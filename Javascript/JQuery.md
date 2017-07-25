@@ -1,0 +1,58 @@
+# JQuery
+
+## selector
+
+- $(selector) : css selector를 적용함
+- 태그명
+- ID
+- Class
+- 내장객체
+
+## Events
+
+Mouse Events | Keyboard Events | Form Events | Document/Window Events
+-------------|-----------------|-------------|-----------------------
+click | keypress | submit | load
+dblclick | keydown | change | resize
+mouseenter | keyup | focus | scroll
+mouseleave |   | blur | unload
+
+### The on() Method
+
+The on() method attaches one or more event handlers for the selected elements.
+
+### Dropdown collapse 처리 예시
+
+  ```javascript
+  var login = function(e) {
+    e.stopPropagation(e);
+    $.ajax({
+      type : 'POST',
+      url : '/login',
+      data : {
+        'email' : $('#login-email').val(),
+        'pwd' : $('#login-password').val()
+      },
+      success : function(resp) {
+        if (resp.result=="no") {
+          $('#login-alert').slideDown(500).delay(2000).slideUp(500);
+        } else {
+          alert("로그인성공");
+          $('#login-form').dropdown("toggle");
+        }
+      }
+    });
+  };
+  $('#login-form').bind('click', function(e) {
+    e.stopPropagation()
+  });
+  $('#login-alert').hide();
+  $('#login-btn').click(function(e) {
+    login(e);
+  });
+  $('#login-email, #login-password').keypress(function(e) {
+    if (e.keyCode == '13') {
+      login(e)
+    }
+  });
+  ```
