@@ -9,12 +9,12 @@
 ### vue-cli 사용
 
 NPM으로 vue와 vue-cli 패키지 설치
-```sh
-npm install vue
-# vue-cli 설치
-npm install --global vue-cli
-# "webpack" 템플릿을 이용해서 새 프로젝트 생성
-```
+  ```sh
+  npm install vue
+  # vue-cli 설치
+  npm install --global vue-cli
+  # "webpack" 템플릿을 이용해서 새 프로젝트 생성
+  ```
 
 #### vue-cli로 새로운 프로젝트 생성
 
@@ -65,8 +65,9 @@ npm install --global vue-cli
 
 #### 디렉토리 구조
 
-- vue-cli로 만든 앱은 ./src 폴더의 main.js 에서 시작된다. main.js에서 Vue 인스턴스를 생성한다.
-  다른 라이브러리 (vue-router, vuex)를 추가하는 경우 여기에서 Vue 인스턴스 생성 전에 추가해 주면된다.
+1. vue-cli로 만든 앱은 ./src 폴더의 main.js 에서 시작된다.
+1. main.js에서 Vue 인스턴스를 생성한다.
+1. 다른 라이브러리 (vue-router, vuex)를 추가하는 경우 여기에서 Vue 인스턴스 생성 전에 추가해 주면된다.
 
 - 파일 / 디렉토리 구조
   - /src/main.js - Application entry point.
@@ -93,6 +94,7 @@ npm install --global vue-cli
   <div id="app">
       <App />
   </div>
+  ```
 
 ### vue-cli 기능
 

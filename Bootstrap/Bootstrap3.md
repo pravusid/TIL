@@ -84,7 +84,7 @@
 
 - form.form-horizontal
   - div.form-group
-    - `<label for="이름" class="control-label col-xs-2">` 
+    - `<label for="이름" class="control-label col-xs-2">`
     - input.form-control .col-xs-10
 - form.form-inline
   - label.sr-only
@@ -189,7 +189,7 @@
       - span.icon-bar
       - span.icon-bar
     - a.navbar-brand
-  
+
   -div.collapse .navbar-collapse id="menu1" (메뉴, 폼)
     - ul.nav .navbar-nav
       - li > a {메뉴명}

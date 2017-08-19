@@ -4,7 +4,7 @@
 
 ### 빌드툴과 버전 선택
 
-- https://start.spring.io에서 프로젝트 생성 Wizard를 실행할 수 있다.
+- <https://start.spring.io>에서 프로젝트 생성 Wizard를 실행할 수 있다.
 
 - 빌드툴은 Gradle, Spring Boot 1.5.4버전을 선택하였다
 

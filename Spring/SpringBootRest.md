@@ -12,5 +12,3 @@
 
 - hidden사용
   - name="_method" / value="put" / value="delete"
-
-## 

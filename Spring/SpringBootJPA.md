@@ -13,7 +13,7 @@
 
 - application.properties
   > The data source properties starting with spring.datasource.* will automatically be read by spring boot JPA. To change the hibernate properties we will use prefix spring.jpa.properties.* with hibernate property name. On the basis of given data source URL, spring boot can automatically identify data source driver class. So we need not to configure diver class.
-  ```
+  ```none
   # JDBC 사용할 때
   spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 
