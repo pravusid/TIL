@@ -58,6 +58,8 @@
       - [ResultSet](#resultset)
     - [JDBC드라이버](#jdbc드라이버)
     - [바인드변수](#바인드변수)
+    - [Connection Pooling](#connection-pooling)
+    - [JNDI (Java Naming Directory Interface)](#jndi-java-naming-directory-interface)
 
 <!-- /TOC -->
 
@@ -519,3 +521,29 @@ sun에서 명시한 스펙에따라 개발된 컴포넌트, 라이브러리
 DBMS도 소프트웨어이기 때문에 쿼리문장 파싱과 컴파일과정을 거치게 된다.하지만 매번 DB에서 컴파일이나 문법검사등을 일으킨다면 성능에 상당한 영향을 주게된다.
 
 > `select * from member where id=입력값 and pass=입력값` 입력값이 변하더라도, 전체문장의 변경으로 간주하지 않도록 한다. 이때 바인드 변수 지원됨
+
+### Connection Pooling
+
+웹분야처럼 __서버와 연결이 유지되지 않는 stateless 특징__을 갖는 경우,
+클라이언트의 요청마다 db와의 접속을 시도하게 되면 너무 많은 자원을 낭비하게 되므로 (속도저하, 접속시도에 따르는 시간지연등)
+클라이언트의 접속이 없더라도 메모리에 미리 여유분의 접속객체를 확보해놓고,
+요청이 있을 때마다 새로운 접속을 일으키는 것이 아니라 이미 생성된 접속객체를 할당하여 데이터베이스 업무를 처리할 수 있게 하는 것
+
+> stateful(실시간 연결된 상태 ex-socket)
+
+### JNDI (Java Naming Directory Interface)
+
+server.xml
+
+```xml
+<Host name="127.0.0.1"  appBase="webapps" unpackWARs="true" autoDeploy="true">
+  <Context path="" docBase="경로\WebContent" reloadable="true">
+  <!-- 이하 context.xml에 작성하는 방식으로도 적용 가능 -->
+    <Resource name="jdbc/myoracle" auth="Container"
+              type="javax.sql.DataSource" driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@127.0.0.1:1521:mysid"
+              username="scott" password="tiger" maxTotal="20" maxIdle="10"
+              maxWaitMillis="-1"/>
+  </Context>
+</Host>
+```

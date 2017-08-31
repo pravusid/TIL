@@ -23,8 +23,6 @@
     - [Servlet Mapping(web.xml)](#servlet-mappingwebxml)
     - [서블릿의 생명주기](#서블릿의-생명주기)
     - [요청 단계](#요청-단계)
-  - [Connection Pooling](#connection-pooling)
-  - [JNDI (Java Naming Directory Interface)](#jndi-java-naming-directory-interface)
   - [코드 조각 자동포함 기능](#코드-조각-자동포함-기능)
   - [MVC 패턴](#mvc-패턴)
     - [fowarding을 이용해서 request객체를 다른곳에서도 이용하기](#fowarding을-이용해서-request객체를-다른곳에서도-이용하기)
@@ -386,32 +384,6 @@ request.getParameter("id"); // 보통 Model에서 처리
 
 1. service()에서 클라이언트에게 응답
 
-## Connection Pooling
-
-웹분야처럼 __서버와 연결이 유지되지 않는 stateless 특징__을 갖는 경우,
-클라이언트의 요청마다 db와의 접속을 시도하게 되면 너무 많은 자원을 낭비하게 되므로 (속도저하, 접속시도에 따르는 시간지연등)
-클라이언트의 접속이 없더라도 메모리에 미리 여유분의 접속객체를 확보해놓고,
-요청이 있을 때마다 새로운 접속을 일으키는 것이 아니라 이미 생성된 접속객체를 할당하여 데이터베이스 업무를 처리할 수 있게 하는 것
-
-> stateful(실시간 연결된 상태 ex-socket)
-
-## JNDI (Java Naming Directory Interface)
-
-server.xml
-
-```xml
-<Host name="127.0.0.1"  appBase="webapps" unpackWARs="true" autoDeploy="true">
-  <Context path="" docBase="경로\WebContent" reloadable="true">
-  <!-- 이하 context.xml에 작성하는 방식으로도 적용 가능 -->
-    <Resource name="jdbc/myoracle" auth="Container"
-              type="javax.sql.DataSource" driverClassName="oracle.jdbc.driver.OracleDriver"
-              url="jdbc:oracle:thin:@127.0.0.1:1521:mysid"
-              username="scott" password="tiger" maxTotal="20" maxIdle="10"
-              maxWaitMillis="-1"/>
-  </Context>
-</Host>
-```
-
 ## 코드 조각 자동포함 기능
 
 모든 jsp페이지에서 동일한 코드를 삽입해야 할 경우 web.xml에서 설정할 수 있다.
@@ -420,7 +392,7 @@ server.xml
 <jsp-config>
   <jsp-property-group>
     <url-pattern>/view/*</url-pattern>
-    <include-coda>/common/fotter.jspf</include-coda>
+    <include-coda>/common/fotter.jsp</include-coda>
   </jsp-property-group>
 </jsp-config>
 ```
