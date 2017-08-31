@@ -56,3 +56,16 @@ The on() method attaches one or more event handlers for the selected elements.
     }
   });
   ```
+
+## JQuery AJAX
+
+```javascript
+$ajax({
+  type:"POST",
+  url:"",
+  data:{id:value, pw:value}
+  success:function(response) {
+    /* 결과값으로 기능구현 */
+  }
+});
+```

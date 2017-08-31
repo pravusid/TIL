@@ -1,6 +1,6 @@
-# Vue.js에서 기타 활용
+# npm (node.js package manager)
 
-## vue에서 jquery / bootstrap 사용
+## jquery / bootstrap 사용
 
 ### JQuery
 

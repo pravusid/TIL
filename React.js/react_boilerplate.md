@@ -15,3 +15,21 @@
 `npm install --save redux react-redux`
 
 ## react-redux
+
+### create-react-app project 디렉토리 구조
+
+- node_modules/
+- public/
+  - index.html
+- src/
+  - actions/
+    - *.js
+    - index.js
+  - components/
+    - *.js
+    - App.js
+  - reducers/
+    - *.js
+    - index.js
+  - index.js
+- packages.json
