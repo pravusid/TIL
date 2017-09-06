@@ -48,3 +48,7 @@
   - @Configuration
   - @EnableAutoConfiguration
   - @ComponentScan
+
+### application.properties 설정
+
+<https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html> 참고

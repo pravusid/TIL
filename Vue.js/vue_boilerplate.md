@@ -95,7 +95,7 @@ Entry Point and Root Vue Instance : import와 webpack entry
   });
   ```
 
-- el : `index.html`의 application mount point (id가 app인 div)
+- el : `index.html`의 application mount point (id가 app인 div의 DOM을 제어함)
 - router : 라우터 사용 선언
 - template : mount point에 적용될 템플릿 (template)
 - components : 컴포넌트 (App.vue를 import해서 여기에서 사용함)
@@ -130,7 +130,7 @@ Entry Point and Root Vue Instance : import와 webpack entry
 
 #### `/dist/index.html`
 
-빌드 결과물의 시작점
+빌드 결과물 시작점
 
   ```html
   <!DOCTYPE html>
@@ -152,12 +152,10 @@ Entry Point and Root Vue Instance : import와 webpack entry
   </html>
   ```
 
-## vue-cli 기능
+## vue-cli 기본 dev-dependencies
 
 vue-cli는 npm scripts 를 이용해서 필요한 기능을 실행할 수 있다.
-최초 프로젝트를 만들때 선택한 내용들로 구성 되어 있고 나는 주로 ESLint에서 스타일을 none으로 선택하고 사용한다.
-스타일을 none으로 하는 이유는 아직 standardjs와 airbnb 중 어떤 스타일이 더 나은지 결론을 내지 못했기 때문이다.
-나머지 테스트에 대한 기능들은 모두 Yes를 선택한다.
+최초 프로젝트를 만들때 선택한 내용들로 구성 되어 있고 나는 주로 ESLint에서 스타일은 airbnb로 선택한다.
 npm 을 이용한 기능들은 아래와 같다.
 
 - dev : 개발용 http 서버를 실행한다. 개발중에는 이 명령어로 실행하면 된다.
@@ -170,3 +168,35 @@ npm 을 이용한 기능들은 아래와 같다.
 ## 크롬 확장기능 vue-devtools 사용
 
 [vue-devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
+
+## import css (static file)
+
+`App.vue`에 추가
+
+```html
+<style lang="css">
+  @import './assets/yourstyles.css'
+</style>
+```
+
+OR `index.html`에서 link도 가능
+
+## css framework 추가
+
+Bulma 설치 : `yarn add bulma`
+
+Webpack sass-loader module 설치 : `yarn add node-sass sass-loader`
+
+`src/assets/sass/main.scss` 파일을 생성해서 bulma를 불러온다
+
+```scss
+// ~는 Webpack/sass-loader가 node_modules 디렉토리로 인식
+@import '~bulma/bulma'
+```
+
+`src/main.js` 파일에 추가
+
+```js
+// Require the main Sass manifest file
+require('./assets/sass/main.scss');
+```

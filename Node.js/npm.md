@@ -10,10 +10,6 @@
 
 http 클라이언트 `npm install --save axios`
 
-### style-loader
-
-`npm install --save-dev style-loader css-loader`
-
 ### JQuery
 
 `npm i --save-dev expose-loader`
