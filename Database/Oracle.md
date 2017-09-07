@@ -1,5 +1,24 @@
 # ORACLE DB
 
+## sys 계정 접속
+
+sqlplus/as sysdba로 로그인 하는 경우에는 system 계정 비밀번호 파일을 사용하거나 OS 인증을 사용한다.
+
+  ```sql
+  C:￦> sqlplus/nolog
+  SQL> conn/as sysdba
+  SQL> alter user system identified by [새로운 암호 지정]
+  SQL> alter user sys identified by [새로운 암호 지정]
+  ```
+
+## 계정이 잠겨있을 경우
+
+락(lock)을 풀어주기 위해서는 DBA 권한을 가진 사용자 계정으로 접속을 해야한다. sys 혹은 system 계정으로 로그인 한다.
+
+SCOTT 사용자의 계정의 락(lock)을 해제한다 : `SQL>alter user scott account unlock;`
+
+비밀번호 변경 `SQL> alter user scott identified by [새로운 암호]`
+
 ## 테이블 스페이스 생성
 
 ```sql
@@ -59,6 +78,30 @@ GRANT CREATE SESSION
 ,CREATE VIEW
 TO 유저명;
 ```
+
+## 백업과 복원
+
+- 백업(Export)
+  - system계정으로 전체 백업
+    `>exp userid=system/비밀번호@ORCL full=y file=c:\dump.dmp`
+  - system 계정으로 scott 계정에 있는 DB백업
+    `>exp userid=system/비밀번호@ORCL owner=scott file=c:\dump.dmp`
+  - scott계정으로 자신의 모든 데이타 백업
+    `>exp userid=scott/비밀번호@ORCL file=c:\dump.dmp`
+  - scott계정으로 emp테이블만 백업
+    `>exp userid=scott/비밀번호@ORCL file=c:\dump.dmp tables=emp or tables=(emp,dept)`
+
+- 복원(Import)
+  - system계정으로 전체 복원
+    `>imp system/비밀번호@ORCL file=c:\dump.dmp`
+  - system 계정으로 scott 계정에 있는 DB복원
+    `>imp system/비밀번호@ORCL fromuser=scott touser=scott file=c:\dump.dmp`
+  - scott계정으로 자신의 모든 데이타 복원
+    `>imp scott/비밀번호@ORCL file=c:\dump.dmp`
+  - 복원하고자하는 DB에 같은 이름의 Object가 있을때,오류를 무시하고 건너 띄고 싶을때 ignore 옵션사용
+    `>imp 아이디/비밀번호@ORCL file=c:\dump.dmp ignore=y`
+  - system계정으로 들어가 scott에서 Export한 데이터를 tiger에게 Import
+    `>imp system/비밀번호@ORCL fromuser=scott touser=tiger file=c:\dump.dmp`
 
 ## 제약조건
 

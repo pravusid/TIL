@@ -151,3 +151,9 @@ Pageable interface를 활용하는데 컨트롤러 매개변수 `Pageable pageab
 
 위에서 `@CreatedDate`와 `@LastModifiedDate` 어노테이션을 적용하고 Spring-data가 이를 감지하게 하려면 설정값이 필요하다
 fooApplication.java (Spring Boot 설정파일) 클래스 상단에 `@EnableJpaAuditing` 어노테이션을 명시한다.
+
+### Entity에서 JSON 사용처리
+
+`@JsonProperty` : 변환 처리 명시
+
+`@JsonIgnore` : 변환하지 않을 항목

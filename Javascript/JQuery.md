@@ -17,6 +17,10 @@ dblclick | keydown | change | resize
 mouseenter | keyup | focus | scroll
 mouseleave |   | blur | unload
 
+### 이벤트 처리
+
+e.preventDefault();
+
 ### The on() Method
 
 The on() method attaches one or more event handlers for the selected elements.
@@ -61,10 +65,15 @@ The on() method attaches one or more event handlers for the selected elements.
 
 ```javascript
 $ajax({
-  type:"POST",
-  url:"",
-  data:{id:value, pw:value}
-  success:function(response) {
+  type: "get" or "post" or "put" or "delete" ,
+  contentType: "multipart/form-data" or "application/json; charset=UTF-8",
+  url: "",
+  data: {id:value, pw:value} or JSON.stringify(json),
+  dataType: "json", // 서버에서 돌아오는 데이터(response)가 어떤 형식일지
+  success: function(data, status) {
+    /* 결과값으로 기능구현 */
+  },
+  error: function(xhr, status) {
     /* 결과값으로 기능구현 */
   }
 });
