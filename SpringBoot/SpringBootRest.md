@@ -45,8 +45,8 @@ JSON이 문자열로 변환된 형태로 JSON parsing을 하거나 직접 분리
 `data.get("key")`로 value를 꺼내면 `Object`가 나오는데
 단일 값이면 `String` 배열이면 `List<LinkedHashMap<String, T>>` 형태의 데이터이다.
 
-### 데이터를 POJO class로 받는경우
+### 데이터를 Entity class로 받는경우
 
-컨트롤러 인수로 `@RequestBody POJOClass data`를 받는다.
+컨트롤러 인수로 `@RequestBody EntityClass data`를 받는다.
 
 데이터와 매칭되는 class를 인수로 요청하면 적절한 결과물이 나온다. 가장 편리한 방법이다.

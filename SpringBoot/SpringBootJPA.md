@@ -2,6 +2,8 @@
 
 ## 시작
 
+<https://docs.spring.io/spring-data/jpa/docs/1.7.0.RELEASE/reference/html/>
+
 ## 초기설정
 
 - build.gradle에 추가
@@ -52,34 +54,109 @@
 
 ### Annotation
 
-- @Entity
+- @Entity : Entity임을 표시함. 테이블과 매칭해서 사용한다.
 - @Table(name="articles") : 기존 테이블과 연결
-- @Id
-- @GeneratedValue
+- @Id : PK 정의
+- @GeneratedValue : Auto_increment, Sequence를 생성해준다
   - strategy = GenerationType.AUTO
-- @Column
+- @Column : 컬럼과 연결, 컬럼 정보 기입
   - name : 기존 column 이름
-- @OneToMany
-- @JoinColumn(name="sosi_id", referencedColumnName="id")
+- @OneToMany(mappedBy="@ManyToOne variable name")
+- @ManyToOne : JoinColumn으로 pk를 가져와서 활용
+- @JoinColumn(name="sosi_id", referencedColumnName="id", foreignKey = @ForeignKey(name="fk_sosi_user"))
+- @ManyToMany
+- @OrderBy("col1 ASC, col2 ASC") : order by로 정렬함
+- @Transient : 테이블의 컬럼과 매핑되지 않고 쓰이는 Attribute 를 정의하고자 할 때
 
 ### repository
 
-CRUD 작업을 위해서 JpaRepository<{tablename}, {PK_TYPE}> 클래스를 상속받는 {tablename}Repository 클래스를 생성한다.
+CRUD 작업을 위해서 JpaRepository(CrudRepository)<{entity}, {PK_TYPE}> 클래스를 상속받는 {tablename}Repository 클래스를 생성한다.
 
 기본적인 CRUD를 위한 method (findAll, findOne, save ...)가 이미 구현되어있다.
 
+#### 핵심 method
+
+- `<S extends T> S save(S entity);`
+- `T findOne(ID primaryKey);`
+- `Iterable<T> findAll();`
+- `Long count();`
+- `void delete(T entity);`
+- `boolean exists(ID primaryKey);`
+
+#### [JpaRepository Query Creation](https://docs.spring.io/spring-data/jpa/docs/1.7.0.RELEASE/reference/html/#jpa.query-methods.query-creation)
+
+Keyword | Sample | JPQL snippet
+--- | --- | ---
+And | `findByLastnameAndFirstname` | … where x.lastname = ?1 and x.firstname = ?2
+Or | `findByLastnameOrFirstname` | … where x.lastname = ?1 or x.firstname = ?2
+Is,Equals | `findByFirstname,findByFirstnameIs,findByFirstnameEquals` | … where x.firstname = 1?
+Between | `findByStartDateBetween` | … where x.startDate between 1? and ?2
+LessThan | `findByAgeLessThan` | … where x.age < ?1
+LessThanEqual | `findByAgeLessThanEqual` | … where x.age ⇐ ?1
+GreaterThan | `findByAgeGreaterThan` | … where x.age > ?1
+GreaterThanEqual | `findByAgeGreaterThanEqual` | … where x.age >= ?1
+After | `findByStartDateAfter` | … where x.startDate > ?1
+Before | `findByStartDateBefore` | … where x.startDate < ?1
+IsNull | `findByAgeIsNull` | … where x.age is null
+IsNotNull,NotNull | `findByAge(Is)NotNull` | … where x.age not null
+Like | `findByFirstnameLike` | … where x.firstname like ?1
+NotLike | `findByFirstnameNotLike` | … where x.firstname not like ?1
+StartingWith | `findByFirstnameStartingWith` | … where x.firstname like ?1 (parameter bound with appended %)
+EndingWith | `findByFirstnameEndingWith` | … where x.firstname like ?1 (parameter bound with prepended %)
+Containing | `findByFirstnameContaining` | … where x.firstname like ?1 (parameter bound wrapped in %)
+OrderBy | `findByAgeOrderByLastnameDesc` | … where x.age = ?1 order by x.lastname desc
+Not | `findByLastnameNot` | … where x.lastname <> ?1
+In | `findByAgeIn(Collection<Age> ages)` | … where x.age in ?1
+NotIn | `findByAgeNotIn(Collection<Age> age)` | … where x.age not in ?1
+True | `findByActiveTrue()` | … where x.active = true
+False | `findByActiveFalse()` | … where x.active = false
+IgnoreCase | `findByFirstnameIgnoreCase` | … where UPPER(x.firstame) = UPPER(?1)
+
+#### @Query 사용
+
+@Query 어노테이션으로 직접 query를 작성할 수 있다.
+
+  ```java
+  @Query("select u from User u where u.firstname like %?1")
+  List<User> findByFirstnameEndsWith(String firstname);
+
+  @Query("select u from User u where u.firstname = :firstname or u.lastname = :lastname")
+  User findByLastnameOrFirstname(@Param("lastname") String lastname, @Param("firstname") String firstname);
+
+  @Query("select u from #{#entityName} u where u.lastname = ?1")
+  List<User> findByLastname(String lastname);
+  ```
+
+native query를 사용할 수 있다
+
+  ```java
+  @Query(value = "SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?0", nativeQuery = true)
+  User findByEmailAddress(String emailAddress);
+  ```
+
+#### 쿼리 생성 후 slice, sort 제어
+
+```java
+Page<User> findByLastname(String lastname, Pageable pageable);
+Slice<User> findByLastname(String lastname, Pageable pageable);
+List<User> findByLastname(String lastname, Sort sort);
+List<User> findByLastname(String lastname, Pageable pageable);
+```
+
 ### Pageable, Page, PageImpl
 
-Repository에는 페이지 단위 입출력이 이미 구현되어 있다.
+`PagingAndSortingRepository`에는 페이지 단위 입출력이 이미 구현되어 있다.
 Pageable interface를 활용하는데 컨트롤러 매개변수 `Pageable pageable`로 구현체를 생성한다.
 
 `Page<t> list = fooRepository.findAll(pageable);` 으로 페이지단위 데이터를 받아온다
 
 페이지조회 조건을 주려면 `@PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable`
 
-### 상위 Entity
+### 상위 Entity, Auditing
 
 데이터 객체의 중복을 없애기 위해서 상위Entity를 생성할 수 있다. AbstractEntity.class를 생성한다.
+
+Auditing을 활용하여 변화를 감지하고 자동으로 값을 갱신할 수 있다.
 
 사용예제
 
@@ -150,10 +227,17 @@ Pageable interface를 활용하는데 컨트롤러 매개변수 `Pageable pageab
 생성한 AbstractEntity.class는 데이터객체에서 상속받아 사용한다.
 
 위에서 `@CreatedDate`와 `@LastModifiedDate` 어노테이션을 적용하고 Spring-data가 이를 감지하게 하려면 설정값이 필요하다
-fooApplication.java (Spring Boot 설정파일) 클래스 상단에 `@EnableJpaAuditing` 어노테이션을 명시한다.
+
+**fooApplication.java (Spring Boot 설정파일) 클래스 상단에 `@EnableJpaAuditing` 어노테이션을 명시한다.**
 
 ### Entity에서 JSON 사용처리
 
 `@JsonProperty` : 변환 처리 명시
 
 `@JsonIgnore` : 변환하지 않을 항목
+
+## 영속성 컨텍스트
+
+### 트랜잭션 범위의 영속성 컨텍스트
+
+Service - Repository 범위에서 준영속 -> 영속 유지 트랜잭션 내에서는 동일한 영속성 컨텍스트를 사용한다.
