@@ -85,6 +85,10 @@ CRUD 작업을 위해서 JpaRepository(CrudRepository)<{entity}, {PK_TYPE}> 클�
 
 #### [JpaRepository Query Creation](https://docs.spring.io/spring-data/jpa/docs/1.7.0.RELEASE/reference/html/#jpa.query-methods.query-creation)
 
+JpaRepository에서 `T findBy[COLUMN][조건](T ColumnName, Pageable Pageable);` 형식의 Method를 자동으로 실행해준다
+
+유용하게도 OneToMany 관계의 Entity 값을 조건으로 쓸 수 있다 `T findBy[ENTITY][COLUMN][조건](T ColumnName, Pageable Pageable);`
+
 Keyword | Sample | JPQL snippet
 --- | --- | ---
 And | `findByLastnameAndFirstname` | … where x.lastname = ?1 and x.firstname = ?2
@@ -141,6 +145,56 @@ Page<User> findByLastname(String lastname, Pageable pageable);
 Slice<User> findByLastname(String lastname, Pageable pageable);
 List<User> findByLastname(String lastname, Sort sort);
 List<User> findByLastname(String lastname, Pageable pageable);
+```
+
+#### Specification
+
+Repository에서 JpaSpecificationExecutor 인터페이스를 추가로 상속받는다
+
+검색조건을 관리하는 Specification 클래스를 생성한다. static으로 method를 정의하고 `new Specification<T>()`를 return한다.
+
+```java
+public static Specification<T> findFoo(final long foo) {
+  return new Specification<T>() {
+    @Override
+    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+      return cb.equal/like(root.get("COLUMN"), foo/"%"+foo);
+    }
+  };
+}
+```
+
+복수의 Predicate를 정의할 수도 있다
+
+```java
+Specification<Employee> specification = new Specification<Employee>() {
+  public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+    List<Predicate> predicates = new ArrayList<Predicate>();
+    predicates.add(builder.equal(root.get("id"), id));
+    predicates.add(builder.equal(root.get("name"), name));
+    predicates.add(builder.equal(root.get("address").get("city"), city));
+    return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+  }
+};
+```
+
+@OneToMany 관계의 데이터를 찾아올 때
+
+```java
+public static Specification<Board> findByComment(final String keyword) {
+  return (Root<Board> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+    Path<Collection<Comment>> comments = root.join("comments");
+    return cb.like(comments.get("content"), "%"+keyword+"%");
+  };
+}
+```
+
+JpaSpecificationExecutor 인터페이스에 명시된 `Specification<?> spec`를 매개변수로 하는 method를 활용한다
+
+```java
+public Page<T> findAll(String keyword, Pageable pageable){
+    return someRepository.findAll(Specifications.where(findFoo(keyword)), pageable);
+}
 ```
 
 ### Pageable, Page, PageImpl

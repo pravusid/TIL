@@ -16,6 +16,9 @@ application.properties
   spring.thymeleaf.cache=false
   ```
 
+Thymeleaf는 태그 정책이 엄격해서 오타나 표준에 맞지않는 구문이 있으면 칼같이 오류를 내뿜는다.
+특히 닫는태그등의 HTML표준 관련 충돌이 잦은데 이를 완화하기 위해서 의존성패키지를 추가한다.
+
 `spring.thymeleaf.mode=LEGACYHTML5` 적용시
 
 gradle dependency 추가 `compile group: 'net.sourceforge.nekohtml', name: 'nekohtml', version: '1.9.22'`
@@ -35,6 +38,8 @@ gradle dependency 추가 `compile group: 'net.sourceforge.nekohtml', name: 'neko
 ### model의 attribute 출력
 
 `<span th:text="${variable}"></span>`
+
+`<span th:utext="${variable}"></span>`
 
 ### 반복문
 
@@ -82,11 +87,12 @@ switch문
   </div>
   ```
 
-## 레이아웃
+## 레이아웃 (Layout)
 
-- th:insert is the simplest: it will simply insert the specified fragment as the body of its host tag.
-  - `<div th:insert="footer :: copy"></div>`
+- th:insert : th:insert를 선언한 태그를 유지하고 내부에 fragment 전체를 가져옴
+
   ```html
+  <div th:insert="footer :: copy"></div>
   <div>
     <footer>
       &copy; 2011 The Good Thymes Virtual Grocery
@@ -94,17 +100,21 @@ switch문
   </div>
   ```
 
-- th:replace actually replaces its host tag with the specified fragment.
-  - `<div th:replace="footer :: copy"></div>`
+- th:replace : th:replace를 선언한 태그 자체가 fragment로 바뀜
+
   ```html
+  <div th:replace="footer :: copy"></div>
+
   <footer>
     &copy; 2011 The Good Thymes Virtual Grocery
   </footer>
   ```
 
-- th:include is similar to th:insert, but instead of inserting the fragment it only inserts the contents of this fragment.
-  - `<div th:include="footer :: copy"></div>`
+- th:include : th:inclue를 선언한 태그는 유지되고 fragment에서 최상위태그 내부의 내용만 가져옴
+
   ```html
+  <div th:include="footer :: copy"></div>
+
   <div>
     &copy; 2011 The Good Thymes Virtual Grocery
   </div>

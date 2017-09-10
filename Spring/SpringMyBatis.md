@@ -231,12 +231,17 @@ public int insertIngr(IngredientVO vo);
     @Result(property="religion", column="id", javaType=List.class,
       many=@Many(select="selectIngrReligion"))
 })
-@Select("SELECT * FROM ("
-    + " SELECT X.*, rownum as num FROM ("
-      + " SELECT id, name, cal"
-      + " FROM ingredient"
-      + " ORDER BY id ASC) X )"
-    + " WHERE num BETWEEN #{start} AND #{end}")
+@Select("SELECT *"
+      + " FROM ("
+        + " SELECT X.*, ROWNUM as rnum"
+        + " FROM ("
+          + " SELECT id, name, cal"
+          + " FROM ingredient"
+          + " ORDER BY id ASC"
+          + " ) X"
+        + " WHERE ROWNUM <= #{end}"
+        + " )"
+      + " WHERE rnum > #{start}")
 public List<IngredientVO> selectIngrList(Map map);
 
 @Select("SELECT id, name, ingredient_id"
