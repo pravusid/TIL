@@ -44,6 +44,7 @@
 ### 기본설정 (Talsist.java)
 
 > 프로젝트를 생성하면 기본적으로 @SpringBootApplication 어노테이션이 붙어있다.
+
 - @SpringBootApplication은 스프링부트 기본설정 3종 신기가 한 번에 적용되어 있는 것이다
   - @Configuration
   - @EnableAutoConfiguration
