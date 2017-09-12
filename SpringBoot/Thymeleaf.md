@@ -221,7 +221,7 @@ The sec:authentication attribute is used to print logged user name and roles:
   Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
   ```
 
-다음처럼 쓸 수도 있다 : `${#authentication.principal.authorities}`
+**다음처럼 쓸 수도 있다 : `${#authentication.principal.authorities}`**
 
 ### 표현식 목록
 
@@ -229,6 +229,8 @@ Expression | Description
 --- | ---
 hasRole([role]) | Returns true if the current principal has the specified role.
 hasAnyRole([role1,role2]) | Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)
+hasAuthority([role]) | Returns true if the current principal has the specified authority.
+hasAnyAuthority([role1,role2]) | Returns true if the current principal has any of the supplied Authority (given as a comma-separated list of strings)
 principal | Allows direct access to the principal object representing the current user
 authentication | Allows direct access to the current Authentication object obtained from the SecurityContext
 permitAll | Always evaluates to true
