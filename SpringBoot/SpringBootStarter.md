@@ -37,9 +37,9 @@
 
 - 패키지 구분은 root, web, service, domain으로 한다
   - root : 프로젝트 설정이 들어갈 예정 (~Application.java 파일)
-  - web :
-  - service :
-  - domain :
+  - web : 컨트롤러
+  - service : 서비스 영역
+  - domain : Entity
 
 ### 기본설정 (Talsist.java)
 
@@ -50,6 +50,6 @@
   - @EnableAutoConfiguration
   - @ComponentScan
 
-### application.properties 설정
+### application.properties(yml) 설정
 
 <https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html> 참고
