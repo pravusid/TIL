@@ -5,12 +5,12 @@
 spring-boot-starter-test에는 다음 패키지들이 들어있다
 
 1. JUnit
-2. Spring Test & Spring Boot Test
-3. AssertJ : a fluent assertion lib
-4. Hamcrest : a lib of matcher object
-5. Mockito : a Java mocking lib
-6. JSONassert : an Assertion lib for JSON
-7. JsonPath : XPath for JSON
+1. Spring Test & Spring Boot Test
+1. AssertJ : a fluent assertion lib
+1. Hamcrest : a lib of matcher object
+1. Mockito : a Java mocking lib
+1. JSONassert : an Assertion lib for JSON
+1. JsonPath : XPath for JSON
 
 ## @RunWith(SpringRunner.class)
 
@@ -47,4 +47,3 @@ mockMvc.perform(get("/"))
   .andExpect(model().attributeExists("foobars"))
   .andExpect(model().attribute("foobars", IsCollectionWithSize.hasSize(1)));
 ```
-

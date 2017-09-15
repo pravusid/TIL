@@ -196,5 +196,3 @@ tiles.xml
   </definition>
 </tiles-definitions>
 ```
-
-## 
