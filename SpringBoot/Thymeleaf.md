@@ -16,10 +16,10 @@ application.properties
   spring.thymeleaf.cache=false
   ```
 
-Thymeleaf는 태그 정책이 엄격해서 오타나 표준에 맞지않는 구문이 있으면 칼같이 오류를 내뿜는다.
-특히 닫는태그등의 HTML표준 관련 충돌이 잦은데 이를 완화하기 위해서 의존성패키지를 추가한다.
+Thymeleaf는 태그 정책이 엄격해서 오타나 표준에 맞지 않는 구문이 있으면 칼같이 오류를 내뿜는다.
+특히 닫는 태그 등의 HTML 표준 관련 충돌이 잦은데 이를 완화하기 위해서 의존성 패키지를 추가한다.
 
-`spring.thymeleaf.mode=LEGACYHTML5` 적용시
+`spring.thymeleaf.mode=LEGACYHTML5` 적용 시
 gradle dependency 추가 `compile("net.sourceforge.nekohtml:nekohtml:1.9.22")`
 
 Spring boot thymeleaf-starter는 thymeleaf2 버전을 적용하고 있기 때문에 버전 변경이 필요하다
