@@ -7,38 +7,38 @@
 ## vue-cli 사용
 
 NPM으로 vue와 vue-cli 패키지 설치
-  ```sh
-  npm install vue
-  # vue-cli 설치
-  npm install -g vue-cli
-  # "webpack" 템플릿을 이용해서 새 프로젝트 생성
-  ```
+
+```sh
+npm install -g vue
+# vue-cli 설치
+npm install -g vue-cli
+# "webpack" 템플릿을 이용해서 새 프로젝트 생성
+```
 
 ### vue-cli로 새로운 프로젝트 생성
 
 `$ vue init <template-name> <project-name>`
 
 템플릿으로는 webpack을 사용(starter), 이후 프로젝트 폴더에서 dependencies 다운로드
-  ```sh
-  vue init webpack vue-example-project
-  cd <project-name>
-  # install dependencies
-  npm install
-  # serve with hot reload at localhost:8080
-  npm run dev
-  # build for production with minification
-  npm run build
-  # build for production and view the bundle analyzer report
-  npm run build --report
-  # run unit tests
-  npm run unit
-  # run e2e tests
-  npm run e2e
-  # run all tests
-  npm test
-  ```
 
-템플릿 vuepack 사용시 `vue init egoist/vuepack new-project`
+```sh
+vue init webpack vue-example-project
+cd <project-name>
+# install dependencies
+npm install
+# serve with hot reload at localhost:8080
+npm run dev
+# build for production with minification
+npm run build
+# build for production and view the bundle analyzer report
+npm run build --report
+# run unit tests
+npm run unit
+# run e2e tests
+npm run e2e
+# run all tests
+npm test
+```
 
 ### 프로젝트 생성시 설정
 
@@ -82,18 +82,18 @@ NPM으로 vue와 vue-cli 패키지 설치
 
 Entry Point and Root Vue Instance : import와 webpack entry
 
-  ```js
-  import Vue from 'vue';
-  import App from './App';
-  import router from './router';
+```js
+import Vue from 'vue';
+import App from './App';
+import router from './router';
 
-  new Vue({
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: { App },
-  });
-  ```
+new Vue({
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: { App },
+});
+```
 
 - el : `index.html`의 application mount point (id가 app인 div의 DOM을 제어함)
 - router : 라우터 사용 선언
@@ -102,55 +102,55 @@ Entry Point and Root Vue Instance : import와 webpack entry
 
 #### `/src/App.vue`
 
-  ```html
-  <template>
-    <div id="app">
-      <img src="./assets/logo.png">
-      <router-view></router-view>
-    </div>
-  </template>
+```html
+<template>
+  <div id="app">
+    <img src="./assets/logo.png">
+    <router-view></router-view>
+  </div>
+</template>
 
-  <script>
-  export default {
-    name: 'app',
-  };
-  </script>
+<script>
+export default {
+  name: 'app',
+};
+</script>
 
-  <style>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-  </style>
-  ```
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+```
 
 #### `/dist/index.html`
 
 빌드 결과물 시작점
 
-  ```html
-  <!DOCTYPE html>
-  <html>
+```html
+<!DOCTYPE html>
+<html>
 
-  <head>
-    <meta charset=utf-8>
-    <title>Vue</title>
-    <link href=/static/css/app.aa4a320cae73ccea747f91c11e724a37.css rel=stylesheet>
-  </head>
+<head>
+  <meta charset=utf-8>
+  <title>Vue</title>
+  <link href=/static/css/app.aa4a320cae73ccea747f91c11e724a37.css rel=stylesheet>
+</head>
 
-  <body>
-    <div id=app></div>
-    <script type=text/javascript src=/static/js/manifest.0e912206617edce8a3e3.js></script>
-    <script type=text/javascript src=/static/js/vendor.ae75c6b5bea60f5d8cec.js></script>
-    <script type=text/javascript src=/static/js/app.12c3f867db1cd28fc91d.js></script>
-  </body>
+<body>
+  <div id=app></div>
+  <script type=text/javascript src=/static/js/manifest.0e912206617edce8a3e3.js></script>
+  <script type=text/javascript src=/static/js/vendor.ae75c6b5bea60f5d8cec.js></script>
+  <script type=text/javascript src=/static/js/app.12c3f867db1cd28fc91d.js></script>
+</body>
 
-  </html>
-  ```
+</html>
+```
 
 ## vue-cli 기본 dev-dependencies
 

@@ -86,16 +86,35 @@ Vue 인스턴스는 데이터 속성 외에도 유용한 인스턴스 속성 및
 
 ## [인스턴트 라이프사이클 훅](https://kr.vuejs.org/v2/guide/instance.html#%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4-%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8)
 
-created, mounted, updated, destroyed 가 존재
-  ```js
-  var vm = new Vue({
-    data: {
-      a: 1
-    },
-    created: function () {
-      // `this` 는 vm 인스턴스를 가리킵니다.
-      console.log('a is: ' + this.a)
-    }
-  })
-  // -> "a is: 1"
-  ```
+created, mounted, updated, destroyed ...
+
+1. new Vue()
+1. `beforeCreate()`
+1. Initialize Data & Events
+1. Instace created
+1. `created()`
+1. Compile template or el's template
+1. `beforeMount()`
+1. replace el with compiled template
+1. Mounted to DOM
+1. `mounted()`
+1. dataChanged
+1. `beforeUpdate()`
+1. re-render DOM
+1. `updated()`
+1. `beforeDestory()`
+1. destroyed
+1. `destroyed()`
+
+```js
+var vm = new Vue({
+  data: {
+    a: 1
+  },
+  created: function () {
+    // `this` 는 vm 인스턴스를 가리킵니다.
+    console.log('a is: ' + this.a)
+  }
+})
+// -> "a is: 1"
+```
