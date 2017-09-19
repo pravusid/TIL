@@ -8,18 +8,13 @@
 
 NPM으로 vue와 vue-cli 패키지 설치
 
-```sh
-npm install -g vue
-# vue-cli 설치
-npm install -g vue-cli
-# "webpack" 템플릿을 이용해서 새 프로젝트 생성
-```
+`yarn global add vue vue-cli`
 
 ### vue-cli로 새로운 프로젝트 생성
 
 `$ vue init <template-name> <project-name>`
 
-템플릿으로는 webpack을 사용(starter), 이후 프로젝트 폴더에서 dependencies 다운로드
+템플릿으로는 webpack을 사용(starter)
 
 ```sh
 vue init webpack vue-example-project
@@ -62,6 +57,10 @@ npm test
 # UI테스트 툴 Nightwatch 적용 여부
 ? Setup e2e tests with Nightwatch? (Y/n)
 ```
+
+### modules 다운로드
+
+`yarn` or `npm install`
 
 ### 디렉토리 구조
 
@@ -199,4 +198,31 @@ Webpack sass-loader module 설치 : `yarn add node-sass sass-loader`
 ```js
 // Require the main Sass manifest file
 require('./assets/sass/main.scss');
+```
+
+## eslint 사용
+
+### 프로젝트에서 사용
+
+```sh
+sudo npm install --save-dev
+eslint eslint-config-airbnb eslint-friendly-formatter eslint-loader eslint-plugin-html eslint-plugin-vue eslint-plugin-import eslint-plugin-node eslint-plugin-promise eslint-plugin-standard
+```
+
+### VS code 에서 global 사용
+
+```sh
+sudo npm -g install
+eslint eslint-config-airbnb-base eslint-plugin-import eslint-plugin-html eslint-plugin-vue
+```
+
+.eslintrc.json 에 추가
+
+```json
+"extends": [
+    "airbnb-base"
+],
+"plugins": [
+    "vue/recommanded"
+],
 ```

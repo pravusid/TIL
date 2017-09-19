@@ -26,37 +26,23 @@ yarn global bin will output the location where Yarn will install symlinks to you
 
 ### 기본 명령어
 
-`yarn` == `npm install` packages.json에 명시된 의존성 패키지를 다운로드/설치 한다.
-
-`yarn (global) add/bin/list/remove/upgrade [--prefix]`
+- `yarn` == `npm install` packages.json에 명시된 의존성 패키지를 다운로드/설치 한다.
+- `yarn (global) add/bin/list/remove/upgrade [--prefix]`
 
 ### yarn add prefix
 
- --dev(-D) : devDependencies
+-  `--dev`(-D) : devDependencies
+-  `--peer`(-P) : peerDependencies
+-  `--optional`(-O) : optionalDependencies에
+-  `--exact`(-E) : 명시한 버전과 정확한 경우에만 설치
+-  `--tilde`(-T) : 명시한 버전과 같은 minor 버전의 최신버전 설치 (버전 세 번째 자리)
 
- --peer(-P) : peerDependencies
-
- --optional(-O) : optionalDependencies에
-
- --exact(-E) : 명시한 버전과 정확한 경우에만 설치
-
- --tilde(-T) : 명시한 버전과 같은 minor 버전의 최신버전 설치 (버전 세 번째 자리)
 
 ## packages
 
 ### axios
 
 http 클라이언트 `npm install --save axios`
-
-### JQuery
-
-`npm i --save-dev expose-loader`
-`npm i --save jquery`
-
-라이브러리를 설치하면서 package.json에 같이 추가하게 됩니다.
-
-vue-cli로 프로젝트를 생성했다면 `/project/src/main.js` 파일에서 import
-`import 'expose-loader?$!expose-loader?jQuery!jquery'`
 
 ### bootstrap
 
