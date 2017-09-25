@@ -158,30 +158,3 @@ public @ResponseBody UsersVO login(UsersVO vo) {
   return vo;
 }
 ```
-
-## eclipse-maven-plugin 배포 : pom.xml에 plugin 추가
-
-- run as config에 goals : `tomcat7:redeploy`
-  ```xml
-  <plugin>
-      <groupId>org.apache.tomcat.maven</groupId>
-      <artifactId>tomcat7-maven-plugin</artifactId>
-      <version>2.2</version>
-      <configuration>
-          <path>/</path>
-          <url>http://211.238.142.123:80/manager/text</url>
-          <username>itmenu</username>
-          <password>unemti</password>
-      </configuration>
-  </plugin>
-  ```
-
-- tomcat-users.xml
-  ```xml
-  <role rolename="admin-gui"/>
-  <role rolename="manager-gui"/>
-  <role rolename="manager-script"/>
-  <user username="tomcat" password="tomcat"  roles="admin-gui,manager-gui,manager-script" />
-  ```
-
-- 배포를 한 적이 있다면 다음 배포 이전에 mvn clean을 실행

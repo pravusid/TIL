@@ -19,6 +19,7 @@
     </ol>
   </div>
   ```
+
   ```js
     Vue.component('todo-item', {
     props: ['todo'],

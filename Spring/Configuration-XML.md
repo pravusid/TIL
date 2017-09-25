@@ -1,12 +1,5 @@
 # Spring 설정 XML편
 
-## server.xml (tomcat)
-
-```xml
-<!-- Encoding Filter(GET) -->
-<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8"/>
-```
-
 ## web.xml
 
 ```xml
@@ -160,39 +153,4 @@
     <beans:bean class="com.idpravus.users.UsersInterceptor" />
   </mvc:interceptor>
 </mvc:interceptors>
-```
-
-## ViewResolver로 Tiles 활용
-
-default.jsp
-
-```jsp
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<tiles:insertAttribute name="header"/>
-```
-
-tiles.xml
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE tiles-definitions PUBLIC
-"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
-<tiles-definitions>
-  <definition name="default" template="/WEB-INF/views/default.jsp">
-    <put-attribute name="header" value="/WEB-INF/views/header.jsp"/>
-    <put-attribute name="navi" value="/WEB-INF/views/navi.jsp"/>
-    <put-attribute name="body" value="/WEB-INF/views/body.jsp"/>
-    <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
-  </definition>
-  <definition name="*" extends="default">
-    <put-attribute name="body" value="/WEB-INF/views/{1}.jsp"/>
-  </definition>
-  <definition name="*/*" extends="default">
-    <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp"/>
-  </definition>
-  <definition name="*/*/*" extends="default">
-    <put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
-  </definition>
-</tiles-definitions>
 ```
