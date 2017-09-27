@@ -6,7 +6,7 @@
 
 ## vue-cli 사용
 
-NPM으로 vue와 vue-cli 패키지 설치
+yarn으로 vue와 vue-cli 패키지 설치
 
 `yarn global add vue vue-cli`
 
@@ -14,7 +14,9 @@ NPM으로 vue와 vue-cli 패키지 설치
 
 `$ vue init <template-name> <project-name>`
 
-템플릿으로는 webpack을 사용(starter)
+- template
+  - webpack : A full-featured Webpack + vue-loader setup with hot reload, linting, testing & css extraction.
+  - webpack-simple : A simple Webpack + vue-loader setup for quick prototyping.
 
 ```sh
 vue init webpack vue-example-project
@@ -35,28 +37,11 @@ npm run e2e
 npm test
 ```
 
-### 프로젝트 생성시 설정
+### Nuxt.js template
 
-```sh
-# Vue 빌드 선택 : 두 개 중에서 선택할 수 있으며, 기본선택은 Runtime + Compiler
-# 두 번째 선택은 6KB의 가벼운 min+gzip으로 이루어져 있는 런타임전용. 템플릿은 .vue에서만 허용
-? Vue build
-- Runtime + Compiler: recommended for most users
-- Runtime-only: about 6KB lighter min+gzip, but templates (or any Vue-specific HTML) are ONLY allowed in .vue files - render functions are required elsewhere
-# vue-router사용여부
-? Install vue-router? (Y/n)
-# ESLint 적용여부
-? Use ESLint to lint your code? (Y/n)
-# ESLint 스타일 (AirBnB 사용 추천)
-? Pick an ESLint preset
-- Standard (https://github.com/feross/standard)
-- Airbnb (https://github.com/airbnb/javascript)
-- none (configure it yourself)
-# 유닛테스트 Karma, Mocha 적용 여부
-? Setup unit tests with Karma + Mocha? (Y/n)
-# UI테스트 툴 Nightwatch 적용 여부
-? Setup e2e tests with Nightwatch? (Y/n)
-```
+Vue 2 + Vue-Router + Vuex + Vue-Meta
+
+`vue init nuxt-community/starter-template <project-name>`
 
 ### modules 다운로드
 
@@ -175,6 +160,9 @@ npm 을 이용한 기능들은 아래와 같다.
 ```html
 <style lang="css">
   @import './assets/yourstyles.css'
+## Nuxt.js
+
+`vue init nuxt-community/starter-template <project-name>`
 </style>
 ```
 
@@ -202,18 +190,9 @@ require('./assets/sass/main.scss');
 
 ## eslint 사용
 
-### 프로젝트에서 사용
-
 ```sh
 sudo npm install --save-dev
 eslint eslint-config-airbnb eslint-friendly-formatter eslint-loader eslint-plugin-html eslint-plugin-vue eslint-plugin-import eslint-plugin-node eslint-plugin-promise eslint-plugin-standard
-```
-
-### VS code 에서 global 사용
-
-```sh
-sudo npm -g install
-eslint eslint-config-airbnb-base eslint-plugin-import eslint-plugin-html eslint-plugin-vue
 ```
 
 .eslintrc.json 에 추가

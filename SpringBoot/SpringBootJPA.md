@@ -138,7 +138,7 @@ native query를 사용할 수 있다
   User findByEmailAddress(String emailAddress);
   ```
 
-#### 쿼리 생성 후 slice, sort 제어
+#### 쿼리문 생성 후 slice, sort 제어
 
 ```java
 Page<User> findByLastname(String lastname, Pageable pageable);
