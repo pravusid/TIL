@@ -190,18 +190,33 @@ require('./assets/sass/main.scss');
 
 ## eslint 사용
 
+### global
+
 ```sh
-sudo npm install --save-dev
+sudo npm -g install
 eslint eslint-config-airbnb eslint-friendly-formatter eslint-loader eslint-plugin-html eslint-plugin-vue eslint-plugin-import eslint-plugin-node eslint-plugin-promise eslint-plugin-standard
 ```
 
-.eslintrc.json 에 추가
+### local
+
+`yarn add --dev eslint eslint-plugin-vue@beta eslint-config-airbnb-base`
+
+.eslintrc.js 에 추가
 
 ```json
-"extends": [
-    "airbnb-base"
-],
-"plugins": [
-    "vue/recommanded"
-],
+module.exports = {
+  parserOptions: {
+    parser: 'babel-eslint',
+    ecmaVersion: 2017,
+    sourceType: 'module',
+  },
+  extends: [
+    'airbnb-base',
+    'plugin:vue/recommended', // or 'plugin:vue/base'
+  ],
+  rules: {
+    // override/add rules' settings here
+    'vue/valid-v-if': 'error',
+  },
+};
 ```
