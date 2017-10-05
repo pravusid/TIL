@@ -27,39 +27,43 @@ The on() method attaches one or more event handlers for the selected elements.
 
 ### Dropdown collapse 처리 예시
 
-  ```javascript
-  var login = function(e) {
-    e.stopPropagation(e);
-    $.ajax({
-      type : 'POST',
-      url : '/login',
-      data : {
-        'email' : $('#login-email').val(),
-        'pwd' : $('#login-password').val()
-      },
-      success : function(resp) {
-        if (resp.result=="no") {
-          $('#login-alert').slideDown(500).delay(2000).slideUp(500);
-        } else {
-          alert("로그인성공");
-          $('#login-form').dropdown("toggle");
-        }
+```javascript
+var login = function(e) {
+  e.stopPropagation(e);
+  $.ajax({
+    type : 'POST',
+    url : '/login',
+    data : {
+      'email' : $('#login-email').val(),
+      'pwd' : $('#login-password').val()
+    },
+    success : function(resp) {
+      if (resp.result=="no") {
+        $('#login-alert').slideDown(500).delay(2000).slideUp(500);
+      } else {
+        alert("로그인성공");
+        $('#login-form').dropdown("toggle");
       }
-    });
-  };
-  $('#login-form').bind('click', function(e) {
-    e.stopPropagation()
-  });
-  $('#login-alert').hide();
-  $('#login-btn').click(function(e) {
-    login(e);
-  });
-  $('#login-email, #login-password').keypress(function(e) {
-    if (e.keyCode == '13') {
-      login(e)
     }
   });
-  ```
+};
+
+$('#login-form').bind('click', function(e) {
+  e.stopPropagation()
+});
+
+$('#login-alert').hide();
+
+$('#login-btn').click(function(e) {
+  login(e);
+});
+
+$('#login-email, #login-password').keypress(function(e) {
+  if (e.keyCode == '13') {
+    login(e)
+  }
+});
+```
 
 ## JQuery AJAX
 

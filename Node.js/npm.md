@@ -2,6 +2,15 @@
 
 ## npm 기초명령어
 
+### 의존성 추가
+
+1. 'npm install': ./node_modules 패키지 설치
+1. 'npm install --save / --save-dev` ./node_modules에 패키지 설치 + ./package.json 업데이트
+
+운영이 아닌 개발 단계에서만 필요한 의존성 모듈들은 devDependencies 에 설치
+
+peerDependencies는 현재 모듈과 다른 모듈간의 호환성 표시 (npm install시 node_modules에 설치되지 않음)
+
 ### npm삭제, npm global modules 모두 삭제
 
 `sudo npm list -g --depth=0. | awk -F ' ' '{print $2}' | awk -F '@' '{print $1}'  | sudo xargs npm remove -g`
