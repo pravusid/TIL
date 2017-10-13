@@ -39,6 +39,10 @@ docker run -d -p 3306:3306 \
 | --------- | -------- |
 | -a(--all) | 전체 목록 출력 |
 
+## docker start
+
+`docker start [OPTIONS] CONTAINER [CONTAINER...]`
+
 ## docker stop
 
 `docker stop [OPTIONS] CONTAINER [CONTAINER...]`
