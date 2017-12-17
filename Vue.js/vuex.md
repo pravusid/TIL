@@ -143,26 +143,6 @@ this.$store.commit('increment', {
 });
 ```
 
-#### Mutations에 상수사용
-
-```js
-// mutation-types.js
-export const SOME_MUTATION = 'SOME_MUTATION';
-
-// store.js
-import Vuex form 'vuex';
-import { SOME_MUTATION } from './mutation-types';
-
-const store = new Vuex.Store({
-  state: { ... },
-  mutations: {
-    [SOME_MUTATION] (state) {
-      /* ... */
-    }
-  }
-});
-```
-
 ### 컴포넌트 내부에서 mapMutations 사용
 
 ```js
@@ -346,3 +326,154 @@ spread연산자를 사용하면 로컬의 computed 속성과 함께 사용가능
   }
 // ...
 ```
+
+## 모듈화
+
+Vuex는 저장소를 모듈로 나눌 수 있다. 각 모듈은 자체 상태, 변이, 액션, 게터 및 중첩된 모듈을 포함할 수 있다.
+
+```js
+const moduleA = {
+  state: { ... },
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
+}
+
+const moduleB = {
+  state: { ... },
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
+}
+
+const store = new Vuex.Store({
+  modules: {
+    a: moduleA,
+    b: moduleB
+  }
+})
+
+store.state.a; // moduleA 의 state
+store.state.b; // moduleB 의 state
+```
+
+모듈의 `mutations` 와 `getters` 내부에서 첫 번째 전달인자는 **모듈의 지역상태** 가 된다.
+
+```js
+const moduleA = {
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      // state는 지역 모듈 상태
+      state.count++;
+    }
+  },
+  getters: {
+    doubleCount (state) {
+      return state.count * 2;
+    }
+  }
+}
+```
+
+모듈 `getters` 내부에서 `rootState`는 세 번째 전달인자로 전해진다
+
+```js
+const mouduleA = {
+  //...
+  getters: {
+    sumWithRootCount (state, getters, rootstate) {
+      return state.count + rootState.count;
+    }
+  }
+}
+```
+
+`actions`의 `context.state`는 지역상태이고 `context.rootState`는 전역 상태이다.
+
+```js
+// ...
+actions: {
+  incrementIfOddOnRootSum ({ state, commit, rootState }) {
+    if ((state.count + rootState.count) % 2 === 1) {
+      commit('increment');
+    }
+  }
+}
+```
+
+## 네임스페이스
+
+### 네임스페이스를 상수로 등록
+
+```js
+// mutation-types.js
+export const SOME_MUTATION = 'SOME_MUTATION';
+
+// store.js
+import Vuex form 'vuex';
+import { SOME_MUTATION } from './mutation-types';
+
+const store = new Vuex.Store({
+  state: { ... },
+  mutations: {
+    [SOME_MUTATION] (state) {
+      /* ... */
+    }
+  }
+});
+```
+
+### 모듈 네임스페이스
+
+모듈내의 action, mutation, getter는 전역 네임스페이스에 등록된다.
+여러 모듈 사용시 이름충돌을 피하기 위해서 접두사 또는 접미사를 붙여 모듈 자신의 네임스페이스를 지정할 수 있다.
+
+```js
+// types.js
+// getter, action, mutation의 이름을 상수로 정의하고 모듈이름 `todos` 접두어를 붙인다.
+export const DONE_COUNT = 'todos/DONE_COUNT';
+export const FETCH_ALL = 'todos/FETCH_ALL';
+export const TOGGLE_DONE = 'todos/TOGGLE_DONE';
+
+// modules/todos.js
+import * from types from '../types';
+
+const todosModule = {
+  state: {
+    todos: []
+  },
+  getters: {
+    [types.DONE_COUNT] (state) {
+      // ...
+    }
+  },
+  actions: {
+    [types.FETCH_ALL] (context, payload) {
+      // ...
+    }
+  },
+  mutations: {
+    [types.TOGGLE_DONE] (state, payload) {
+      // ...
+    }
+  }
+}
+```
+
+## 동적 모듈등록
+
+`store.registerModule` 메소드로 저장소가 생상 된 후에 모듈등록 가능
+
+```js
+store.registerModule('myModule', {
+  // ...
+})
+```
+
+이 때 모듈 상태는 `store.state.myModule`으로 접근가능
+
+`store.unregisterModule(moduleName)`을 사용하여 동적으로 등록된 모듈을 제거할 수 있다.
+이 방법으로는 저장소 생성시 선언된 정적모듈은 제거할 수 없다.
