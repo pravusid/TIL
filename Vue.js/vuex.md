@@ -205,7 +205,7 @@ actions: {
 액션 사용은 dispatch 메소드 사용
 
 ```js
-this.$store.dispatch('increment`);
+this.$store.dispatch('increment');
 ```
 
 `commit`이 아니라 `dispatch`를 사용하는 것은 비동기 작업을 염두에 둔 것
