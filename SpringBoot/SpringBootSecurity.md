@@ -47,6 +47,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/").permitAll()
         .antMatchers("/mypage/**").hasAnyAuthority(Authority.USER.getAuthority(), Authority.ADMIN.getAuthority())
         .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
+        .antMatchers("/h2-console/**").permitAll()
+        .and()
+      // 추가 h2-console 관련설정
+      .csrf()
+        .ignoringAntMatchers("/h2-console/**")
+        .and()
+      .headers()
+        .addHeaderWriter(new XFrameOptionsHeaderWriter(new WhiteListedAllowFromStrategy(Arrays.asList("localhost"))))
         .and()
       // 로그인 관련 설정, username과 password Column과 form name이 다르다면 명시해주자
       .formLogin()
