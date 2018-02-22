@@ -1,4 +1,4 @@
-# JPA - hibernate
+# Spring Data JPA
 
 ## 시작
 
