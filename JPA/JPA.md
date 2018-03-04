@@ -68,17 +68,14 @@ JPA와 하이버네이트를 사용하기 위해서는 다음의 라이브러리
 
 ## 영속성 관리
 
-## 객체 매핑 : 기본 어노테이션
+## 객체 매핑
 
 - `@Entity` : 매핑 대상이 되는 클래스를 알려준다
 - `@Table` : Entity와 매핑되는 테이블을 알려준다. 생략시 클래스 이름(Entity 이름)을 테이블 이름으로 매핑한다.
-- `@Id` : Entity 클래스의 필드를 테이블의 Primary Key와 매핑한다. @Id가 사용된 필드를 식별자 필드라 한다.
-- `@Column` : 필드를 컬럼에 매핑한다. 대소문자를 구분하는 DB에서는 생략하지 말고 명시해야한다. 생략시 필드명이 컬럼명에 매핑되고 camelcase의 경우 snakecase로 변환된다.
-- `@Enumerated`: 자바 enum과 매핑
 
 ### 기본키 매핑
 
-`@id` 어노테이션 사용
+`@Id` : Entity 클래스의 필드를 테이블의 Primary Key와 매핑한다. @Id가 사용된 필드를 식별자 필드라 한다.
 
 #### 기본키 직접할당
 
@@ -89,7 +86,9 @@ JPA와 하이버네이트를 사용하기 위해서는 다음의 라이브러리
 DMBS마다 지원방식이 다르므로 사용에 유의, (`@GeneratedValue(strategy = {전략명}`)
 
 - AUTO: DBMS에 따라 자동으로 방식을 선택한다 (Oracle:SEQUENCE, MYSQL:IDENTITY ...)
-- IDENTITY: 기본키 생성을 DBMS에 위임 (MYSQL AUTO_INCREMENT 해당), 영속상태를 위해서는 식별자가 필요하므로 트랜잭션을 지원하는 쓰기지연에 사용할 수 없음. (데이터베이스에 Entity 저장하여 식별자 획득 후 영속성 컨텍스트에 저장함)
+- IDENTITY: 기본키 생성을 DBMS에 위임 (MYSQL AUTO_INCREMENT 해당),
+  영속상태를 위해서는 식별자가 필요하므로 트랜잭션을 지원하는 쓰기지연에 사용할 수 없음.
+  (데이터베이스에 Entity 저장하여 식별자 획득 후 영속성 컨텍스트에 저장함)
   ```java
   @Entity
   public class User {
@@ -108,7 +107,8 @@ DMBS마다 지원방식이 다르므로 사용에 유의, (`@GeneratedValue(stra
     private Long id;
   }
   ```
-  - allocationSize 기본값은 50인데 이는 시퀀스에 접근하는 수를 줄이기 위해서이다. allocationSize 크기만큼 JPA가 메모리에서 식별자를 할당하고 INSERT를 일괄 진행하는 형태이다.
+  - allocationSize 기본값은 50인데 이는 시퀀스에 접근하는 수를 줄이기 위해서이다.
+    allocationSize 크기만큼 JPA가 메모리에서 식별자를 할당하고 INSERT를 일괄 진행하는 형태이다.
 - TABLE: 키 생성 테이블 사용
   ```java
   @Entity
@@ -122,6 +122,60 @@ DMBS마다 지원방식이 다르므로 사용에 유의, (`@GeneratedValue(stra
   - Table 전략은 키 조회, 키 증가시 각각 DB에 접근하는 단점이 있다 (2회)
 
 ### 필드와 컬럼 매핑
+
+#### `@Column`
+
+필드를 컬럼에 매핑한다. 대소문자를 구분하는 DB에서는 생략하지 말고 명시해야한다.
+생략시 필드명이 컬럼명에 매핑되고 camelcase의 경우 snakecase로 변환된다
+
+속성 정리
+| 속성 | 기능 | 기본값 |
+| --- | --- | --- |
+| name | 필드와 매핑할 테이블의 컬럼이름 | 객체의 필드 이름 |
+| table | 하나의 엔티티를 두 개 이상의 테이블에 매핑 | 현재 매핑 테이블 |
+| precision, scale | DDL 생성시 소수 포함 전체 자릿수, 소수의 자릿수 지정. BigDecimal 에서 사용 | |
+| nullable | DDL 생성시 not null 제약조건 | true |
+| unique | DDL 생성시, 한 컬럼에 Unique 제약조건시, 두 개 이상은 @Table에서 지정 | |
+| length | 문자 길이 제약조건, String에 사용 | 255 |
+| columnDefinition | DDL 생성시 옵션 직접 기입 | |
+
+#### `@Enumerated`
+
+자바 enum과 매핑할 때 사용.
+기본값은 enum의 순서가 저장되는 ORDINAL이나 값 변경 추적이 불가하므로 STRING 사용이 권장됨
+
+- `EnumType.ORDINAL`: enum 순서를 데이터베이스에 저장 (기본 값)
+- `EnumType.STRING`: enum 이름을 데이터베이스에 저장
+
+#### `@Temporal`
+
+날짜 타입(java.util.Date, java.util.Calendar) 매핑시 사용
+`@Temporal` 생략 시 timestamp(datetime)과 매핑 됨
+
+- `TemporalType.DATE`: (날짜) 데이터베이스 date 타입과 매핑
+- `TemporalType.TIME`: (시각) 데이터베이스 time 타입과 매핑
+- `TemporalType.TIMESTAMP`: (날짜와 시각) 데이터베이스 timestamp 타입과 매핑
+
+#### `@Lob`
+
+BLOB, CLOB 타입 매핑
+
+- CLOB과 매핑되는 Java Type: String, Char[], java.sql.CLOB
+- BLOB과 매핑되는 Java Type: byte[], java.sql.BLOB
+
+#### `@Transient`
+
+해당 필드를 데이터베이스와 매핑하지 않는다 (저장, 조회 둘다 하지 않는다)
+
+#### `@Access`
+
+JPA가 Entity에 접근하는 방식을 지정한다
+
+- `AccessType.FIELD`: 필드에 직접 접근 (private여도 접근함)
+- `AccessType.PROPERTY`: getter로 접근
+
+`@Access`를 명시 하지 않으면 `@Id`의 위치에 따라 달라진다.
+(변수에 위치: FIELD, getter에 위치: PROPERTY)
 
 ## 연관관계 매핑 기초
 
