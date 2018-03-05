@@ -68,6 +68,29 @@ JPA와 하이버네이트를 사용하기 위해서는 다음의 라이브러리
 
 ## 영속성 관리
 
+### EntityManagerFactory
+
+- EntityManagerFactory는 보통 하나를 생성하여 공유한다.
+- 생성될 때 커넥션풀도 생성한다.
+- Thread safe 하다.
+
+### EntityManager
+
+- EntityManager는 EntityManagerFactory로 부터 생성한다.
+- EntityManager는 연결이 실제로 필요한 시점까지 커넥션을 획득하지 않는다.
+- EntityManager는 Thread safe하지 않다.
+
+### 영속성 컨텍스트 (Persistence context)
+
+Java 내에서 데이터베이스 계층(persistence layer)과 동기화하는 Entity 저장환경이라고 볼 수 있다.
+
+#### 영속성 컨텍스트와 관련한 Entity의 생명주기
+
+- 비영속(transient): 영속성 컨텍스트와 전혀 관계가 없는 상태
+- 영속(managed): 영속성 컨텍스트에 저장된 상태
+- 준영속/분리됨(detached): 영속성 컨텍스트에 저장되었다 분리된 상태
+- 삭제(removed): 영속성 컨텍스트에서 삭제된 상태
+
 ## 객체 매핑
 
 - `@Entity` : 매핑 대상이 되는 클래스를 알려준다
