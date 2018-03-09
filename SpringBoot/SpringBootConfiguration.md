@@ -57,10 +57,10 @@ spring:
     console:
       enabled: true
   datasource:
-#    url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+#    url: jdbc:mysql://192.168.1.35/idpravus?autoReconnect=true&useUnicode=true&characterEncoding=utf8
 #    username: user
 #    password: pwd
-    url: jdbc:h2:mem:dbname
+    url: jdbc:h2:mem:idpravus
     username: sa
     password:
 
