@@ -29,6 +29,9 @@ JPA와 하이버네이트를 사용하기 위해서는 다음의 라이브러리
   <!-- 영속성유닛 등록 / transaction-type 설정 -->
   <persistence-unit name="unitname">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <!-- @Entity 등록 -->
+    <class>kr.pravusid.domain.User</class>
+    <class>kr.pravusid.domain.Board</class>
     <properties>
       <!-- 필수속성 -->
       <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
