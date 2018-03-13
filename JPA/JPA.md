@@ -156,36 +156,36 @@ DMBS마다 지원방식이 다르므로 사용에 유의, (`@GeneratedValue(stra
 - IDENTITY: 기본키 생성을 DBMS에 위임 (MYSQL AUTO_INCREMENT 해당),
   영속상태를 위해서는 식별자가 필요하므로 트랜잭션을 지원하는 쓰기지연에 사용할 수 없음.
   (데이터베이스에 Entity 저장하여 식별자 획득 후 영속성 컨텍스트에 저장함)
-  ```java
-  @Entity
-  public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-  }
-  ```
+    ```java
+    @Entity
+    public class User {
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      private Long id;
+    }
+    ```
 - SEQUENCE: 데이터베이스 시퀀스를 사용하여 기본키 할당 (오라클...)
-  ```java
-  @Entity
-  public class User {
-    @Id
-    @SequenceGenerator(name = "{NAME}", sequenceName = "{데이터베이스의 시퀀스}", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "{NAME}")
-    private Long id;
-  }
-  ```
+    ```java
+    @Entity
+    public class User {
+      @Id
+      @SequenceGenerator(name = "{NAME}", sequenceName = "{데이터베이스의 시퀀스}", initialValue = 1, allocationSize = 1)
+      @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "{NAME}")
+      private Long id;
+    }
+    ```
   - allocationSize 기본값은 50인데 이는 시퀀스에 접근하는 수를 줄이기 위해서이다.
     allocationSize 크기만큼 JPA가 메모리에서 식별자를 할당하고 INSERT를 일괄 진행하는 형태이다.
 - TABLE: 키 생성 테이블 사용
-  ```java
-  @Entity
-  @TableGenerator(name = "{NAME}", table = "{TABLE_NAME}", pkColumnValue = "USER_SEQ", allocationSize = 1)
-  public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "{NAME}")
-    private Long id;
-  }
-  ```
+    ```java
+    @Entity
+    @TableGenerator(name = "{NAME}", table = "{TABLE_NAME}", pkColumnValue = "USER_SEQ", allocationSize = 1)
+    public class User {
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "{NAME}")
+      private Long id;
+    }
+    ```
   - Table 전략은 키 조회, 키 증가시 각각 DB에 접근하는 단점이 있다 (2회)
 
 ### 필드와 컬럼 매핑
