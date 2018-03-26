@@ -110,7 +110,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 
 `<span th:utext="${variable}"></span>`
 
-#### attribute concat String
+#### concat attribute and String
 
 `th:text="'static part' + ${attr.field}"`
 
