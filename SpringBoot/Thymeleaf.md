@@ -110,6 +110,16 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 
 `<span th:utext="${variable}"></span>`
 
+#### attribute concat String
+
+`th:text="'static part' + ${attr.field}"`
+
+`th:text="${'static part' + attr.field}"`
+
+#### inline expression (3버전 이상부터 지원)
+
+`[[${session.user.name}]]`
+
 ### 반복문
 
 ```html
