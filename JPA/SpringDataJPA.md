@@ -7,6 +7,7 @@
 ## 초기설정
 
 - build.gradle에 추가
+
   ```groovy
   compile('org.springframework.boot:spring-boot-starter-data-jpa')
   runtime('mysql:mysql-connector-java')
@@ -15,6 +16,7 @@
 
 - application.properties
   > The data source properties starting with spring.datasource.* will automatically be read by spring boot JPA. To change the hibernate properties we will use prefix spring.jpa.properties.* with hibernate property name. On the basis of given data source URL, spring boot can automatically identify data source driver class. So we need not to configure diver class.
+
   ```text
   # JDBC 사용할 때
   spring.datasource.driver-class-name=com.mysql.jdbc.Driver
@@ -116,9 +118,25 @@ True | `findByActiveTrue()` | … where x.active = true
 False | `findByActiveFalse()` | … where x.active = false
 IgnoreCase | `findByFirstnameIgnoreCase` | … where UPPER(x.firstame) = UPPER(?1)
 
+결과 개수를 지정하여 조회할 수도 있다.
+
+```java
+User findFirstByOrderByLastnameAsc();
+
+User findTopByOrderByAgeDesc();
+
+Page<User> queryFirst10ByLastname(String lastname, Pageable pageable);
+
+Slice<User> findTop3ByLastname(String lastname, Pageable pageable);
+
+List<User> findFirst10ByLastname(String lastname, Sort sort);
+
+List<User> findTop10ByLastname(String lastname, Pageable pageable);
+```
+
 #### @Query 사용
 
-@Query 어노테이션으로 직접 query를 작성할 수 있다.
+@Query 어노테이션으로 직접 query를 작성할 수 있다(JPQL).
 
   ```java
   @Query("select u from User u where u.firstname like %?1")
@@ -142,8 +160,11 @@ native query를 사용할 수 있다
 
 ```java
 Page<User> findByLastname(String lastname, Pageable pageable);
+
 Slice<User> findByLastname(String lastname, Pageable pageable);
+
 List<User> findByLastname(String lastname, Sort sort);
+
 List<User> findByLastname(String lastname, Pageable pageable);
 ```
 
@@ -202,9 +223,52 @@ public Page<T> findAll(String keyword, Pageable pageable){
 `PagingAndSortingRepository`에는 페이지 단위 입출력이 이미 구현되어 있다.
 Pageable interface를 활용하는데 컨트롤러 매개변수 `Pageable pageable`로 구현체를 생성한다.
 
-`Page<t> list = fooRepository.findAll(pageable);` 으로 페이지단위 데이터를 받아온다
+`Page<T> list = fooRepository.findAll(pageable);` 으로 페이지단위 데이터를 받아온다
 
 페이지조회 조건을 주려면 `@PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable`
+
+사용자정의 조회 method에서도 두번째 인자로 사용할 수 있다.
+
+```java
+// repository interface 에 선언
+Page<Emp> findFirst10ByJob(String job, Pageable pageable); // 페이징
+List<Emp> findFirst10ByJob(String job, Sort sort); // 정렬
+```
+
+`Page<T> extends Slice<T>` 인터페이스에서 제공하는 method는 다음과 같다
+해당하는 getter를 template engine에서 불러와서 사용할 수 있다. (`content`는 생략가능)
+
+```java
+long getTotalElements();  // 전체 데이터 개수
+int getTotalPages();  // 전체 페이지 수
+
+List<T> getContent(); // 조회된 데이터 목록
+int getNumber();  // 현재 페이지 (0 ~)
+int getNumberOfElements();  //현재 페이지 게시물 수
+int getSize();  // 가져온 게시물 수
+Sort getSort();  // 정렬정보
+boolean isFirst();  // 현재 페이지가 첫 페이지인지
+boolean isLast();  // 현재 페이지가 마지막 페이지 인지
+```
+
+반환받은 페이지 객체를 직렬화한 형태는 다음과 같다.
+
+```json
+{
+  "links" : [ { "rel" : "next",
+                "href" : "http://localhost:8080/persons?page=1&size=20" }
+  ],
+  "content" : [
+     … // 20 Person instances rendered here
+  ],
+  "pageMetadata" : {
+    "size" : 20, // 가져온 게시물 수
+    "totalElements" : 30, // 전체 게시물 수
+    "totalPages" : 2, // 전체 페이지
+    "number" : 0 // 현재 페이지
+  }
+}
+```
 
 ### 상위 Entity, Auditing
 
