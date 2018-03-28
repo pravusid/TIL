@@ -112,9 +112,13 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 
 #### concat attribute and String
 
-`th:text="'static part' + ${attr.field}"`
+`<span th:text="|Welcome to our application, ${user.name}!|">`
 
-`th:text="${'static part' + attr.field}"`
+아래의 방법으로도 가능하다.
+
+`<span th:text="'Welcome to our application, ' + ${user.name} + '!'">`
+
+`<span th:text="${onevar} + ' ' + |${twovar}, ${threevar}|">`
 
 #### inline expression (3버전 이상부터 지원)
 
@@ -144,7 +148,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 삼항 연산자도 사용 가능하다
 
   ```html
-  <tr th:class="${row.even}? (${row.first}? 'first' : 'even') : 'odd'">
+  <tr th:classappend="${row.even}? (${row.first}? 'first' : 'even') : 'odd'">
     ...
   </tr>
   ```
@@ -168,7 +172,26 @@ switch문
 
 ## 레이아웃 (Layout)
 
-- th:insert : th:insert를 선언한 태그를 유지하고 내부에 fragment 전체를 가져옴
+- `th:fragment` 태그로 레이아웃이 될 내용을 지정한다.
+
+```html
+<html>
+<head th:fragment="header">
+  ...
+</head>
+<body>
+  <nav th:fragment="nav">
+    ...
+  </nav>
+  <div th:fragment="footer">
+    ...
+  </div>
+</body>
+</html>
+```
+
+- `th:insert`를 선언한 태그를 유지하고 내부에 fragment 전체를 가져옴
+- 가져올 대상은 `{파일명} :: {fragment명}` 순서
 
   ```html
   <div th:insert="footer :: copy"></div>
