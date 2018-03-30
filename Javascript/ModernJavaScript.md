@@ -37,12 +37,12 @@ Flow는 Facebook 주도로 개발되고 있는 자바스크립트 정적타입 �
 
 개인 개발자들의 프로젝트 위주였다
 
- - John Resig(jQuery)
- - Jeremy Ashkenas(Backbone, Underscore)
- - Thomas Fuchs(Zepto, script.aculo.us)
- - Mihai Baizon(Uglify)
- - Eric Schoffstall(Gulp)
- - Ben Alman(Grunt)
+- John Resig(jQuery)
+- Jeremy Ashkenas(Backbone, Underscore)
+- Thomas Fuchs(Zepto, script.aculo.us)
+- Mihai Baizon(Uglify)
+- Eric Schoffstall(Gulp)
+- Ben Alman(Grunt)
 
 ### 최근의 프레임워크 / 라이브러리
 
@@ -53,4 +53,4 @@ Flow는 Facebook 주도로 개발되고 있는 자바스크립트 정적타입 �
 
 커뮤니티 프로젝트
 
-- Vue.js
+- Vue.js (Evan You)

@@ -31,7 +31,7 @@ Note: Ubuntu 17.04 comes with cmdtest installed by default. If you’re getting 
 
 **설치이후 global package binaries 경로를 환경변수로 설정해주어야 한다. 기본경로는 `~/.yarn`이고 경로를 변경하면 `경로/bin`에 바이너리가 연결된다**
 
-yarn global bin will output the location where Yarn will install symlinks to your installed binaries. You can configure the base location with yarn config set prefix <filepath>.
+yarn global bin will output the location where Yarn will install symlinks to your installed binaries. You can configure the base location with yarn config set prefix `<filepath>`.
 
 ### 기본 명령어
 
@@ -40,18 +40,13 @@ yarn global bin will output the location where Yarn will install symlinks to you
 
 ### yarn add prefix
 
--  `--dev`(-D) : devDependencies
--  `--peer`(-P) : peerDependencies
--  `--optional`(-O) : optionalDependencies에
--  `--exact`(-E) : 명시한 버전과 정확한 경우에만 설치
--  `--tilde`(-T) : 명시한 버전과 같은 minor 버전의 최신버전 설치 (버전 세 번째 자리)
-
+- `--dev`(-D) : devDependencies (개발용)
+- `--peer`(-P) : peerDependencies (호환성이 있음을 명시: 의존성이 있는것은 아님)
+- `--optional`(-O) : optionalDependencies에
+- `--exact`(-E) : 명시한 버전과 정확한 경우에만 설치
+- `--tilde`(-T) : 명시한 버전과 같은 minor 버전의 최신버전 설치 (버전 세 번째 자리)
 
 ## packages
-
-### axios
-
-http 클라이언트 `npm install --save axios`
 
 ### bootstrap
 
