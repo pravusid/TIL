@@ -77,9 +77,11 @@ yarn add --dev babel-eslint babel-jest babel-register
 ### `.eslintrc.js`
 
 ```js
-{
+module.exports = {
   parser: 'babel-eslint',
-  plugins: ['import', 'jest'],
+  plugins: [
+    'import', 'jest'
+  ],
   parserOptions: {
     ecmaVersion: 2017,
     sourceType: 'module',
@@ -88,12 +90,14 @@ yarn add --dev babel-eslint babel-jest babel-register
     node: true,
     jest: true,
   },
-  extends: ['eslint:recommended'],
+  extends: [
+    'airbnb-base'
+  ],
   rules: {
     'jest/no-focused-tests': 2,
     'jest/no-identical-title': 2,
   },
-}
+};
 ```
 
 ## template engine
