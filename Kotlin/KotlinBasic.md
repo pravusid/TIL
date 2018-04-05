@@ -421,3 +421,79 @@ fun readNumber(reader: BufferedReader) {
 ```
 
 ## 함수 정의와 호출
+
+함수예제
+
+```kt
+fun <T> joinToString(
+  collection: Collection<T>,
+  separator: String,
+  prefix: String,
+  postfix: String
+): String {
+  val result = StringBuilder(prefix)
+  for ((index, element) in collection.withIndex()) {
+    if (index > 0) result.append(separator)
+    result.append(element)
+  }
+  result.append(postfix)
+  return result.toString()
+}
+```
+
+### 파라미터
+
+#### 파라미터 이름
+
+위에서 만든 함수 호출시 가독성을 위해서 인자의 이름을 명시할 수 있다.
+인자를 명시하고 나면 그 뒤에 오는 모든인자의 이름을 명시해야 한다.
+
+```kt
+joinToString(collection, separator = " ", prefix = " ", postfix = ".")
+```
+
+#### 디폴트 파라미터
+
+코틀린에서는 디폴트 파라미터를 이용하여 불필요한 Method Overloading을 피할 수 있다.
+
+```kt
+fun <T> joinToString(
+  collection: Collection<T>,
+  separator: String = ", ",
+  prefix: String = "",
+  postfix: String = ""
+): String
+```
+
+collection과 separator 호출시 뒤의 인수 두개는 생략가능
+
+`joinToString(list, "; ")`
+
+중간 인자를 생략하고 뒤의 인수를 호출한다면 인자 이름을 붙여서 호출해야한다.
+
+`joinToString(list, postfix = ";", prefix="# ")`
+
+> 만약 자바에서 코틀린 함수를 호출 할 때 디폴트 파라미터로 오버로딩한 함수를 호출하고 싶다면 `@JvmOverloads` 코틀린 함수 어노테이션을 사용하면 된다.
+
+### 최상위 함수
+
+코틀린에서는 특정한 클래스에 포함할 필요가 없는 메소드 (유틸성 메소드)를 클래스 밖에서 선언할 수 있다.
+
+```kt
+@file:JvmName("StringFunctions") // 클래스 이름을 파일명과 다르게 할 때 어노테이션을 사용할 수 있다.
+package strings
+fun joinToString(...): String { ... }
+```
+
+이 경우 바이너리 코드로 컴파일되면 소스가 명시된 파일명으로 생성된 클래스의 static method로 작동한다.
+
+#### 최상위 프로퍼티
+
+프로퍼티 역시 최상위 수준에 놓을 수 있다.
+
+```kt
+var opCount = 0
+fun performOperation() {
+  opCount++
+}
+```
