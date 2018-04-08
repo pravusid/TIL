@@ -475,7 +475,9 @@ collection과 separator 호출시 뒤의 인수 두개는 생략가능
 
 > 만약 자바에서 코틀린 함수를 호출 할 때 디폴트 파라미터로 오버로딩한 함수를 호출하고 싶다면 `@JvmOverloads` 코틀린 함수 어노테이션을 사용하면 된다.
 
-### 최상위 함수
+### 최상위 함수와 최상위 프로퍼티
+
+#### 최상위 함수
 
 코틀린에서는 특정한 클래스에 포함할 필요가 없는 메소드 (유틸성 메소드)를 클래스 밖에서 선언할 수 있다.
 
@@ -497,3 +499,16 @@ fun performOperation() {
   opCount++
 }
 ```
+
+정적필드에 해당하는 프로퍼티도 최상위에 놓을 수 있다
+
+`val UNIX_LINE_SEPARATOR = "\n"`
+
+val로 선언한 변수의 경우 getter로 접근해야 하기 때문에 상수로 사용하기에 자연스럽지 않다.
+
+`const val UNIX_LINE_SEPARATOR = "\n"`
+
+const 변경자로 자바의 `public static final` 필드로 컴파일 할 수 있다.
+단 자바의 primary type과 String type의 프로퍼티만 const로 지정할 수 있다.
+
+### 확장 함수와 확장 프로퍼티
