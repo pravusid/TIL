@@ -62,3 +62,56 @@ release 브랜치에 커밋된 버그수정은 다시 develop 브랜치에 백�
 ### 브랜치 업데이트 하기
 
 브랜치를 업데이트할 때는 병합과 리베이스 중 하나를 선택할 수 있다.
+
+원격참조를 통해 추적 브랜치를 업데이트 하는 과정은 일반적으로 pull 명령어를 사용해 실행한다.
+단, pull은 두 가지 별개의 과정, fetch와 merge 또는 fetch와 rebase의 조합이다.
+
+기본적으로 pull 명령어는 병합 전략을 사용해 로컬 브랜치를 업데이트 한다.
+그러나 `-rebase`라는 매개변수를 사용하면 리베이스전략을 사용해 로컬 브랜치를 업데이트 할 수 있다.
+
+> 리베이스를 사용하는 방법에는 두가지가 있다. 첫째, 병합 방법의 대안으로 새로운 작업을 관련 브랜치에 통합하는것. 둘째, 기존의 브랜치에 개별 커밋을 추가, 변경, 삭제하는 식으로 히스토리를 고쳐 해당 히스토리를 간결하게 만드는 것.
+
+두 개의 브랜치가 FF-Merge나 Rebase를 사용하여 병합하면 결과 그래프(history)는 사실상 같다.
+하지만 업데이트를 위해 병합하면 연결이 양방향이 되면서 히스토리 그래프는 상당히 달라질 수 있다.
+
+이런 동기화 문제 때문에 일반적으로 프로젝트에 다시 합칠 작업을 할 때는 추적 브랜치에서 작업하지 않는다.
+브랜치 전략과 상관없이 추적 브랜치는 보통 장기적 브랜치(master / release)에 연결하고 작업 브랜치는 기능이나 티켓 또는 핫픽스 브랜치가 된다.
+
+리베이스를 통한 브랜치 업데이트 작업을 하면 히스토리를 단순화시켜 읽기 쉽게 해준다.
+그러나 여기에는 대가가 따른다. 해당 브랜치 사본에 개발자가 생성한 커밋 객체가 포함된 경우 특히 그렇다.
+자신만의 커밋을 가진 브랜치를 리베이스 하려면 해당 커밋을 새로운 브랜치 팁에 다시 재생해야한다.
+각각의 커밋은 새로운 부모를 갖게 되면서 완전히 새로운 확인자를 할당받게 된다.
+특히 새로운 부모를 할당받는 커밋이 이전에 원격 저장소를 통해 공유된 적이 있다면 혼란을 초래한다.
+새로운 확인자 뿐만아니라 커밋을 재생할 때마다 충돌 해결에 시간이 소요된다.
+
+#### 리베이스를 통한 원격 작업 예시
+
+작업시작을 위한 명령
+
+```sh
+git checkout develop
+git pull --rebase=preserve origin develop
+git checkout -b feature-foobar
+$ 작업을 한다
+git add --all
+git commit
+```
+
+작업완료후 공유를 위한 명령, rebase 이후 로컬 develop 와 feature-foobar 내용이 동일해짐
+
+```sh
+git checkout develop
+git pull --rebase=preserve
+git checkout feature-foobar
+git rebase develop
+git push origin feature-foobar
+```
+
+내가 작업한 브랜치에 rebase로 통합브랜치의 내용을 반영한 것을, 원격통합브랜치에 업데이트
+
+```sh
+git checkout feature-foobar
+git merge --no-ff feature-foobar master
+git branch --delete feature-foobar
+git push --delete origin feature-foobar
+```
