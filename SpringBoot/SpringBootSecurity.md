@@ -39,6 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     web.ignoring().antMatchers("/js/**", "/css/**");
   }
 
+  // 로그인을 위한 autenticationProvider를 설정한다
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      auth.authenticationProvider(authenticationProvider());
+  }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
@@ -87,10 +93,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .rememberMeServices(persistentTokenBasedRememberMeServices());
   }
 
-  // 패스워드 인코더 설정 Bean으로 올려놓으면 알아서 적용된다, 다만 DB에 저장하는 부분만 암호화 해서 처리하면 된다.
+  // 패스워드 인코더 설정 Bean
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  // AutenticationProvider를 bean으로 등록한다. 기본제공되는 AuthencationProvider의 구현체이다.
+  // DaoAuthenticationProvider는 내부적으로 UserDetailsService를 호출해 db에서 사용자를 조회한다.
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+      authProvider.setUserDetailsService(userDetailsService);
+      authProvider.setPasswordEncoder(passwordEncoder());
+      return authProvider;
   }
 
   // 쿠키 기반 Remember Me 설정, Https가 아니라면 SecureCookie가 작동하지 않을 수 있다.
