@@ -8,6 +8,8 @@ Gradle 의존성에 `compile('org.springframework.boot:spring-boot-starter-secur
 
 <https://docs.spring.io/spring-security/site/docs/current/guides/html5/index.html>
 
+회원ID property로 여러 이름을 쓸 수 있겠지만, 불필요한 추가설정을 피하기 위해 `username`을 사용하는 것이 좋다.
+
 ### SecurityConfig.java 파일 생성
 
 ```java
@@ -21,10 +23,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final static String COOKIE_NAME = "IDPRAVUS_AUTH";
 
   private UserDetailsService userDetailsService;
+  private PersistentTokenRepository persistentTokenRepository;
 
-  @Autowired
-  public SecurityConfig(UserDetailsService customUserDetailsService) {
+  public SecurityConfig(UserDetailsService customUserDetailsService,
+      PersistentTokenRepository persistentTokenRepository) {
     this.userDetailsService = customUserDetailsService;
+    this.persistentTokenRepository = persistentTokenRepository;
   }
 
   // 인증설정 (in memory, JDBC ...) 하는데 쓰는 builder, UserDetailsService를 Bean으로 등록하면 별 쓸일 없는듯
@@ -42,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   // 로그인을 위한 autenticationProvider를 설정한다
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      auth.authenticationProvider(authenticationProvider());
+    auth.authenticationProvider(authenticationProvider());
   }
 
   @Override
@@ -65,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // 로그인 관련 설정, username과 password Column과 form name이 다르다면 명시해주자
       .formLogin()
         .loginPage("/login").failureUrl("/login?error").permitAll()
-        .usernameParameter("userId")
+        .usernameParameter("username")
         .passwordParameter("password")
         .defaultSuccessUrl("/")
         .and()
@@ -73,10 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .logout()
         .logoutUrl("/logout")
         .logoutSuccessUrl("/")
-        // 쿠키로 remember Me 사용할 때 로그아웃시 쿠키 삭제
-        // Persistent 기반에서는 로그아웃시 기본적으로 removeUserTokens(String username) Method 호출함
-        .deleteCookies("JSESSIONID")
-        .deleteCookies(COOKIE_NAME)
+        // 세션 초기화 (쿠키 / 퍼시스턴스 rememberme 관계없이 세션쿠키는 생성됨)
+        // Persistent 기반에서는 로그아웃시 기본적으로 removeUserTokens(String username) Method 호출함 (JSESSIONID만 삭제필요)
+        // cookie 기반 RememberMe 사용할 때, 로그아웃 하면 쿠키(COOKIE_NAME) 삭제
+        .deleteCookies("JSESSIONID", COOKIE_NAME)
         .invalidateHttpSession(true)
         .and()
       // Error 페이지(인증 권한이 없을 때) 주소를 명시한다
@@ -99,16 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder();
   }
 
-  // AutenticationProvider를 bean으로 등록한다. 기본제공되는 AuthencationProvider의 구현체이다.
-  // DaoAuthenticationProvider는 내부적으로 UserDetailsService를 호출해 db에서 사용자를 조회한다.
-  @Bean
-  public DaoAuthenticationProvider authenticationProvider() {
-      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-      authProvider.setUserDetailsService(userDetailsService);
-      authProvider.setPasswordEncoder(passwordEncoder());
-      return authProvider;
-  }
-
   // 쿠키 기반 Remember Me 설정, Https가 아니라면 SecureCookie가 작동하지 않을 수 있다.
   @Bean
   public TokenBasedRememberMeServices tokenBasedRememberMeServices() {
@@ -119,6 +113,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     tokenBasedRememberMeServices.setTokenValiditySeconds(60 * 60 * 24 * 30);
     tokenBasedRememberMeServices.setUseSecureCookie(false);
     return tokenBasedRememberMeServices;
+  }
+
+  // AutenticationProvider를 bean으로 등록한다. 기본제공되는 AuthencationProvider의 구현체이다.
+  // DaoAuthenticationProvider는 내부적으로 UserDetailsService를 호출해 db에서 사용자를 조회한다.
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
   }
 
   // 퍼시스턴스 기반 Remember Me 설정
@@ -171,41 +175,60 @@ Token Entity를 사용하기 위한 JpaRepository
 퍼시스턴스 기반 Remember Me에서 PersistentTokenRepository 구현
 
   ```java
+  @Component
   public class PersistentTokenRepositoryImpl implements PersistentTokenRepository {
-
-    @Autowired
     private PersistentLoginsRepository persistentLoginsRepository;
-    @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public void createNewToken(PersistentRememberMeToken token) {
-      User user = userRepository.findByUserId(token.getUsername());
-      PersistentLogins persistentLogins =
-          new PersistentLogins(user, token.getSeries(), token.getTokenValue(), token.getDate());
-      persistentLoginsRepository.save(persistentLogins);
-    }
+      public PersistentTokenRepositoryImpl(PersistentLoginsRepository persistentLoginsRepository,
+            UserRepository userRepository) {
+        this.persistentLoginsRepository = persistentLoginsRepository;
+        this.userRepository = userRepository;
+      }
 
-    @Override
-    public void updateToken(String series, String tokenValue, Date lastUsed) {
-      PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
-      persistentLogins.update(series, tokenValue, lastUsed);
-      persistentLoginsRepository.save(persistentLogins);
-    }
+      @Override
+      public void createNewToken(PersistentRememberMeToken token) {
+        User user = userRepository.findByUsername(token.getUsername());
+        PersistentLogins persistentLogins = new PersistentLogins(user, token.getSeries(), token.getTokenValue(),
+            dateToLocalDate(token.getDate()));
+        persistentLoginsRepository.save(persistentLogins);
+      }
 
-    @Override
-    public PersistentRememberMeToken getTokenForSeries(String series) {
-      PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
-      return new PersistentRememberMeToken(persistentLogins.getUser().getUserId(), series,
-          persistentLogins.getToken(), persistentLogins.getLastUsed());
-    }
+      @Override
+      public void updateToken(String series, String tokenValue, Date lastUsed) {
+        PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
+        persistentLogins.update(series, tokenValue, dateToLocalDate(lastUsed));
+        persistentLoginsRepository.save(persistentLogins);
+      }
 
-    @Transactional
-    @Override
-    public void removeUserTokens(String username) {
-      User user = userRepository.findByUserId(username);
-      persistentLoginsRepository.deleteByUserId(user.getId());
-    }
+      @Override
+      public PersistentRememberMeToken getTokenForSeries(String series) {
+        PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
+        // Persistence Token Database 초기화했을 때를 대비한 방어
+        try {
+          return new PersistentRememberMeToken(persistentLogins.getUser().getUsername(), series,
+              persistentLogins.getToken(), localDateToDate(persistentLogins.getLastUsed()));
+        } catch (NullPointerException e) {
+          return null;
+        }
+      }
+
+      @Transactional
+      @Override
+      public void removeUserTokens(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+          persistentLoginsRepository.deleteByUserId(user.getId());
+        }
+      }
+
+      private LocalDate dateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+      }
+
+      private Date localDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+      }
   }
   ```
 
@@ -268,7 +291,7 @@ UserDetails 인터페이스를 구현한다. 인증후 유저객체(Authenticati
 @Column(name="authority")
 private List<Authority> authorities;
 
-public User() {
+private User() {
   authorities = new ArrayList<>();
   authorities.add(Authority.USER);
 }
@@ -295,17 +318,17 @@ public class CustomUserDetailService implements UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-    User user = userRepo.findByUserId(userId);
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepo.findByUsername(username);
     if (user == null) {
-      throw new UsernameNotFoundException(userId);
+      throw new UsernameNotFoundException(username);
     }
     return user;
   }
 }
 ```
 
-## 가입 처리이후 로그인
+## 가입 처리 / 유저 정보 변경 이후 로그인
 
 ```java
 Authentication authentication =
