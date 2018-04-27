@@ -147,7 +147,7 @@ public class WebController implements WebMvcConfigurer {
 ```html
 <html>
 <body>
-  <form action="#" th:action="@{/}" th:object="${entity}" method="post">
+  <form action="#" th:action="@{/}" th:object="${personForm}" method="post">
     <table>
       <tr>
         <td>Name:</td>
