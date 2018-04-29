@@ -18,7 +18,9 @@ Docker는 리눅스 컨테이너 기술을 기반으로 두기 때문에 Windows
 
 ### Linux
 
-설치 : `curl -s https://get.docker.com/ | sudo sh`
+설치: `curl -s https://get.docker.com/ | sudo sh`
+
+우분투 기본 저장소: `sudo apt install docker.io`
 
 사용자를 docker 그룹에 추가함
 

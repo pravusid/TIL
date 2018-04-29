@@ -22,6 +22,7 @@ shell 설정 파일 (.bashrc / .zshrc)에 다음 내용을 추가한다
 ```sh
 # set alias
 alias altjava='sudo update-alternatives --config java'
+alias altterm='sudo update-alternatives --config x-terminal-emulator'
 alias python='/usr/bin/python3'
 alias pip='/usr/bin/pip3'
 ```
