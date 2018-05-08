@@ -5,7 +5,7 @@
 ```groovy
 buildscript {
     ext {
-        springBootVersion = '1.5.6.RELEASE'
+        springBootVersion = '1.5.12.RELEASE'
         thymeleafVersion = '3.0.1.RELEASE'
     }
     repositories {
@@ -13,6 +13,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE'
     }
 }
 
@@ -20,7 +21,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = 1.8
 
 repositories {
@@ -37,9 +38,19 @@ dependencies {
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:${thymeleafVersion}")
     compile("net.sourceforge.nekohtml:nekohtml:1.9.22")
     runtime('com.h2database:h2')
-//    runtime("mysql:mysql-connector-java")
     runtime("org.springframework.boot:spring-boot-devtools")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.springframework.security:spring-security-test")
+}
+
+jar {
+    manifest {
+        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
+    }
+    dependsOn configurations.runtime
+    from {
+        configurations.compile.collect {it.isDirectory()? it: zipTree(it)}
+    }
 }
 ```
 
@@ -60,9 +71,10 @@ spring:
 #    url: jdbc:mysql://192.168.1.35/idpravus?autoReconnect=true&useUnicode=true&characterEncoding=utf8
 #    username: user
 #    password: pwd
-    url: jdbc:h2:mem:idpravus
+    url: jdbc:h2:mem:idpravus;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
+    data: classpath:import.sql
 
   # JPA로 사용할 데이터베이스 명시
   jpa:

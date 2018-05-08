@@ -12,6 +12,10 @@ spring-boot-starter-test에는 다음 패키지들이 들어있다
 1. JSONassert : an Assertion lib for JSON
 1. JsonPath : XPath for JSON
 
+spring-security 사용시 테스트 의존성을 추가해야 한다
+
+`testCompile('org.springframework.security:spring-security-test')`
+
 ## @SpringBootTest
 
 테스트에 사용할 ApplicationContext를 생성함 (@ContextConfiguration)

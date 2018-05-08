@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   // 인증정보를 갖고가지 않을 주소를 설정한다
   @Override
   public void configure(WebSecurity web) throws Exception {
-    web.ignoring().antMatchers("/js/**", "/css/**");
+    web.ignoring().antMatchers("/js/**", "/css/**", "/h2-console/**");
   }
 
   // 로그인을 위한 autenticationProvider를 설정한다
@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http
       // 인증정보를 설정한다
       .authorizeRequests()
-        .antMatchers("/").permitAll()
+        .antMatchers("/board/**").permitAll()
         .antMatchers("/mypage/**").hasAnyAuthority(Authority.USER.getAuthority(), Authority.ADMIN.getAuthority())
         .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
         .antMatchers("/h2-console/**").permitAll()
