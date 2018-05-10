@@ -28,6 +28,7 @@ UI를 만들기 위한 자바스크립트 라이브러리 (View 영역)
   - `export default App;`(es6) == `module.export = App;`
 
 - `/src/index.js` 파일 작성
+
   ```js
   import React from 'react';
   import ReactDOM from 'react-dom';
@@ -43,6 +44,7 @@ UI를 만들기 위한 자바스크립트 라이브러리 (View 영역)
   - 3.0 beta로 업데이트 `npm install --save-dev react-hot-loader@next`
 
   - `webpack.config.js` 수정
+
   ```json
   var webpack = require('webpack');
 
@@ -82,6 +84,7 @@ UI를 만들기 위한 자바스크립트 라이브러리 (View 영역)
   ```
 
   - `/src/index.js` 수정
+
   ```js
   import React from 'react';
   import ReactDOM from 'react-dom';
@@ -134,6 +137,7 @@ UI를 만들기 위한 자바스크립트 라이브러리 (View 영역)
 ### JSX
 
 XML-like syntax를 native JavaScript로 변경
+
   ```js
   class Codelab extends React.Component {
     render() {
@@ -157,6 +161,7 @@ XML-like syntax를 native JavaScript로 변경
 
   ReactDOM.render(<App/>, document.getElementById('root'));
   ```
+
   ```html
   <div id="root"></div>
   ```
@@ -194,6 +199,7 @@ XML-like syntax를 native JavaScript로 변경
 
   ReactDOM.render(<App name="velopert">I am your child</App>, document.getElementById('root'));
   ```
+
   ```html
   <div id="root"></div>
   ```
@@ -241,6 +247,7 @@ XML-like syntax를 native JavaScript로 변경
 
   ReactDOM.render(<App/>, document.getElementById('root'));
   ```
+
   ```html
   <div id="root"></div>
   ```
@@ -248,6 +255,7 @@ XML-like syntax를 native JavaScript로 변경
 ### component
 
 map() 함수 사용
+
   ```js
   let numbers = [1,2,3,4,5];
   let processed = numbers.map((num) => {
@@ -256,6 +264,7 @@ map() 함수 사용
   ```
 
 컴포넌트 정의
+
   ```js
   class Contactinfo extends React.Component {
     render() {
@@ -302,6 +311,7 @@ map() 함수 사용
 
   ReactDOM.render(<App></App>, document.getElementById('root'));
   ```
+
   ```html
   <div id="root"></div>
   ```

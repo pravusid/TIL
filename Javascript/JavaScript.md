@@ -65,6 +65,7 @@
   - 함수선언문(function statement)
     - 반드시 함수명이 정의되어 있어야 함
     - 일종의 함수 리터럴을 이용해 생성하는 방식
+
   ```js
   function add(x, y) {
     return x + y;
@@ -73,6 +74,7 @@
 
   - 함수표현식(function expression) :
     함수도 하나의 값처럼 취급되므로, 생성된 함수를 바로 변수에 할당한다
+
   ```js
   var add = function(x, y) {
     return x + y;
@@ -80,6 +82,7 @@
   ```
 
   - Function() 생성자 함수 : 자주 사용되지는 않음
+
   ```js
   var add = new Function("x", "y", "return x + y");
   ```
@@ -104,6 +107,7 @@
 
 - 함수 형태
   - 콜백함수 : 등록해놓은 함수가 개발자가 아니라 시스템에 의해서 이벤트나 특정 시점에 도달했을 때 호출 되는 경우
+
   ```js
   <script>
   window.onload = function() {
@@ -111,15 +115,19 @@
   }
   </script>
   ```
+
   - 즉시 실행 함수 : 정의와 동시에 실행하는 함수
     - 즉시 실행함수는 다시 호출 할 수 없다.
     - 최초 한 번의 실행만을 필요로 하는 초기화 코드 등에 사용 할 수 있다.
+
   ```js
   (function(name) {
     console.log("this is the immediate function --> " + name)
   })("foo");
   ```
+
   - 내부 함수 : 함수 내부에서 정의된 함수, 클로저 생성, 부모 함수 코드에서 외부의 접근을 막고 독립적인 헬퍼 함수를 구현 하는 용도
+
   ```js
   function parent() {
     var a = 100;
@@ -134,7 +142,9 @@
   }
   child();  // error : child is not defined
   ```
+
   - 함수 자체를 리턴하는 함수
+
   ```js
   var self = function() {
     console.log("a");

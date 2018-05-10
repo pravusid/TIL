@@ -4,6 +4,7 @@
 
 - 화면크기에 따라 출력을 다르게 한다(반응형 웹)
 - css에서 @media 지시어 사용
+
   ```css
   /* (화면출력/인쇄)에서만 적용 */
   @media screen/print {
@@ -105,6 +106,7 @@
   - .btn-lg
   - .btn-block : 부모태그의 크기에 버튼크기를 맞춤
 - 버튼 기능
+
   ```javascript
   // data loading
   $("#btn").click(function() {
@@ -134,12 +136,14 @@
     - `<li> <a> 내용 </a> </li>`
     - `<li class="divider"></li>` : 구분선
 - dropdown 기능
+
   ```javascript
   $("#버튼id").click(function(e) {
     $(".dropdown-toggle").dropdown("toggle");
     return false;
   });
   ```
+
   - event
     ```javascript
       $("#menu1").on("show/shown.bs.dropdown", function(e) {
@@ -190,13 +194,13 @@
       - span.icon-bar
     - a.navbar-brand
 
-  -div.collapse .navbar-collapse id="menu1" (메뉴, 폼)
+  - div.collapse .navbar-collapse id="menu1" (메뉴, 폼)
     - ul.nav .navbar-nav
       - li > a {메뉴명}
     - ul.nav .navbar-nav .navbar-right
       - li > a {메뉴명}
     - form.navbar-form
-      -div.form-group
+      - div.form-group
         - input.form-control :text
         - input.btn .btn-default .navbar-btn :button
 
@@ -242,6 +246,7 @@
       - button.btn .btn-primary data-dismiss="modal"
 
 - 스크립트로 modal 생성
+
   ```javascript
     $("#btnShow").click(function() {
         $("#myModal").modal("show"); // modal 보이기
@@ -250,6 +255,7 @@
   ```
 
 - modal Event
+
   ```javascript
     $("#myModal").on("show.bs.modal", function(e) {
       console.log("event", e.type);
@@ -260,6 +266,7 @@
 
 - div.nav-container의 위치가 relative로 지정되어야 함
 - `<body data-spy="scroll" data-taget="#navbarID" data-offset="활성화위치설정(탭 높이만큼 줄여준다)">`
+
   ```javascript
     $("body").scrollspy({
       target:"#navbarID",
@@ -284,6 +291,7 @@
 ### tooltip
 
 - `<span data-toggle="tooltip" data-title="툴팁내용" data-animation="true" data-placement="auto" data-html="true" data-trigger="hover focus" data-delay="1000" data-container="#ID">`
+
   ```javascript
     $("[data-toggle=tooltip]").tooltip();
     $("#대상").tooltip({
@@ -294,7 +302,9 @@
       $("#tip1").tooltip("hide/show/toggle");
     });
   ```
+
 - 동적 생성시
+
   ```javascript
     $("body").tooltip({
       selector:"[data-toggle=tooltip]"
@@ -309,6 +319,7 @@
 
 - 툴팁과 거의 동일함
 - data-content="팝업 내용"
+
   ```javascript
   $("[data-toggle=popover]").popover();
     $("#대상").popover({
@@ -321,6 +332,7 @@
 
 - div.alert .alert-success {내용}
   - button.close data-dismiss="alert" {&times;}
+
   ```javascript
   // 호출
   $("#id").click(function() {
@@ -351,6 +363,7 @@
     - span.glyphicon .glyphicon-chevron-left
   - a.right .carousel-control [href="#slider"] [data-slide="next"]
     - span.glyphicon .glyphicon-chevron-right
+
   ```javascript
   $("#slider").carousel("cycle/pause/prev/next")
   // 이벤트
@@ -362,6 +375,7 @@
 ### affix (고정 기능)
 
 - tag.affix data-spy="affix" data-offset-top/bottom="300"
+
   ```javascript
   $("#target").affix({
     offset:{

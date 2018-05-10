@@ -47,15 +47,24 @@ collectstatic static | 파일을 한곳에 모음
 ## Work Flow
 
 1. settings.py에 생성한 app 등록
+
 1. models.py 작성
+
 1. model을 db에 생성
+
   ```sh
   ./manage.py makemigrations (app이름)
   ./manage.py migrate
   ```
+
 1. urls.py에 mapping
+
 1. views.py에 (url에서 연결된 함수)작성
+
 1. views와 연결된 templates 작성 (noname.html)
+
 1. forms.py로 모델에서 선언한 폼 생성
+
 1. views.py에서 생성한 폼을 템플릿으로 연결
+
 1. views.py에서 받은 요청이 post면 form값 저장

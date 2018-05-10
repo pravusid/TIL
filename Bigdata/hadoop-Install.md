@@ -107,6 +107,7 @@
     </property>
   </configuration>
   ```
+
 1. mapred-site.xml
 
   ```xml
