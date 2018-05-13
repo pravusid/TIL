@@ -138,3 +138,171 @@ val list2: List<Int> = listOf(1, 2)
 ```
 
 물론 컴파일 단계에서 컴파일러가 타입인자를 인식하고 맞는 값만 넣도록 보장하기 때문에 내부의 값은 선언한 타입과 같다.
+
+만약 타입 파라미터가 2개 이상이라면 `*` (star projection)을 사용한다.
+즉, 인자의 타입을 알 수 없는 경우 `if (value is List<*>) { ... }` 와 같이 사용하게 된다.
+
+`as` 나 `as?` 캐스팅에서도 제네릭 타입을 사용할 수 있다.
+실행시점에는 제네릭의 타입인자를 알 수 없으므로 캐스팅은 항상 성공하고, 컴파일러가 unchecked cast라는 경고를 해준다. (컴파일은 진행된다)
+
+### 실체화한 타입 파라미터를 사용한 함수
+
+코틀린 제네릭 타입인자 정보는 실행시점에 삭제되지만, 인라인 함수의 타입 파라미터는 실체화 되므로 실행시점에 알 수 있다.
+컴파일 이후 타입 파라미터가 지워지지 않음을 표시하기 위해 제네릭 앞에 `reified` 키워드를 붙인다.
+
+```kt
+inline fun<reified T> isA(value: Any) = value is T
+>>> print(isA<String>)("abc")
+true
+```
+
+실체화한 타입 파라미터를 사용하는 간단한 예제 중 하나는 표준 라이브러리 함수인 `filterIsInstance`이다
+
+```kt
+inline fun <reified T> iterable<*>.filterIsInstance(): List<T> {
+  val destination = mutableListOf<T>
+  for (element in this) {
+    if (element is T) {
+      destination.add(element)
+    }
+  }
+  return destination
+}
+
+val items = listOf("one", 2, "three")
+>>> println(items.filterIsInstance<String>())
+[one, three]
+```
+
+자바 코드에서는 `reified` 타입 파라미터를 사용하는 inline 함수를 호출할 수 없다.
+
+### 실체화한 타입 파라미터로 클래스 참조
+
+`java.lang.Class` 타입인자를 파라미터로 받는 API에 대한 코틀린 어댑터를 구축하는 경우 실체화한 타입파라미터를 자주 사용한다.
+
+`java.lang.Class`를 사용하는 API의 예로 JDK의 `ServiceLoader`가 있다.
+
+표준 자바 API인 `ServiceLoader`를 사용해 서비스를 읽으려면 다음과 같다.
+
+`val serviceImpl = ServiceLoader.load(Service::class.java)`
+
+위의 예를 구체화한 타입 파라미터를 사용하면 다음과 같다.
+
+`val serviceImpl = loadService<Service>()`
+
+타입파라미터를 사용하기 위해 `loadService` 함수를 정의해 보자
+
+```kt
+inline fun <reified T> loadService() {
+  return ServiceLoader.load(T::class.java)
+}
+```
+
+### 실체화한 타입 파라미터의 제약
+
+현재 코틀린에서 구현된 실체화된 타입파라미터의 명세로는 다음과 같은 경우 사용 가능하다
+
+- 타입 검사와 캐스팅 (is, !is, as, as?)
+- 코틀린 리플렉션 API (`::class`)
+- 코틀린 타입에 대응하는 `java.lang.Class` 얻기 (`::class.java`)
+- 다른 함수를 호출 할 때 타입 인자로 사용
+
+하지만 다음 경우 사용할 수 없다
+
+- 타입 파라미터 클래스의 인스턴스 생성하기
+- 타입 파라미터 클래스의 companion object method 호출
+- 실체화한 타입 파라미터를 요구하는 함수 호출시, 실체화 하지 않은 타입 파라미터로 받은 타입을 인자로 넘기는 것
+- 클래스, 프로퍼티, 인라인 함수가 아닌 함수의 타입 파라미터를 `reified`로 지정 하기
+
+실체화한 타입 파라미터를 인라인 함수에만 사용할 수 있으므로,
+실체화한 타입 파라미터를 사용하는 함수는 자신에게 전달되는 모든 람다를 인라이닝 한다.
+람다를 인라이닝 하지 않으려면 `noinline` 변경자를 함수 타입 파라미터에 붙이면 된다.
+
+## 변성(variance)
+
+### 변성이 있는 이유
+
+만약 `List<Any>` 타입의 파라미터를 받는 함수에 `List<String>`을 넘기면 안전할까?
+`String`은 `Any`를 확장하므로 `Any` 타입의 파라미터에 `String` 값을 넘기면 안전하겠지만,
+`List`의 인자로 들어가는 경우는 상황이 다르다.
+
+```kt
+fun addAnswer(list: MutableList<Any>) {
+  list.add(42)
+}
+
+>>> val strings = mutableListof("abc", "bac")
+>>> addAnswer(Strings)
+>>> println(strings.maxBy { it.length }) // 현 라인에서 실행시점 예외가 발생
+ClassCastException: Integer cannot be cast to String
+```
+
+따라서 `List<Any>` 타입의 파라미터를 받는 함수에 `List<String>`을 넘기는 경우는 두 가지로 나누어 볼 수 있다.
+함수가 리스트의 원소를 변경하는 경우 타입 불일치 가능성 때문에 `List<String>`을 넘길 수 없다.
+하지만 원소 추가나 변경이 없는 경우에는 `List<String>`을 넘길 수 있다.
+
+코틀린에서는 리스트의 변경 가능성에 따라 안전하지 못한 함수 호출을 막을 수 있다. (immutable, mutable)
+
+### 클래스, 타입, 하위타입
+
+제네릭 클래스가 아닌 클래스에서는 클래스 이름을 바로 타입으로 쓸 수 있다. `String`, `String?`
+
+제네릭 클래스에서는 보다 복잡하다. 올바른 타입을 얻으려면 제네릭 타입의 타입 파라미터를 구체적인 타입 인자로 바꿔줘야 한다.
+`List`는 클래스이지만 타입은 아니다. 하지만 타입인자를 치환한 `List<Int>`, `List<String?>` 등은 타입니다.
+
+어떤 타입 A의 값이 필요한 장소에 어떤 타입 B의 값을 넣어도 아무 문제가 없다면, B는 A위 subtype 이다.
+supertype은 subtype의 반대 개념이다.
+
+컴파일러는 변수 대입이나 함수 인자 전달 시 subtype 검사를 매번 수행한다.
+
+간단한 경우 subtype은 subclass와 근본적으로 같다.
+널이 될 수 없는 타입은 널이 될 수 있는 타입의 하위 타입이다. 그러나 두 타입 모두 같은 클래스에 해당한다.
+
+제네릭 타입에 대해 이야기할 때 하위 클래스와 하위 타입의 차이가 중요해진다.
+제네릭 타입을 인스턴스화할 때 타입 인자로 서로 다른 타입이 들어가고
+서로 다른 타입으로 생성된 인스턴스 사이에 하위 타입관계가 성립되지 않으면 그 제네릭타입을 무공변(invariant)라고 말한다.
+
+자바에서는 모든 크래스가 무공변이지만, 코틀린에서는 읽기 전용 컬렉션을 표현하면 공변적(covariant)이 될 수있다.
+
+### 공변성 (하위 타입 관계를 유지)
+
+A가 B의 하위 타입일 때 `Producer<A>`가 `Producer<B>`의 하위타입이면 `Producer`는 공변적이다.
+코틀린에서 제네릭 클래스가 타입 파라미터에 대해 공변적임을 표시하려면 타입 파라미터 이름 앞에 `out`을 넣어야 한다.
+
+```kt
+interface Producer<out T> {
+  fun produce(): T
+}
+```
+
+클래스의 타입 파라미터를 공변적으로 만들면 함수 정의에 사용한 파라미터 타입과 타입인자의 타입이 정확히 일치하지 않더라도
+그 클래스의 인스턴스를 함수 인자나 반환 값으로 사용할 수 있다.
+
+모든 클래스를 공변적으로 만들 수는 없다. 공변적으로 만들면 안전하지 못한 클래스도 있다.
+타입 안전성을 보장하기 위해 공변적 파라미터는 항상 out 위치에 있어야만 한다.
+이는 클래스가 `T` 타입의 값을 생산할 수는 있지만(반환타입) `T` 타입의 값을 소비할 수는 없다(파라미터 타입)는 뜻이다.
+
+`out` 키워드는 `T` 타입의 사용을 제한하며 `T`로 인해 생기는 하위 타입관계의 타입 안전성을 보장한다.
+
+앞에서 살펴본 `List<T>` 타입을 다시 사펴보자. 코틀린 `List`는 읽기 전용이므로
+List에 `T` 타입의 값을 추가하거나 기존 값을 변경하는 메소드는 없다. 따라서 `List`는 `T`에 대해 공변적이다.
+
+타입 파라미터를 함수의 파라미터 타입이나 반환 타입에만 쓸수있는 것은 아니다.
+타입 파라미터를 다른 타입의 타입 인자로 사용할 수도 있다.
+
+```kt
+interface List<out T> : Collection<T> {
+  fun subList (from Index: Int, toIndex: Int): List<T> // T는 out 위치에 있다
+}
+```
+
+컴파일러는 타입 파라미터가 쓰이는 위치를 제한한다.
+클래스가 공변적으로 선언된 경우 "Type parameter T is declared as 'out' but occurs in 'in' position" 이라는 오류가 발생한다.
+생성자 파라미터는 in이나 out 어느쪽도 아니므로 타입 파라미터가 out이라 해도 여전히 타입을 생성자 파라미터 선언에 사용할 수 있다.
+
+변성은 코드에서 위험 여지가 있는 메소드를 호출할 수 없게 만들어 제네릭 타입의 인스턴스를 잘못 사용하는 일이 없도록 방지한다.
+생성자는 인스턴스 생성 뒤 호출할 수 있는 메소드가 아니므로 위험하지 않지만,
+`val`이나 `var` 키워드를 생성자 파라미터에 쓴다면 `getter`나 `setter`를 정의하는 것과 같다.
+
+위치 규칙은 외부에서 볼 수 있는 (public, protected, internal) 클래스 API에 적용할 수 있다.
+`private` 메소드의 파라미터는 in / out이 아닌 위치이므로, 클래스 내부구현에는 위치가 적용되지 않는다.
