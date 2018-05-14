@@ -262,7 +262,7 @@ supertype은 subtype의 반대 개념이다.
 제네릭 타입을 인스턴스화할 때 타입 인자로 서로 다른 타입이 들어가고
 서로 다른 타입으로 생성된 인스턴스 사이에 하위 타입관계가 성립되지 않으면 그 제네릭타입을 무공변(invariant)라고 말한다.
 
-자바에서는 모든 크래스가 무공변이지만, 코틀린에서는 읽기 전용 컬렉션을 표현하면 공변적(covariant)이 될 수있다.
+자바에서는 모든 클래스가 무공변이지만, 코틀린에서는 읽기 전용 컬렉션을 표현하면 공변적(covariant)이 될 수있다.
 
 ### 공변성 (하위 타입 관계를 유지)
 
@@ -284,7 +284,7 @@ interface Producer<out T> {
 
 `out` 키워드는 `T` 타입의 사용을 제한하며 `T`로 인해 생기는 하위 타입관계의 타입 안전성을 보장한다.
 
-앞에서 살펴본 `List<T>` 타입을 다시 사펴보자. 코틀린 `List`는 읽기 전용이므로
+앞에서 살펴본 `List<T>` 타입을 다시 살펴보자. 코틀린 `List`는 읽기 전용이므로
 List에 `T` 타입의 값을 추가하거나 기존 값을 변경하는 메소드는 없다. 따라서 `List`는 `T`에 대해 공변적이다.
 
 타입 파라미터를 함수의 파라미터 타입이나 반환 타입에만 쓸수있는 것은 아니다.
@@ -292,9 +292,54 @@ List에 `T` 타입의 값을 추가하거나 기존 값을 변경하는 메소�
 
 ```kt
 interface List<out T> : Collection<T> {
-  fun subList (from Index: Int, toIndex: Int): List<T> // T는 out 위치에 있다
+  fun subList (fromIndex: Int, toIndex: Int): List<T> // T는 out 위치에 있다
 }
 ```
+
+### 반공변성 (contravariance)
+
+반공변성의 메소드는 `T`는 `in` 위치에서만 사용된다
+
+`Consumer<T>`를 예로 들어 설명하자면,
+타입 B가 타입 A의 하위타입인경우 `Consumer<A>`가 `Consumer<B>`의 하위타입인 관계가 성립할 때,
+제네릭 클래스 `Consumer<T>`는 타입인자 `T`에 대해 반공변이다.
+
+`<? super B>`와 같은 제네릭으로 생각해 볼 수 있다.
+
+`in` 위치에서 반공변성이 적용되는 이유는 `T` 타입을 인자로 받는 함수를 사용되는 경우 문제가 발생할 수 있기 때문이다.
+만약 `B extends A` 임과 동시에 `C extends A` 라면 `in`위치에서 사용되는 B와 C는 A의 인터페이스를 구현하기는 하지만,
+의도한 올바른 동작을 보장할 수 없다.
+
+### 공변성 / 반공변성
+
+클래스나 인터페이스가 어떤 타입 파라미터에 대해서는 공변적이면서 다른 타입 파라미터에 대해서는 반공변적일 수도 있다.
+코틀린의 `Function` 인터페이스가 대표적인 예이다.
+다음 선언은 파라미터가 하나뿐인 `Function` 인터페이스인 `Function1`이다.
+
+```kt
+interface Function1<in P, out R> {
+  operator fun invoke(p: P): R
+}
+```
+
+해당 인터페이스를 사용하는 예제를 보자
+
+`fun enumerateCats(f: Function1<Cat, Number>) { ... }`
+
+코틀린 표기에서 (P) -> R은 `Function1<P, R>`을 알아보기 쉽게 적은 것이다.
+이를 코틀린 문법에 따라 다시 쓰면 다음과 같다
+
+```kt
+fun enumerateCats(f: (Cat) -> Number) { ... }
+fun Animal.getIndex(): Int = ...
+
+>>> enumerateCats(Animal::getIndex)
+```
+
+함수 `Function1`의 타입관계는 첫 번째 타입인자의 하위 타입관계와는 반대지만 (Cat => Animal)
+두 번째 타입인자 하위 타입 관계와는 같다 (Number <= Int)
+
+### 생성자 및 private 메소드
 
 컴파일러는 타입 파라미터가 쓰이는 위치를 제한한다.
 클래스가 공변적으로 선언된 경우 "Type parameter T is declared as 'out' but occurs in 'in' position" 이라는 오류가 발생한다.
@@ -306,3 +351,93 @@ interface List<out T> : Collection<T> {
 
 위치 규칙은 외부에서 볼 수 있는 (public, protected, internal) 클래스 API에 적용할 수 있다.
 `private` 메소드의 파라미터는 in / out이 아닌 위치이므로, 클래스 내부구현에는 위치가 적용되지 않는다.
+
+### 사용지점 변성
+
+클래스를 선언하면서 변성을 지정하는 것을 declaration site variance 라고 부른다.
+
+자바에서는 타입 파라미터가 있는 타입을 사용할 때마다 해당 타입 파라미터를 하위 타입이나 상위 타입중 어떤 타입으로 대치할 수 있는지 명시해야 한다.
+이를 use-site variance라고 부른다.
+
+자바8 표준 라이브러리 `Function` 인터페이스를 살펴보면 자바에서는 use-site variance를 사용함을 알 수 있다.
+
+```java
+public interface Stream {
+  <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+}
+```
+
+declaration site variance를 사용하면 매번 변성을 지정하지 않아도 되므로 간결한 코드를 작성할 수 있다.
+물론 코틀린에서도 use-site variance를 지원한다.
+코틀린의 use-site variance는 자바의 bounded wildcard와 동일한 역할을 수행한다.
+`<out T>`는 `<? extends T>`와 같고 `<in T>`는 `<? super T>`와 같다.
+
+```kt
+fun <T: R, R> copyData(source: MutableList<out T>, dest: MutableList<in R>) {
+  for (item in source) {
+    dest.add(item)
+  }
+}
+```
+
+### 스타 프로젝션 `*`
+
+`MutableList<*>`는 `MutableList<Any?>`와 같지 않다. (`MutableList<T>`는 `T`에 대해 무공변성이다.)
+`MutableList<Any?>`는 모든 타입의 원소를 담는 리스트이지만, `MutableList<*>`는 아직 정해지지 않은 구체적인 타입의 원소만을 담는 리스트이다.
+
+따라서 `MutableList<*>`는 아웃 프로젝션 타입으로 처리된다. (`MutableList<out Any?>` 처럼 처리됨)
+`*` 타입이 어떤 타입인지는 모르지만 `Any?`의 하위타입이라는 사실은 분명하므로 안전하게 `Any?` 타입의 원소를 꺼낼 수는 있으나 넣을 수는 없다.
+
+코틀린의 `Type<*>`는 자바의 `Type<?>`에 대응한다.
+
+타입 파라미터를 시그니처에서 전혀 언급하지 않거나,
+데이터를 읽기는 하지만 타입에 관심없는 경우처럼 타입 인자정보가 중요하지 않을때 스타 프로젝션을 사용한다.
+
+```kt
+fun printFirst(list: List<*>) {
+  if (list.isNotEmpty()) {
+    println(list.first())
+  }
+}
+```
+
+### 스타 프로젝션 예제
+
+사용자 입력검증을 위한 `FieldValidator`라는 인터페이스를 정의했다고 가정하자.
+`FieldValidator`에 in 파라미터를 정의해 반공변성을 부여한다.
+반공변성이므로 `String` 타입의 필드검증을 위해 `Any`타입을 검증하는 `FieldValidator`를 사용할 수 있다.
+
+```kt
+interface FieldValidator<in T> {
+  fun validate(input: T): Boolean
+}
+
+object DefaultStringValidator : FieldValidator<String> {
+  override fun validate(input: String) = input.isNotEmpty()
+}
+
+object DefaultIntValidator : FieldValidator<Int> {
+  override fun validate(input: Int) = input >= 0
+}
+
+object Validators {
+  private val validators = mutableMapOf<KClass<*>, FieldValidator<*>>()
+  fun <T : Any> registerValidator(kClass: KClass<T>, fieldValidator: FieldValidator<T>) {
+    validators[kClass] = fieldValidator
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  operator fun <T : Any> get(kClass: KClass<T>): FieldValidator<T> =
+    validators[kClass] as? FieldValidator<T> ?: throw IllegalArgumentException(
+      "No validator for ${kClass.simpleName}")
+}
+
+>>> Validators.registerValidator(String::class, DefaultStringValidator)
+>>> Validators.registerValidator(Int::class, DefaultIntValidator)
+>>> println(Validators[String::class].validate("Kotlin"))
+true
+>> println(Validators[Int::class].validate(42))
+true
+```
+
+타입 안정성을 보장하지 못하는 부분을 API 내부에 감추고 외부에서 안전하지 못한 부분에 접근하지 못하게 처리한다.
