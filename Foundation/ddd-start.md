@@ -377,3 +377,61 @@ JPA는 트랜잭션 범위내에서 지연로딩을 허용하기 때문에 실�
 반면 애그리거트에 속한 `@Entity` 타입에 대한 매핑은 `cascade` 속성을 사용해서 저장/삭제시 동시 처리되도록 해야한다.
 
 ## 리포지토리의 조회 기능
+
+Specification은 애그리거트가 특정 조건을 충족하는지 여부를 검사한다.
+
+```java
+public interface Specification<T> {
+  public boolean isSatisfiedBy(T agg);
+}
+```
+
+리포지토리는 스펙을 전달받아 애그리거트를 걸러내는 용도로 사용한다.
+스펙은 `AND`연산자나 `OR`연산자로 조합해서 새로운 조건을 만들 수 있다.
+
+### JPA를 위한 스펙 구현
+
+JPA에서 다양한 검색조건을 조합하기 위해 `CriteriaBuilder`와 `Predicate`를 사용한다.
+JPA 리포지토리를 위한 `Specification`의 인터페이스는 다음과 같이 정의할 수 있다.
+
+```java
+public interface Specification<T> {
+  Predicate toPredicate(Root<T> root, CriteriaBuilder cb);
+}
+```
+
+위 스펙을 구현하면 다음과 같다.
+
+```java
+public class OrdererSpec implements Specification<Order> {
+  private String ordererId;
+
+  public OrdererSpec(String ordererId) {
+    this.ordererId = ordererId
+  }
+
+  @Override
+  public Predicate toPredicate(Root<Order> root, CriteriaBuilder cb) {
+    return cb.equal(
+      root.get(Order_.orderer).get(Orderer_.memberId).get(MemberId_.id),
+      ordererId
+    );
+  }
+}
+```
+
+서비스는 원하는 스펙을 생성하고 리포지토리에 전달하면 된다.
+
+`List<Order> orders = orderRepository.findAll(new OrdererSpec("user"))`
+
+### 조회전용 기능 구현
+
+리포지토리는 애그리거트의 저장소를 표현하는 것으로 다음용도로는 적합하지 않다.
+
+- 여러 애그리거트를 조합해서 한 화면에 보여주는 데이터 제공
+- 각종 통계 데이터 제공
+
+이런 기능은 조회 전용 쿼리로 처리해야 한다.
+JPA와 하이버네이트에서는 동적 인스턴스 생성, 하이버네이트 `@Subselect` 확장기능, 네이티브 쿼리를 사용할 수 있다.
+
+#### 동적 인스턴스 생성
