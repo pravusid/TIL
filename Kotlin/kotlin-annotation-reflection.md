@@ -238,3 +238,259 @@ fun sum(x: Int, y: Int) = x + y
 
 `KProperty`의 `call` 메소드를 호출할 수도 있다. `KProperty`의 `call`은 프로퍼티의 게터를 호출한다.
 최상위 프로퍼티는 `KProperty0` 인터페이스의 인스턴스로 표현되며, `KProperty0` 안에는 인자가 없는 `get` 메소드가 있다.
+
+> 최상위 수준이나 클래스 안에 정의된 프로퍼티만 리플렉션으로 접근할 수 있고 함수의 로컬 변수에는 접근할 수 없다.
+
+### 리플렉션을 사용한 객체 직렬화 구현
+
+우선 제이키드의 직렬화 함수 선언을 살펴보자
+
+`fun serialize(obj: Any): String`
+
+이 함수는 객체를 받아서 그 객체에 대한 JSON 표현을 문자열로 돌려준다.
+값을 직렬화 하면서 `StringBuilder` 객체뒤 직렬화한 문자열을 추가한다.
+`append` 호출을 더 간결하게 수행하기 위해 직렬화 기능을 `StringBuilder`의 확장함수로 구현한다.
+
+`serialize`는 대부분의 작업을 `serializeObject`에 위임한다.
+
+`fun serialize(obj: Any): String = builderString { serializeObject(obj) }`
+
+이제 `serializeObject` 구현을 살펴보자
+
+```kt
+private fun StringBuilder.serializeObject(obj: Any) {
+  val kClass = obj.javaClass.kotlin
+  val properties = kClass.memberProperties
+
+  properties.joinToStringBuilder(this, prefix = "{", postfix = "}") { prop ->
+    serializeString(prop.name)
+    append(": ")
+    serializePropertyValue(prop.get(obj))
+  }
+}
+```
+
+이 예제에서는 어떤 객체의 클래스에 정의된 모든 프로퍼티를 열거하기 때문에 각 프로퍼티가 어떤 타입인지 알 수 없다.
+따라서 `prop` 변수의 타입은 `KProperty1<Any, *>`이며, `prop.get(obj)` 메소드 호출은 `Any` 타입의 값을 반환한다.
+하지만 이 코드에서는 어떤 프로퍼티의 `get`에 넘기는 객체가 바로 그 프로퍼티를 얻어온 객체인 `obj`이므로 항상 프로퍼티 값이 제대로 반환된다.
+
+### 애노테이션을 활용한 직렬화 제어
+
+애노테이션을 `serializeObject` 함수가 어떻게 처리하는지 살펴보자.
+
+어떻게 `@JsonExclude`가 붙은 프로퍼티를 제외할 수 있을지 살펴보자
+
+`KAnnotatedElement` 인터페이스에는 `annotations` 프로퍼티가 있다.
+이 프로퍼티는 소스코드상에서 해당요소에 적용된 (`@Retention`이 `RUNTIME`인) 모든 애노테이션 인스턴스의 컬렉션이다.
+`KProperty`는 `KAnnotatedElement`를 확장하므로 `property.annotations`를 통해 프로퍼티의 모든 애노테이션을 얻을 수 있다.
+
+```kt
+inline fun <reified T> KAnnotatedElement.findAnnotation(): T? =
+  annotations.filterIsInstance<T>().firstOrNull()
+}
+```
+
+`findAnnotation` 함수는 인자로 전달받은 타입의 애노테이션이 있으면 반환하고, 타입 파라미터를 `reified`로 만들어 클래스를 타입인자로 전달한다.
+
+```kt
+val properties = kClass.memberProperties.filter { it.findAnnotation<JsonExclude>() == null }
+```
+
+`@JsonName`의 경우 애노테이션 존재여부와 함께 애노테이션 인자도 알아야 한다.
+
+```kt
+val jsonNameAnn = prop.findAnnotation<JsonName>()
+val propName = jsonNameAnn?.name ?: prop.name
+```
+
+`Person` 클래스 인스턴스를 직렬화 하는 과정을 살펴보자.
+`firstName` 프로퍼티를 직렬화 하는 동안 `jsonNameAnn`에는 `JsonName` 애노테이션 클래스에 해당하는 인스턴스가 들어있다.
+
+프로퍼티 필터링을 포함하는 객체 직렬화
+
+```kt
+private fun StringBuilder.serializeObject(obj: Any) {
+  obj.javaClass.kotlin.memberProperties
+      .filter { it.findAnnotation<JsonExclude>() == null}
+      .joinToStringBuilder(this, prefix = "{", postfix = "}") {
+        serializeProperty(it, obj)
+      }
+}
+
+private fun StringBuilder.serializeProperty(prop: KProperty1<Any, *>, obj: Any) {
+  val jsonNameAnn = prop.findAnnotation<JsonName>()
+  val propName = jsonNameAnn?.name ?: prop.name
+  serializeString(propName)
+  append(": )
+  serializePropertyValue(prop.get(obj))
+}
+```
+
+마지막으로 `@CustomSerializer` 애노테이션을 구현해보자
+
+```kt
+annotaion class CustomSerializer {
+  val serializerClass: KClass<out ValueSerializer<*>>
+}
+```
+
+이를 사용하기 위한 `getSerializer`를 구현해보자
+
+```kt
+fun KProperty<*>.getSerializer(): ValueSerializer<Any?>? {
+  val customSerializerAnn = findAnnotation<CustomSerializer>() ?: return null
+  val serializerClass = customSerializerAnn.serializerClass
+  val valueSerializer = serializerClass.objectInstance ?: serializerClass.createInstance()
+
+  @Suppress("UNCHECKED_CAST")
+  return valueSerializer as ValueSerializer<Any?>
+}
+```
+
+`getSerializer`는 `KProperty`의 확장함수 이다.
+
+`@CustomSerializer` 애노테이션으로 처리되는 클래스와 객체는 모두 `KClass`로 표현된다.
+`KClass`에서 `objectInstance` 호출로 싱글톤 인스턴스를 생성한다.
+
+### JSON 파싱과 객체 역직렬화
+
+역직렬화 API는 직렬화와 마찬가지로 함수 하나로 이뤄져 있다.
+
+`inline fun <reified T: Any> deserialize(json: String): T`
+
+JSON 역직렬화기는 3단계로 구현되어 있다.
+
+1. 어휘 분석기 : lexical analyzer
+2. 문법분석기 : syntax analyzer
+3. 파서 : parser
+
+최상위 역직렬화 함수를 정의해보자
+
+```kt
+fun <T : Any> deserialize(json: Reader, targetClass: KClass<T>): T {
+  val seed = ObjectSeed(targetClass, CallsInfoCache())
+  Parser(json, seed).parse()
+  return seed.spawn()
+}
+```
+
+객체 역직렬화 하기
+
+```kt
+class ObjectSeed<out T: Any>(targetClass: KClass<T>, val classInfoCache: CallsInfoCache): Seed {
+  private val classInfo: ClassInfo<T> = classInfoCache[targetClass]
+  private val valueArguments = mutableMapOf<KParameter, Any?>()
+  private val seedArguments = mutableMapOf<KParameter, seed>()
+  private val arguments: Map<KParameter, Any?>
+    get() = valueArguments + seedArguments.mapValues { it.value.spawn() }
+
+  override fun setSimpleProperty(propertyName: String, value: Any?) {
+    val param = classInfo.getConstructorParameter(propertyName)
+    valueArguments[param] = classInfo.deserializeConstructorArgument(param, value)
+  }
+
+  override fun createCompositeProperty(propertyName: String, isList: Boolean): Seed {
+    val param = classInfo.getConstructorParameter(propertyName)
+    val deserializeAs = classInfo.getDeserializeClass(propertyName)
+    val seed = createSeedForType(deserializeAs ?: param.type.javaType, isList)
+    return seed.apply { seedArguments[param] = this }
+  }
+
+  override fun sapwn(): T = classInfo.createInstance(arguments)
+}
+```
+
+### 최종 역직렬화 단계
+
+`KCallable.call` 은 인자 리스트를 받아서 함수나 생성자를 호출해준다.
+하지만 디폴트 파라미터 값을 지원하지 않는다는 한계가 있다.
+디폴트 파라미터를 사용하기 위해서는 `KCallable.callBy`를 사용할 수 있다.
+
+```kt
+interface KCallable<out R> {
+  fun callBy(args: Map<KParameter, Any?>): R
+  ...
+}
+```
+
+`callBy` 메소드는 파라미터와 파라미터에 해당하는 값을 연결해주는 맵을 인자로 받는다.
+인자로 받은 맵에서 파라미터를 찾을수 없을 때 디폴트 값이 정의되어 있다면 디폴트 값을 사용한다.
+여기서는 `args` 맵에 들어있는 각 값의 타입이 생성자의 파라미터 타입과 일치해야 한다. 그렇지 않으면 `Exception`이 발생한다.
+따라서 파라미터 타입이 어떤것인지를 확인하기 위해 `KParameter.type` 프로퍼티를 활용해야 한다.
+
+```kt
+fun serializerForType(type: Type): ValueSerializer<out Any?>? =
+  when(type) {
+    Byte::class.java -> ByteSerializer
+    Int::class.java -> IntSerializer
+    Boolean::class.java -> BooleanSerializer
+    ...
+    else -> null
+  }
+```
+
+타입별 `ValueSerializer` 구현은 필요한 타입 검사나 변환을 수행한다
+
+```kt
+object BooleanSerializer : ValueSerializer<Boolean> {
+  override fun fromJsonValue(jsonValue: Any?): Boolean {
+    if (jsonValue !is Boolean) throw JKidException("Boolean expected")
+    return jsonValue
+  }
+
+  override fun toJsonValue(value: Boolean) = value
+}
+```
+
+`ClassInfoCache`는 리플렉션 연산의 비용을 줄이기 위한 클래스이다.
+직렬화와 역직렬화에 사용되는 애노테이션들은 파라미터가 아니라 프로퍼티에 적용된다.
+하지만 객체를 역직렬화할 때는 프로퍼티가 아니라 생성자 파라미터를 다뤄야 한다.
+
+애노테이션을 꺼내려면 파라미터에 해당하는 프로퍼티를 찾아야 하는데 JSON에서 모든 키/값 쌍을 읽을 때마다 검색을 수행하면 느려진다.
+따라서 클래스별로 한 번만 검색을 수행하고 검색결과를 캐시에 넣는 기능을 수행한다.
+
+```kt
+class ClassInfoCache {
+  private val cacheData = mutableMapOf<KClass<*>, ClassInfo<*>>()
+  @Suppress("UNCHECKED_CAST")
+  operator fun <T : Any> get(cls: KClass<T>): ClassInfo<T> =
+    cacheData.getOrPut(cls) { ClassInfo(cls) } as ClassInfo<T>
+}
+```
+
+맵에 값을 저장할 때는 타입정보가 사라지지만,
+맵에서 받은 값의 타입인 `ClassInfo<T>` 타입인자가 항상 올바른 값이 되게 `get` 메소드 값이 구현이 보장한다.
+
+`ClassInfo` 클래스는 대상 클래스의 새 인스턴스를 만들고 필요한 정보를 캐시해 둔다.
+
+```kt
+class ClassInfo<T : Any>(cls: KClass<T>) {
+  private val constructor = cls.primaryConstructor!!
+  private val jsonNameToParam = hashMapOf<String, KParameter>()
+  private val paramToSerializer = hashMapOf<KParameter, ValueSerializer<out Any?>>()
+  private val jsonNameToDeserializeClass = hashMapOf<String, Class<out Any?>>()
+
+  init {
+    constructor.parameters.forEach { cacheDataForParameter(cls, It) }
+  }
+
+  fun getConstructorParameter(propertyName: String): KParameter =
+    jsonNameToParam[propertyName]!!
+
+  fun deserializeConstructorArgument(param: KParameter, value: Any?): Any {
+    val serializer = paramToSerializer[param]
+    if (serializer != null) return serializer.fromJsonValue(value)
+    validateArgumentType(param, value)
+    return value
+  }
+
+  fun createInstance(arguments: Map<KParameter, Any?>): T {
+    ensureAllParametersPresent(arguments)
+    return constructor.callBy(arguments)
+  }
+  ...
+}
+```
+
+`jsonNameToParam`은 JSON 파일의 각 키에 해당하는 파라미터를 저장하고, `paramToSerializer`는 각 파라미터에 대한 직렬화기를 저장한다.
+`jsonNameToDeserializeClass`는 `@DeserializeInterface` 애노테이션 인자로 지정한 클래스를 저장한다.
