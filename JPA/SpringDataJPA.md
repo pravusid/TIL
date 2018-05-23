@@ -56,25 +56,25 @@
 
 ### Annotation
 
-- @Entity : Entity임을 표시함. 테이블과 매칭해서 사용한다.
-- @Table(name="articles") : 기존 테이블과 연결
-- @Id : PK 정의
-- @GeneratedValue : Auto_increment, Sequence를 생성해준다
-  - strategy = GenerationType.AUTO
-- @Column : 컬럼과 연결, 컬럼 정보 기입
-  - name : 기존 column 이름
-- @OneToMany(mappedBy="@ManyToOne variable name")
-- @ManyToOne : JoinColumn으로 pk를 가져와서 활용
-- @JoinColumn(name="sosi_id", referencedColumnName="id", foreignKey = @ForeignKey(name="fk_sosi_user"))
-- @ManyToMany
-- @OrderBy("col1 ASC, col2 ASC") : order by로 정렬함
-- @Transient : 테이블의 컬럼과 매핑되지 않고 쓰이는 Attribute 를 정의하고자 할 때
+- `@Entity` : Entity임을 표시함. 테이블과 매칭해서 사용한다.
+- `@Table(name="articles")` : 기존 테이블과 연결
+- `@Id` : PK 정의
+- `@GeneratedValue` : Auto_increment, Sequence를 생성해준다
+  - `strategy = GenerationType.AUTO`
+- `@Column` : 컬럼과 연결, 컬럼 정보 기입
+  - `name` : 기존 column 이름
+- `@OneToMany(mappedBy="@ManyToOne variable name")`
+- `@ManyToOne` : JoinColumn으로 pk를 가져와서 활용
+- `@JoinColumn(name="sosi_id", referencedColumnName="id", foreignKey = @ForeignKey(name="fk_sosi_user"))`
+- `@ManyToMany`
+- `@OrderBy("col1 ASC, col2 ASC")` : order by로 정렬함
+- `@Transient` : 테이블의 컬럼과 매핑되지 않고 쓰이는 Attribute 를 정의하고자 할 때
 
 ### repository
 
-CRUD 작업을 위해서 JpaRepository(CrudRepository)<{entity}, {PK_TYPE}> 클래스를 상속받는 {tablename}Repository 클래스를 생성한다.
+CRUD 작업을 위해서 `JpaRepository(CrudRepository)<{entity}, {PK_TYPE}>` 인터페이스를 상속받는 `{tablename}Repository` 클래스를 생성한다.
 
-기본적인 CRUD를 위한 method (findAll, findOne, save ...)가 이미 구현되어있다.
+기본적인 CRUD를 위한 method (`findAll`, `findOne`, `save` ...)가 이미 구현되어있다.
 
 #### 핵심 method
 
@@ -170,9 +170,9 @@ List<User> findByLastname(String lastname, Pageable pageable);
 
 #### Specification
 
-Repository에서 JpaSpecificationExecutor 인터페이스를 추가로 상속받는다
+Repository에서 `JpaSpecificationExecutor` 인터페이스를 추가로 상속받는다
 
-검색조건을 관리하는 Specification 클래스를 생성한다. static으로 method를 정의하고 `new Specification<T>()`를 return한다.
+검색조건을 관리하는 `Specification` 클래스를 생성한다. `static`으로 method를 정의하고 `new Specification<T>()`를 return한다.
 
 ```java
 public static Specification<T> findFoo(final long foo) {
@@ -185,7 +185,7 @@ public static Specification<T> findFoo(final long foo) {
 }
 ```
 
-복수의 Predicate를 정의할 수도 있다
+복수의 `Predicate`를 정의할 수도 있다
 
 ```java
 Specification<Employee> specification = new Specification<Employee>() {
@@ -199,7 +199,7 @@ Specification<Employee> specification = new Specification<Employee>() {
 };
 ```
 
-@OneToMany 관계의 데이터를 찾아올 때
+`@OneToMany` 관계의 데이터를 찾아올 때
 
 ```java
 public static Specification<Board> findByComment(final String keyword) {
@@ -210,7 +210,7 @@ public static Specification<Board> findByComment(final String keyword) {
 }
 ```
 
-JpaSpecificationExecutor 인터페이스에 명시된 `Specification<?> spec`를 매개변수로 하는 method를 활용한다
+`JpaSpecificationExecutor` 인터페이스에 명시된 `Specification<?> spec`를 매개변수로 하는 method를 활용한다
 
 ```java
 public Page<T> findAll(String keyword, Pageable pageable){
@@ -221,7 +221,7 @@ public Page<T> findAll(String keyword, Pageable pageable){
 ### Pageable, Page, PageImpl
 
 `PagingAndSortingRepository`에는 페이지 단위 입출력이 이미 구현되어 있다.
-Pageable interface를 활용하는데 컨트롤러 매개변수 `Pageable pageable`로 구현체를 생성한다.
+`Pageable` interface를 활용하는데 컨트롤러 매개변수 `Pageable pageable`로 구현체를 생성한다.
 
 `Page<T> list = fooRepository.findAll(pageable);` 으로 페이지단위 데이터를 받아온다
 
@@ -272,7 +272,7 @@ boolean isLast();  // 현재 페이지가 마지막 페이지 인지
 
 ### 상위 Entity, Auditing
 
-데이터 객체의 중복을 없애기 위해서 상위Entity를 생성할 수 있다. AbstractEntity.class를 생성한다.
+데이터 객체의 중복을 없애기 위해서 상위 Entity를 생성할 수 있다. `AbstractEntity.class`를 생성한다.
 
 Auditing을 활용하여 변화를 감지하고 자동으로 값을 갱신할 수 있다.
 
@@ -342,11 +342,21 @@ Auditing을 활용하여 변화를 감지하고 자동으로 값을 갱신할 �
   }
   ```
 
-생성한 AbstractEntity.class는 데이터객체에서 상속받아 사용한다.
+생성한 `AbstractEntity.class`는 데이터객체에서 상속받아 사용한다.
 
 위에서 `@CreatedDate`와 `@LastModifiedDate` 어노테이션을 적용하고 Spring-data가 이를 감지하게 하려면 설정값이 필요하다
 
-**fooApplication.java (Spring Boot 설정파일) 클래스 상단에 `@EnableJpaAuditing` 어노테이션을 명시한다.**
+**`fooApplication.java` (Spring Boot 설정파일) 클래스 상단에 `@EnableJpaAuditing` 어노테이션을 명시한다.**
+
+#### Auditing 사용시 `LocalDate` `LocalDateTime` 처리
+
+`LocalDate`, `LocalDateTime`을 DB에 입력하려고 하면
+`Caused by: com.mysql.jdbc.MsqlDataTruncation: Data truncation: Incorrect dateme value:` 에러가 발생하거나
+`tinyblob` 타입으로 저장되는 경우가 발생한다.
+
+`@Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)`
+
+위 애노테이션을 Entity `LocalDate` 필드에 명시하면 변환가능하다.
 
 ### Entity에서 JSON 사용처리
 
