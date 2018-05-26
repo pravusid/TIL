@@ -1,4 +1,4 @@
-# Spring Boot REST
+# Spring REST
 
 ## 기본설정
 

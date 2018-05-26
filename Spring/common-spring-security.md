@@ -1,4 +1,4 @@
-# Spring Boot Security
+# Spring Security
 
 ## 시작
 
