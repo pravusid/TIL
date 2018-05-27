@@ -147,3 +147,21 @@ public class ServletContextConfig extends WebMvcConfigurerAdapter {
   }
 }
 ```
+
+## 외부 설정파일 불러오기
+
+```properties
+external.properties.path = somepath
+```
+
+```java
+@Component
+public class ExternalProp {
+  @Value("${external.properties.path}")
+  private String path;
+}
+```
+
+위 코드를 사용하기 위해서 properties 파일을 context에 등록해야 한다 (`@Configuration` 파일에 명시)
+
+`@PropertySource("classpath:propname.properties")`
