@@ -218,15 +218,20 @@ annotation 사용을위해서는 application-context.xml 파일에
   - 부분삭제 : session.removeAttribute(key);
 - 세션 유효시간 설정
 
-## @Aspect
+## AOP
 
-- @Before(execution("`*`(return) com.idpravus.dao.MyDatabase.o*(..))")
+구현체로 AspectJ가 많이 쓰임
+
+### AOP Annotation
+
+- @Aspect: Class 사용 정의
+- @Before(execution("`*`(return-type) `com.idpravus.dao.MyDatabase.*(..)`(package, parameter)")
 - @After-Returning( ) : 정상수행
 - @After-Throwing( ) : 에러 발생시
 - @After( ) : finally 상황(무조건 수행)
 
 1. JoinPoint : 시점
-2. PointCut : 호출 조건
+2. PointCut : 호출 조건 (execution 조건 명시)
 3. Advice : JoinPoint + PointCut
 4. Aspect : Advice가 모인것
 
@@ -241,13 +246,23 @@ annotation 사용을위해서는 application-context.xml 파일에
   - `@After`
   - `@Around`
 
-- servlet-context.xml (aop @annotation 사용시)
+- servlet-context.xml (AOP @annotation 사용시)
 
   ```xml
   <aop:aspectj-autoproxy/>
   ```
 
 - Aspect 정의(annotation) : Before와 Around 같이쓰면 Around -> Before -> Around 순으로 실행됨
+
+#### Pointcut 설정
+
+- `execution()`
+- `bean()`
+- `within()`
+- `@annotation()`
+- `()`
+
+### AOP 예제
 
   ```java
   @Aspect
