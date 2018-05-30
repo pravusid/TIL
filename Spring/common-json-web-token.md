@@ -62,18 +62,18 @@ String compactJws = Jwts.builder()
 
 ```java
 try {
-    Jws<Claims> claims = Jwts.parser()
-        .requireSubject("Joe")
-        .require("hasMotorcycle", true)
-        .setSigningKey(key)
-        .parseClaimsJws(compactJws);
+  Jws<Claims> claims = Jwts.parser()
+    .requireSubject("Joe")
+    .require("hasMotorcycle", true)
+    .setSigningKey(key)
+    .parseClaimsJws(compactJws);
 } catch (MissingClaimException e) {
-    // we get here if the required claim is not present
+  // we get here if the required claim is not present
 } catch (IncorrectClaimException e) {
-    // we get here if the required claim has the wrong value
+  // we get here if the required claim has the wrong value
 }
 ```
 
-파싱 도중 예외가 발생할 수 있다. JJWT의 에외들은 모두 RuntimeExceptions와 JwtException의 하위 클래스이다.
+파싱 도중 예외가 발생할 수 있다. JJWT의 에외들은 모두 `RuntimeExceptions`와 `JwtException`의 하위 클래스이다.
 
 ## Spring Security

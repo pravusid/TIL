@@ -190,14 +190,12 @@ T(n) = T(n/2) + c2 = T(n/4) + c2 + c2
 ```python
 def SelectionSort(list):
     size = len(list)
-    for element in range(0, size):
+    for element in range(size): # range는 반폐구간
         min_position = element
         for target in range(element + 1, size):
             if (list[target] < list[min_position]):
                 min_position = target
-        temp = list[element]
-        list[element] = list[min_position]
-        list[min_position] = temp
+        (list[element], list[min_position]) = (list[min_position], list[element])
 ```
 
 #### 선택 정렬 알고리즘 성능
@@ -212,3 +210,39 @@ def SelectionSort(list):
 3. 제자리 정렬임: 데이터가 움직이는 경우는 두 원소 교환밖에 없음 (저장공간 이외의 공간을 상수개만 사용)
 
 ### 버블 정렬
+
+버블 정렬은 인접한 두 원소를 차례대로 비교하면서 자리바꿈을 통해 정렬하는 방식이다.
+
+`{ 30, 50, 7, 40, 88, 15, 44}` 의 배열을 정렬해보면
+
+1. 첫 번째 30과 두 번째 50을 비교한다.
+2. 30이 50보다 작다. 두 번째 50과 세 번째 7을 비교한다.
+3. 50이 7보다 크다. 두 수의 자리를 바꾼다.
+4. 세 번째 50을 다시 네 번째 40과 비교한다.
+5. 50이 40보다 크다. 두 수의 자리를 바꾼다.
+6. ... 반복하여 n-1번째 원소와 n번째 원소를 비교할때 까지 진행한다.
+7. 다시 1 ~ 6의 과정을, 정렬된 원소 이전까지 반복한다.
+
+#### 버블 정렬 알고리즘
+
+```python
+def BubbleSort(list):
+    size = len(list) - 1
+    for element in range(size):
+        for head in range(size - element):
+            if (list[head] > list[head + 1]):
+                (list[head], list[head + 1]) = (list[head + 1], list[head])
+```
+
+#### 버블 정렬 알고리즘 성능
+
+버블 정렬 알고리즘은 이중 반복문으로 구성되며
+바깥 반복은 조건에 따라 최소 상수, 최대 `n`에 비례하고, 안쪽 반복은 `n`에 비례한다.
+
+수행시간은 최선의 경우 `O(n)`, 최악의 경우 `O(n^2)`, 평균의 경우 `O(n^2)`이다.
+
+#### 버블 정렬 특징
+
+1. 선택 정렬에 비해 원소의 교환이 많이 발생함: 수행시간이 최악인 경우 (`O(n^2)`) 선택 정렬보다 비효율적임
+2. 안정적인 정렬임
+3. 제자리 정렬임
