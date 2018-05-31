@@ -188,14 +188,14 @@ T(n) = T(n/2) + c2 = T(n/4) + c2 + c2
 #### 선택 정렬 알고리즘
 
 ```python
-def SelectionSort(list):
-    size = len(list)
+def SelectionSort(dlist):
+    size = len(dlist)
     for element in range(size): # range는 반폐구간
         min_position = element
         for target in range(element + 1, size):
-            if (list[target] < list[min_position]):
+            if (dlist[target] < dlist[min_position]):
                 min_position = target
-        (list[element], list[min_position]) = (list[min_position], list[element])
+        (dlist[element], dlist[min_position]) = (dlist[min_position], dlist[element])
 ```
 
 #### 선택 정렬 알고리즘 성능
@@ -226,12 +226,12 @@ def SelectionSort(list):
 #### 버블 정렬 알고리즘
 
 ```python
-def BubbleSort(list):
-    size = len(list) - 1
+def BubbleSort(dlist):
+    size = len(dlist) - 1
     for element in range(size):
         for head in range(size - element):
-            if (list[head] > list[head + 1]):
-                (list[head], list[head + 1]) = (list[head + 1], list[head])
+            if (dlist[head] > dlist[head + 1]):
+                (dlist[head], dlist[head + 1]) = (dlist[head + 1], dlist[head])
 ```
 
 #### 버블 정렬 알고리즘 성능
@@ -270,14 +270,14 @@ def BubbleSort(list):
 #### 이진 탐색 알고리즘
 
 ```python
-def binary_search(list, target):
+def binary_search(dlist, target):
     left = 0
-    right = len(list) - 1
+    right = len(dlist) - 1
     while (left <= right):
         mid = (left + right) // 2
-        if (list[mid] == target):
+        if (dlist[mid] == target):
             return mid
-        elif (list[mid] < target):
+        elif (dlist[mid] < target):
             left = mid + 1
         else:
             right = mid - 1
@@ -287,18 +287,18 @@ def binary_search(list, target):
 순환(재귀) 알고리즘으로 구현할 수 있다.
 
 ```python
-def binary_search_recursion(list, target, left, right):
+def binary_search_recursion(dlist, target, left, right):
     if (left > right): return None
     mid = (left + right) // 2
 
-    if (list[mid] == target):
+    if (dlist[mid] == target):
         return mid
-    elif (list[mid] < target):
+    elif (dlist[mid] < target):
         left = mid + 1
     else:
         right = mid - 1
 
-    return binary_search_recursion(list, target, left, right)
+    return binary_search_recursion(dlist, target, left, right)
 ```
 
 #### 이진 탐색 성능 분석
