@@ -2,6 +2,8 @@
 
 ## 소개
 
+사실상 spring framework 공식 템플릿 엔진
+
 ## 설정
 
 application.properties
@@ -19,7 +21,7 @@ application.properties
 Thymeleaf는 태그 정책이 엄격해서 오타나 표준에 맞지 않는 구문이 있으면 칼같이 오류를 내뿜는다.
 특히 닫는 태그 등의 HTML 표준 관련 충돌이 잦은데 이를 완화하기 위해서 의존성 패키지를 추가한다.
 
-`spring.thymeleaf.mode=LEGACYHTML5` 적용 시
+`spring.thymeleaf.mode=LEGACYHTML5` 적용 시 (**thymeleaf3 버전에서는 적용할 필요 없음**)
 gradle dependency 추가 `compile("net.sourceforge.nekohtml:nekohtml:1.9.22")`
 
 Spring boot thymeleaf-starter는 thymeleaf2 버전을 적용하고 있기 때문에 버전 변경이 필요하다
@@ -97,6 +99,10 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 ### thymeleaf 사용 선언
 
 `<html xmlns:th="http://www.thymeleaf.org">`
+
+## 링크
+
+`<a th:href="@{/logout}">Sign Out</a>`
 
 ### 범위 선언
 
