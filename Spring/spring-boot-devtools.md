@@ -27,16 +27,18 @@ gradle dependencies에 추가
 
 기본 설정이 자동빌드이므로 의존성만 추가해도 작동함
 
-## `application.yml` 설정
+## `application.yml` 설정 (별도 설정 없이도 작동함)
 
 아무것도 설정하지 않으면 기본 값으로 작동함
 
+(템플릿엔진 cache 기본값: false `DevToolsPropertyDefaultsPostProcessor.java`)
+
 ```yml
-spring:
-  devtools:
-    livereload.enable: true
-  thymeleaf:
-    cache: false
+devtools:
+  livereload:
+    enabled: true # 기본값이 true임
+  restart:
+    additional-exclude: [static/**, public/**] # 변경되었을때 재시작 하지 않을 파일경로 추가 (static 파일은 기본값에 등록되어 있음)
 ```
 
 ## LiveReload
