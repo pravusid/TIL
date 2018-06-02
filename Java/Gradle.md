@@ -4,6 +4,10 @@
 
 ## 명령어
 
+버전 업데이트
+
+`./gradlew wrapper --gradle-version {version}`
+
 ## tips
 
 ### dependency 포함한 jar build
