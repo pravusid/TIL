@@ -57,7 +57,7 @@ Java Util Logging : `logging.properties`
       <maxHistory>30</maxHistory>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
+      <level>INFO</level> <!-- 로그 파일 기본 레벨 -->
     </filter>
 
     <encoder>
@@ -70,13 +70,16 @@ Java Util Logging : `logging.properties`
   <logger name="org.hibernate.SQL" level="INFO"/>
   <logger name="org.quartz.core" level="INFO"/>
 
-  <root level="INFO">
+  <root level="INFO"> <!-- 콘솔 출력 로그 레벨 -->
     <appender-ref ref="dailyRollingFileAppender" />
   </root>
 </configuration>
 ```
 
 ### application.yml
+
+기본적으로 클래스패스에 `logback-spring.xml`이 있으면 해당 설정대로 작동한다.
+설정파일에서 별도로 설정하면 `logback-spring.xml`을 override 하지 않고 추가로 설정내용을 실행한다.
 
 ```yml
 spring.profiles: logging-info
@@ -99,9 +102,9 @@ logging:
     org.quartz.core: DEBUG
 
 ---
-spring.profiles: logging-daily
+spring.profiles: logging-debug
 logging:
-  config: classpath:logback-spring.xml
+  config: classpath:logback-spring-debug.xml
 ```
 
 ### 실행

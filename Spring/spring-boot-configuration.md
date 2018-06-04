@@ -5,7 +5,7 @@
 ```groovy
 buildscript {
     ext {
-        springBootVersion = '1.5.12.RELEASE'
+        springBootVersion = '1.5.13.RELEASE'
         thymeleafVersion = '3.0.1.RELEASE'
     }
     repositories {
@@ -32,11 +32,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-aop")
     compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.security:spring-security-jwt:1.0.9.RELEASE")
+    compile("org.springframework.security.oauth:spring-security-oauth2:2.3.3.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.thymeleaf:thymeleaf:${thymeleafVersion}")
     compile("org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:${thymeleafVersion}")
-    compile("net.sourceforge.nekohtml:nekohtml:1.9.22")
     runtime('com.h2database:h2')
     runtime("org.springframework.boot:spring-boot-devtools")
     testCompile("org.springframework.boot:spring-boot-starter-test")
@@ -57,21 +58,21 @@ jar {
 ## application.yml
 
 ```yml
-#server:
-#  port: 80
+spring:
+  profiles.active: dev
+
+---
 
 spring:
-  profiles.active: logging-debug
-  thymeleaf:
-    mode: LEGACYHTML5
+  profiles: dev
   h2:
     console:
       enabled: true
   datasource:
-#    url: jdbc:mysql://192.168.1.35/idpravus?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+#    url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
 #    username: user
 #    password: pwd
-    url: jdbc:h2:mem:idpravus;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
     data: classpath:import.sql
@@ -85,18 +86,23 @@ spring:
       ddl-auto: update
 #      ddl-auto: create-drop
 
----
-spring.profiles: logging-debug
 logging:
-  file: logs/application.log
-  level:
-    org.thymeleaf: DEBUG
-    org.springframework.web: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.quartz.core: DEBUG
+  config: classpath:logback-spring-debug.xml
 
 ---
-spring.profiles: logging-daily
-logging:
-  config: classpath:logback-spring.xml
+
+spring:
+  profiles: service
+  datasource:
+    url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+    username: user
+    password: pwd
+
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 80
 ```
