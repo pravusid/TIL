@@ -8,8 +8,61 @@
 ## 설정
 
 - ip 바인딩 설정
-  - /etc/mongodb.conf : `bind_ip = 0.0.0.0`
+  - /etc/mongod.conf : `bind_ip = 0.0.0.0`
   - /etc/ : `sudo rm -rf *.sock`
+
+`mongod.conf`
+
+```yml
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+# Where and how to store data.
+storage:
+  dbPath: /var/lib/mongo
+  journal:
+    enabled: true
+#  engine: mmapv1 / wiredTiger
+
+# how the process runs
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: /var/run/mongodb/mongod.pid  # location of pidfile
+  timeZoneInfo: /usr/share/zoneinfo
+
+# network interfaces
+net:
+  port: 27017
+  bindIp: 127.0.0.1  # Enter 0.0.0.0,:: to bind to all IPv4 and IPv6 addresses or, alternatively, use the net.bindIpAll setting.
+```
+
+### windows 설정
+
+실행: `mongod --config "c:\data\mongod.cfg"`
+
+`mongod.cfg`
+
+```yml
+net:
+    port: 28080
+    bindIp: 0.0.0.0
+systemLog:
+    destination: file
+    path: c:\data\log\mongod.log
+storage:
+    journal:
+        enabled: true
+    dbPath: c:\data\
+    engine: mmapv1 # 32bit
+security:
+    authorization: enabled
+```
 
 ## 실행/종료
 
