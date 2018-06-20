@@ -184,6 +184,15 @@ INSERT INTO
   );
 ```
 
+#### TokenStore
+
+토큰스토어 종류
+
+1. `org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore`: JAVA 내부에서 Map, Queue 구조의 메모리를 사용
+2. `org.springframework.security.oauth2.provider.token.store.JdbcTokenStore`: JDBC 를 사용해서 DB 에 저장
+3. `org.springframework.security.oauth2.provider.token.store.JwtTokenStore`: Json Web Token 을 이용
+4. `org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore`: Redis 에 Token 정보를 저장
+
 #### Token을 처리할 서버 설정
 
 `AuthorizationSeverConfig.java`
@@ -197,18 +206,16 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     private String resourceId;
 
     private AuthenticationManager authenticationManager;
-    private ClientDetailsService clientDetailsService;
 
-    public AuthorizationSeverConfig(AuthenticationManager authenticationManager, ClientDetailsService clientDetailsService) {
+    public AuthorizationSeverConfig(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        this.clientDetailsService = clientDetailsService;
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore())
-                .accessTokenConverter(accessTokenConverter())
-                .authenticationManager(authenticationManager);
+        endpoints.authenticationManager(authenticationManager)
+                .tokenStore(tokenStore())
+                .accessTokenConverter(accessTokenConverter());
     }
 
     @Bean
@@ -225,6 +232,17 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         return converter;
     }
 
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(clientDetailsService());
+    }
+
+    @Bean
+    @Primary
+    public ClientDetailsService clientDetailsService(DataSource dataSource) {
+        return new JdbcClientDetailsService(dataSource);
+    }
+
     @Bean
     @Primary
     public DefaultTokenServices tokenService() {
@@ -232,17 +250,6 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         defaultTokenServices.setTokenStore(tokenStore());
         defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
-    }
-
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService);
-    }
-
-    @Bean
-    @Primary
-    public JdbcClientDetailsService JdbcClientDetailsService(DataSource dataSource) {
-        return new JdbcClientDetailsService(dataSource);
     }
 
 }
@@ -277,7 +284,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer config) {
-        config.resourceId(resourceId);
+        config.resourceId(resourceId)
+                .tokenStore(tokenStore());
     }
 
     @Bean
@@ -305,9 +313,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 }
 ```
 
-#### 기존에 스프링 시큐리티를 사용중이었다면 (모놀리틱)
-
-토큰 발급 주소를 허용한다
+#### 토큰 발급 주소를 허용
 
 ```java
 ...
