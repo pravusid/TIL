@@ -232,6 +232,41 @@ Token Entity를 사용하기 위한 JpaRepository
   }
   ```
 
+### CORS 설정
+
+```java
+@EnableWebSecurity
+@Configuation
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            // CORS preflight request는 permitAll
+            .authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .and()
+            // CORS 적용
+            .anyRequest().authenticated()
+                .and()
+            .cors()
+                .and();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+}
+```
+
 ### 로그인/로그아웃 폼 예제
 
 ```html
