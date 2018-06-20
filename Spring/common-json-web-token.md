@@ -205,10 +205,26 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     @Value("${resouce.id:spring-boot-application}")
     private String resourceId;
 
+    @Value("${security.oauth2.resource.jwt.key-value}")
+    private String publicKey;
+
+    private ClientDetailsService clientDetailsService;
     private AuthenticationManager authenticationManager;
 
-    public AuthorizationSeverConfig(AuthenticationManager authenticationManager) {
+    public AuthorizationSeverConfig(ClientDetailsService clientDetailsService, AuthenticationManager authenticationManager) {
+        this.clientDetailsService = clientDetailsService;
         this.authenticationManager = authenticationManager;
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(clientDetailsService);
+    }
+
+    @Bean
+    @Primary
+    public JdbcClientDetailsService JdbcClientDetailsService(DataSource dataSource) {
+        return new JdbcClientDetailsService(dataSource);
     }
 
     @Override
@@ -217,6 +233,8 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
                 .tokenStore(tokenStore())
                 .accessTokenConverter(accessTokenConverter());
     }
+
+    // 아래의 세 메소드는 Jwt 토큰용 (인증 서버 / 리소스 서버 모두 있음)
 
     @Bean
     public TokenStore tokenStore() {
@@ -230,17 +248,6 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         converter.setKeyPair(keyFactory.getKeyPair("jwtserver", "keypass".toCharArray()));
 //        converter.setSigningKey("secret");
         return converter;
-    }
-
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService());
-    }
-
-    @Bean
-    @Primary
-    public ClientDetailsService clientDetailsService(DataSource dataSource) {
-        return new JdbcClientDetailsService(dataSource);
     }
 
     @Bean
@@ -287,6 +294,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         config.resourceId(resourceId)
                 .tokenStore(tokenStore());
     }
+
+    // 아래의 세 메소드는 Jwt 토큰용 (인증 서버 / 리소스 서버 모두 있음)
 
     @Bean
     public TokenStore tokenStore() {
