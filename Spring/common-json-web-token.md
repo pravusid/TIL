@@ -202,28 +202,33 @@ INSERT INTO
 @EnableAuthorizationServer
 public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${resouce.id:spring-boot-application}")
-    private String resourceId;
-
-    @Value("${security.oauth2.resource.jwt.key-value}")
-    private String publicKey;
-
-    private ClientDetailsService clientDetailsService;
+    private PasswordEncoder passwordEncoder;
+    private DataSource dataSource;
     private AuthenticationManager authenticationManager;
 
-    public AuthorizationSeverConfig(ClientDetailsService clientDetailsService, AuthenticationManager authenticationManager) {
-        this.clientDetailsService = clientDetailsService;
+    public AuthorizationSeverConfig(PasswordEncoder passwordEncoder,
+            DataSource dataSource,
+            AuthenticationManager authenticationManager) {
+        this.passwordEncoder = passwordEncoder;
+        this.dataSource = dataSource;
         this.authenticationManager = authenticationManager;
     }
 
+    // client_secret 조회시 암호화 사용
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.passwordEncoder(passwordEncoder);
+    }
+
+    // client 정보를 DB로 부터 조회
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService);
+        clients.withClientDetails(clientDetailsService());
     }
 
     @Bean
     @Primary
-    public JdbcClientDetailsService JdbcClientDetailsService(DataSource dataSource) {
+    public ClientDetailsService clientDetailsService() {
         return new JdbcClientDetailsService(dataSource);
     }
 
@@ -325,7 +330,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 #### 토큰 발급 주소를 허용
 
 ```java
-...
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     ...
     @Override
@@ -333,7 +337,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 ...
-                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/oauth/**").permitAll()
                 ...
     }
     ...
@@ -372,7 +376,7 @@ The default can be restored by setting security.oauth2.resource.filter-order = 3
 
 ### 테스트
 
-`curl -u vueclient:vueclientpwd http://localhost:8080/oauth/token -d  "grant_type=password&username=user&password=1111"`
+`curl -u vueclient:vueclientpwd http://localhost:8080/oauth/token -d "grant_type=password&username=user&password=1111"`
 
 클라이언트에서 발급받은 토큰으로 요청
 

@@ -32,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   // 인증설정 (in memory, JDBC ...) 하는데 쓰는 builder, UserDetailsService를 Bean으로 등록하면 별 쓸일 없는듯
-  @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
@@ -97,6 +96,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .rememberMeServices(persistentTokenBasedRememberMeServices());
   }
 
+  // AutenticationProvider를 bean으로 등록한다. 기본제공되는 AuthencationProvider의 구현체이다.
+  // DaoAuthenticationProvider는 내부적으로 UserDetailsService를 호출해 db에서 사용자를 조회한다.
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
+  }
+
   // 패스워드 인코더 설정 Bean
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -113,16 +122,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     tokenBasedRememberMeServices.setTokenValiditySeconds(60 * 60 * 24 * 30);
     tokenBasedRememberMeServices.setUseSecureCookie(false);
     return tokenBasedRememberMeServices;
-  }
-
-  // AutenticationProvider를 bean으로 등록한다. 기본제공되는 AuthencationProvider의 구현체이다.
-  // DaoAuthenticationProvider는 내부적으로 UserDetailsService를 호출해 db에서 사용자를 조회한다.
-  @Bean
-  public DaoAuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService);
-    authProvider.setPasswordEncoder(passwordEncoder());
-    return authProvider;
   }
 
   // 퍼시스턴스 기반 Remember Me 설정
@@ -234,6 +233,30 @@ Token Entity를 사용하기 위한 JpaRepository
 
 ### CORS 설정
 
+Security와 상관없이 WebMVC CORS 설정도 필요함
+아래 설정을 사용하지 않으려면 or 아래의 mapping에 해당하지 않는 곳 설정 : controller에서 `@CrossOrigin` 사용
+
+```java
+@Configuration
+public class WebConfig {
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+            }
+        };
+    }
+
+}
+```
+
+Spring Security CORS 설정 RequestMatching 되는 곳에서 작동함
+
 ```java
 @EnableWebSecurity
 @Configuation
@@ -241,26 +264,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            // CORS preflight request는 permitAll
-            .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .and()
-            // CORS 적용
-            .anyRequest().authenticated()
-                .and()
-            .cors()
-                .and();
+            ...
+            .cors().and()
+            ...
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
@@ -324,10 +341,10 @@ UserDetails 인터페이스를 구현한다. 인증후 유저객체(Authenticati
 @ElementCollection(fetch = FetchType.EAGER)
 @Enumerated(EnumType.STRING)
 @Column(name="authority")
-private List<Authority> authorities;
+private Set<Authority> authorities;
 
 private User() {
-  authorities = new ArrayList<>();
+  authorities = new HashSet<>();
   authorities.add(Authority.USER);
 }
 
@@ -347,7 +364,6 @@ UserDetailsService 인터페이스를 구현한다. SecurityConfig에서 설정�
 public class CustomUserDetailService implements UserDetailsService {
   private UserRepository userRepo;
 
-  @Autowired
   public CustomUserDetailService(UserRepository userRepo) {
     this.userRepo = userRepo;
   }
