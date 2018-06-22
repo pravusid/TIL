@@ -17,7 +17,7 @@
 ```groovy
 jar {
     manifest {
-        attributes 'Main-Class': 'kr.co.iot4health.Main'
+        attributes 'Main-Class': 'kr.pravusid'
     }
 }
 
