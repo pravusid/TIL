@@ -403,37 +403,29 @@ security:
 
 (참고): 필터 순서: OAuth 2 Resource Filter (Debug mode에서 `filters: ArrayList` 내부 순서대로 필터가 작동함)
 
-The default order of the OAuth2 resource filter has changed from 3 to SecurityProperties.ACCESS_OVERRIDE_ORDER - 1.
-This places it after the actuator endpoints but before the basic authentication filter chain.
-The default can be restored by setting security.oauth2.resource.filter-order = 3
+OAuth2 resource filter의 기본 실행 순서가 3에서 SecurityProperties.ACCESS_OVERRIDE_ORDER - 1 로 변경됨
+actuator endpoints 다음 순서이고 the basic authentication filter chain 이전에 실행됨
+기존의 순서인 3으로 다시 변경하려면 `security.oauth2.resource.filter-order = 3`
 
 ### CustomTokenEnhancer
 
 #### Custom Claims in the Token
 
-Let’s now set up some infrastructure to be able to add a few custom claims in the Access Token. The standard claims provided by the framework are all well and good, but most of the time we’ll need some extra information in the token to utilize on the client side.
-
-We’ll define a TokenEnhancer to customize our Access Token with these additional claims.
-
-In the following example, we will add an extra field “organization” to our Access Token – with this CustomTokenEnhancer:
+추가적인 claim 정의를 위해서 사용자 `TokenEnhancer`를 정의함
 
 ```java
 public class CustomTokenEnhancer implements TokenEnhancer {
     @Override
-    public OAuth2AccessToken enhance(
-      OAuth2AccessToken accessToken, 
-      OAuth2Authentication authentication) {
+    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put(
-          "organization", authentication.getName() + randomAlphabetic(4));
-        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(
-          additionalInfo);
+        additionalInfo.put("organization", authentication.getName() + randomAlphabetic(4));
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
 }
 ```
 
-Then, we’ll wire that into our Authorization Server configuration – as follows:
+Authorization Server 설정에서 TokenEnhancer를 연결한다
 
 ```java
     @Override
@@ -454,7 +446,7 @@ Then, we’ll wire that into our Authorization Server configuration – as follo
     }
 ```
 
-With this new configuration up and running – here’s what a token token payload would look like:
+위의 설정으로 생성되는 token의 payload 형태는 다음과 같다
 
 ```json
 {
@@ -476,83 +468,75 @@ With this new configuration up and running – here’s what a token token paylo
 
 #### Access Extra Claims on Resource Server
 
-But, how can we access that information over on the resource server side?
+리소스 서버에서 CustomToken을 처리해보자
 
-What we’ll do here is – extract the extra claims from the access token:
-
+```java
 public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
-    OAuth2AuthenticationDetails details
-      = (OAuth2AuthenticationDetails) auth.getDetails();
-    OAuth2AccessToken accessToken = tokenStore
-      .readAccessToken(details.getTokenValue());
+    OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
+    OAuth2AccessToken accessToken = tokenStore.readAccessToken(details.getTokenValue());
     return accessToken.getAdditionalInformation();
 }
+```
 
-In the following section, we’ll discuss how to add that extra information to our Authentication details by using a custom AccessTokenConverter
-6.1. Custom AccessTokenConverter
+`CustomAccessTokenConverter`
 
-Let’s create CustomAccessTokenConverter and set Authentication details with access token claims:
-
+```java
 @Component
 public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
- 
     @Override
     public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
-        OAuth2Authentication authentication
-         = super.extractAuthentication(claims);
+        OAuth2Authentication authentication = super.extractAuthentication(claims);
         authentication.setDetails(claims);
         return authentication;
     }
 }
+```
 
-Note: DefaultAccessTokenConverter used to set Authentication details to Null.
-6.2. Configure JwtTokenStore
+CustomAccessTokenConverter를 위한 JwtTokenStore를 정의하자
 
-Next, we’ll configure our JwtTokenStore to use our CustomAccessTokenConverter:
-
+```java
 @Configuration
 @EnableResourceServer
-public class OAuth2ResourceServerConfigJwt
- extends ResourceServerConfigurerAdapter {
- 
+public class OAuth2ResourceServerConfigJwt extends ResourceServerConfigurerAdapter {
+
     @Autowired
     private CustomAccessTokenConverter customAccessTokenConverter;
- 
+
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
- 
+
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setAccessTokenConverter(customAccessTokenConverter);
     }
-    // ...
+
 }
-6.3. Extra Claims available in the Authentication Object
+```
 
-Now that the Authorization Server added some extra claims in the token, we can now access on the Resource Server side, directly in the Authentication object:
+Resource Server 에서 Authentication object 처리를 정의하자
 
+```java
 public Map<String, Object> getExtraInfo(Authentication auth) {
-    OAuth2AuthenticationDetails oauthDetails
-      = (OAuth2AuthenticationDetails) auth.getDetails();
-    return (Map<String, Object>) oauthDetails
-      .getDecodedDetails();
+    OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) auth.getDetails();
+    return (Map<String, Object>) oauthDetails.getDecodedDetails();
 }
-6.4. Authentication Details Test
+```
 
-Let’s make sure our Authentication object contains that extra information:
+#### Authentication Details Test
 
+추가 claim을 포함한 token 처리를 테스트 해보자
+
+```java
 @RunWith(SpringRunner.class)
-@SpringBootTest(
-  classes = ResourceServerApplication.class, 
-  webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ResourceServerApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class AuthenticationClaimsIntegrationTest {
- 
+
     @Autowired
     private JwtTokenStore tokenStore;
- 
+
     @Test
     public void whenTokenDoesNotContainIssuer_thenSuccess() {
         String tokenValue = obtainAccessToken("fooClientIdPassword", "john", "123");
@@ -561,7 +545,7 @@ public class AuthenticationClaimsIntegrationTest {
   
         assertTrue(details.containsKey("organization"));
     }
- 
+
     private String obtainAccessToken(
       String clientId, String username, String password) {
   
@@ -577,8 +561,7 @@ public class AuthenticationClaimsIntegrationTest {
         return response.jsonPath().getString("access_token");
     }
 }
-
-Note: we obtained the access token with extra claims from the Authorization Server, then we read the Authentication object from it which contains extra information “organization” in the details object.
+```
 
 ### 테스트
 
