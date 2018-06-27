@@ -471,11 +471,11 @@ Authorization Server 설정에서 TokenEnhancer를 연결한다
 리소스 서버에서 CustomToken을 처리해보자
 
 ```java
-public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
-    OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
-    OAuth2AccessToken accessToken = tokenStore.readAccessToken(details.getTokenValue());
-    return accessToken.getAdditionalInformation();
-}
+    public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
+        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
+        OAuth2AccessToken accessToken = tokenStore.readAccessToken(details.getTokenValue());
+        return accessToken.getAdditionalInformation();
+    }
 ```
 
 `CustomAccessTokenConverter`
@@ -519,10 +519,10 @@ public class OAuth2ResourceServerConfigJwt extends ResourceServerConfigurerAdapt
 Resource Server 에서 Authentication object 처리를 정의하자
 
 ```java
-public Map<String, Object> getExtraInfo(Authentication auth) {
-    OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) auth.getDetails();
-    return (Map<String, Object>) oauthDetails.getDecodedDetails();
-}
+    public Map<String, Object> getExtraInfo(Authentication auth) {
+        OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) auth.getDetails();
+        return (Map<String, Object>) oauthDetails.getDecodedDetails();
+    }
 ```
 
 #### Authentication Details Test
