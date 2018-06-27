@@ -48,7 +48,7 @@
 | `Ctrl+S­hift+Z` | redo |
 | `Ctrl+Y` | redo |
 | `Ctrl+Home` | go to cell start |
-| `Ctrl+Up`| 	go to cell start |
+| `Ctrl+Up`| go to cell start |
 | `Ctrl+End` | go to cell end |
 | `Ctrl+Down` | go to cell end |
 | `Ctrl+Left` | go one word left |
