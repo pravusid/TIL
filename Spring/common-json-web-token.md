@@ -94,7 +94,15 @@ try {
 
 파싱 도중 예외가 발생할 수 있다. JJWT의 에외들은 모두 `RuntimeExceptions`와 `JwtException`의 하위 클래스이다.
 
-## Spring Security and JWT
+## Spring Security: OAuth2 & JWT
+
+<https://projects.spring.io/spring-security-oauth/docs/oauth2.html>
+
+기본적으로 Authorization 서버와 Resource Server는 분리되어 있어야 함.
+
+`AuthorizationEndpoint` authorization(인가)에 대한 서비스 요청 처리: Default URL: `/oauth/authorize`
+
+`TokenEndpoint` access token에 대한 서비스 요청 처리: Default URL: `/oauth/token`
 
 ### 설정
 
@@ -195,6 +203,14 @@ INSERT INTO
 
 #### Token을 처리할 서버 설정
 
+`AuthorizationServerEndpointsConfigurer`에서 허가유형에 대한 설정을 할 수 있다.
+
+- `authenticationManager`: password 허가로 전환하기 위해서는 AuthenticationManager를 주입해야 한다
+- `userDetailsService`: UserDetailsService를 주입하거나 어떤 방법으로든 글로벌하게 구성할 수 있다면 (예를 들어, GlobalAuthenticationManagerConfigurer), refresh token 허가는 계정이 여전히 활성화되어 있는지 보장하기 위해 user details에서 검증을 포함하게 된다.
+- `authorizationCodeServices`: auth code 허가를 위해 인가 코드 서비스(AuthorizationCodeServices의 인스턴스)를 정의한다.
+- `implicitGrantService`: implicit 허가 동안에 상태를 관리한다.
+- `tokenGranter`: TokenGranter (허가 제어 전체를 포함하며 위의 다른 속성은 무시한다)
+
 `AuthorizationSeverConfig.java`
 
 ```java
@@ -214,10 +230,10 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         this.authenticationManager = authenticationManager;
     }
 
-    // client_secret 조회시 암호화 사용
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.passwordEncoder(passwordEncoder);
+    public void configure(AuthorizationServerSecurityConfigurer securityConfig) throws Exception {
+        // password encoder bean이 있다면 설정하지 않아도 적용되어 있음 (client 정보 조회시)
+        securityConfig.passwordEncoder(passwordEncoder);
     }
 
     // client 정보를 DB로 부터 조회
@@ -329,6 +345,23 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 #### 토큰 발급 주소를 허용
 
+`AuthorizationServerEndpointsConfigurer`에서는 `pathMapping()`를 제공
+
+- 엔드포인트의 기본 URL 경로 (기본 구현체는 프레임워크 제공)
+- 필수 커스텀 경로 (“/”로 시작)
+
+프레임워크가 제공하는 URL 경로는
+
+- /oauth/authorize (인가 엔드포인트)
+- /oauth/token (토큰 엔드포인트)
+- /oauth/confirm_access (사용자가 허가의 승인을 확인하는 POST 요청)
+- /oauth/error (인가 서버에서 에러를 보여줄 때 사용)
+- /oauth/check_token (액세스 토큰을 복호화 하기 위해 리소스 서버에서 사용)
+- /oauth/token_key (JWT 토큰을 사용하는 경우 토큰 검증을 위한 공개키를 노출)가 있다.
+
+인가 엔드포인트 /oauth/authorize (또는 대채된 매핑 경로)는 인증된 사용자만 접근할 수 있도록 Spring Security를 사용해 보호해야 한다.
+예를 들어, 표준 Spring Security의 WebSecurityConfigurer를 사용하면 다음과 같다.
+
 ```java
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     ...
@@ -337,7 +370,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 ...
-                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/oauth/**").hasAuthority("USER")
                 ...
     }
     ...
@@ -373,6 +406,179 @@ security:
 The default order of the OAuth2 resource filter has changed from 3 to SecurityProperties.ACCESS_OVERRIDE_ORDER - 1.
 This places it after the actuator endpoints but before the basic authentication filter chain.
 The default can be restored by setting security.oauth2.resource.filter-order = 3
+
+### CustomTokenEnhancer
+
+#### Custom Claims in the Token
+
+Let’s now set up some infrastructure to be able to add a few custom claims in the Access Token. The standard claims provided by the framework are all well and good, but most of the time we’ll need some extra information in the token to utilize on the client side.
+
+We’ll define a TokenEnhancer to customize our Access Token with these additional claims.
+
+In the following example, we will add an extra field “organization” to our Access Token – with this CustomTokenEnhancer:
+
+```java
+public class CustomTokenEnhancer implements TokenEnhancer {
+    @Override
+    public OAuth2AccessToken enhance(
+      OAuth2AccessToken accessToken, 
+      OAuth2Authentication authentication) {
+        Map<String, Object> additionalInfo = new HashMap<>();
+        additionalInfo.put(
+          "organization", authentication.getName() + randomAlphabetic(4));
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(
+          additionalInfo);
+        return accessToken;
+    }
+}
+```
+
+Then, we’ll wire that into our Authorization Server configuration – as follows:
+
+```java
+    @Override
+    public void configure(
+    AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(
+        Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+
+        endpoints.tokenStore(tokenStore())
+                .tokenEnhancer(tokenEnhancerChain)
+                .authenticationManager(authenticationManager);
+    }
+
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new CustomTokenEnhancer();
+    }
+```
+
+With this new configuration up and running – here’s what a token token payload would look like:
+
+```json
+{
+    "user_name": "john",
+    "scope": [
+        "foo",
+        "read",
+        "write"
+    ],
+    "organization": "johnIiCh",
+    "exp": 1458126622,
+    "authorities": [
+        "ROLE_USER"
+    ],
+    "jti": "e0ad1ef3-a8a5-4eef-998d-00b26bc2c53f",
+    "client_id": "fooClientIdPassword"
+}
+```
+
+#### Access Extra Claims on Resource Server
+
+But, how can we access that information over on the resource server side?
+
+What we’ll do here is – extract the extra claims from the access token:
+
+public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
+    OAuth2AuthenticationDetails details
+      = (OAuth2AuthenticationDetails) auth.getDetails();
+    OAuth2AccessToken accessToken = tokenStore
+      .readAccessToken(details.getTokenValue());
+    return accessToken.getAdditionalInformation();
+}
+
+In the following section, we’ll discuss how to add that extra information to our Authentication details by using a custom AccessTokenConverter
+6.1. Custom AccessTokenConverter
+
+Let’s create CustomAccessTokenConverter and set Authentication details with access token claims:
+
+@Component
+public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
+ 
+    @Override
+    public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
+        OAuth2Authentication authentication
+         = super.extractAuthentication(claims);
+        authentication.setDetails(claims);
+        return authentication;
+    }
+}
+
+Note: DefaultAccessTokenConverter used to set Authentication details to Null.
+6.2. Configure JwtTokenStore
+
+Next, we’ll configure our JwtTokenStore to use our CustomAccessTokenConverter:
+
+@Configuration
+@EnableResourceServer
+public class OAuth2ResourceServerConfigJwt
+ extends ResourceServerConfigurerAdapter {
+ 
+    @Autowired
+    private CustomAccessTokenConverter customAccessTokenConverter;
+ 
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
+    }
+ 
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setAccessTokenConverter(customAccessTokenConverter);
+    }
+    // ...
+}
+6.3. Extra Claims available in the Authentication Object
+
+Now that the Authorization Server added some extra claims in the token, we can now access on the Resource Server side, directly in the Authentication object:
+
+public Map<String, Object> getExtraInfo(Authentication auth) {
+    OAuth2AuthenticationDetails oauthDetails
+      = (OAuth2AuthenticationDetails) auth.getDetails();
+    return (Map<String, Object>) oauthDetails
+      .getDecodedDetails();
+}
+6.4. Authentication Details Test
+
+Let’s make sure our Authentication object contains that extra information:
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+  classes = ResourceServerApplication.class, 
+  webEnvironment = WebEnvironment.RANDOM_PORT)
+public class AuthenticationClaimsIntegrationTest {
+ 
+    @Autowired
+    private JwtTokenStore tokenStore;
+ 
+    @Test
+    public void whenTokenDoesNotContainIssuer_thenSuccess() {
+        String tokenValue = obtainAccessToken("fooClientIdPassword", "john", "123");
+        OAuth2Authentication auth = tokenStore.readAuthentication(tokenValue);
+        Map<String, Object> details = (Map<String, Object>) auth.getDetails();
+  
+        assertTrue(details.containsKey("organization"));
+    }
+ 
+    private String obtainAccessToken(
+      String clientId, String username, String password) {
+  
+        Map<String, String> params = new HashMap<>();
+        params.put("grant_type", "password");
+        params.put("client_id", clientId);
+        params.put("username", username);
+        params.put("password", password);
+        Response response = RestAssured.given()
+          .auth().preemptive().basic(clientId, "secret")
+          .and().with().params(params).when()
+          .post("http://localhost:8081/spring-security-oauth-server/oauth/token");
+        return response.jsonPath().getString("access_token");
+    }
+}
+
+Note: we obtained the access token with extra claims from the Authorization Server, then we read the Authentication object from it which contains extra information “organization” in the details object.
 
 ### 테스트
 

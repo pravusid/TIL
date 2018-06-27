@@ -256,6 +256,7 @@ public class WebConfig {
 ```
 
 Spring Security CORS 설정 RequestMatching 되는 곳에서 작동함
+(OAuth2 사용시 Resource 서버에 RequestMatch 한다면 Resource 서버에 설정해야 함)
 
 ```java
 @EnableWebSecurity
