@@ -233,8 +233,9 @@ Token Entity를 사용하기 위한 JpaRepository
 
 ### CORS 설정
 
-Security와 상관없이 WebMVC CORS 설정도 필요함
-아래 설정을 사용하지 않으려면 or 아래의 mapping에 해당하지 않는 곳 설정 : controller에서 `@CrossOrigin` 사용
+Security를 사용하지 않을때 WebMvc 설정:
+아래 설정을 사용하지 않으려면 or 아래의 mapping에 해당하지 않는 곳 설정
+> controller에서 `@CrossOrigin` 사용
 
 ```java
 @Configuration
@@ -282,6 +283,42 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+}
+```
+
+특정 요청 (token 발급)에서 OPTIONS method가 막히는 경우 서블릿 필터에서 OPTIONS 처리 등록
+
+```java
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class CustomCorsFilter implements Filter {
+
+    @Override
+    public void init(FilterConfig config) throws ServletException {
+    }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse) resp;
+        HttpServletRequest request = (HttpServletRequest) req;
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "OPTIONS");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers",
+                "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            chain.doFilter(req, resp);
+        }
+    }
+
+    @Override
+    public void destroy() {
+    }
+
 }
 ```
 
