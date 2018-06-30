@@ -87,7 +87,7 @@ Vue.js에서는 텍스트 formatting을 위해서 필터를 사용할 수 있다
 
 필터 함수는 항상 표현식의 값을 첫번째 인자로 받는다.
 
-```html
+```js
 new Vue({
   // ...
   filters: {
@@ -103,3 +103,50 @@ new Vue({
 필터는 체이닝 가능하다. `{{ message | filterA | filterB }}`
 
 필터는 JavaScript 함수로 선언되므로 인자를 받을 수 있다. `{{ message | filterA('arg1', arg2) }}`
+
+## 폼 입력 바인딩 (v-model)
+
+`v-model` 디렉티브를 사용하여 폼 input과 textarea 엘리먼트에 양방향 데이터 바인딩을 생성할 수 있다.
+
+`v-model`은 기본적으로 사용자 입력 이벤트에 대한 데이터를 업데이트하는 “syntax sugar”이며 일부 경우에 특별한 주의를 해야함
+
+```html
+<input v-model="message" placeholder="여기를 수정해보세요">
+<p>메시지: {{ message }}</p>
+```
+
+여러개의 체크박스는 같은 배열을 바인딩 할 수 있다. 라디오 버튼 역시 동일하다.
+
+```html
+<div id='example-3'>
+  <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+  <label for="jack">Jack</label>
+  <input type="checkbox" id="john" value="John" v-model="checkedNames">
+  <label for="john">John</label>
+  <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+  <label for="mike">Mike</label>
+  <br>
+  <span>체크한 이름: {{ checkedNames }}</span>
+</div>
+```
+
+### v-model 수식어
+
+`.lazy`: 기본적으로, v-model은 각 입력 이벤트 후 입력과 데이터를 동기화 합니다.
+
+```html
+<!-- "input" 대신 "change" 이후에 동기화 됩니다. -->
+<input v-model.lazy="msg" >
+```
+
+`.number`: 사용자 입력이 자동으로 숫자로 형변환 되기를 원하면, v-model이 관리하는 input에 number 수식어를 추가하면 됩니다.
+
+```html
+<input v-model.number="age" type="number">
+```
+
+`.trim`: v-model이 관리하는 input을 자동으로 trim 하기 원하면, trim 수정자를 추가하면 됩니다.
+
+```html
+<input v-model.trim="msg">
+```

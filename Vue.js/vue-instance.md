@@ -23,6 +23,45 @@ var MyComponent = Vue.extend({
 var myComponentInstance = new MyComponent()
 ```
 
+### props (단방향 데이터 흐름)
+
+모든 props는 하위 속성과 상위 속성 사이의 단방향 바인딩을 형성함
+
+1. `v-bind:`를 `:`로 단축하여 사용할 수 있음
+2. js의 CamelCase는 html에서 kebab-case로 사용할 수 있음
+3. 하위 컴포넌트에서 해당 바인딩을 props로 받을 수 있음 (하위 컴포넌트에서 수정불가-단방향 데이터 흐름)
+
+```html
+<div>
+  <input v-model="parentMsg">
+  <br>
+  <child v-bind:my-message="parentMsg"></child>
+</div>
+```
+
+prop의 초기 값을 초기 값으로 사용하는 로컬 데이터 속성을 정의
+
+```js
+props: ['initialCounter'],
+data: function () {
+  return { counter: this.initialCounter }
+}
+```
+
+prop 값으로 부터 계산된 속성을 정의 합니다.
+
+```js
+props: ['size'],
+computed: {
+  normalizedSize: function () {
+    return this.size.trim().toLowerCase()
+  }
+}
+```
+
+자바 스크립트의 객체와 배열은 참조로 전달되므로 prop가 배열이나 객체인 경우
+하위 객체 또는 배열 자체를 부모 상태로 변경하면 부모 상태에 영향을 준다.
+
 ### data 객체
 
 각각의 Vue 인스턴스는 data 객체의 모든 속성을 프록시 처리한다.
