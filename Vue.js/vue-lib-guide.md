@@ -5,6 +5,7 @@
 - [bootstrap-vue](https://github.com/bootstrap-vue/bootstrap-vue)
 - [buefy: bulma + vuejs](https://github.com/buefy/buefy)
 - [vuetifyjs: material + vuejs](https://github.com/vuetifyjs/vuetify)
+- [elementFE](https://github.com/ElemeFE/element)
 - [vue-fontawesome](https://github.com/FortAwesome/vue-fontawesome)
 
 ## Data
@@ -13,6 +14,7 @@
 - [vee-validate: input validation](https://github.com/baianat/vee-validate)
 - [vue-i18n](https://github.com/kazupon/vue-i18n)
 - [vue-lazyload](https://github.com/hilongjw/vue-lazyload)
+- [vue-authenticate](https://github.com/dgrubelic/vue-authenticate)
 
 ## Component
 
@@ -31,7 +33,7 @@
 - [text-mask](https://github.com/text-mask/text-mask)
 - [vue-input-tag](https://github.com/matiastucci/vue-input-tag)
 - [vue-multiselect](https://github.com/shentao/vue-multiselect)
-- [vue-upload-component](https://github.com/lian-yue/vue-upload-component)
+- [vue-filepond](https://github.com/pqina/vue-filepond)
 - [vue-image-inputer](https://github.com/waynecz/vue-img-inputer)
 - [vue-draggable](https://github.com/SortableJS/Vue.Draggable)
 
