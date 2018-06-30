@@ -12,7 +12,7 @@ Controller routing method에서 `@Valid Entity entity` 형식으로 데이터를
 
 ```java
 if (bindingResult.hasErrors()) {
-  return "template";
+    return "template";
 }
 ```
 
@@ -22,21 +22,21 @@ RestController 에서는 `BindingResult` 없이 `defaultMessage`와 `field`로 �
 
 Entity에 명시
 
-- @AssertFalse : false 값만
-- @AssertTrue : true 값만
-- @DecimalMax(value=) : 지정된 값 이하의 실수만
-- @DecimalMin(value=) : 지정된 값 이상의 실수만
-- @Digits(integer=,fraction=) : 대상 수가 지정된 정수와 소수 자리수보다 적을 경우
-- @Future : 대상 날짜가 현재보다 미래일 경우만
-- @Past : 대상 날짜가 현재보다 과거일 경우만
-- @Max(value) : 지정된 값보다 아래일 경우만
-- @Min(value) : 지정된 값보다 이상일 경우만
-- @NotNull : null 값이 아닐 경우만
-- @Null : null일 겨우만
-- @Pattern(regex=, flag=) : 해당 정규식을 만족할 경우만
-- @Size(min=, max=) : 문자열 또는 배열이 지정된 값 사이일 경우
-- @Email : Email 형식
-- @NotBlank : 빈칸 허용하지 않음
+- `@AssertFalse` : false 값만
+- `@AssertTrue` : true 값만
+- `@DecimalMax(value=)` : 지정된 값 이하의 실수만
+- `@DecimalMin(value=)` : 지정된 값 이상의 실수만
+- `@Digits(integer=,fraction=)` : 대상 수가 지정된 정수와 소수 자리수보다 적을 경우
+- `@Future` : 대상 날짜가 현재보다 미래일 경우만
+- `@Past` : 대상 날짜가 현재보다 과거일 경우만
+- `@Max(value)` : 지정된 값보다 아래일 경우만
+- `@Min(value)` : 지정된 값보다 이상일 경우만
+- `@NotNull` : null 값이 아닐 경우만
+- `@Null` : null일 겨우만
+- `@Pattern(regex=, flag=)` : 해당 정규식을 만족할 경우만
+- `@Size(min=, max=)` : 문자열 또는 배열이 지정된 값 사이일 경우
+- `@Email` : Email 형식
+- `@NotBlank` : 빈칸 허용하지 않음
 
 ## Custom 어노테이션
 
@@ -48,23 +48,23 @@ Entity에 명시
 @Constraint(validatedBy = { FieldsMatchValidator.class })
 public @interface FieldsMatcher {
 
-  String message() default "다른 값이 입력되었습니다";
+    String message() default "다른 값이 입력되었습니다";
 
-  Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-  Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 
-  String baseField();
+    String baseField();
 
-  String matchField();
+    String matchField();
 
-  @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
-  @Retention(RetentionPolicy.RUNTIME)
-  @interface List {
+    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface List {
 
-    FieldsMatcher[] value();
+        FieldsMatcher[] value();
 
-  }
+    }
 
 }
 ```
@@ -74,42 +74,42 @@ public @interface FieldsMatcher {
 ```java
 public class FieldsMatchValidator implements ConstraintValidator<FieldsMatcher, Object> {
 
-  private String baseField;
-  private String matchField;
-  private String message;
+    private String baseField;
+    private String matchField;
+    private String message;
 
-  @Override
-  public void initialize(FieldsMatcher constraint) {
-    baseField = constraint.baseField();
-    matchField = constraint.matchField();
-    message = constraint.message();
-  }
-
-  @Override
-  public boolean isValid(Object object, ConstraintValidatorContext context) {
-    try {
-      Object baseFieldValue = getFieldValue(object, baseField);
-      Object matchFieldValue = getFieldValue(object, matchField);
-      if (baseFieldValue != null && baseFieldValue.equals(matchFieldValue)) {
-        return true;
-      }
-      context.buildConstraintViolationWithTemplate(message)
-          .addPropertyNode(baseField)
-          .addConstraintViolation()
-          .disableDefaultConstraintViolation();
-      return false;
-
-    } catch (Exception e) {
-      return false;
+    @Override
+    public void initialize(FieldsMatcher constraint) {
+        baseField = constraint.baseField();
+        matchField = constraint.matchField();
+        message = constraint.message();
     }
-  }
 
-  private Object getFieldValue(Object object, String fieldName) throws Exception {
-    Class<?> clazz = object.getClass();
-    Field field = clazz.getDeclaredField(fieldName);
-    field.setAccessible(true);
-    return field.get(object);
-  }
+    @Override
+    public boolean isValid(Object object, ConstraintValidatorContext context) {
+      try {
+          Object baseFieldValue = getFieldValue(object, baseField);
+          Object matchFieldValue = getFieldValue(object, matchField);
+          if (baseFieldValue != null && baseFieldValue.equals(matchFieldValue)) {
+              return true;
+          }
+          context.buildConstraintViolationWithTemplate(message)
+                  .addPropertyNode(baseField)
+                  .addConstraintViolation()
+                  .disableDefaultConstraintViolation();
+          return false;
+
+      } catch (Exception e) {
+          return false;
+      }
+    }
+
+    private Object getFieldValue(Object object, String fieldName) throws Exception {
+        Class<?> clazz = object.getClass();
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(object);
+    }
 
 }
 ```
@@ -122,23 +122,23 @@ public class FieldsMatchValidator implements ConstraintValidator<FieldsMatcher, 
 @Controller
 public class WebController implements WebMvcConfigurer {
 
-  @Override
-  public void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/results").setViewName("results");
-  }
-
-  @GetMapping("/")
-  public String showForm(PersonForm personForm) {
-    return "form";
-  }
-
-  @PostMapping("/")
-  public String checkPersonInfo(@Valid PersonForm personForm, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return "form";
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+       registry.addViewController("/results").setViewName("results");
     }
-    return "redirect:/results";
-  }
+
+    @GetMapping("/")
+    public String showForm(PersonForm personForm) {
+        return "form";
+    }
+
+    @PostMapping("/")
+    public String checkPersonInfo(@Valid PersonForm personForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+           return "form";
+        }
+        return "redirect:/results";
+    }
 }
 ```
 
@@ -178,4 +178,96 @@ Form에서 명시하지 않은 필드에 validation 어노테이션 사용시
 
 ```html
 <p th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Incorrect date</p>
+```
+
+## 사용자 정의 BindingResult Error
+
+### 설정
+
+#### `CustomValidationException`
+
+```java
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class CustomValidationException extends RuntimeException {
+
+    private Error[] errors;
+
+    public CustomValidationException(String defaultMessage, String field){
+        this.errors = new Error[]{new Error(defaultMessage, field)};
+    }
+
+    public CustomValidationException(Error[] errors) {
+        this.errors = errors;
+    }
+
+    public Error[] getErrors() {
+        return errors;
+    }
+
+    public static class Error {
+
+        private String defaultMessage;
+        private String field;
+
+        private Error(String defaultMessage, String field) {
+            this.defaultMessage = defaultMessage;
+            this.field = field;
+        }
+
+        public String getDefaultMessage() {
+            return defaultMessage;
+        }
+
+        public String getField() {
+            return field;
+        }
+    }
+
+}
+```
+
+#### `ErrorAttributes`
+
+```java
+@Configuration
+public class WebConfig {
+
+    @Bean
+    public ErrorAttributes errorAttributes() {
+        return new DefaultErrorAttributes() {
+            @Override
+            public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
+                Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, includeStackTrace);
+                Throwable error = getError(requestAttributes);
+                if (error instanceof CustomValidationException) {
+                    errorAttributes.put("errors", ((CustomValidationException)error).getErrors());
+                }
+                return errorAttributes;
+            }
+        };
+    }
+
+}
+```
+
+### 사용
+
+사용자 정의 Exception throw
+
+```java
+public User save(UserDto userDto) {
+    duplicateCheck(userDto);
+    User user = userRepo.save(userDto.toEntity());
+    UserSessionUtil.applyAuthToCtxHolder(user);
+    return user;
+}
+
+private void duplicateCheck(UserDto dto) {
+    if (userRepo.findByUsername(dto.getUsername()) != null) {
+        throw new CustomValidationException("이미 존재하는 아이디 입니다", "username");
+    }
+    if (userRepo.findByEmail(dto.getEmail()) != null) {
+        throw new CustomValidationException("사용중인 이메일 입니다", "email");
+    }
+}
 ```
