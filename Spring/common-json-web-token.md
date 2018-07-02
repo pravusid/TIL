@@ -570,3 +570,56 @@ public class AuthenticationClaimsIntegrationTest {
 클라이언트에서 발급받은 토큰으로 요청
 
 `curl -H "authorization: bearer {access_token}" http://localhost:8080/api/user`
+
+### 활용
+
+#### 컨트롤러에서 접근제한
+
+```java
+@PreAuthorize("#oauth2.hasScope('read')")
+@GetMapping("/")
+public String hello() {
+    return "home";
+}
+```
+
+#### Spring Controller에서 Http Header Authorization
+
+`@RequestHeader` 애노테이션을 컨트롤러에서 사용하여 토큰을 받는다
+
+```java
+@GetMapping("/")
+public String hello(@RequestHeader(value="Authorization") String authorization) {
+    System.out.println("Token: " + authorization);
+    return "home";
+}
+```
+
+#### JWT Decode
+
+아래의 Token은 Resource Server 접근시 Verification을 통과한 것이다
+
+```kt
+import org.springframework.security.jwt.Jwt
+import org.springframework.security.jwt.JwtHelper
+import org.springframework.security.oauth2.common.util.JsonParserFactory
+
+
+class CustomJwtHelper {
+
+    companion object {
+
+        fun getTokenUsername(requestToken: String): String {
+            val jwt = getParsedToken(requestToken)
+            val claims = JsonParserFactory.create().parseMap(jwt.claims)
+            return claims["user_name"] as String
+        }
+
+        private fun getParsedToken(requestToken: String): Jwt {
+            return JwtHelper.decode(requestToken.split(" ")[1])
+        }
+
+    }
+
+}
+```
