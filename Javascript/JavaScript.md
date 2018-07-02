@@ -159,9 +159,3 @@
 - 함수 호출과 this
 
 - 프로토타입과 프로토타입 체이닝
-
-## AJAX (비동기 자바스크립트 & XML)
-
-별도의 실행부가 background에서 요청을 시도하고 응답을 받아오는 방식
-
-`XMLHttp onreadystatechange = function()`
