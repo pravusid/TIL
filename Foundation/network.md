@@ -151,7 +151,7 @@ OSI 모델의 기본 목적은 각 계층별로 고유의 역할과 기능을 �
 
 ### 아날로그 변조
 
-![AM-FM-PM](img\network-analog.jpg) 
+![AM-FM-PM](img/network-analog.jpg) 
 
 #### 진폭 변조 (Amplitude Modulation)
 
@@ -176,7 +176,7 @@ OSI 모델의 기본 목적은 각 계층별로 고유의 역할과 기능을 �
 
 디지털 변조에서 가장 중요한 변수는 비트오류율 - BER(Bit Error Rate) 이다. BER은 전체 수신된 비트 수에 대한 오류 비트의 비율이다.
 
-![typesofdigmod.png](img\network-digital.jpg) 
+![typesofdigmod.png](img/network-digital.jpg) 
 
 #### ASK (Amplitude Shift Keying)
 
@@ -460,4 +460,3 @@ SYN 문자는 00010110(홀수패리티 경우)의 비트 패턴을 갖고 수신
 ## 데이터 통신의 요소
 
 ### 통신선로
-
