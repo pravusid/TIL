@@ -218,6 +218,38 @@ public Page<T> findAll(String keyword, Pageable pageable){
 }
 ```
 
+### Sort
+
+Sort 객체는 컨트롤러에서 Command Object로 받을 수 있다.
+
+```java
+@Controller
+public List<T> list(Sort sort) {
+  List<T> list = repository.findAll(sort);
+  return list;
+}
+```
+
+이 때 Sort의 내용은 request parameter로 정의할 수 있다.
+
+- 이름으로 정렬: `/path?sort=name,asc`
+- 이름 역순으로 정렬: `/path?sort=name,desc`
+- 이름으로 정렬 + ID로 정렬: `/path?sort=name,id`
+- 이름으로 정렬 + ID 역순으로 정렬: `/path?sort=name,asc&sort=id,desc`
+
+기존에 parameter로 받은 Sort에 추가 조건을 입력하거나, 조건이 없는 경우 새 Sort 객체를 생성할 수 있다.
+
+```java
+@Controller
+public List<T> list(Sort sort) {
+  sort = sort.and(new Sort(Sort.Direction.DESC, "count"))
+  List<T> list = repository.findAll(sort);
+  return list;
+}
+```
+
+컨트롤러에서 `Pageable` 객체를 받는다면 Sort를 포함한다. (상세내용은 아래)
+
 ### Pageable, Page, PageImpl
 
 `PagingAndSortingRepository`에는 페이지 단위 입출력이 이미 구현되어 있다.
@@ -226,6 +258,9 @@ public Page<T> findAll(String keyword, Pageable pageable){
 `Page<T> list = fooRepository.findAll(pageable);` 으로 페이지단위 데이터를 받아온다
 
 페이지조회 조건을 주려면 `@PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable`
+
+컨트롤러에서 `pageable` 인터페이스에 대응하는 객체를 받는 방법 외에 **직접 객체를 생성**할 수도 있다.
+`PageRequest pageRequest = new PageRequest(page, 1, Sort.Direction.ASC, "count")`
 
 사용자정의 조회 method에서도 두번째 인자로 사용할 수 있다.
 
@@ -363,9 +398,3 @@ Auditing을 활용하여 변화를 감지하고 자동으로 값을 갱신할 �
 `@JsonProperty` : 변환 처리 명시
 
 `@JsonIgnore` : 변환하지 않을 항목
-
-## 영속성 컨텍스트
-
-### 트랜잭션 범위의 영속성 컨텍스트
-
-Service - Repository 범위에서 준영속 -> 영속 유지 트랜잭션 내에서는 동일한 영속성 컨텍스트를 사용한다.
