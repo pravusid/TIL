@@ -1,8 +1,6 @@
 # Vue instance
 
-## Vue 인스턴스 옵션
-
-### Vue 인스턴스 생성자
+## Vue 인스턴스 생성
 
 모든 Vue vm은 Vue 생성자 함수로 root Vue 인스턴스를 생성하여 부트스트래핑된다.
 
@@ -12,24 +10,82 @@ var vm = new Vue({
 })
 ```
 
-Vue 생성자는 미리 정의 된 옵션으로 재사용 가능한 컴포넌트 생성자를 생성하도록 확장 가능하다.
+Vue 인스턴스를 인스턴스화 할 때는 데이터, 템플릿, 마운트할 엘리먼트, 메소드, 라이프사이클 콜백 등의 옵션을 포함 할 수 있는 options 객체를 전달 해야한다.
+
+Vue 생성자는 미리 정의 된 옵션으로 재사용 가능한 컴포넌트 생성자를 생성하도록 확장 할 수 있다.
+모든 Vue 컴포넌트는 본질적으로 확장된 Vue 인스턴스이다.
+
+## 속성과 메소드
+
+각 Vue 인스턴스는 data 객체에 있는 모든 속성을 프록시 처리한다.
 
 ```js
-var MyComponent = Vue.extend({
-  // 옵션 확장
+// 데이터 객체
+var data = { a: 1 }
+
+// Vue인스턴스에 데이터 객체를 추가합니다.
+var vm = new Vue({
+  data: data
 })
-// `MyComponent`의 모든 인스턴스는
-// 미리 정의된 확장 옵션과 함께 생성됩니다.
-var myComponentInstance = new MyComponent()
+
+// 같은 객체를 참조합니다!
+vm.a === data.a // => true
+
+// 속성 설정은 원본 데이터에도 영향을 미칩니다.
+vm.a = 2
+data.a // => 2
 ```
+
+데이터가 변경되면 화면은 다시 렌더링된다.
+data에 있는 속성들은 인스턴스가 생성될 때 존재한 것들만 반응형이다.
+
+따라서 인스턴스 생성 이후 새 속성을 추가하면: `vm.b = 'hi'`
+
+b가 변경되어도 화면은 갱신되지 않는다.
+어떤 속성이 나중에 필요하다는 것을 알고 있으며, 빈 값이거나 존재하지 않은 상태로 시작한다면 미리 초기값을 지정해서 객체를 생성해야 한다.
+
+만약 Object.freeze ()를 사용하면, 기존 속성이 변경되는 것을 막아 반응성 시스템이 데이터를 추적하지 않게 한다.
+
+```js
+var obj = {
+  foo: 'bar'
+}
+
+Object.freeze(obj)
+
+new Vue({
+  el: '#app',
+  data: obj
+})
+```
+
+## 인스턴스 데이터
 
 ### props (단방향 데이터 흐름)
 
-모든 props는 하위 속성과 상위 속성 사이의 단방향 바인딩을 형성함
+모든 props는 하위 속성과 상위 속성 사이의 단방향 바인딩을 형성함 (부모 컴포넌트 -> 자식 컴포넌트)
 
 1. `v-bind:`를 `:`로 단축하여 사용할 수 있음
 2. js의 CamelCase는 html에서 kebab-case로 사용할 수 있음
 3. 하위 컴포넌트에서 해당 바인딩을 props로 받을 수 있음 (하위 컴포넌트에서 수정불가-단방향 데이터 흐름)
+
+자바 스크립트의 객체와 배열은 참조로 전달되므로 prop가 배열이나 객체인 경우
+하위 객체 또는 배열 자체를 부모 상태로 변경하면 부모 상태에 영향을 준다.
+
+자세한 내용은 Vue Component에서 다룸
+
+#### props 단순예제
+
+자식 컴포넌트를 정의
+
+```js
+Vue.component('child', {
+  props: ['myMessage'],
+  template: '<span>{{ myMessage }}</span>'
+})
+```
+
+부모 컴포넌트에서 자식컴포넌트를 호출하고 props를 사용
 
 ```html
 <div>
@@ -38,6 +94,10 @@ var myComponentInstance = new MyComponent()
   <child v-bind:my-message="parentMsg"></child>
 </div>
 ```
+
+객체의 모든 속성을 `props`로 전달하려면, 인자없이 `v-bind`를 사용하면 된다 (`v-bind:prop-name` 대신 `v-bind`)
+
+#### props를 데이터 처리 인스턴스 method에서 활용
 
 prop의 초기 값을 초기 값으로 사용하는 로컬 데이터 속성을 정의
 
@@ -48,7 +108,7 @@ data: function () {
 }
 ```
 
-prop 값으로 부터 계산된 속성을 정의 합니다.
+prop 값으로 부터 계산된 속성을 정의
 
 ```js
 props: ['size'],
@@ -59,13 +119,11 @@ computed: {
 }
 ```
 
-자바 스크립트의 객체와 배열은 참조로 전달되므로 prop가 배열이나 객체인 경우
-하위 객체 또는 배열 자체를 부모 상태로 변경하면 부모 상태에 영향을 준다.
-
 ### data 객체
 
 각각의 Vue 인스턴스는 data 객체의 모든 속성을 프록시 처리한다.
-데이터 속성 외에도 유용한 인스턴스 속성 및 메소드가 있고, 이 프로퍼티들과 메소드들은 $ 접두사로 프록시 데이터 속성과 구별하여 호출가능하다.
+데이터 속성 외에도 유용한 인스턴스 속성 및 메소드가 있고,
+이 프로퍼티들과 메소드들은 $ 접두사로 프록시 데이터 속성과 구별하여 호출가능하다.
 
 ```js
 var data = { a: 1 };
@@ -179,7 +237,14 @@ var vm = new Vue({
 });
 ```
 
-## [인스턴트 라이프사이클 훅](https://kr.vuejs.org/v2/guide/instance.html#%EB%9D%BC%EC%9D%B4%ED%94%84%EC%82%AC%EC%9D%B4%ED%81%B4-%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8)
+## 인스턴트 라이프사이클 훅
+
+각 Vue 인스턴스는 데이터 관찰을 설정하고, 템플릿을 컴파일하고, 인스턴스를 DOM에 마운트하고, 데이터가 변경 될 때 DOM을 업데이트해야 할 때 일련의 초기화 단계를 거칩니다. 그 과정에서 사용자 정의 로직을 실행할 수있는 라이프사이클 훅 도 호출됩니다. 예를 들어, created 훅은 인스턴스가 생성된 후에 호출됩니다. 예:
+
+> options 속성이나 콜백에 created: () => console.log(this.a) 이나 vm.$watch('a', newValue => this.myMethod()) 와 같은 화살표 함수 사용을 지양하기 바랍니다.
+화살표 함수들은 부모 컨텍스트에 바인딩되기 때문에, this 컨텍스트가 호출하는 Vue 인스턴스에서 사용할 경우 Uncaught TypeError: Cannot read property of undefined 또는 Uncaught TypeError: this.myMethod is not a function와 같은 오류가 발생하게 됩니다.
+
+![라이프사이클](img/life-cycle.jpg)
 
 created, mounted, updated, destroyed ...
 
