@@ -1,5 +1,64 @@
 # 파이썬 기초
 
+- [파이썬 기초](#%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EA%B8%B0%EC%B4%88)
+  - [자료형](#%EC%9E%90%EB%A3%8C%ED%98%95)
+    - [숫자형](#%EC%88%AB%EC%9E%90%ED%98%95)
+    - [문자열](#%EB%AC%B8%EC%9E%90%EC%97%B4)
+      - [이스케이프 코드](#%EC%9D%B4%EC%8A%A4%EC%BC%80%EC%9D%B4%ED%94%84-%EC%BD%94%EB%93%9C)
+      - [문자열 연산](#%EB%AC%B8%EC%9E%90%EC%97%B4-%EC%97%B0%EC%82%B0)
+      - [문자열 인덱싱과 슬라이싱](#%EB%AC%B8%EC%9E%90%EC%97%B4-%EC%9D%B8%EB%8D%B1%EC%8B%B1%EA%B3%BC-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%8B%B1)
+      - [문자열 포매팅](#%EB%AC%B8%EC%9E%90%EC%97%B4-%ED%8F%AC%EB%A7%A4%ED%8C%85)
+        - [문자열 포맷 코드](#%EB%AC%B8%EC%9E%90%EC%97%B4-%ED%8F%AC%EB%A7%B7-%EC%BD%94%EB%93%9C)
+        - [`format()` 함수](#format-%ED%95%A8%EC%88%98)
+        - [크기와 정렬](#%ED%81%AC%EA%B8%B0%EC%99%80-%EC%A0%95%EB%A0%AC)
+      - [f 문자열 포매팅](#f-%EB%AC%B8%EC%9E%90%EC%97%B4-%ED%8F%AC%EB%A7%A4%ED%8C%85)
+      - [문자열 관련 함수](#%EB%AC%B8%EC%9E%90%EC%97%B4-%EA%B4%80%EB%A0%A8-%ED%95%A8%EC%88%98)
+    - [리스트](#%EB%A6%AC%EC%8A%A4%ED%8A%B8)
+      - [리스트의 인덱싱과 슬라이싱](#%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EC%9D%B8%EB%8D%B1%EC%8B%B1%EA%B3%BC-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%8B%B1)
+      - [리스트 연산자](#%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EC%97%B0%EC%82%B0%EC%9E%90)
+      - [리스트 수정과 삭제](#%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EC%88%98%EC%A0%95%EA%B3%BC-%EC%82%AD%EC%A0%9C)
+      - [리스트 관련 함수](#%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EA%B4%80%EB%A0%A8-%ED%95%A8%EC%88%98)
+    - [튜플](#%ED%8A%9C%ED%94%8C)
+      - [튜플 인덱싱과 슬라이싱, 연산 ( + * )](#%ED%8A%9C%ED%94%8C-%EC%9D%B8%EB%8D%B1%EC%8B%B1%EA%B3%BC-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%8B%B1-%EC%97%B0%EC%82%B0)
+    - [딕셔너리](#%EB%94%95%EC%85%94%EB%84%88%EB%A6%AC)
+      - [딕셔너리 추가, 삭제](#%EB%94%95%EC%85%94%EB%84%88%EB%A6%AC-%EC%B6%94%EA%B0%80-%EC%82%AD%EC%A0%9C)
+      - [딕셔너리 사용](#%EB%94%95%EC%85%94%EB%84%88%EB%A6%AC-%EC%82%AC%EC%9A%A9)
+      - [딕셔너리 관련 함수](#%EB%94%95%EC%85%94%EB%84%88%EB%A6%AC-%EA%B4%80%EB%A0%A8-%ED%95%A8%EC%88%98)
+    - [집합(set)](#%EC%A7%91%ED%95%A9set)
+      - [집합 자료형의 특징](#%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%ED%98%95%EC%9D%98-%ED%8A%B9%EC%A7%95)
+      - [집합 자료형의 활용](#%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%ED%98%95%EC%9D%98-%ED%99%9C%EC%9A%A9)
+      - [집합 자료형 관련 함수](#%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%ED%98%95-%EA%B4%80%EB%A0%A8-%ED%95%A8%EC%88%98)
+    - [Boolean 자료형](#boolean-%EC%9E%90%EB%A3%8C%ED%98%95)
+      - [다른 자료형의 bool 값](#%EB%8B%A4%EB%A5%B8-%EC%9E%90%EB%A3%8C%ED%98%95%EC%9D%98-bool-%EA%B0%92)
+    - [변수 생성 Trick](#%EB%B3%80%EC%88%98-%EC%83%9D%EC%84%B1-trick)
+  - [제어문](#%EC%A0%9C%EC%96%B4%EB%AC%B8)
+    - [if문](#if%EB%AC%B8)
+      - [비교연산자](#%EB%B9%84%EA%B5%90%EC%97%B0%EC%82%B0%EC%9E%90)
+    - [while문](#while%EB%AC%B8)
+    - [for문](#for%EB%AC%B8)
+      - [range 함수](#range-%ED%95%A8%EC%88%98)
+      - [list내부 for문: list comprehension](#list%EB%82%B4%EB%B6%80-for%EB%AC%B8-list-comprehension)
+  - [함수](#%ED%95%A8%EC%88%98)
+    - [함수 정의](#%ED%95%A8%EC%88%98-%EC%A0%95%EC%9D%98)
+    - [가변 인자](#%EA%B0%80%EB%B3%80-%EC%9D%B8%EC%9E%90)
+    - [키워드 인자 (kwargs)](#%ED%82%A4%EC%9B%8C%EB%93%9C-%EC%9D%B8%EC%9E%90-kwargs)
+    - [초기값 설정](#%EC%B4%88%EA%B8%B0%EA%B0%92-%EC%84%A4%EC%A0%95)
+    - [lambda](#lambda)
+  - [입력과 출력](#%EC%9E%85%EB%A0%A5%EA%B3%BC-%EC%B6%9C%EB%A0%A5)
+    - [입력](#%EC%9E%85%EB%A0%A5)
+    - [출력](#%EC%B6%9C%EB%A0%A5)
+  - [클래스](#%ED%81%B4%EB%9E%98%EC%8A%A4)
+    - [구조](#%EA%B5%AC%EC%A1%B0)
+    - [상속](#%EC%83%81%EC%86%8D)
+    - [클래스 변수](#%ED%81%B4%EB%9E%98%EC%8A%A4-%EB%B3%80%EC%88%98)
+  - [모듈](#%EB%AA%A8%EB%93%88)
+  - [패키지](#%ED%8C%A8%ED%82%A4%EC%A7%80)
+  - [예외처리](#%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%AC)
+    - [오류 회피](#%EC%98%A4%EB%A5%98-%ED%9A%8C%ED%94%BC)
+    - [오류 발생](#%EC%98%A4%EB%A5%98-%EB%B0%9C%EC%83%9D)
+    - [사용자 정의 에러](#%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A0%95%EC%9D%98-%EC%97%90%EB%9F%AC)
+  - [내장함수](#%EB%82%B4%EC%9E%A5%ED%95%A8%EC%88%98)
+
 ## 자료형
 
 ### 숫자형
@@ -98,7 +157,7 @@ key-value의 형태로 사용할 수도 있다. `"hello {strng}".format(strng = 
 소수점 크기
 
 - 단위절사: `"{0:0.2f}".format(3.141592)` -> `3.14`
-- 공백: `"{0:10.2f}".format(3.141592)` -> `      3.14`
+- 공백(`-`로 표현): `"{0:10.2f}".format(3.141592)` -> `------3.14`
 
 curly brace를 사용하려면 두개를 연속으로 사용하면 된다: `"{{ this }}"` -> `{ this }`
 
