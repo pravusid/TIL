@@ -6,18 +6,7 @@
 
 ### 컴포넌트 정의
 
-Vue 생성자는 미리 정의 된 옵션으로 재사용 가능한 컴포넌트 생성자를 생성하도록 확장 가능하다.
-
-```js
-var MyComponent = Vue.extend({
-  // 옵션 확장
-})
-// `MyComponent`의 모든 인스턴스는
-// 미리 정의된 확장 옵션과 함께 생성됩니다.
-var myComponentInstance = new MyComponent()
-```
-
-또한 전역 컴포넌트를 등록하려면, `Vue.component(tagName, options)`를 사용할 수 있다
+전역 컴포넌트를 등록하려면, `Vue.component(tagName, options)`를 사용할 수 있다
 Global registration은 Root Vue instance(with new Vue)가 생성되기 이전에 수행된다.
 
 ```js
@@ -40,6 +29,17 @@ Vue.component('button-counter', {
 
 ```js
 new Vue({ el: '#components-demo' })
+```
+
+Vue 생성자는 미리 정의 된 옵션으로 재사용 가능한 컴포넌트 생성자를 생성하도록 확장 가능하다.
+
+```js
+var MyComponent = Vue.extend({
+  // 옵션 확장
+})
+// `MyComponent`의 모든 인스턴스는
+// 미리 정의된 확장 옵션과 함께 생성됩니다.
+var myComponentInstance = new MyComponent()
 ```
 
 ### 컴포넌트 재사용
@@ -714,7 +714,7 @@ Vue.component('base-checkbox', {
 이러한 문제가 발생했을 때 컴포넌트에서 사용된 리스너 객체를 포함하고 있는 `$listeners` property를 사용할 수 있다.
 `v-on="$listeners"`를 사용하여 컴포넌트에 포함된 특정한 자식 요소까지 포함한 이벤트 리스너를 보낼 수 있다.
 
-```json
+```js
 {
   focus: function (event) { /* ... */ }
   input: function (value) { /* ... */ },
@@ -1248,36 +1248,38 @@ Vuex와 같은 실제 상태를 관리하는 솔루션을 사용하고 싶은 �
 
 ### Programmatic Event Listeners
 
-So far, you’ve seen uses of $emit, listened to with v-on, but Vue instances also offer other methods in its events interface. We can:
+지금까지 `v-on`이 수신하는 `$emit`을 사용하는 것을 봐왔다. 그러나 Vue 인스턴스는 다른 방식의 이벤트 인터페이스를 제공한다.
 
-    Listen for an event with $on(eventName, eventHandler)
-    Listen for an event only once with $once(eventName, eventHandler)
-    Stop listening for an event with $off(eventName, eventHandler)
+- `$on(eventName, eventHandler)`으로 이벤트를 수신한다
+- `$once(eventName, eventHandler)`으로 이벤트를 단 한번 수신한다
+- `$off(eventName, eventHandler)`으로 이벤트 수신을 중지한다
 
-You normally won’t have to use these, but they’re available for cases when you need to manually listen for events on a component instance. They can also be useful as a code organization tool. For example, you may often see this pattern for integrating a 3rd-party library:
+보통 위의 방법을 사용하지 않을 것이다. 그러나 컴포넌트 인스턴스로부터 수동으로 이벤트를 받으려면 위의 방법으로 가능하다.
+또한 이 방식은 서드파티 라이브러리와 통합을 위한 코드구성에 유용하게 사용되는 패턴이다.
 
-// Attach the datepicker to an input once
-// it's mounted to the DOM.
+```js
+// DOM에 마운트 될 때, 데이트피커(팝업)와 input을 연결한다
 mounted: function () {
-  // Pikaday is a 3rd-party datepicker library
+  // Pikaday는 서드파티 datepicker library이다
   this.picker = new Pikaday({
     field: this.$refs.input,
     format: 'YYYY-MM-DD'
   })
 },
-// Right before the component is destroyed,
-// also destroy the datepicker.
+// 컴포넌트 인스턴스가 destroy 될때 함께 삭제
 beforeDestroy: function () {
   this.picker.destroy()
 }
+```
 
-This has two potential issues:
+이 방식은 두 가지의 잠재적 이슈가 있다
 
-    It requires saving the picker to the component instance, when it’s possible that only lifecycle hooks need access to it. This isn’t terrible, but it could be considered clutter.
-    Our setup code is kept separate from our cleanup code, making it more difficult to programmatically clean up anything we set up.
+- 라이프사이클 훅이 데이트피커에 접근하기 위해서 데이트피커를 저장할 `picker` 변수가 필요하다. 나쁘지는 않지만 깔끔하지 않다
+- 인스턴스 생성 코드는 해제 코드와 분리되어 생성한 것을 해제하기 어렵도록 만든다
 
-You could resolve both issues with a programmatic listener:
+두 이슈를 programmatic listener를 통해 해결할 수 있다
 
+```js
 mounted: function () {
   var picker = new Pikaday({
     field: this.$refs.input,
@@ -1288,9 +1290,11 @@ mounted: function () {
     picker.destroy()
   })
 }
+```
 
-Using this strategy, we could even use Pikaday with several input elements, with each new instance automatically cleaning up after itself:
+이 전략을 이용하면 Pikaday를 여러개의 입력 엘리먼트와 사용하더라도, 각 데이트피커 인스턴스는 사용 후 알아서 해제될 것이다.
 
+```js
 mounted: function () {
   this.attachDatepicker('startDateInput')
   this.attachDatepicker('endDateInput')
@@ -1307,208 +1311,117 @@ methods: {
     })
   }
 }
+```
 
-See this fiddle for the full code. Note, however, that if you find yourself having to do a lot of setup and cleanup within a single component, the best solution will usually be to create more modular components. In this case, we’d recommend creating a reusable <input-datepicker> component.
+그러나 하나의 컴포넌트에서 생성 및 해제가 많이 이루어진다면, 가장 좋은 해결법은 더 많은 모듈 컴포넌트를 만드는 것이다.
+위의 경우 재사용 가능한 `<input-datepicker>` 컴포넌트를 만드는 것이 된다.
 
-To learn more about programmatic listeners, check out the API for Events Instance Methods.
+> Vue의 이벤트 시스템은 브라우저의 `EventTarget API`와 다르다. 비슷하게 동작하지만 `$emit`, `$on`, `$off`는 `dispatchEvent`, `addEventListener`, `removeEventListener`의 축약표현이 아니다.
 
-Note that Vue’s event system is different from the browser’s EventTarget API. Though they work similarly, $emit, $on, and $off are not aliases for dispatchEvent, addEventListener, and removeEventListener.
-Circular References
-Recursive Components
+### 순환참조
 
-Components can recursively invoke themselves in their own template. However, they can only do so with the name option:
+#### 재귀 컴포넌트
 
+컴포넌트는 자신의 템플릿에서 재귀적으로 호출할 수 있으며, 이를 위해서는 name 옵션이 필요하다.
+
+```js
 name: 'unique-name-of-my-component'
+```
 
-When you register a component globally using Vue.component, the global ID is automatically set as the component’s name option.
+Vue.component를 사용하여 컴포넌트를 전역적으로 등록하면, 전역id가 컴포넌트의 name 옵션으로 자동 설정된다.
 
+```js
 Vue.component('unique-name-of-my-component', {
   // ...
 })
+```
 
-If you’re not careful, recursive components can also lead to infinite loops:
+재귀적 컴포넌트로 인해 무한 루프가 발생할 수 있음에 주의해야 한다.
 
+```js
 name: 'stack-overflow',
 template: '<div><stack-overflow></stack-overflow></div>'
+```
 
-A component like the above will result in a “max stack size exceeded” error, so make sure recursive invocation is conditional (i.e. uses a v-if that will eventually be false).
-Circular References Between Components
+위와 같은 컴포넌트는 “Max stack size exceeded” 오류가 발생하므로 조건부 재귀 호출인지 확인해야 한다. (재귀를 탈출할 수 있는지)
 
-Let’s say you’re building a file directory tree, like in Finder or File Explorer. You might have a tree-folder component with this template:
+#### 컴포넌트 사이의 순환 참조
 
+파일 탐색기 같은 파일 디렉토리 트리를 작성한다고 가정해 보자. 아래의 템플릿으로 `tree-folder` 컴포넌트를 정의할 수 있다.
+
+```html
 <p>
   <span>{{ folder.name }}</span>
   <tree-folder-contents :children="folder.children"/>
 </p>
+```
 
-Then a tree-folder-contents component with this template:
+`tree-folder-contents`의 템플릿은 다음과 같다
 
+```html
 <ul>
   <li v-for="child in children">
     <tree-folder v-if="child.children" :folder="child"/>
     <span v-else>{{ child.name }}</span>
   </li>
 </ul>
+```
 
-When you look closely, you’ll see that these components will actually be each other’s descendent and ancestor in the render tree - a paradox! When registering components globally with Vue.component, this paradox is resolved for you automatically. If that’s you, you can stop reading here.
+자세히 살펴보면 렌더링 트리에서 컴포넌트 서로가 자식인 동시에 조상인 패러독스에 빠진다.
+Vue.component를 이용해 전역으로 컴포넌트를 등록하면, 패러독스는 자동으로 해결된다.
 
-However, if you’re requiring/importing components using a module system, e.g. via Webpack or Browserify, you’ll get an error:
+그러나 모듈 시스템을 사용하여 컴포넌트를 불러오는 경우. Webpack이나 Browserify에서 오류가 발생한다.
 
-Failed to mount component: template or render function not defined.
+`Failed to mount component: template or render function not defined.`
 
-To explain what’s happening, let’s call our components A and B. The module system sees that it needs A, but first A needs B, but B needs A, but A needs B, etc. It’s stuck in a loop, not knowing how to fully resolve either component without first resolving the other. To fix this, we need to give the module system a point at which it can say, “A needs B eventually, but there’s no need to resolve B first.”
+컴포넌트A와 B를 이용해서 상황을 설명해보자.
+모듈 시스템은 A가 필요한데 우선 A는 B를 필요로 한다.
+그런데 B에는 A가 필요하므로, 그 A는 다시 B를 필요로 하는 - 서로의 문제를 해결하지 않으면 각자의 문제를 해결할 수 없는 - 순환에 빠진다.
+이를 해결하려면 모듈 시스템에 “결국 A는 B를 필요로 하지만, B를 먼저 해결할 필요가 없다.” 라고 언급할 지점이 필요하다.
 
-In our case, let’s make that point the tree-folder component. We know the child that creates the paradox is the tree-folder-contents component, so we’ll wait until the beforeCreate lifecycle hook to register it:
+예제에서는 그 지점을 `tree-folder` 컴포넌트로 삼아 문제를 해결할 수 있다.
+패러독스는 자식 컴포넌트인 `tree-folder-contents`에서 발생하므로,
+`beforeCreate` 라이프사이클 훅이 자식 컴포넌트를 등록할 때까지 대기할 것이다.
 
+```js
 beforeCreate: function () {
   this.$options.components.TreeFolderContents = require('./tree-folder-contents.vue').default
 }
+```
 
-Or alternatively, you could use Webpack’s asynchronous import when you register the component locally:
+또는 로컬 컴포넌트를 등록할 때 Webpack의 비동기 import를 사용할 수 있다
 
+```js
 components: {
   TreeFolderContents: () => import('./tree-folder-contents.vue')
 }
+```
 
-Problem solved!
-Alternate Template Definitions
-Inline Templates
+### 템플릿 정의의 대안
 
-When the inline-template special attribute is present on a child component, the component will use its inner content as its template, rather than treating it as distributed content. This allows more flexible template-authoring.
+#### 인라인 템플릿
 
-<my-component inline-template>
-  <div>
-    <p>These are compiled as the component's own template.</p>
-    <p>Not parent's transclusion content.</p>
-  </div>
-</my-component>
-
-However, inline-template makes the scope of your templates harder to reason about. As a best practice, prefer defining templates inside the component using the template option or in a <template> element in a .vue file.
-X-Templates
-
-Another way to define templates is inside of a script element with the type text/x-template, then referencing the template by an id. For example:
-
-<script type="text/x-template" id="hello-world-template">
-  <p>Hello hello hello</p>
-</script>
-
-Vue.component('hello-world', {
-  template: '#hello-world-template'
-})
-
-These can be useful for demos with large templates or in extremely small applications, but should otherwise be avoided, because they separate templates from the rest of the component definition.
-Controlling Updates
-
-Thanks to Vue’s Reactivity system, it always knows when to update (if you use it correctly). There are edge cases, however, when you might want to force an update, despite the fact that no reactive data has changed. Then there are other cases when you might want to prevent unnecessary updates.
-Forcing an Update
-
-If you find yourself needing to force an update in Vue, in 99.99% of cases, you’ve made a mistake somewhere.
-
-You may not have accounted for change detection caveats with arrays or objects, or you may be relying on state that isn’t tracked by Vue’s reactivity system, e.g. with data.
-
-However, if you’ve ruled out the above and find yourself in this extremely rare situation of having to manually force an update, you can do so with $forceUpdate.
-Cheap Static Components with v-once
-
-Rendering plain HTML elements is very fast in Vue, but sometimes you might have a component that contains a lot of static content. In these cases, you can ensure that it’s only evaluated once and then cached by adding the v-once directive to the root element, like this:
-
-Vue.component('terms-of-service', {
-  template: `
-    <div v-once>
-      <h1>Terms of Service</h1>
-      ... a lot of static content ...
-    </div>
-  `
-})
-
-Once again, try not to overuse this pattern. While convenient in those rare cases when you have to render a lot of static content, it’s simply not necessary unless you actually notice slow rendering – plus, it could cause a lot of confusion later. For example, imagine another developer who’s not familiar with v-once or simply misses it in the template. They might spend hours trying to figure out why the template isn’t updating correctly.
-
-## 기타
-
-### 재사용 가능한 컴포넌트 제작하기
-
-Vue 컴포넌트API는 prop, 이벤트, 슬롯의 세 부분으로 나누어 진다
-
-- Props 는 외부 환경을 데이터를 컴포넌트로 전달한다
-- 컴포넌트는 이벤트를 통해서만 외부 환경에서 사이드이펙트를 발생시킬 수 있다
-- 슬롯을 사용하면 외부 환경에서 추가 콘텐츠가 포함된 컴포넌트를 작성할 수 있다
+자식 컴포넌트에 inline-template이라는 특수 속성이 존재할 때,
+컴포넌트는 그 내용을 배포된(렌더링 된)내용으로 취급하지 않고 템플릿으로 사용한다.
+이를 활용하면 보다 유연한 템플릿 작성이 가능하다.
 
 ```html
-<my-component :foo="baz" :bar="qux" @event-a="doThis" @event-b="doThat">
-  <img slot="icon" src="...">
-  <p slot="main-text">Hello!</p>
+<my-component inline-template>
+  <div>
+    <p>이것은 컴포넌트의 자체 템플릿으로 컴파일 됨</p>
+    <p>부모가 만들어낸 내용이 아님</p>
+  </div>
 </my-component>
 ```
 
-### 재귀 컴포넌트
+그러나, inline-template은 템플릿의 범위를 추론하기 어렵게 만든다.
+가장 좋은 방법은 template 옵션을 사용하거나 `.vue` 파일의 `<template>` 엘리먼트를 사용하여 컴포넌트 내부에 템플릿을 정의하는 것이다.
 
-컴포넌트는 자신의 템플릿에서 재귀적으로 호출할 수 있습니다. 그러나, 그들은 name 옵션으로만 가능합니다.
+#### X-Templates
 
-name: 'unique-name-of-my-component'
+템플릿을 정의하는 또 다른 방법은 text/x-template 유형의 스크립트 엘리먼트 내부에 id로 템플릿을 참조하는 것이다.
 
-Vue.component를 사용하여 컴포넌트를 전역적으로 등록하면, 글로벌 ID가 컴포넌트의 name 옵션으로 자동 설정됩니다.
-
-Vue.component('unique-name-of-my-component', {
-  // ...
-})
-
-주의하지 않으면 재귀적 컴포넌트로 인해 무한 루프가 발생할 수도 있습니다.
-
-name: 'stack-overflow',
-template: '<div><stack-overflow></stack-overflow></div>'
-
-위와 같은 컴포넌트는 “최대 스택 크기 초과” 오류가 발생하므로 재귀 호출이 조건부 (즉, 마지막에 false가 될 v-if를 사용하세요)인지 확인하십시오.
-
-### 컴포넌트 사이의 순환 참조
-
-Finder나 파일 탐색기와 같이 파일 디렉토리 트리를 작성한다고 가정해 보겠습니다. 이 템플릿을 가지고 tree-folder 컴포넌트를 가질 수 있습니다.
-
-<p>
-  <span>{{ folder.name }}</span>
-  <tree-folder-contents :children="folder.children"/>
-</p>
-
-그런 다음이 템플릿이 있는 tree-folder-contents 컴포넌트 :
-
-<ul>
-  <li v-for="child in children">
-    <tree-folder v-if="child.children" :folder="child"/>
-    <span v-else>{{ child.name }}</span>
-  </li>
-</ul>
-
-자세히 살펴보면이 컴포넌트가 실제로 렌더링 트리에서 서로의 자식 및 조상인 패러독스라는 것을 알 수 있습니다! Vue.component를 이용해 전역으로 컴포넌트 등록할 때, 이 패러독스는 자동으로 해결됩니다. 그런 경우에 처해있으면 한번 읽어보세요.
-
-그러나 모듈 시스템 을 사용하여 컴포넌트를 필요로하거나 가져오는 경우. Webpack 또는 Browserify를 통해 오류가 발생합니다.
-
-컴포넌트를 마운트하지 못했습니다 : 템플릿 또는 렌더링 함수가 정의되지 않았습니다.
-
-무슨 일이 일어나고 있는지 설명하기 위해 모듈 A와 B를 호출 할 것입니다. 모듈 시스템은 A가 필요합니다 하지만 A는 B를 우선적으로 필요로 합니다 게다가 B는 A를 필요로 하는 것을 알 수 있습니다. 먼저 서로 다른 컴포넌트를 해결하지 않고 두 컴포넌트를 완전히 해결하는 방법을 알지 못합니다. 이를 해결하려면 모듈 시스템에 “A는 B를 필요로 하나 B를 먼저 해결할 필요가 없습니다.”라고 말할 수있는 지점을 제공해야합니다.
-
-여기에서는 tree-folder 컴포넌트로 삼을 것입니다. 패러독스를 만드는 자식은 tree-folder-contents 컴포넌트이므로, beforeCreate 라이프 사이클 훅이 등록 될 때까지 기다릴 것입니다.
-
-beforeCreate: function () {
-  this.$options.components.TreeFolderContents = require('./tree-folder-contents.vue')
-}
-
-문제가 해결되었습니다!
-
-### 인라인 템플릿
-
-하위 컴포넌트에 inline-template 이라는 특수한 속성이 존재할 때, 컴포넌트는 그 내용을 분산 된 내용으로 취급하지 않고 템플릿으로 사용합니다. 따라서 보다 유연한 템플릿 작성이 가능합니다.
-
-<my-component inline-template>
-  <div>
-    <p>이것은 컴포넌트의 자체 템플릿으로 컴파일됩니다.</p>
-    <p>부모가 만들어낸 내용이 아닙니다.</p>
-  </div>
-</my-component>
-
-그러나, inline-template 은 템플릿의 범위를 추론하기 더 어렵게 만듭니다. 가장 좋은 방법은 template 옵션을 사용하거나.vue 파일의template 엘리먼트를 사용하여 컴포넌트 내부에 템플릿을 정의하는 것입니다.
-
-### X-Templates
-
-템플리트를 정의하는 또 다른 방법은 text/x-template 유형의 스크립트 엘리먼트 내부에 ID로 템플릿을 참조하는 것입니다. 예:
-
+```js
 <script type="text/x-template" id="hello-world-template">
   <p>Hello hello hello</p>
 </script>
@@ -1516,13 +1429,31 @@ beforeCreate: function () {
 Vue.component('hello-world', {
   template: '#hello-world-template'
 })
+```
 
-이 기능은 큰 템플릿이나 매우 작은 응용 프로그램의 데모에는 유용 할 수 있지만 템플릿을 나머지 컴포넌트 정의와 분리하기 때문에 피해야합니다.
+이 기능은 큰 템플릿이나 매우 작은 응용 프로그램의 데모에는 유용 할 수 있지만 템플릿을 나머지 컴포넌트 정의와 분리하기 때문에 피해야한다.
 
-### v-once를 이용한 비용이 적게드는 정적 컴포넌트
+### 업데이트 제어하기
 
-일반 HTML 엘리먼트를 렌더링하는 것은 Vue에서 매우 빠르지만 가끔 정적 콘텐츠가 많이 포함 된 컴포넌트가 있을 수 있습니다. 이런 경우,v-once 디렉티브를 루트 엘리먼트에 추가함으로써 캐시가 한번만 실행되도록 할 수 있습니다.
+Vue의 반응형 시스템 덕분에 (제대로 사용만 된다면) 언제 업데이트가 이루어지는지 항상 알 수 있다.
+그러나 여기에도 edge case가 있는데, 반응형 데이터가 변하지 않았다는 사실에도 불구하고 강제 업데이트를 하고싶을 때가 있을 수 있다.
 
+다음은 불필요한 업데이트를 막고싶을때 사용하는 경우들이다.
+
+#### Forcing an Update
+
+만약 Vue의 강제 업데이트를 하고싶다면, 거의 모든 경우에서 어딘가 실수를 할 것이다.
+
+배열이나 객체의 변화감지 통보에 대한 설명을 듣지도 못할 거고, Vue의 반응형 시스템에 추적되지 않는 상태에(with data) 의존하게 될지도 모른다.
+
+그러나 문제들을 배제한채, 강제 업데이트를 해야하는 매우 희귀한 상황에서 `$forceUpdate`를 사용할 수 있다.
+
+#### v-once를 이용한 비용이 적게드는 정적 컴포넌트
+
+Vue에서 일반 HTML 엘리먼트를 렌더링하는 것은 매우 빠르지만, 가끔 많은 정적 콘텐츠가 포함 된 컴포넌트가 있을 수 있다.
+이런 경우, v-once 디렉티브를 루트 엘리먼트에 추가함으로써 캐시가 한번만 실행되도록 할 수 있다.
+
+```js
 Vue.component('terms-of-service', {
   template: '\
     <div v-once>\
@@ -1531,3 +1462,6 @@ Vue.component('terms-of-service', {
     </div>\
   '
 })
+```
+
+> 위의 방식을 과용해서는 안된다. 정적 콘텐츠가 많은 경우 같이 드문 경우에서는 편리한 해결법이 될 수 있으나, 렌더링이 느리다는 사실을 깨닫기 전까지는 불필요 하다. 게다가 나중에 많은 혼란을 불러올 수 있다. 예를 들어 `v-once`를 잘 모르거나 템플릿에 사용하는 것을 잊어버린 다른 개발자에게는, 템플릿이 정상적으로 업데이트 되지 않은 문제를 해결하는데 많은 시간이 걸릴 수 있다.
