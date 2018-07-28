@@ -20,22 +20,22 @@ def myFct(bindings: Int*) = { ... } // bindings is a sequence of int, containing
 These are functions that take a function as a parameter or return functions.
 
 ```scala
-// sum() returns a function that takes two integers and returns an integer  
-def sum(f: Int => Int): (Int, Int) => Int = {  
-  def sumf(a: Int, b: Int): Int = {...}  
-  sumf  
-} 
+// sum() returns a function that takes two integers and returns an integer
+def sum(f: Int => Int): (Int, Int) => Int = {
+  def sumf(a: Int, b: Int): Int = {...}
+  sumf
+}
 
-// same as above. Its type is (Int => Int) => (Int, Int) => Int  
-def sum(f: Int => Int)(a: Int, b: Int): Int = { ... } 
+// same as above. Its type is (Int => Int) => (Int, Int) => Int
+def sum(f: Int => Int)(a: Int, b: Int): Int = { ... }
 
 // Called like this
-sum((x: Int) => x * x * x)          // Anonymous function, i.e. does not have a name  
+sum((x: Int) => x * x * x)          // Anonymous function, i.e. does not have a name
 sum(x => x * x * x)                 // Same anonymous function with type inferred
 
-def cube(x: Int) = x * x * x  
+def cube(x: Int) = x * x * x
 sum(x => x * x * x)(1, 10) // sum of cubes from 1 to 10
-sum(cube)(1, 10)           // same as above      
+sum(cube)(1, 10)           // same as above
 ```
 
 ## Currying
@@ -50,21 +50,21 @@ def f(a: Int)(b: Int): Int // curried version (type is Int => Int => Int)
 ## Classes
 
 ```scala
-class MyClass(x: Int, y: Int) {           // Defines a new type MyClass with a constructor  
-  require(y > 0, "y must be positive")    // precondition, triggering an IllegalArgumentException if not met  
-  def this (x: Int) = { ... }             // auxiliary constructor   
-  def nb1 = x                             // public method computed every time it is called  
-  def nb2 = y  
-  private def test(a: Int): Int = { ... } // private method  
-  val nb3 = x + y                         // computed only once  
-  override def toString =                 // overridden method  
-      member1 + ", " + member2 
+class MyClass(x: Int, y: Int) {           // Defines a new type MyClass with a constructor
+  require(y > 0, "y must be positive")    // precondition, triggering an IllegalArgumentException if not met
+  def this (x: Int) = { ... }             // auxiliary constructor
+  def nb1 = x                             // public method computed every time it is called
+  def nb2 = y
+  private def test(a: Int): Int = { ... } // private method
+  val nb3 = x + y                         // computed only once
+  override def toString =                 // overridden method
+      member1 + ", " + member2
   }
 
 new MyClass(1, 2) // creates a new object of type
 ```
 
-this references the current object, assert(<condition>) issues AssertionError if condition is not met. See scala.Predef for require, assume and assert.
+this references the current object, assert(`<condition>`) issues AssertionError if condition is not met. See scala.Predef for require, assume and assert.
 
 ## Operators
 
@@ -94,14 +94,14 @@ Note that assignment operators have lowest precedence. (Read Scala Language Spec
 ## Class hierarchies
 
 ```scala
-abstract class TopLevel {     // abstract class  
-  def method1(x: Int): Int   // abstract method  
-  def method2(x: Int): Int = { ... }  
+abstract class TopLevel {     // abstract class
+  def method1(x: Int): Int   // abstract method
+  def method2(x: Int): Int = { ... }
 }
 
-class Level1 extends TopLevel {  
-  def method1(x: Int): Int = { ... }  
-  override def method2(x: Int): Int = { ...} // TopLevel's method2 needs to be explicitly overridden  
+class Level1 extends TopLevel {
+  def method1(x: Int): Int = { ... }
+  override def method2(x: Int): Int = { ...} // TopLevel's method2 needs to be explicitly overridden
 }
 
 object MyObject extends TopLevel { ... } // defines a singleton object. No other instance can be created
@@ -110,8 +110,8 @@ object MyObject extends TopLevel { ... } // defines a singleton object. No other
 To create an runnable application in Scala:
 
 ```scala
-object Hello {  
-  def main(args: Array[String]) = println("Hello world")  
+object Hello {
+  def main(args: Array[String]) = println("Hello world")
 }
 ```
 
@@ -145,9 +145,9 @@ object Hello extends App {
 Similar to C++ templates or Java generics. These can apply to classes, traits or functions.
 
 ```scala
-class MyClass[T](arg1: T) { ... }  
-new MyClass[Int](1)  
-new MyClass(1)   // the type is being inferred, i.e. determined based on the value arguments  
+class MyClass[T](arg1: T) { ... }
+new MyClass[Int](1)
+new MyClass(1)   // the type is being inferred, i.e. determined based on the value arguments
 ```
 
 It is possible to restrict the type being used, e.g.
@@ -325,7 +325,7 @@ xs updated(n, x)  // same list than xs, except at index n where it contains x, c
 xs indexOf x      // the index of the first element equal to x (-1 otherwise)
 xs contains x     // same as xs indexOf x >= 0
 xs filter p       // returns a list of the elements that satisfy the predicate p
-xs filterNot p    // filter with negated p 
+xs filterNot p    // filter with negated p
 xs partition p    // same as (xs filter p, xs filterNot p)
 xs takeWhile p    // the longest prefix consisting of elements that satisfy p
 xs dropWhile p    // the remainder of the list after any leading element satisfying p have been removed
@@ -354,9 +354,9 @@ xs :+ x  // creates a new collection with trailing element x
 
 // Operations on maps
 val myMap = Map("I" -> 1, "V" -> 5, "X" -> 10)  // create a map
-myMap("I")      // => 1  
-myMap("A")      // => java.util.NoSuchElementException  
-myMap get "A"   // => None 
+myMap("I")      // => 1
+myMap("A")      // => java.util.NoSuchElementException
+myMap get "A"   // => None
 myMap get "I"   // => Some(1)
 myMap.updated("V", 15)  // returns a new map where "V" maps to 15 (entry is updated)
                         // if the key ("V" here) does not exist, a new entry is added
@@ -375,21 +375,21 @@ x #:: xs // Same as Stream.cons(x, xs)
 
 ```scala
 val pair = ("answer", 42)   // type: (String, Int)
-val (label, value) = pair   // label = "answer", value = 42  
-pair._1 // "answer"  
-pair._2 // 42  
+val (label, value) = pair   // label = "answer", value = 42
+pair._1 // "answer"
+pair._2 // 42
 ```
 
-##Ordering
+## Ordering
 
 There is already a class in the standard library that represents orderings: scala.math.Ordering[T] which contains comparison functions such as lt() and gt() for standard types. Types with a single natural ordering should inherit from the trait scala.math.Ordered[T].
 
 ```scala
-import math.Ordering  
+import math.Ordering
 
-def msort[T](xs: List[T])(implicit ord: Ordering) = { ...}  
-msort(fruits)(Ordering.String)  
-msort(fruits)   // the compiler figures out the right ordering  
+def msort[T](xs: List[T])(implicit ord: Ordering) = { ...}
+msort(fruits)(Ordering.String)
+msort(fruits)   // the compiler figures out the right ordering
 ```
 
 ## For-Comprehensions
@@ -433,18 +433,18 @@ This means you can use a for-comprehension for your own type, as long as you def
 Example 2
 
 ```scala
-for {  
-  i <- 1 until n  
-  j <- 1 until i  
-  if isPrime(i + j)  
-} yield (i, j)  
+for {
+  i <- 1 until n
+  j <- 1 until i
+  if isPrime(i + j)
+} yield (i, j)
 ```
 
 is equivalent to
 
 ```scala
 for (i <- 1 until n; j <- 1 until i if isPrime(i + j))
-    yield (i, j)  
+    yield (i, j)
 ```
 
 is equivalent to
