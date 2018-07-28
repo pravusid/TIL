@@ -6,16 +6,31 @@
 
 `sudo apt install openssh-server`
 
-### SSH 비대칭 키 발급
+## SSH로 명령실행
+
+`ssh user@host 명령어`
+
+## SSH 비대칭 키 발급
 
 RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private key를 활용해 인증한다.
 
 `ssh-keygen -t rsa`
 
+## 비대칭 키를 사용해 인증 (비밀번호 입력 대신))
+
+공개키를 서버의 `authorized_keys`에 등록: `ssh-copy-id user@host`
+
+서버에서 권한 설정
+
+```sh
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
 ## Secure Copy (SCP)
 
 ```sh
-scp <옵션> <원본 경로 및 파일> <복사 받을 곳 경로 및 파일>
+scp <옵션> <원본 경로 및 파일명> <대상 경로 및 파일명>
 ```
 
 - 옵션
@@ -24,5 +39,5 @@ scp <옵션> <원본 경로 및 파일> <복사 받을 곳 경로 및 파일>
   - `-r` : 하위 폴더/파일 모두 복사한다 (recursive)
 
 - 사용 예
-  - 보내기 : `scp -rp 파일명 hostname@ipaddress:~/다운로드/파일명`
-  - 받기 : `scp -rp hostname@ipaddress:~/다운로드/파일명 로컬경로/파일명`
+  - 보내기 : `scp -rp 파일명 user@host:~/다운로드/파일명`
+  - 받기 : `scp -rp user@host:~/다운로드/파일명 로컬경로/파일명`
