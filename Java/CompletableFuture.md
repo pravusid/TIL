@@ -28,7 +28,7 @@ CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 });
 
 // future가 완료될 때 까지 block 상태로 대기한다
-future.get()
+System.out.println(future.get());
 ```
 
 ### `supplyAsync()`
@@ -52,6 +52,7 @@ CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
 ### Executor
 
 `CompletableFuture`는 작업들을 글로벌 `ForkJoinPool.commonPool()`에서 얻은 쓰레드에서 실행한다.
+만약 parallelism을 지원하지 않는다면 `ForkJoinPool` 대신 `ThreadPerTaskExecutor`를 사용한다.
 
 `Executor`를 지정하는 메소드를 통해 사용자 정의 Thread pool을 활용할 수 있다.
 
@@ -73,6 +74,18 @@ CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
 ```
 
 ## CompletableFuture 반환값 처리
+
+반환값을 감싼 `CompletableFuture`를 처리하는 방법은 크게 다음과 같다
+
+- `Apply`: 인자O, 반환O
+- `Run`: 인자X, 반환X
+- `Accept`: 인자O, 반환X
+
+API에서는 여기에 추가적인 옵션을 붙인 메소드를 제공한다.
+
+- `Either`:다른 두 CompletableFuture 중 먼저 하나가 완료되면 처리됨
+- `Both`: 다른 CompletableFuture와 체인에서 반환된 CompletableFuture를 모두 기다림 (다른 타입의 반환값 수용)
+- `Async` : 추가적인 쓰레드에서 비동기로 실행 (executor 지정가능)
 
 ### `thenApply()`
 
@@ -111,9 +124,10 @@ CompletableFuture<String> welcomeText = CompletableFuture.supplyAsync(() -> {
 });
 ```
 
-### `thenAccept()` / `thenRun()`
+### `thenRun()` & `thenAccept()` => 실행 후 반환값이 없음
 
-콜백 메소드에서 값 처리후 반환값이 없거나(`thenRun()`), 반환값을 받아서(`thenAccept()`) 연속적인 작업을 실행하려 할 때
+콜백 메소드에서 값 처리후 반환값이 없거나(`thenRun()`),
+반환값을 받아서(`thenAccept()`) 연속적인 작업을 실행하려 할 때
 
 ```java
 CompletableFuture.supplyAsync(() -> {
@@ -132,6 +146,8 @@ CompletableFuture.supplyAsync(() -> {
 ## CompletableFutures 결합
 
 ### `thenCompose()`를 사용한 의존관계의 Future 결합
+
+전에 Async 프로세스로 응답 받은 값을 다음 Async 프로세스의 인자로 사용하는 경우 (합성)
 
 회원 정보를 얻는 `getUsersDetail` 서비스와 회원의 신용점수를 얻는 별도의 서비스인 `getCreditRating`을 가정해보자
 
@@ -160,10 +176,10 @@ CompletableFuture<Double> result = getUserDetail(userId)
         .thenCompose(user -> getCreditRating(user));
 ```
 
-### `thenCompose()`를 사용한 독립적인 Future 결합
+### `thenCombine()`을 사용한 독립적인 Future 결합
 
-`thenCompose()`는 하나의 Future가 다른 Future에 종속적일 때 사용했다.
-`thenCombine()`은 독립적인 두 future 종료후 실행할 무언가가 있을 때 사용한다.
+`thenCompose()`는 하나의 Future가 다른 Future에 종속적일 때 사용했다. (합성)
+`thenCombine()`은 독립적인 두 future 종료 후(병렬실행) 실행할 무언가가 있을 때 사용한다.
 
 ```java
 System.out.println("Retrieving weight.");
