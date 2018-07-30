@@ -383,16 +383,6 @@ Auditing을 활용하여 변화를 감지하고 자동으로 값을 갱신할 �
 
 **`fooApplication.java` (Spring Boot 설정파일) 클래스 상단에 `@EnableJpaAuditing` 어노테이션을 명시한다.**
 
-#### Auditing 사용시 `LocalDate` `LocalDateTime` 처리
-
-`LocalDate`, `LocalDateTime`을 DB에 입력하려고 하면
-`Caused by: com.mysql.jdbc.MsqlDataTruncation: Data truncation: Incorrect dateme value:` 에러가 발생하거나
-`tinyblob` 타입으로 저장되는 경우가 발생한다.
-
-`@Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)`
-
-위 애노테이션을 Entity `LocalDate` 필드에 명시하면 변환가능하다.
-
 ### Entity에서 JSON 사용처리
 
 `@JsonProperty` : 변환 처리 명시
