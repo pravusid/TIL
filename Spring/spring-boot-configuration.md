@@ -57,6 +57,8 @@ jar {
 
 ## application.yml
 
+<https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html>
+
 ```yml
 spring:
   profiles.active: dev
@@ -69,9 +71,7 @@ spring:
     console:
       enabled: true
   datasource:
-#    url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
-#    username: user
-#    password: pwd
+    driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
@@ -79,12 +79,10 @@ spring:
 
   # JPA로 사용할 데이터베이스 명시
   jpa:
-#    database: mysql
-    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect # auto-detected by default
     show-sql: true
     hibernate:
-      ddl-auto: update
-#      ddl-auto: create-drop
+      ddl-auto: update # create-drop
 
 logging:
   config: classpath:logback-spring-debug.xml
@@ -94,12 +92,13 @@ logging:
 spring:
   profiles: service
   datasource:
+    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
     username: user
     password: pwd
 
   jpa:
-    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # auto-detected by default
     hibernate:
       ddl-auto: update
 
