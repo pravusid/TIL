@@ -25,11 +25,11 @@ docker \
   # 컨테이너 이름과 포트연결
   --name ${MYSQL_CONTAINER_NAME} \
   --publish 3306:3306 \
-  # 인코딩 설정
-  --character-set-server=utf8mb4
-  --collation-server=utf8mb4_unicode_ci
   # 실행할 이미지
-  mariadb:latest;
+  mariadb:latest \
+  # 인코딩 설정 (args)
+  --character-set-server=utf8mb4 \
+  --collation-server=utf8mb4_unicode_ci;
 ```
 
 bash shell로 container 실행
