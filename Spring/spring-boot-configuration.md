@@ -71,7 +71,6 @@ spring:
     console:
       enabled: true
   datasource:
-    driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
