@@ -2,6 +2,8 @@
 
 자바 1.8에서 도입된 CompletableFuture는 자바 1.5 Future API의 확장이다
 
+`CompletableFuture<T> implements Future<T>, CompletionStage<T>`: `CompletionStage`는 `Promise`이다.
+
 ## Future API의 한계점
 
 1. 임의로 종료할 수 없다
@@ -214,7 +216,7 @@ CompletableFuture<Double> combinedFuture =
 
 `thenCombine()`으로 전해진 콜백 메소드는 두 Future가 모두 끝나고 호출될 것이다.
 
-## 다수의 CompletableFutures 결합
+## 다수의 CompletableFutures의 CompletionStage 기다리기
 
 여러개의 `CompletableFuture`를 결합하기 위해서 다음의 메소드를 사용할 수 있다.
 
@@ -264,8 +266,8 @@ CompletableFuture<List<String>> allPageContentsFuture = allFutures.thenApply(v -
 });
 ```
 
-`future.join()` 메소드는 모든 future가 완료된 후 호출 되므로 blocking이 발생하지 않는다.
-`join()` 메소드는 `get()`메소드와 비슷하지만 unchecked exception을 throw 한다는 점이 다르다.
+`join()` 메소드는 `get()`메소드와 동일하게 결과값을 기다리는 동안 blocking을 발생시킨다.
+`join()`은 `get()`과 다르게 checked exception을 처리할 필요가 없어 람다 표현식 내에서 사용하기 좋다.
 
 ```java
 // 키워드를 갖고있는 웹페이지 수를 센다
