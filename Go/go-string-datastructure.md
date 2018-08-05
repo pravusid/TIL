@@ -408,3 +408,121 @@ m[key] = value
 ```
 
 ### 맵 사용하기
+
+문자열안의 각 문제수를 세는 함수를 작성해보자
+
+```go
+func count(s string, codeCount map[rune]int) {
+    for _, r := range s {
+        codeCount[r]++
+    }
+}
+```
+
+맵을 비교하는 가장 간단한 방법은 `reflect.DeepEqual`을 이용하는 것이다
+
+```go
+import "reflect"
+
+func TestCount(t *testing.T) {
+    codeCount := map[rune]int{}
+    count("가나다나", codeCount)
+    if !reflect.DeepEqual(
+        map[rune]int{'가':1, '나': 2, '다': 1},
+        codeCount,
+    ) {
+        t.Error("codeCount mismatch:", codeCount)
+    }
+}
+```
+
+맵을 `range`로 반복하면 키와 값이 나온다
+
+```go
+for k, v := range m {
+    // key, value
+}
+```
+
+### 집합
+
+Go 언어에서 키의 존재를 확인할 수 있는 집합은 따로 제공하지 않는다.
+
+이는 맵을 이용하면서 빈 구조체를 값으로 사용하는 함수를 작성해서 해결할 수 있다.
+
+```go
+func hasDupeRune(s string) bool {
+    runeSet := map[rune]struct(){}{}
+    for _, r := range s{
+        if _, exists := runeSet[r]; exists {
+            return true
+        }
+        runeSet[r] = struct{}{}
+    }
+    return false
+}
+```
+
+맵에서 원소 삭제시에는 `delete`를 사용하면 된다
+
+```go
+delete(m, key)
+```
+
+### 맵의 한계
+
+맵을 여러 고루틴에서 동시에 읽는것은 문제없으나 맵의 구조가 변경되는 경우에는 문제가 생긴다 (Thread safe 하지 않음)
+
+또한 키에는 불변 자료형만 쓸 수 있다. (`string`은 가능하나 `[]byte`는 불가능)
+
+## 입출력
+
+입출력을 위한 표준 라이브러리 `io`
+
+### io.Reader / io.Writer
+
+`io.Reader`와 `io.Writer`는 바이트를 읽고 쓸 수 있는 인터페이스이다.
+
+`fmt` 패키지에서 F로 시작하는 함수들은 `io.Reader`와 `io.Writer`를 인자로 받는다.
+
+- `fmt.Println(s)` = `fmt.Fprintln(os.Stdout, s)`
+- `fmt.Scanf(format, ...)` = `fmt.Fscanf(os.Stdin, format, ...)`
+
+### 파일 읽기
+
+```go
+f, err := os.Open(filename)
+if err != nil {
+    return err
+}
+defer f.Close()
+var num int
+if _, err := fmt.Fscanf(f, "%d\n", &num); err == nil {
+    // 읽은 num 값 사용
+}
+```
+
+`os.Open()`의 반환값은 파일 오브젝트와 에러 두 개이다. 에러의 값이 `nil`이면 파일을 정상적으로 연 것이다.
+
+`defer`는 해당 함수를 벗어날 때 호출할 함수를 등록하는 역할을 한다. 수행은 역순으로 이루어진다.
+
+### 파일 쓰기
+
+```go
+f, err := os.Create(filename)
+if err != nil {
+    return err
+}
+defer f.Close()
+if _, err := fmt.Fprintf(f, %d\n", num); err != nil {
+    return err
+}
+```
+
+### 텍스트 리스트 읽고 쓰기
+
+[예제](training/list_io/list_io.go)
+
+### 그래프의 인접 리스트 읽고 쓰기
+
+[예제](training/graph/graph.go)
