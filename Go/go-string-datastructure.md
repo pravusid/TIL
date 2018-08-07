@@ -526,3 +526,16 @@ if _, err := fmt.Fprintf(f, %d\n", num); err != nil {
 ### 그래프의 인접 리스트 읽고 쓰기
 
 [예제](training/graph/graph.go)
+
+예제 그래프
+
+```text
+total(5)
+0: 2개 [3, 4]
+1: 2개 [0, 2]
+2: 1개 [3]
+3: 2개 [2, 4]
+4: 1개 [0]
+```
+
+[예제](training/graph/graph_test.go)
