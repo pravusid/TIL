@@ -1,34 +1,30 @@
 # JSP (Java Server Pages)
 
-<!-- TOC -->
-
 - [JSP (Java Server Pages)](#jsp-java-server-pages)
-  - [JSP란](#jsp란)
-  - [JSP 코드를 기재할 수 있는 영역](#jsp-코드를-기재할-수-있는-영역)
-  - [JSP 내장객체](#jsp-내장객체)
-  - [세션(session)](#세션session)
-  - [쿠키 (Cookie)](#쿠키-cookie)
-  - [액션태그](#액션태그)
-  - [EL (표현언어)](#el-표현언어)
-    - [연산자](#연산자)
+  - [JSP란](#jsp%EB%9E%80)
+  - [JSP 코드를 기재할 수 있는 영역](#jsp-%EC%BD%94%EB%93%9C%EB%A5%BC-%EA%B8%B0%EC%9E%AC%ED%95%A0-%EC%88%98-%EC%9E%88%EB%8A%94-%EC%98%81%EC%97%AD)
+  - [JSP 내장객체](#jsp-%EB%82%B4%EC%9E%A5%EA%B0%9D%EC%B2%B4)
+  - [세션(session)](#%EC%84%B8%EC%85%98session)
+  - [쿠키 (Cookie)](#%EC%BF%A0%ED%82%A4-cookie)
+  - [액션태그](#%EC%95%A1%EC%85%98%ED%83%9C%EA%B7%B8)
+  - [EL (표현언어)](#el-%ED%91%9C%ED%98%84%EC%96%B8%EC%96%B4)
+    - [연산자](#%EC%97%B0%EC%82%B0%EC%9E%90)
   - [JSTL (JSP Standard Tag Library)](#jstl-jsp-standard-tag-library)
     - [core](#core)
     - [fmt](#fmt)
-    - [기타](#기타)
-  - [커스텀 태그](#커스텀-태그)
-    - [커스텀 태그 구현](#커스텀-태그-구현)
+    - [기타](#%EA%B8%B0%ED%83%80)
+  - [커스텀 태그](#%EC%BB%A4%EC%8A%A4%ED%85%80-%ED%83%9C%EA%B7%B8)
+    - [커스텀 태그 구현](#%EC%BB%A4%EC%8A%A4%ED%85%80-%ED%83%9C%EA%B7%B8-%EA%B5%AC%ED%98%84)
   - [Servlet](#servlet)
-    - [서블릿 개발절차](#서블릿-개발절차)
-    - [서블릿 계보](#서블릿-계보)
+    - [서블릿 개발절차](#%EC%84%9C%EB%B8%94%EB%A6%BF-%EA%B0%9C%EB%B0%9C%EC%A0%88%EC%B0%A8)
+    - [서블릿 계보](#%EC%84%9C%EB%B8%94%EB%A6%BF-%EA%B3%84%EB%B3%B4)
     - [Servlet Mapping(web.xml)](#servlet-mappingwebxml)
-    - [서블릿의 생명주기](#서블릿의-생명주기)
-    - [요청 단계](#요청-단계)
-  - [코드 조각 자동포함 기능](#코드-조각-자동포함-기능)
-  - [MVC 패턴](#mvc-패턴)
-    - [fowarding을 이용해서 request객체를 다른곳에서도 이용하기](#fowarding을-이용해서-request객체를-다른곳에서도-이용하기)
-    - [MVC에서 컨트롤러의 역할](#mvc에서-컨트롤러의-역할)
-
-<!-- /TOC -->
+    - [서블릿의 생명주기](#%EC%84%9C%EB%B8%94%EB%A6%BF%EC%9D%98-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0)
+    - [요청 단계](#%EC%9A%94%EC%B2%AD-%EB%8B%A8%EA%B3%84)
+  - [코드 조각 자동포함 기능](#%EC%BD%94%EB%93%9C-%EC%A1%B0%EA%B0%81-%EC%9E%90%EB%8F%99%ED%8F%AC%ED%95%A8-%EA%B8%B0%EB%8A%A5)
+  - [MVC 패턴](#mvc-%ED%8C%A8%ED%84%B4)
+    - [fowarding을 이용해서 request객체를 다른곳에서도 이용하기](#fowarding%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%B4%EC%84%9C-request%EA%B0%9D%EC%B2%B4%EB%A5%BC-%EB%8B%A4%EB%A5%B8%EA%B3%B3%EC%97%90%EC%84%9C%EB%8F%84-%EC%9D%B4%EC%9A%A9%ED%95%98%EA%B8%B0)
+    - [MVC에서 컨트롤러의 역할](#mvc%EC%97%90%EC%84%9C-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC%EC%9D%98-%EC%97%AD%ED%95%A0)
 
 ## JSP란
 
@@ -178,12 +174,14 @@ request.getParameter("id"); // 보통 Model에서 처리
   - `<c:forEach var="vo" items="list" varStatus="s"></c:forEach>`
 
 - if (else 없음)
+
   ```java
   <c:if test="조건">처리</c:if>
   <c:if test="!조건">else처리</c:if>
   ```
 
 - choose (다중if문)
+
   ```java
   <c:choose>
   <c:when test="조건">처리</c:when>
@@ -195,15 +193,18 @@ request.getParameter("id"); // 보통 Model에서 처리
   - `<c:forTokens var="color" items="red,green,blue" delims=",">${color}</c:forTokens>`
 
 - url(url 인코딩 후 생성)
+
   ```java
   <c:url value="URL" [var="varName"] [scope="영역"]>
     <c:param name="이름" value="값"/>
   </c:url>
   ```
+
   - var속성의 변수에 url을 생성해서 저장한다.
   - param tag로 파라미터를 추가 할 수 있다.
 
 - redirect -> sendRedirect(url)
+
   ```java
   <c:redirect url="URL" [context="컨텍스트경로"]>
     <c:param name="이름" value="값"/>
@@ -320,8 +321,8 @@ request.getParameter("id"); // 보통 Model에서 처리
 ### 서블릿 개발절차
 
 1. 클래스 작성하고 HttpServlet
-1. 적절한 메서드 오버라이드 doGet()
-1. 서블릿 매핑(Mapping) : WEB-INF/web.xml
+2. 적절한 메서드 오버라이드 doGet()
+3. 서블릿 매핑(Mapping) : WEB-INF/web.xml
 
 ### 서블릿 계보
 
