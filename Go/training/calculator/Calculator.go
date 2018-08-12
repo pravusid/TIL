@@ -40,7 +40,7 @@ func Eval(expr string) int {
 			}
 		}
 	}
-	for _, token := range strings.Split(expr, "") {
+	for _, token := range strings.Split(expr, " ") {
 		switch token {
 		case "(":
 			ops = append(ops, token)
