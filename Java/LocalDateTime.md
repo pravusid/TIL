@@ -1,19 +1,17 @@
 # JSR-310
 
-## API 정리
-
-### LocalDate
+## LocalDate
 
 날짜 정보만 필요할 때 사용한다
 
-#### LocalDate 필드
+### LocalDate 필드
 
 ```java
 LocalDate.MIN // -999999999-01-01 - 과거 표현시
 LocalDate.MAX // +999999999-12-31 - 미래 표현시
 ```
 
-#### LocalDate 생성
+### LocalDate 생성
 
 ```java
 LocalDate.now([ZoneId zone]); // Timezone의 현재날짜, 지정되어 있지 않으면 현재 Timezone의 날짜를 반환한다
@@ -22,7 +20,7 @@ LocalDate.ofEpochDay(long epochDay) // UNIX 타임을 받은 경우
 LocalDate.parse(CharSequence text, [DatetimeFormatter formatter]) // 날짜 문자열을 파싱함
 ```
 
-#### LocalDate 메소드: 조회
+### LocalDate 메소드: 조회
 
 - `int getYear()`: 연도를 얻는다
 - `int getMonthValue()`: 1 to 12
@@ -39,7 +37,7 @@ LocalDate.parse(CharSequence text, [DatetimeFormatter formatter]) // 날짜 문�
 - `LocalDateTime atTime(int hour, int minute, [int second], [int nanoOfSecond])`: 직접 입력받은 시각으로 합성한 후 `LocalDateTime`을 반환한다
 - `LocalDateTime atStartOfDay([ZoneId zone])`: 해당날짜의 `LocalDateTime` 00:00분을 반환한다
 
-#### LocalDate 메소드: 연산
+### LocalDate 메소드: 연산
 
 - `LocalDate plus/minus(long amount, TemporalUnit unit)`: 날짜를 더한다/뺀다, `ChronoUnit`의 enum 값으로 단위를 설정한다
 - `LocalDate plus/minusYears(long years)`: 연도를 더한다/뺀다
@@ -49,7 +47,7 @@ LocalDate.parse(CharSequence text, [DatetimeFormatter formatter]) // 날짜 문�
 - `long until(Temporal endExclusive, TemporalUnit unit)`: 주어진 날짜와 인자의 날짜간의 차이를 구한다
 - `Period until(ChronoLocalDate endDateExclusive)`: 주어진 날짜와 인자의 날짜간의 차이를 구한다
 
-#### LocalDate 메소드: 비교
+### LocalDate 메소드: 비교
 
 - `int compareTo(ChronoLocalDate other)`: 날짜를 비교하여 결과를 반환한다 (음수, 0, 양수)
 - `boolean isAfter(ChronoLocalDate other)`: 인자보다 이후 날짜인지 비교
@@ -63,11 +61,11 @@ Period period = currentDate.until(targetDate);
 period.getDays();
 ```
 
-### LocalTime
+## LocalTime
 
 시간 정보만 필요할 때 사용한다
 
-#### LocalTime 필드
+### LocalTime 필드
 
 ```java
 LocalTime.MAX // 23:59:59.999999999
@@ -76,7 +74,7 @@ LocalTime.MIDNIGHT // 00:00, the start of the day
 LocalTime.NOON // 12:00, the middle of the day
 ```
 
-#### LocalTime 생성
+### LocalTime 생성
 
 ```java
 LocalTime.now([ZoneId zone]); // Timezone의 현재시각, 지정되어 있지 않으면 현재 Timezone의 시각을 반환한다
@@ -86,7 +84,7 @@ LocalTime.ofNanoOfDay(long nanoOfDay) // the nano of day, from 0 to 24 * 60 * 60
 LocalTime.parse(CharSequence text, [DatetimeFormatter formatter]) // 시각 문자열을 파싱함
 ```
 
-#### LocalTime 메소드: 조회
+### LocalTime 메소드: 조회
 
 - `int getHour()`: 0 to 23
 - `int getMinute()`: 0 to 59
@@ -96,7 +94,7 @@ LocalTime.parse(CharSequence text, [DatetimeFormatter formatter]) // 시각 문�
 - `int toSecondOfDay()`: 현재 시각이 하루 시작으로 부터 몇 초가 지났는지 반환
 - `long toNanoOfDay()`: 현재 시각이 하루 시작으로 부터 몇 나노초가 지났는지 반환
 
-#### LocalTime 메소드: 연산
+### LocalTime 메소드: 연산
 
 - `LocalTime plus/minus(long amount, TemporalUnit unit)`: 시간을 더한다/뺀다, `ChronoUnit`의 enum 값으로 단위를 설정한다
 - `LocalTime plus/minusHours(long hours)`: 시간을 더한다/뺀다
@@ -106,7 +104,7 @@ LocalTime.parse(CharSequence text, [DatetimeFormatter formatter]) // 시각 문�
 - `long until(Temporal endExclusive, TemporalUnit unit)`: 주어진 시각과 인자의 시각간의 차이를 구한다
 - `LocalDateTime atDate(LocalDate date)`: `LocalDate`를 입력받아 합성한 후 `LocalDateTime`을 반환한다
 
-#### LocalTime 메소드: 비교
+### LocalTime 메소드: 비교
 
 - `int compareTo(LocalTime other)`: 시각을 비교하여 결과를 반환한다 (음수, 0, 양수)
 - `boolean isAfter(LocalTime other)`: 인자보다 이후 시각 여부
@@ -119,18 +117,18 @@ Duration duration = Duration.between(startTime, endTime);
 duration.getSeconds();
 ```
 
-### LocalDateTime
+## LocalDateTime
 
 날짜, 시간 모두 필요할 때 사용한다
 
-#### LocalDateTime 필드
+### LocalDateTime 필드
 
 ```java
 LocalDateTime.MIN // -999999999-01-01T00:00:00
 LocalDateTime.MAX // +999999999-12-31T23:59:59.99999999
 ```
 
-#### LocalDateTime 생성
+### LocalDateTime 생성
 
 ```java
 LocalDateTime.now([ZoneId zone]); // Timezone의 현재날짜시각, 지정되어 있지 않으면 현재 Timezone의 날짜시각을 반환한다
@@ -141,7 +139,7 @@ LocalDateTime.ofEpochSecond(long epochSecond, int nanoOfSecond, ZoneOffset offse
 LocalDateTime.parse(CharSequence text, [DatetimeFormatter formatter]) // 시각 문자열을 파싱함
 ```
 
-#### LocalDateTime 메소드
+### LocalDateTime 메소드
 
 조회 및 연산 메소드는 `LocalDate`와 `LocalTime`에 해당하는 기능을 대부분 사용할 수 있다.
 
@@ -155,7 +153,7 @@ ChronoUnit.HOURS.between(start, end);
 ChronoUnit.SECONDS.between(start, end);
 ```
 
-### TemporalAdjusters
+## TemporalAdjusters
 
 `--with--` 메소드와 `TemporalAdjuster` 메소드를 사용하면 날짜와 시각을 상대적으로 변경할 수 있다.
 
@@ -174,6 +172,83 @@ LocalDateTime targetDateTime4 = currentDateTime
     .with(TemporalAdjusters.previous(DayOfWeek.FRIDAY)) // 지난주 금요일
     .with(TemporalAdjusters.previousOrSame(DayOfWeek.FRIDAY));// 지난주 금요일(오늘 포함)
 ```
+
+## DateTimeFormatter
+
+DateTime을 생성하거나 파싱할 때 사용
+
+### format()
+
+```java
+dt.format(DateTimeFormatter.ISO_DATE_TIME);              // 2017-06-12T14:28:59. 147
+date.format(DateTimeFormatter.ISO_LOCAL_DATE);           // 2017-06-12
+time.format(DateTimeFormatter.ISO_LOCAL_TIME);           // 14:28:59. 147
+dt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);        // 2017-06-12T14:28:59. 147
+odt.format(DateTimeFormatter.ISO_OFFSET_DATE);           // 2017-06-12+09:00
+odt.format(DateTimeFormatter.ISO_OFFSET_TIME);           // 14:28:59. 147+09:00
+odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);      // 2017-06-12T14:28:59. 147+09:00
+zdt.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);       // 2017-06-12T14:28:59. 147+09:00[Asia/Seoul]
+zdt.format(DateTimeFormatter.ISO_INSTANT);               // 2017-06-12T05:28:59. 147Z
+date.format(DateTimeFormatter.BASIC_ISO_DATE);           // 20170612
+date.format(DateTimeFormatter.ISO_DATE);                 // 2017-06-12
+time.format(DateTimeFormatter.ISO_TIME);                 // 14:28:59. 147
+date.format(DateTimeFormatter.ISO_ORDINAL_DATE);         // 2017-163
+date.format(DateTimeFormatter.ISO_WEEK_DATE);            // 2017-W24-1
+odt.format(DateTimeFormatter.RFC_1123_DATE_TIME);        // Mon. 12 Jun 2017 14:28:59 +09:00
+```
+
+### ofPattern()
+
+```java
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+```
+
+| Symbol | Meaning                    | Presentation     | Examples                                         |
+| ------ | -------------------------- | ---------------- | ------------------------------------------------ |
+| `G`    | era                        | text             | AD; Anno Domini; A                               |
+| `u`    | year                       | year             | 2004; 04                                         |
+| `y`    | year-of-era                | year             | 2004; 04                                         |
+| `D`    | day-of-year                | number           | 189                                              |
+| `M/L`  | month-of-year              | number/text      | 7; 07; Jul; July; J                              |
+| `d`    | day-of-month               | number           | 10                                               |
+|                                                                                                           |
+| `Q/q`  | quarter-of-year            | number/text      | 3; 03; Q3; 3rd quarter                           |
+| `Y`    | week-based-year            | year             | 1996; 96                                         |
+| `w`    | week-of-week-based-year    | number           | 27                                               |
+| `W`    | week-of-month              | number           | 4                                                |
+| `E`    | day-of-week                | text             | Tue; Tuesday; T                                  |
+| `e/c`  | localized day-of-week      | number/text      | 2; 02; Tue; Tuesday; T                           |
+| `F`    | week-of-month              | number           | 3                                                |
+|                                                                                                           |
+| `a`    | am-pm-of-day               | text             | PM                                               |
+| `h`    | clock-hour-of-am-pm (1-12) | number           | 12                                               |
+| `K`    | hour-of-am-pm (0-11)       | number           | 0                                                |
+| `k`    | clock-hour-of-am-pm (1-24) | number           | 0                                                |
+|                                                                                                           |
+| `H`    | hour-of-day (0-23)         | number           | 0                                                |
+| `m`    | minute-of-hour             | number           | 30                                               |
+| `s`    | second-of-minute           | number           | 55                                               |
+| `S`    | fraction-of-second         | fraction         | 978                                              |
+| `A`    | milli-of-day               | number           | 1234                                             |
+| `n`    | nano-of-second             | number           | 987654321                                        |
+| `N`    | nano-of-day                | number           | 1234000000                                       |
+|                                                                                                           |
+| `V`    | time-zone ID               | zone-id          | America/Los_Angeles; Z; -08:30                   |
+| `z`    | time-zone name             | zone-name        | Pacific Standard Time; PST                       |
+| `O`    | localized zone-offset      | offset-O         | GMT+8; GMT+08:00; UTC-08:00;                     |
+| `X`    | zone-offset 'Z' for zero   | offset-X         | Z; -08; -0830; -08:30; -083015; -08:30:15;       |
+| `x`    | zone-offset                | offset-x         | +0000; -08; -0830; -08:30; -083015; -08:30:15;   |
+| `Z`    | zone-offset                | offset-Z         | +0000; -0800; -08:00;                            |
+|                                                                                                           |
+| `p`    | pad next                   | pad modifier     | 1                                                |
+|                                                                                                           |
+| `'`    | escape for text            | delimiter        |                                                  |
+| `''`   | single quote               | literal          | '                                                |
+| `[`    | optional section start     |                  |                                                  |
+| `]`    | optional section end       |                  |                                                  |
+| `#`    | reserved for future use    |                  |                                                  |
+| `{`    | reserved for future use    |                  |                                                  |
+| `}`    | reserved for future use    |                  |                                                  |
 
 ## Date(Time) / LocalDate(Time) 사이의 변환
 
