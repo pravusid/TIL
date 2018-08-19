@@ -158,7 +158,7 @@ ChronoUnit.SECONDS.between(start, end);
 `--with--` 메소드와 `TemporalAdjuster` 메소드를 사용하면 날짜와 시각을 상대적으로 변경할 수 있다.
 
 ```java
-LocalDateTime targetDateTime4 = currentDateTime
+LocalDateTime targetDateTime = currentDateTime
     .with(TemporalAdjusters.firstDayOfYear()) // 이번 년도의 첫 번째 일(1월 1일)
     .with(TemporalAdjusters.lastDayOfYear()) // 이번 년도의 마지막 일(12월 31일)
     .with(TemporalAdjusters.firstDayOfNextYear()) // 다음 년도의 첫 번째 일(1월 1일)
