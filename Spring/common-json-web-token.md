@@ -623,3 +623,18 @@ class CustomJwtHelper {
 
 }
 ```
+
+Base64 Decode를 통해 JWT를 decoding 할 수 있다
+
+```kt
+fun decodeJwt(jwt: String) {
+    val splits = jwt.split("\\.".toRegex())
+    val base64EncodedHeader = splits[0]
+    val base64EncodedBody = splits[1]
+    val base64EncodedSignature = splits[2]
+
+    val base64Url = Base64(true)
+    val header = String(base64Url.decode(base64EncodedHeader))
+    val body = String(base64Url.decode(base64EncodedBody))
+}
+```
