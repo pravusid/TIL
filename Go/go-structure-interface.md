@@ -40,58 +40,6 @@ var task = struct {
 }{"laundry", false, nil}
 ```
 
-### const와 iota
-
-Go에서는 enum 자료형이 없고 대신 상수를 사용한다.
-
-```go
-const {
-    UNKNOWN status = 0
-    TODO    status = 1
-    DONE    status = 2
-}
-```
-
-0, 1, 2를 순서대로 붙이는 것이 번거롭다면 `iota`를 사용할 수 있다.
-
-```go
-const {
-    UNKNOWN status = iota
-    TODO    status = iota
-    DONE    status = iota
-}
-```
-
-`iota`를 사용할 때는 한번만 써도 된다
-
-```go
-const {
-    UNKNOWN status = iota
-    TODO
-    DONE
-}
-```
-
-단순히 0부터 순차적으로 사용하는 것 이외의 방법으로 사용할 수도 있다.
-
-```go
-type ByteSize float64
-
-const {
-    _   = iota // ignore first value
-    KB  ByteSize = 1 << (10 * iota)
-    MB
-    GB
-    TB
-    PB
-    EB
-    ZB
-    YB
-}
-```
-
-KB는 2^10 인 1024가 되고 다음 MB는 2^20이 된다
-
 ### 테이블 기반 테스트
 
 Go 언어의 testing 패키지에서는 다른 언어들 처럼 assertion을 이용한 유닛테스트를 지원하지 않는다.
