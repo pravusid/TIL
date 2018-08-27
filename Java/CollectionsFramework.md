@@ -208,3 +208,11 @@ Concurrent programming을 지원하기 위한 Concurrent Collection 인터페이
 
 Comparator 인터페이스는 두개의 파라미터를 가지고 있는 `compare(Object o1, Object o2)` 메소드를 제공한다.
 이 메소드를 통해 정렬 알고리즘을 직접 상세히 구현할 수 있다.
+
+## 병렬처리를 위한 컬렉션
+
+- `java.util.concurrent.ConcurrentHashMap`
+- `java.util.concurrent.ConcurrentLinkedQueue`
+
+병렬처리를 위한 컬렉션은 부분(segment)잠금을 사용한다.
+따라서 처리하는 요소가 포함된 부분만 잠그고 다른 요소에는 다른 쓰레드가 접근 가능하다.
