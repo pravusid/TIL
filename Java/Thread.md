@@ -20,6 +20,54 @@ Java의 일반 쓰레드 구현 방식은 다음과 같다.
 2. public void run()을 구현
 3. Thread(Runnable) 객체를 만들어 start()로 run() 메소드를 호출
 
+### 동기화 메소드와 동기화 블록
+
+쓰레드가 사용중인 객체를 다른 쓰레드가 변경할 수 없도록 하려면 객체에 잠금을 걸어야 한다.
+
+멀티 쓰레드 프로그램에서 하나의 쓰레드가 실행할 수 있는 코드 영역을 임계영역(critical section)이라고 한다.
+
+자바는 임계 영역을 지정하기 위해 동기화 메소드와 동기화 블록을 제공한다.
+
+```java
+public synchronized void method() {
+    // 단 하나의 쓰레드만 동시에 접근 가능
+}
+```
+
+동기화 메소드는 전체가 임계영역이고 쓰레드가 동기화 메소드 영역을 실행하는 즉시 객체에 잠금이 일어나고,
+동기화 메소드가 종료되면 잠금이 풀린다.
+
+일부 내용만 임계영역으로 만드려면 동기화 블록을 만들면 된다.
+
+```java
+public void method() {
+    // ...
+    synchronized(공유객체) {
+        // 임계영역
+    }
+    // ...
+}
+```
+
+### 쓰레드 상태 제어
+
+- `interrupt()`: 일시 정지 상태의 쓰레드에서 `InterruptedException` 예외를 발생시킨다
+- `notify()`, `notifyAll()`: 동기화 블록 내에서 `wait()` 메소드에 의해 일시정지 상태에 있는 쓰레드를 실행대기상태로 만든다
+- `sleep()`: 주어진 시간동안 쓰레드를 일시 정지 상태로 만든다
+- `join()`: `obj.join()` obj 쓰레드가 종료되거나 인자로 주어진 시간이 지나면 실행 대기상태가 된다
+- `wait()`: 동기화 블록내에서 쓰레드를 일시 정지 상태로 만든다. 주어진 시간이 지나거나 `notify()` 메소드에 의해 실행대기상태가 된다.
+- `yield()`: 실행 중 우선순위가 동일한 다른 쓰레드에게 실행을 양보하고 실행 대기상태가 된다
+
+### 쓰레드 그룹
+
+쓰레드를 묶어서 사용하기 위해 사용된다
+
+```java
+ThreadGroup tg = new ThreadGroup([ThreadGroup parent], String name);
+// 쓰레드를 생성할 때 쓰레드 그룹을 지정할 수 있다
+Thread t = new Thread(ThreadGroup, Runnable target);
+```
+
 ## Java Multi Threading
 
 JDK 1.5 부터 포함된 Concurrent 패키지에서 Executor, Callable, Future 지원
@@ -55,18 +103,15 @@ JDK 1.5 부터 포함된 Concurrent 패키지에서 Executor, Callable, Future �
 
 지정한 수의 Thread Pool을 사용한다
 
+CPU코어 수만큼 최대 쓰레드를 지정하려면 인자로 `Runtime.getRuntime().availableProcessors()`를 사용한다
+
 ```java
-public class UsingFixedThreadPool {
-    public static void main(String args[]) {
-        System.out.println("Main thread starts here...");
+ExecutorService execService = Executors.newFixedThreadPool(2);
 
-        ExecutorService execService = Executors.newFixedThreadPool(2);
-        execService.execute(new MyThreadTask());
-        execService.execute(new MyThreadTask());
+execService.execute(new MyThreadTask());
+execService.execute(new MyThreadTask());
 
-        execService.shutdown();
-    }
-}
+execService.shutdown();
 ```
 
 #### CachedThreadPool 사용
@@ -74,17 +119,12 @@ public class UsingFixedThreadPool {
 CachedThreadPool은 FixedThreadPool과 달리 Task의 숫자에 따라 쓰레드 숫자가 변한다
 
 ```java
-public class UsingCachedThreadPool {
-    public static void main(String args[]) {
-        System.out.println("Main thread starts here...");
+ExecutorService execService = Executors.newCachedThreadPool();
 
-        ExecutorService execService = Executors.newCachedThreadPool();
-        execService.execute(new MyThreadTask());
-        execService.execute(new MyThreadTask());
+execService.execute(new MyThreadTask());
+execService.execute(new MyThreadTask());
 
-        execService.shutdown();
-    }
-}
+execService.shutdown();
 ```
 
 #### SingleThreadExecutor
@@ -92,18 +132,12 @@ public class UsingCachedThreadPool {
 쓰레드가 하나로 구성되어 있다. Task간 Thread safe 하다.
 
 ```java
-public class UsingSingleThreadExecutor {
-    public static void main(String args[]) {
-        System.out.println("Main thread starts here...");
+ExecutorService execService = Executors.newSingleThreadExecutor();
 
-        ExecutorService execService = Executors.newSingleThreadExecutor();
+execService.execute(new MyThreadTask());
+execService.execute(new MyThreadTask());
 
-        execService.execute(new MyThreadTask());
-        execService.execute(new MyThreadTask());
-
-        execService.shutdown();
-    }
-}
+execService.shutdown();
 ```
 
 ### Executors 종료
@@ -142,7 +176,12 @@ ThreadFactory 인터페이스는 다음의 메소드를 구현해야 한다.
 
 synchronized를 이용해 변경 시점까지 락을 거는 방법으로 데이터를 읽는 메소드를 락을 걸고 쓰레드가 실행되는 마지막에 락을 푼다.
 this.wait()로 기다리고 this.notifyAll()로 해제한다.
-done 변수를 이용해 synchronized로 무조건 들어가지 않도록 했으며, done은 volatile로 선언해서 어떤 스레드가 값을 변경하든, 항상 최신값을 읽어갈 수 있게 해준다. 참고로 volatile은 항상 최신 값을 읽게는 해주지만 operation을 atomic하게는 만들지 않으며, synchronized는 operation을 atomic하게 해준다. 즉, volatile은 동기화를 할 뿐이지 lock은 아니다.
+
+done 변수를 이용해 synchronized로 무조건 들어가지 않도록 했으며, done은 volatile로 선언해서 어떤 스레드가 값을 변경하든,
+항상 최신값을 읽어갈 수 있게 해준다.
+
+참고로 volatile은 항상 최신 값을 읽게는 해주지만 operation을 atomic하게는 만들지 않으며, synchronized는 operation을 atomic하게 해준다.
+즉, volatile은 동기화를 할 뿐이지 lock은 아니다.
 
 ```java
 public class ReturningValueFirstWay {
