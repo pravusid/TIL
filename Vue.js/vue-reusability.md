@@ -760,7 +760,7 @@ new Vue({
 ```js
 Vue.component('my-component', {
   functional: true,
-  // 인스턴스의 부족함을 보완하기 위해 2번째에 컨텍스트 인수가 제공됨
+  // 인스턴스의 부족함을 보완하기 위해 2번째에 컨텍스트 인자가 제공됨
   render: function (createElement, context) {
     // ...
   },
@@ -851,3 +851,138 @@ Vue.component('smart-list', {
   <p>second</p>
 </my-functional-component>
 ```
+
+## 플러그인
+
+### 플러그인 작성
+
+플러그인은 엄격하게 정의된 범위는 없으나 일반적으로 전역 수준 기능을 Vue에 추가한다.
+
+일반적으로 작성할 수있는 플러그인에는 여러 유형이 있다.
+
+- 약간의 전역 메소드 또는 속성 추가 (예) vue-custom-element
+- 하나 이상의 글로벌 에셋 추가 : 디렉티브 / 필터 / 트랜지션 등 (예) vue-router
+- 글로벌 mixin으로 일부 컴포넌트 옵션을 추가 (예) vuex
+- Vue.prototype에 Vue 인스턴스 메소드를 연결하여 Vue 인스턴스 메소드를 추가
+- 가지고 있는 API를 제공하면서 동시에 위의 일부 조합을 주입하는 라이브러리 (예) vue-router
+
+Vue.js 플러그인은 install 메소드를 노출해야 한다. 이 메소드는 인자로 Vue 생성자와 옵션을 받는다.
+
+```js
+MyPlugin.install = function (Vue, options) {
+  // 1. 전역 메소드 또는 속성 추가
+  Vue.myGlobalMethod = function () {
+    // 필요한 로직 ...
+  }
+
+  // 2. 전역 에셋 추가
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 필요한 로직 ...
+    }
+    ...
+  })
+
+  // 3. 컴포넌트 옵션 주입
+  Vue.mixin({
+    created: function () {
+      // 필요한 로직 ...
+    }
+    ...
+  })
+
+  // 4. 인스턴스 메소드 추가
+  Vue.prototype.$myMethod = function (options) {
+    // 필요한 로직 ...
+  }
+}
+```
+
+### 플러그인 사용하기
+
+`Vue.use()` 글로벌 메소드를 호출하여 플러그인을 사용할 수 있다
+
+```js
+// `MyPlugin.install(Vue)` 호출
+Vue.use(MyPlugin)
+```
+
+옵션을 선택해서 전달할 수 있다
+
+```js
+Vue.use(MyPlugin, { someOption: true })
+```
+
+`Vue.use`는 같은 플러그인을 두 번 이상 사용하지 못하기 때문에, 같은 플러그인을 여러 번 호출하면 플러그인이 한 번만 설치된다.
+
+vue-router와 같은 Vue.js 공식 플러그인이 제공하는 일부 플러그인은
+Vue가 전역 변수로 사용 가능한 경우 자동으로 Vue.use()를 호출한다.
+
+그러나 CommonJS와 같은 모듈 환경에서는 항상 `Vue.use()`를 명시적으로 호출해야한다.
+
+```js
+// Browserify 또는 Webpack을 통해 CommonJS를 사용할 때
+var Vue = require('vue')
+var VueRouter = require('vue-router')
+
+Vue.use(VueRouter)
+```
+
+## 필터
+
+Vue는 텍스트 형식을 지정할 수 있는 필터를 지원한다.
+이 필터들은 중괄호 보간법 혹은 v-bind 표현법을 이용할 때 사용가능하다.
+
+필터는 자바스크립트 표현식 마지막에 `|` 심볼과 함께 추가하면 된다.
+
+```html
+<!-- 중괄호 보간법 -->
+{{ message | capitalize }}
+
+<!-- v-bind 표현 -->
+<div v-bind:id="rawId | formatId"></div>
+```
+
+컴포넌트 옵션에서 로컬 필터를 정의할 수 있다
+
+```js
+filters: {
+  capitalize: function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
+}
+```
+
+또는 다음과 같이 전역 필터를 정의할 수 있습니다.
+
+```js
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
+```
+
+필터의 함수는 항상 첫 번째 전달인자로 표현식의 값(이전 체이닝의 결과)을 받는다.
+위 예제에서, capitalize 필터 함수는 message의 값을 전달인자로 받는다.
+
+또한 필터는 체이닝 할 수 있다.
+
+```html
+{{ message | filterA | filterB }}
+```
+
+위와 같은 경우에, 하나의 인자를 받는 filterA는 message값을 받을 것이고 filterA가 message와 함께 실행된 결과가 filterB에 넘겨진다.
+
+필터는 기본적으로 자바스크립트 함수이기 때문에 두 개 이상의 인자를 받을 수 있다.
+
+```html
+{{ message | filterA('arg1', arg2) }}
+```
+
+여기서 filterA는 세개의 인자를 받는 함수로 정의되어 있다.
+
+message의 값은 첫번째 인자로 전달되고, 순수 문자열인 'arg1'은 두번째 인자가 되고,
+자바스크립트 표현식인 arg2는 표현식이 실행된 이후에 세번째 인자로 전달된다.
