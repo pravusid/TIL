@@ -686,3 +686,98 @@ closure라는 명칭은 함수가 자유 변수에 대해 닫혀있다라는 의
 - 루프안에서 클로저 활용시 주의해야 한다
 
 ## 객체지향 프로그래밍
+
+클래스 기반 객체지향 언어는 모든 인스턴스가 클래스에 정의된 대로 같은 구조이고 일반적으로 런타임에 바꿀 수 없다.
+
+반면 프로토타입 기반의 언어는 객체의 자료구조, 메소드 등을 동적으로 바꿀 수 있다.
+
+### 클래스, 생성자, 메소드
+
+자바스크립트에서는 class라는 개념이 없다.(ES6에서 문법적으로 추가되었으나 프로토타입 기반의 특별한 함수이다)
+
+자바스크립트는 기본 타입을 제외하면 모든것이 객체로 구성되어 있고, 함수 객체로 많은 것을 구현한다.
+앞에서 살펴본대로 new 연산자와 생성자 함수를 사용해서 객체를 생성했다.
+
+그러나 생성자 함수에서 객체 공통기능을 선언하게되면 (getter / setter 등의) 불필요한 메모리 사용이 발생한다.
+
+이 문제 해결을 위해서 프로토타입에 접근해야 한다.
+
+```js
+function Person(arg) {
+  this.name = arg;
+}
+
+Person.prototype.getName = function() {
+  return this.name;
+}
+
+Person.prototype.setName = function(value) {
+  this.name = value;
+}
+
+var me = new Person('me');
+var you = new Person('you');
+console.log(me.getName()); // me
+console.log(you.getName()); // you
+```
+
+위의 코드는 더글라스 크락포드가 제시한 방식에 따라 다음처럼 쓸 수도 있다
+
+```js
+Function.prototype.method = function(name, func) {
+  this.prototype[name] = func;
+}
+
+function Person(arg) {
+  this.name = arg;
+}
+
+Person.method('getName', function() {
+  return this.name;
+});
+
+Person.method('setName', function(value) {
+  this.name = value;
+});
+
+Person.prototype.setName = function(value) {
+  this.name = value;
+}
+
+var me = new Person('me');
+var you = new Person('you');
+console.log(me.getName()); // me
+console.log(you.getName()); // you
+```
+
+### 상속
+
+자바스크립트는 프로토타입 체인을 이용하여 상속을 구현할 수 있다.
+
+#### 프로토타입을 이용한 상속
+
+```js
+function createObject(o) {
+  function F() {}
+  F.prototype = o;
+  return new F();
+}
+
+var person = {
+  name: "zzoon",
+  getName: function() {
+    return this.name;
+  },
+  setName: function(value) {
+    this.name = value;
+  }
+};
+
+var student = createObject(person);
+
+student.setName("me");
+console.log(student.getName()); // me
+```
+
+`createObject()` 함수는 인자로 들어온 객체를 부모로 하는 자식 객체를 생성하여 반환한다.
+위의 함수는 ES5에서 `Object.create()` 함수로 제공되므로 따로 구현할 필요는 없다.
