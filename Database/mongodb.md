@@ -75,6 +75,16 @@ security:
   db.shutdownServer()
   ```
 
+## 인증모드 콘솔접속
+
+### 로컬 연결
+
+`mongo <dbname> -u <username> -p <password>`
+
+### 원격 연결
+
+`mongo -u <username> -p <password> <ipaddress>:<port>/<dbname>`
+
 ## 사용자 설정
 
 ### 관리자 계정 및 권한 추가
