@@ -754,8 +754,6 @@ console.log(you.getName()); // you
 
 자바스크립트는 프로토타입 체인을 이용하여 상속을 구현할 수 있다.
 
-#### 프로토타입을 이용한 상속
-
 ```js
 function createObject(o) {
   function F() {}
@@ -781,3 +779,253 @@ console.log(student.getName()); // me
 
 `createObject()` 함수는 인자로 들어온 객체를 부모로 하는 자식 객체를 생성하여 반환한다.
 위의 함수는 ES5에서 `Object.create()` 함수로 제공되므로 따로 구현할 필요는 없다.
+
+### 캡슐화
+
+```js
+var Person = function(arg) {
+  var name = arg;
+
+  // Person 함수 객체의 프로토타입에 접근가능하도록 함수생성하여 반환함
+  var Func = function() {}
+  Func.prototype = {
+    getName: function() {
+      return name;
+    },
+    setName: function(arg) {
+      name = arg;
+    }
+  };
+  
+  return Func;
+}();
+
+var me = new Person();
+```
+
+Person 함수의 private 멤버에 접근할 수 있는 메소드를 반환받는다.
+다만, 접근하는 private 멤버가 객체나 배열이면 얕은 복사로 참조만을 반환하므로 이후 이를 쉽게 변경할 수 있다.
+
+따라서 보통의 경우 객체를 반환하지 않고 객체의 주요 정보를 새로운 객체에 담아서 반환하는 방법을 많이 사용한다.
+하지만 꼭 객체가 반환되어야 하는 경우에는 깊은 복사로 복사본을 만들어서 반환하는 방법을 사용하는 것이 좋다.
+
+### 응용: 클래스의 기능을 가진 subClass 함수
+
+다음을 이용하여 클래스 기능을 하는 함수를 구현하여 보자
+
+- 함수의 프로토타입 체인
+- extend 함수
+- 인스턴스르 생성할 때 생성자 호출
+
+#### 자식 클래스 생성 및 상속
+
+subClass는 상속받을 클래스에 넣을 변수 및 메소드가 담긴 객체를 인자로 받아 부모함수를 상속하는 자식클래스를 만든다.
+
+```js
+var subClass = function() {
+  // 클로저로 임시 함수객체가 한번만 생성되도록 함
+  var F = function() {};
+
+  return function(obj) {
+    // 최상위 함수객체가 Function이어야 한다.
+    var parent = this === window ? Function : this;
+
+    // 자식 함수 객체 생성
+    var child = function() {
+      var _parent = child.parent;
+
+      // 부모 생성자가 있으면 호출하고, 부모가 Function 인경우 최상위이므로 실행X
+      if (_parent && _parent !== Function) {
+        // 부모함수의 재귀적 호출
+        _parent.apply(this, arguments);
+      }
+
+      // 생성자 호출
+      if (child.prototype._init) {
+        child.prototype._init.apply(this, arguments);
+      }
+    };
+
+    // 프로토타입을 이용한 상속
+    F.prototype = parent.prototype;
+    child.prototype = new F();
+    child.prototype.constructor = child;
+    child.parent = parent;
+    // 자식 함수객체에 subClass 함수가 있어야 하므로
+    child.subClass = arguments.callee;
+
+    // 사용자가 인자로 넣은 객체를 자식클래스에 넣어 확장함 (얕은복사)
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        child.prototype[i] = obj[i];
+      }
+    }
+  }();
+}
+```
+
+#### subClass 활용
+
+subClass 함수로 상속예제를 만들어보자
+
+```js
+var personObj = {
+  _init: function() {
+    console.log("person init");
+  },
+  getName: function() {
+    return this._name;
+  },
+  setName: function(name) {
+    this._name = name;
+  }
+};
+
+var studentObj = {
+  _init: function() {
+    console.log("student init");
+  },
+  getName: function() {
+    return "Student Name: " + this._name;
+  }
+};
+
+var Person = subClass(personObj);
+var person = new Person();
+person.setName("ME");
+console.log(person.getName()); // ME
+
+var Student = Person.subClass(studentObj);
+var student = new Student();
+student.setName("HAKSAENG");
+console.log(student.getName()); // Student Name: HAKSAENG
+```
+
+## 함수형 프로그래밍
+
+### 함수형 프로그래밍의 개념
+
+함수형 프로그래밍은 함수의 조합으로 작업을 수행한다.
+
+작업이 이루어지는 동안 작업에 필요한 데이터와 상태는 변하지 않는다. (no side effect)
+
+### 자바스크립트에서 함수형 프로그래밍
+
+자바스크립트에서도 함수형 프로그래밍이 가능하다
+
+- 일급 객체로서의 함수
+- 클로저
+
+를 지원하기 때문이다.
+
+함수형 프로그래밍을 활용한 예제를 작성해보자.
+
+팩토리얼: 클로저로 숨겨지는 cache에는 팩토리얼을 연산한 값을 저장한다.
+
+```js
+var factorial = function() {
+  var cache = { '0': 1 };
+  var func = function(n) {
+    var result = 0;
+
+    if (typeof(cache[n]) === 'number') {
+      result = cache[n];
+    } else {
+      result = cache[n] = n * func(n-1);
+    }
+
+    return result;
+  }
+
+  return func;
+}();
+
+console.log(factorial(10));
+```
+
+위의 패턴을 사용하여 팩토리얼과 피보나치 수열을 계산하는 함수를 받아 재사용하는 함수를 만들 수 있다.
+
+```js
+var cacher = function(cache, func) {
+  var calculate = function(n) {
+    if (typeof(cache[n]) === 'number') {
+      result = cache[n];
+    } else {
+      result = cache[n] = func(calculate, n);
+    }
+
+    return result;
+  }
+
+  return calculate;
+};
+
+var fact = cacher({ '0': 1 }, function(func, n) {
+  return n * func(n-1);
+});
+
+var fibo = cacher({ '0': 0, '1': 1 }, function(func, n) {
+  return func(n-1) + func(n-2);
+});
+
+console.log(fact(10));
+console.log(fibo(10));
+```
+
+### 함수형 프로그래밍을 활용한 주요 함수
+
+#### apply
+
+특정 데이터를 여러 함수를 적용하는 방식으로 작업을 수행하는 것을 적용(apply)한다라고 한다.
+
+따라서 자바스크립트에서도 함수를 호출하는 역할을 하는 메소드를 apply라고 이름 붙이게 되었다.
+
+#### 커링 (currying)
+
+커링이란 특정 함수에서 정의된 인자의 일부를 넣어 고정시키고,
+나머지를 인자로 받는 새로운 함수를 만드는 것을 의미한다.
+
+커링은 자바스크립트에서 기본으로 지원하지 않으나 커링함수를 정의하여 사용할 수 있다.
+
+```js
+Function.prototype.curry = function() {
+  var fn = this, args = Array.prototype.slice.call(arguments);
+  return function() {
+    return fn.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+  };
+};
+```
+
+#### map
+
+```js
+Array.prototype.map = function(callback) {
+  var obj = this;
+  var value, mappedValue;
+  var A = new Array(obj.length);
+
+  for (var i = 0; i < obj.length; i++) {
+    value = obj[i];
+    mappedValue = callback.call(null, value);
+    A[i] = mappedValue;
+  }
+
+  return A;
+};
+```
+
+#### reduce
+
+```js
+Array.prototype.reduce = function(callback, memo) {
+  var obj = this;
+  var value, accumulatedValue = 0;
+
+  for (var i = 0; i < obj.length; i++) {
+    value = obj[i];
+    accumulatedValue = callback.call(null, accumulatedValue, value);
+  }
+
+  return accumulatedValue;
+}
+```
