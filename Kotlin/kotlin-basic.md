@@ -86,13 +86,13 @@ fun 함수명(파라미터): 반환타입 {
 
 따라서 위의 함수를 보다 간결하게 표현하면 아래와 같다 (식이 본문인 함수)
 
-```kt
+```kotlin
 fun max(a: Int, b, Int): Int = if (a > b) a else b
 ```
 
 식이 본문인 함수는 타입추론을 사용하여 반환값을 생략할 수 있다. (블록이 본문인 함수는 해당하지 않음)
 
-```kt
+```kotlin
 fun max(a: Int, b: Int) = if (a > b) a else b
 ```
 
@@ -102,7 +102,7 @@ Kotlin에서는 타입지정을 생략하는 경우가 흔하므로 타입을 �
 
 초기값이 있으면 타입생략이 가능하지만, 초기화 하지않고 변수를 선언하기 위해서는 타입을 반드시 명시해야한다.
 
-```kt
+```kotlin
 //가능
 val answer = 42
 
@@ -126,7 +126,7 @@ var 키워드를 사용하면 변수 값을 변경할 수 있지만 타입은 �
 
 #### 문자열 템플릿
 
-```kt
+```kotlin
 fun main (args: Array<String>) {
   val name = if (args.size > 0) args[0] else "Kotlin"
   println("Hello, ${name}!")
@@ -156,7 +156,7 @@ public class Person {
 
 위의 자바로 작성한 내용과 아래의 Kotlin 코드는 동일한 기능을 수행한다.
 
-```kt
+```kotlin
 class Person(val name: String)
 ```
 
@@ -164,7 +164,7 @@ Kotlin에서는 프로퍼티를 간결하게 기술할 수 있는 구문을 제�
 
 자바에서 멤버필드의 접근제한자는 캡슐화를 위해 private으로 두고 접근자(getter) 메소드를 사용한다.
 
-```kt
+```kotlin
 class Person(
   val name: String,
   var isMarried: Boolean
@@ -177,7 +177,7 @@ class Person(
 그러나 접근자 사용은 property 직접 접근형태의 문법을 사용한다. (실제 직접접근은 아님)
 getter 뿐만 아니라 setter의 경우도 동일하다.
 
-```kt
+```kotlin
 val person = Person("Bob", true)
 println(person.name)
 println(person.isMarried)
@@ -187,7 +187,7 @@ println(person.isMarried)
 
 접근자를 직접 작성할 수도 있다.
 
-```kt
+```kotlin
 class Rectangle(val Height: Int, val width: Int) {
   val isSquare: Boolean
     get() {
@@ -202,7 +202,7 @@ class Rectangle(val Height: Int, val width: Int) {
 
 #### enum
 
-```kt
+```kotlin
 enum class Color {
   RED, GREEN, BLUE
 }
@@ -212,7 +212,7 @@ kotlin에서 enum은 soft keyword로 class 키워드 앞에 붙는다.
 
 프로퍼티와 메소드가 있는 enum 클래스를 선언할 수도 있다.
 
-```kt
+```kotlin
 enum class Color(
   val red: Int, val green: Int, val blue: Int
 ) {
@@ -228,7 +228,7 @@ enum class Color(
 
 when은 switch문에 해당하는 문법이다.
 
-```kt
+```kotlin
 fun getMnemonic(color: Color) =
   when (color) {
     Color.RED -> "Richard"
@@ -239,7 +239,7 @@ fun getMnemonic(color: Color) =
 
 분기안에서 여러 값을 사용할 수도 있다.
 
-```kt
+```kotlin
 fun getMnemonic(color: Color) =
   when (color) {
     Color.RED, Color.GREEN -> "Richard"
@@ -249,7 +249,7 @@ fun getMnemonic(color: Color) =
 
 자바의 switch와 다르게 각 분기에 break;를 넣지 않아도 되며 분기조건에 임의의 객체를 허용한다.
 
-```kt
+```kotlin
 fun mix(c1: Color, c2: Color) =
   when (setOf(c1, c2)) {
     setOf(RED, YELLOW) -> ORANGE
@@ -263,7 +263,7 @@ fun mix(c1: Color, c2: Color) =
 
 when은 인자 없이 사용할 수도 있다. 이 경우 if / elseif 문과 유사한 형식이 된다.
 
-```kt
+```kotlin
 fun mix(c1: Color, c2: Color) =
   when {
     (c1 == RED && c2 == YELLOW) ||
@@ -278,7 +278,7 @@ fun mix(c1: Color, c2: Color) =
 
 ### 스마트 캐스트: 타입검사 + 타입캐스트
 
-```kt
+```kotlin
 interface Expr
 class Num(val value: Int): Expr
 class Sum(val left: Expr, val right: Expr): Expr
@@ -287,12 +287,12 @@ class Sum(val left: Expr, val right: Expr): Expr
 `(1 + 2) + 4`라는 식을 `Sum(Sum(Num(1), Num(2), Num(4)))`라는 구조의 객체로 생성할 수 있다.
 계산을 위해서 위의 내용을 실제로 구현하면
 
-```kt
+```kotlin
 fun eval(e: Expr): Int =
   when (e) {
     // 스마트 캐스트가 적용된 상태
     is Num -> {
-      println("num: ${e.value})
+      println("num: ${e.value}")
       e.value // 블록의 마지막 식이므로 e의 타입이 Num이면 e.value가 반환된다.
     }
     is Sum -> {
@@ -322,7 +322,7 @@ Kotlin은 `is`를 사용해 변수 타입을 검사하며 이는 다른언어의
 
 `val oneToTen = 1..10`의 경우 1과 10을 포함하는(닫힌 구간) 10회의 반복 범위를 의미한다.
 
-```kt
+```kotlin
 for (i in 100 downTo 1 step 2) {
   print(i)
 }
@@ -337,7 +337,7 @@ for (i in 100 downTo 1 step 2) {
 
 #### map에 대한 iteration
 
-```kt
+```kotlin
 val binaryReps = TreeMap<Char, String>()
 
 // assignment
@@ -348,7 +348,7 @@ for (c in 'A'..'F') { // 문자열도 순서대로 범위지정이 가능하다
 
 // iteration
 for ( (letter, binary) in binaryReps ) {
-  println("${letter} = ${binary})
+  println("${letter} = ${binary}")
 }
 ```
 
@@ -356,7 +356,7 @@ for ( (letter, binary) in binaryReps ) {
 
 `java.lang.Comparable` 인터페이스를 구현 클래스라면 해당 클래스의 인스턴스 객체를 사용해 범위를 만들 수 있다.
 
-```kt
+```kotlin
 // 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z'
 fun isLetter(c: Char) = c in 'a'..'z' || c in 'A'..'Z'
 fun isNotDigit(c: Char) = c !in '0'..'9'
@@ -364,7 +364,7 @@ fun isNotDigit(c: Char) = c !in '0'..'9'
 
 `in` 및 `!in` 연산자를 `when`에서 사용할 수 있다.
 
-```kt
+```kotlin
 fun recognize(c: Char) = when(c) {
   in '0'..'9' ->
     "it's a digit!"
@@ -379,7 +379,7 @@ fun recognize(c: Char) = when(c) {
 
 자바와 달리 코틀린의 `throw`는 식이므로 다른식에 포함될 수 있다.
 
-```kt
+```kotlin
 val percentage =
   if (number in 0..100)
     number
@@ -394,7 +394,7 @@ try catch finally는 자바와 유사하지만 method 뒤의 `throws Exception` 
 자바는 체크 예외처리를 강제하지만 많은 프로그래머들이 의미 없이 예외를 다시 던지거나,
 예외를 잡되 처리하지는 않고 그냥 무시하는 코드를 작성하는 경우가 흔한 문제가 있다.
 
-```kt
+```kotlin
 fun readNumber(reader: BufferedReader): Int? { //
   try {
     val line = reader.readLine()
@@ -409,7 +409,7 @@ fun readNumber(reader: BufferedReader): Int? { //
 
 try를 식으로 사용할 수도 있다.
 
-```kt
+```kotlin
 fun readNumber(reader: BufferedReader) {
   val number = try {
     Integer.parseInt(reader.readLine())

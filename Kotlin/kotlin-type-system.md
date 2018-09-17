@@ -23,7 +23,7 @@ int strLen(String s) {
 만약 위의 함수에서 s가 `null`이면 NPE가 발생한다.
 이 함수를 코틀린으로 다시 작성하면 다음과 같다.
 
-```kt
+```kotlin
 fun strLen(s: String) = s.length
 ```
 
@@ -32,7 +32,7 @@ fun strLen(s: String) = s.length
 
 이 함수가 널과 문자열 모두를 인자로 받으려면 타입 이름 뒤에 물음표 `?`를 명시해야 한다.
 
-```kt
+```kotlin
 fun strLenSafe(s: String?) = ...
 ```
 
@@ -40,7 +40,7 @@ fun strLenSafe(s: String?) = ...
 이렇게 제약이 많다면 널이 될 수 있는 타입의 값으로 무엇을 할 수 있을까.
 가장 중요한 것은 결과 값을 `null`과 비교하는 것이다.
 
-```kt
+```kotlin
 fun strLenSafe(s: String?): Int = if (s != null) s.length else 0
 ```
 
@@ -60,7 +60,7 @@ fun strLenSafe(s: String?): Int = if (s != null) s.length else 0
 
 메소드 호출 뿐만 아니라 프로퍼티를 읽거나 쓸 때도 안전한 호출을 사용할 ㅜㅅ 있다.
 
-```kt
+```kotlin
 class Employee(val name: String, val manager: Employee?)
 
 fun managerName(employee: Employee): String? = employee.manager?.name
@@ -72,7 +72,7 @@ null
 자바에서는 `if`문으로 `null` 확인을 해야 NPE가 발생하지 않는 method chaining 의 경우를 보자.
 코틀린에서는 널이 될 수 있는 중간 객체가 여럿 있다면 식 하나에서 안전한 호출을 연쇄사용하면 편리하다.
 
-```kt
+```kotlin
 class Address(val streetAddress: String, val zipCode: Int,
     val city: String, val country: String)
 
@@ -92,13 +92,13 @@ fun Person.countryName(): String {
 
 엘비스 연산자는 이항연산자로 좌항이 널인지 검사하고, 좌항값이 널이 아니면 좌항을, 널이면 우항값을 결과로 한다.
 
-```kt
+```kotlin
 val t: String = s ?: ""
 ```
 
 이를 이용하면 앞의 예제를 고쳐쓸 수 있다.
 
-```kt
+```kotlin
 class Address(val streetAddress: String, val zipCode: Int,
     val city: String, val country: String)
 
@@ -121,7 +121,7 @@ fun Person.countryName(): String {
 `as?` 연산자는 값을 지정한 타입으로 캐스트한다. 대상 타입으로 변환할 수 없으면 `null`을 반환한다.
 따라서 안전한 캐스트를 사용할 때는 엘비스 연산자와 함께 사용하는 것이 좋다.
 
-```kt
+```kotlin
 class Person(val firstName: String, val lastName: String) {
   override fun equals(o: Any?): Boolean {
     val otherPerson = o as? Person ?: return false
@@ -142,7 +142,7 @@ class Person(val firstName: String, val lastName: String) {
 not-null assertion은 어떤 값이든 강제로 널이 될 수 없는 타입으로 바꿀 수 있다.
 `null`에 대해 `!!`를 사용하면 NPE가 발생한다.
 
-```kt
+```kotlin
 fun ignoreNulls(s: String?) {
   val sNotNull: String = s!! // 예외 발생지점
   println(sNotNull.length)
@@ -159,7 +159,7 @@ kotlin.KotlinNullPointerException
 이런 경우 호출된 함수가 언제나 다른 함수에서 널이 아닌 값을 전달받는다는 사실이 분명하다면 굳이 널 검사를 다시 수행할 필요가 없다.
 이런경우 `!!` 단언문을 쓸 수 있다.
 
-```kt
+```kotlin
 class CopyRowAction(val list: JList<String>) : AbstractAction() {
   override fun isEnabled(): Boolean = list.selectedValue != null
   override fun actionPerformed(e: ActionEvent) { // actionPerformed는 isEnabled가 true인 경우에만 호출되므로
@@ -180,9 +180,9 @@ class CopyRowAction(val list: JList<String>) : AbstractAction() {
 `let` 함수를 사용하면 널이 될 수 있는 식을 더 쉽게 다룰 수 있다.
 `let` 함수를 안전한 호출 연산자와 함께 사용하면 원하는 식의 결과가 널인지 검사한 다음 결과를 변수에 넣는 작업을 한번에 처리할 수 있다.
 
-```kt
+```kotlin
 fun sendEmailTo(email: String) {
-  println("Sending email to ${email})
+  println("Sending email to ${email}")
 }
 
 getTheBestPersonInTheWorld()?.let { sendEmailTo(it.email) }
@@ -197,7 +197,7 @@ getTheBestPersonInTheWorld()?.let { sendEmailTo(it.email) }
 이를 해결하기 위해 프로퍼티를 late-initialized 할 수 있다.
 `lateinit` 변경자를 붙이면 프로퍼티를 나중에 초기화 할 수 있다.
 
-```kt
+```kotlin
 class MyService {
   fun performAction(): String = "foo"
 }
@@ -224,7 +224,7 @@ class MyTest {
 어떤 메소드를 호출하기 전에 수신 객체 역할을 하는 변수가 널이 될 수 없다고 보장하는 대신,
 직접 변수에 대해 메소드를 호출해도 확장 함수인 메소드가 알아서 널을 처리해준다. 이런 처리는 확장함수에서만 가능하다.
 
-```kt
+```kotlin
 fun verifyUserInput(input: String?) {
   if (input.isNullOrBlank()) { // 안전한 호출을 하지 않아도 된다
     println("please fill in the required fields")
@@ -236,7 +236,7 @@ fun verifyUserInput(input: String?) {
 즉, 널이 될 수 있는 타입의 확장 함수는 안전한 호출 없이도 호출 가능하다.
 그렇기 때문에 해당 확장함수 내부에서는 `null` 여부를 검사해야 한다.
 
-```kt
+```kotlin
 fun String?.isNullOrBlank(): Boolean = this == null || this.isBlank() // 두번째 this는 스마트 캐스트가 적용된다.
 ```
 
@@ -246,7 +246,7 @@ fun String?.isNullOrBlank(): Boolean = this == null || this.isBlank() // 두번�
 널이 될 수 있는 타입을 포함하는 어떤 타입이라도 타입 파라미터를 대신할 수 있다.
 따라서 타입 파라미터 `T`를 클래스나 함수 안에서 타입 이름으로 사용하면 이름 끝에 `?`가 없어도 `T`는 널이 될 수 있는 타입이다.
 
-```kt
+```kotlin
 fun <T> printHashCode(t: T) {
   println(t?.hashCode()) // t는 null이 될 수 있으므로 안전한 호출을 써야 한다
 }
@@ -254,7 +254,7 @@ fun <T> printHashCode(t: T) {
 
 타입 파라미터가 널이 아님을 확실히 하려면 널이 될 수 없는 upper bound를 지정해야 한다.
 
-```kt
+```kotlin
 fun <T: Any> printHashCode(t: T) { // T는 null이 될 수 없는 타입이다
   println(t.hashCode())
 }
@@ -292,7 +292,7 @@ interface StringProcessor {
 
 코틀린 컴파일러는 다음의 두 가지를 모두 받아들인다
 
-```kt
+```kotlin
 class StringPrinter : StringProcessor {
   override fun process(value: String) {
     println(value)
@@ -353,14 +353,14 @@ class NullableStringPrinter : StringProcessor {
 
 코틀린 컴파일러는 다음과 같은 코드를 거부한다.
 
-```kt
+```kotlin
 val i = 1
 val l: Long = i // type mismatch Error
 ```
 
 대신 직접 변환 메소드를 호출해야 한다.
 
-```kt
+```kotlin
 val i = 1
 val l: Long = i.toLong()
 ```
@@ -414,7 +414,7 @@ val l: Long = i.toLong()
 
 이 특성은 제네릭 파라미터를 반환하는 함수를 오버라이드 하면서 반환 타입을 `Unit`으로 할 때 유용하다.
 
-```kt
+```kotlin
 interface Processor<T> {
   fun process(): T
 }
@@ -438,7 +438,7 @@ class NoResultProcessor : Processor<Unit> {
 그런 함수를 호출하는 코드를 분석하는 경우 함수가 정상적으로 끝나지 않는다는 사실을 알면 좋을 것이다.
 그런 경우를 표현하기 위해 코틀린에는 `Nothing`이라는 특별한 반환타입이 있다.
 
-```kt
+```kotlin
 fun fail(message: String): Nothing {
   throw IllegalStateException(message)
 }
@@ -448,7 +448,7 @@ fun fail(message: String): Nothing {
 
 `Nothing`을 반환하는 함수를 엘비스 연산자의 우항에 사용해서 전제조건을 검사할 수 있다.
 
-```kt
+```kotlin
 val address = company.address ?: fail("No address")
 println(address.city)
 ```
@@ -469,7 +469,7 @@ println(address.city)
 
 널이 될 수 있는 값으로 이루어진 컬렉션으로 널 값을 걸러내는 경우가 자주 있기 때문에 코틀린 표준 라이브러리는 `filterNotNull`이라는 함수를 제공한다.
 
-```kt
+```kotlin
 fun addValidNumbers(numbers: List<Int?>) {
   val validNumbers = numbers.filterNotNull()
   println("Sum of valid numbers: ${validNumbers.sum()})
@@ -535,10 +535,10 @@ fun addValidNumbers(numbers: List<Int?>) {
 
 코틀린 배열은 `indices` 확장함수로 이터레이션 할 수 있다
 
-```kt
+```kotlin
 fun main(args: Array<String>) {
   for (i in args.indices) {
-    println("${i} is: ${args[i]})
+    println("${i} is: ${args[i]}")
   }
 }
 ```
@@ -549,7 +549,7 @@ fun main(args: Array<String>) {
 - `arrayOfNulls` 함수에 정수 값을 인자로 넘기면 모든 원소가 `null`이고 인자로 넘긴 값과 같은 크기의 배열을 만들 수 있다. 원소 타입이 널이 될 수 있는 타입인 경우에만 이 함수를 쓸 수 있다.
 - `Array` 생성자는 배열 크기와 람다를 인자로 받아서 람다를 호출하여 각 배열 원소를 초기화 해준다. `arrayOf`를 쓰지 않고 각 원소가 널이 아닌 배열을 만들어야 하는 경우 이 생성자를 사용한다.
 
-```kt
+```kotlin
 val letters = Array<String>(26) { i -> ('a' + i).toString()}
 
 >>> println(letters.joinToString(""))
@@ -559,7 +559,7 @@ abcdefghijklmnopqrstuvwxyz
 코틀린에서는 배열을 인자로 받는 자바함수를 호출하거나 `vararg` 파라미터를 받는 코틀린 함수를 호출하기 위해 자주 배열을 만든다.
 하지만 이때 데이터가 이미 컬렉션에 들어 있다면 컬렉션을 `toTypedArray` 메소드를 사용해서 배열로 만들어야 한다.
 
-```kt
+```kotlin
 val strings = listOf("a", "b", "c")
 
 >>> println("%s/%s/%s".format(*strings.toTypedArray())) // 스프레드 연산자로 vararg 인자를 넘긴다
@@ -573,19 +573,19 @@ val strings = listOf("a", "b", "c")
 
 - 각 배열 타입의 생성자는 `size` 인자를 받아서 해당 원시 타입의 디폴트값으로 초기화된 `size` 크기의 배열을 반환한다
 
-  ```kt
+  ```kotlin
   val fiveZeros = IntArray(5)
   ```
 
 - 팩토리 함수(`IntArray`를 생성하는 `intArrayOf` 등)는 여러 값을 가변 인자로 받아서 그런 값이 들어간 배열을 반환한다
 
-  ```kt
+  ```kotlin
   val fiveZerosToo = intArrayOf(0, 0, 0, 0, 0)
   ```
 
 - 일반 배열과 마찬가지로, 크기와 람다를 인자로 받는 생성자를 사용한다.
 
-  ```kt
+  ```kotlin
   val squares = IntArray(5) { i -> (i+1) * (i+1) }
 
   >>> println(squares.joinToString())
@@ -597,7 +597,7 @@ val strings = listOf("a", "b", "c")
 코틀린 표준 라이브러리는 배열 기본연산에 더해 컬렉션에 사용할 수 있는 모든 확장함수를 배열에도 제공한다 (`filter`, `map` 등)
 원시 타입인 원소로 이뤄진 배열에도 그런 확장 함수를 똑같이 사용할 수 있다. (반환 값은 리스티이다)
 
-```kt
+```kotlin
 fun main(args: Array<String>) {
   args.forEachIndexed { index, element ->
     println("argument ${index} is: ${element}")

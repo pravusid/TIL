@@ -7,7 +7,7 @@
 예를 들어 `BigInteger` 클래스를 다룬다면 `add` 메소드를 호출하기보다는 `+` 연산을 사용하는 편이 낫다.
 컬렉션에 원소를 추가하는 경우에도 `+=` 연산자를 사용할 수 있으면 좋다.
 
-```kt
+```kotlin
 data class Point(val x: Int, val y: Int) {
   operator fun plus(other: Point): Point {
     return Point(x + other.x, y + other.y)
@@ -42,7 +42,7 @@ Point(x=40, y=60)
 
 연산자 함수의 반환타입이 두 피연산자 중 하나와 일치해야 하는것도 아니다.
 
-```kt
+```kotlin
 operator fun Char.times(count: Int): String {
   return toString().repeat(count)
 }
@@ -69,7 +69,7 @@ aaa
 
 `plus`와 같은 연산자를 오버로딩하면 코틀린은 `+` 연산자뿐 아니라 그와 관련있는 연산자인 `+=`도 자동으로 함께 지원한다
 
-```kt
+```kotlin
 >>> var point = Point(1, 2)
 >>> point += Point(3, 4)
 >>> println(point)
@@ -78,7 +78,7 @@ Point(x=4, y=6)
 
 경우에 따라 변경가능한 컬렉션에 원소를 추가하는 내부상태 변경을 의도하고 싶을 때가 있다.
 
-```kt
+```kotlin
 >>> val numbers = ArrayList<Int>()
 >>> numbers += 42
 >>> println(numbers[0])
@@ -99,7 +99,7 @@ Point(x=4, y=6)
 
 단항 연산자를 오버로딩하는 절차도 이항연산자와 동일하다.
 
-```kt
+```kotlin
 operator fun Point.unaryMinus(): Point {
   return Point(-x, -y)
 }
@@ -145,7 +145,7 @@ Point(x=-10, y=-20)
 
 `Comparable` 인터페이스를 구현하는 모든 자바클래스는 코틀린에서 비교연산자 구문을 사용할 수 있다.
 
-```kt
+```kotlin
 >>> println("abc" < "bac")
 true
 ```
@@ -161,7 +161,7 @@ true
 
 `get` 관례 구현
 
-```kt
+```kotlin
 operator fun Point.get(index: Int): Int {
   // index 0은 x좌표, index 1은 y좌표
   return when (index) {
@@ -178,7 +178,7 @@ operator fun Point.get(index: Int): Int {
 
 `set` 관례 구현
 
-```kt
+```kotlin
 data class MutablePoint(var x: Int, var y: Int)
 
 operator fun MutablePoint.set(index: Int, value: Int) {
@@ -200,7 +200,7 @@ MutablePoint(x=10, y=42)
 `in`은 객체가 컬렉션에 들어있는지 검사하는 membership test를 한다.
 `in` 연산자와 대응하는 함수는 `contains`이다.
 
-```kt
+```kotlin
 data class Rectangle(val upperLeft: Point, val lowerRight: Point)
 
 operator fun Rectangle.contains(p: Point): Boolean {
@@ -225,7 +225,7 @@ true
 
 예를 들어 `LocalDate` 클래스를 사용해 날짜의 범위를 만들어보자
 
-```kt
+```kotlin
 >>> val now = LocalDate.now()
 >>> val vacation = now..now.plusDay(10) // 오늘부터 10일짜리 범위 생성
 >>> println(now.plusWeeks(1) in vacation)
@@ -234,7 +234,7 @@ true
 
 `rangeTo` 연산자는 다른 산술연산자보다 우선순위가 낮지만 혼동을 피하기 위해 괄호로 인자를 감싸주면 좋다.
 
-```kt
+```kotlin
 >>> val n = 0
 >>> println(0..(n+1))
 0..10
@@ -253,7 +253,7 @@ true
 
 클래스 안에 직접 `iterator` 메소드를 구현할 수도 있다.
 
-```kt
+```kotlin
 operator fun ClosedRange<LocalDate>.iterator(): Iterator<LocalDate> =
     object : Iterator<LocalDate> {
       var current = start
@@ -279,7 +279,7 @@ operator fun ClosedRange<LocalDate>.iterator(): Iterator<LocalDate> =
 
 구조 분해 선언(destucturing declaration)을 사용하면 복합적인 값을 분해해서 여러 다른 변수를 한번에 초기화 할 수 있다.
 
-```kt
+```kotlin
 >>> val p = Point(10, 20)
 >>> val (x, y) = p
 >>> println(x)
@@ -295,7 +295,7 @@ operator fun ClosedRange<LocalDate>.iterator(): Iterator<LocalDate> =
 
 앞의 코드는 다음과 같이 컴파일 된다.
 
-```kt
+```kotlin
 val a = p.component1()
 val b = p.component2()
 ```
@@ -305,7 +305,7 @@ val b = p.component2()
 
 배열이나 컬렉션에도 `componentN` 함수가 있다.
 
-```kt
+```kotlin
 data class NameComponents(val name: String, val extension: String)
 
 fun splitFilename(fullName: String): NameComponents {
@@ -321,7 +321,7 @@ fun splitFilename(fullName: String): NameComponents {
 
 함수 본문 내의 선언문뿐 아니라 변수 선언이 들어갈 수 있는 장소라면 어디든 구조분해 선언을 사용할 수 있다.
 
-```kt
+```kotlin
 fun printEntries(map: Map<String, String>) {
   for ((key, value) in map) { // 루프변수에 구조분해 선언을 사용함
     println("${key} -> ${value}")
@@ -336,7 +336,7 @@ fun printEntries(map: Map<String, String>) {
 
 ### 위임 프로퍼티 문법
 
-```kt
+```kotlin
 class Delegate {
   operator fun getValue(...) { ... }
   operator fun setValue(..., value: Type) { ... }
@@ -356,7 +356,7 @@ lazy initialization은 객체의 일부분을 초기화하지 않고 남겨뒀�
 
 위임 프로퍼티가 아닌 지연초기화를 backing property를 사용한 코드는 다음과 같다
 
-```kt
+```kotlin
 class Person(val name: String) {
   private var _emails: List<Email>? = null
   val emails: List<Email>
@@ -372,7 +372,7 @@ class Person(val name: String) {
 이런 코드는 작성이 성가시다. 위임 프로퍼티를 사용하면 코드를 더 간단하게 작성할 수 있다.
 이와 같은 경우를 위해 위임객체를 반환하는 표준 라이브러리 함수인 `lazy`를 활용하면 된다.
 
-```kt
+```kotlin
 class Person(val name: String) {
   val emails by lazy { loadEmails(this) }
 }
@@ -386,7 +386,7 @@ class Person(val name: String) {
 
 다음과 같은 위임 프로퍼티가 있는 클래스가 있다고 가정하자
 
-```kt
+```kotlin
 class C {
   var prop: Type by MyDelegate()
 }
@@ -398,7 +398,7 @@ val c = C()
 
 컴파일러는 다음과 같은 코드를 생성한다
 
-```kt
+```kotlin
 class C {
   private val <delegate> = MyDelegate()
   var prop: Type
@@ -417,7 +417,7 @@ class C {
 
 그런 상황을 구현하는 방법 중에는 정보를 모두 맵에 저장하고, 맵을 통해 처리하는 프로퍼티로 필수정보를 제공하는 방법이 있다.
 
-```kt
+```kotlin
 class Person {
   private val _attributes = hashMapOf<String, String>()
 
@@ -438,7 +438,7 @@ class Person {
 
 위임 프로퍼티를 사용해 데이터베이스 칼럼에 접근하는 예제이다
 
-```kt
+```kotlin
 // 데이터베이스 테이블에 대응하는 객체 (싱글톤)
 object Users : IdTable() {
   val name = varchar("name", length = 50).index()

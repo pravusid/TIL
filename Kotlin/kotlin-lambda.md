@@ -19,7 +19,7 @@
 
 하지만 람다를 사용한 라이브러리 함수를 쓰면 간결하게 결과를 구할 수 있다. 모든 컬렉션에 대해 maxBy 함수를 호출할 수 있다.
 
-```kt
+```kotlin
 >>> val people = listOf(Person("Alice", 29), Person("Bob", 31))
 >>> println(people.maxBy { it.age })
 Person(name=Bob, age=31)
@@ -38,7 +38,7 @@ Person(name=Bob, age=31)
 람다식을 직접 호출할 수도 있지만 읽기도 불편하고 쓸모도 없다.
 코틀린에서 `run()` 함수를 사용하면 인자로 받은 람다를 실행할 수 있다.
 
-```kt
+```kotlin
 >>> { println(42) }()
 42
 >>> run { println(42) }
@@ -69,7 +69,7 @@ Person(name=Bob, age=31)
 중첩 클래스와 동일하게 람다에서도 파이널 변수가 아닌 로컬변수에 접근하여 변경할 수 있다.
 마찬가지로 람다를 함수 안에서 정의하면 함수의 파라미터뿐 아니라 람다 정의에 앞서 선언된 로컬 변수까지 람다에서 접근가능하다.
 
-```kt
+```kotlin
 fun printMessageWithPrefix(messages: Collection<String>, prefix: String) {
   message.forEach { // 람다식
     println("${prefix} ${it}")
@@ -95,7 +95,7 @@ Member reference: `클래스::멤버`
 참조대상이 함수/프로퍼티와 관계없이 참조 뒤에는 괄호를 넣으면 안된다.
 멤버 참조는 그 멤버를 호출하는 람다와 같은 타입이다. 따라서 다음과 같이 바꿔 쓸 수 있다. (에타변환)
 
-```kt
+```kotlin
 people.maxBy(Person::age)
 people.maxBy { p -> p.age }
 people.maxBy { it.age }
@@ -103,7 +103,7 @@ people.maxBy { it.age }
 
 또한 멤버가 아닌 최상위 함수나 프로퍼티를 참조할 수도 있다.
 
-```kt
+```kotlin
 fun salute() = println("Salute!")
 >>> run(::salute)
 Salute!
@@ -111,7 +111,7 @@ Salute!
 
 람다로 인자가 여럿인 다른 함수에게 작업을 위임하는 경우 람다를 정의하지 않고 직접 위임함수에 대한 참조를 제공할 수 있다.
 
-```kt
+```kotlin
 // case1
 val action = { person: Person, message: String ->
   sendEmail(person, message)
@@ -123,7 +123,7 @@ val nextAction = ::sendEmail
 생성자 참조를 사용하면 클래스 생성 작업을 연기하거나 저장해둘 수 있다.
 `::` 뒤에 클래스 이름을 넣으면 생성자 참조를 만들 수 있다.
 
-```kt
+```kotlin
 data class Person(val name, String, val age: Int)
 
 >>> val createPerson = ::Person // 생성자 참조를 변수에 할당한다
@@ -134,14 +134,14 @@ Person(name=Alice, age=29)
 
 확장함수도 멤버변수와 똑같은 방식으로 참조할 수 있다.
 
-```kt
+```kotlin
 fun Person.isAdult() = age > 21
 val predicate = Person::isAdult
 ```
 
 코틀린 1.1 부터는 참조를 얻은 다음 참조를 호출할 때 인스턴스 객체 제공을 바운드 멤버참조로 할 수 있다.
 
-```kt
+```kotlin
 val p = Person.("Dmitry", 34)
 val personAgeFunction = Person::age
 
@@ -158,7 +158,7 @@ val dmitryAgeFunction = p::age
 
 filter 함수는 컬렉션을 이터레이션 하면서 주어진 람다에 각 원소를 넘기고 람다가 true를 반환하는 원소만 모은다.
 
-```kt
+```kotlin
 val list = listOf(1, 2, 3, 4)
 
 >>> println(list.filter { it % 2 == 0 })
@@ -170,7 +170,7 @@ filter 함수는 컬렉션에서 원치 않는 원소를 제거하지만 원소�
 
 map 함수는 주어진 람다를 컬렉션의 각 원소에 적용한 결과를 모아서 새 컬렉션을 만든다 (mapping)
 
-```kt
+```kotlin
 val list = listOf(1, 2, 3, 4)
 
 >>> println(list.map { it * it })
@@ -186,7 +186,7 @@ val list = listOf(1, 2, 3, 4)
 코틀린에서 `all`과 `any`가 그런 연산이다.
 `count`함수는 조건을 만족하는 원소의 개수를 반환하며, `find`함수는 조건을 만족하는 첫 번째 원소를 반환한다.
 
-```kt
+```kotlin
 val canBeInClub27 = { p: Person -> p.age <= 27 }
 val people = listOf(Person("Alice", 27), Person("Bob", 31))
 
@@ -202,7 +202,7 @@ true
 
 조건을 만족하는 원소의 개수를 구하려면 count를 사용한다.
 
-```kt
+```kotlin
 val people = listOf(Person("Alice", 27), Person("Bob", 31))
 >>> println(people.count(canBeInClub27))
 1
@@ -212,7 +212,7 @@ val people = listOf(Person("Alice", 27), Person("Bob", 31))
 
 조건을 만족하는 원소를 하나 찾고 싶으면 `find` 함수를 사용한다.
 
-```kt
+```kotlin
 val people = listOf(Person("Alice", 27), Person("Bob", 31))
 >>> println(people.find(canBeInClub27))
 Person(name=Alice, age=27)
@@ -222,7 +222,7 @@ Person(name=Alice, age=27)
 
 `groupBy`는 특성을 파라미터로 전달하면 컬렉션을 자동으로 구분해주는 함수이다.
 
-```kt
+```kotlin
 val list = listOf("a", "ab", "b")
 >>> println(list.groupBy(String::first))
 {a=[a, ab], b=[b]}
@@ -233,7 +233,7 @@ val list = listOf("a", "ab", "b")
 `flatMap` 함수는 먼저 인자로 주어진 람다를 컬렉션의 모든 객체에 적용하고 (map),
  람다를 적용한 결과 얻어지는 여러 리스트를 한 리스트로 모은다 (flatten).
 
- ```kt
+ ```kotlin
 val strings = listOf("abc", "def")
 >>> println(strings.flatMap { it.toList() })
 [a, b, c, d, e, f]
@@ -274,7 +274,7 @@ sequence를 사용하여 연쇄적으로 컬렉션 연산을 할 수 있다.
 
 다음은 어떤 파일의 상위 디렉토리를 찾으면서 숨김 속성을 가진 디렉토리에 파일이 들어있는지 검사하는 것이다.
 
-```kt
+```kotlin
 fun File.isInsideHiddenDirectory() =
   generateSequence(this) { it.parentFile }.any { it.isHidden }
 
@@ -294,7 +294,7 @@ void postponeComputation(int delay, Runnable computation);
 
 코틀린에서 람다를 위 함수에 넘길 수 있다. 또한 객체식을 함수형 인터페이스 구현으로 넘길 수도 있다.
 
-```kt
+```kotlin
 postponeComputation(1000) { println(42) }
 
 postponeComputation(1000, object: Runnable {
@@ -317,7 +317,7 @@ postponeComputation(1000, object: Runnable {
 SAM 생성자는 람다를 함수형 인터페이스 인스턴스로 변환할 수 있게 컴파일러가 자동으로 생성한 함수이다.
 컴파일러가 자동으로 람다를 함수형 인터페이스 익명 클래스로 바꾸지 못하는 경우 SAM 생성자를 사용할 수 있다.
 
-```kt
+```kotlin
 fun createAllDoneRunnable(): Runnable {
   return Runnable {
     println("All done!")
@@ -334,7 +334,7 @@ SAM 생성자는 함수형 인터페이스의 유일한 추상 메소드의 본�
 람다로 생성한 함수형 인터페이스 인스턴스를 변수에 저장해야 할 때도 SAM 생성자를 사용할 수 있다.
 여러 버튼에 같은 리스너를 적용하는 상황에서 SAM 생성자를 통해 람다를 함수형 인터페이스 인스턴스로 만들어 변수에 저장해 활용할 수 있다.
 
-```kt
+```kotlin
 val listener = onClickListener { view ->
   val text = when (view.id) {
     R.id.button1 -> "first button"
@@ -366,7 +366,7 @@ button2.setOnClickListener(listener)
 
 커스텀 뷰에서 Padding 값을 지정할 때 let을 사용해서 다음과 같이 작성할 수 있다.
 
-```kt
+```kotlin
 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f,
     resources.displayMetrics).toInt().let { padding ->
       setPadding(padding, 0, padding, 0)
@@ -381,7 +381,7 @@ let()을 안전한 호출(Safe Calls - ?.)과 함께 사용하면 `if (null != o
 
 어떤 객체의 이름을 반복하지 않고 그 객체에 대한 다양한 연산을 수행할 수 있는 함수이다: `fun <T, R> with(receiver: T, block: T.() -> R): R`
 
-```kt
+```kotlin
 fun alphabet(): String {
   val result = StringBuilder()
   for (letter in 'A'..'Z') {
@@ -393,7 +393,7 @@ fun alphabet(): String {
 
 위의 예제를 `with`를 사용하여 작성해 보자
 
-```kt
+```kotlin
 fun alphabet(): String {
   return with(StringBuilder()) {
     for (letter in 'A'..'Z') {
@@ -425,7 +425,7 @@ with에게 인자로 넘긴 객체의 클래스와 with를 사용하는 코드�
 
 `run` 메서드에서도 안전한 호출(Safe Calls)를 사용할 수 있다.
 
-```kt
+```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
   supportActionBar?.run {
     setDisplayHomeAsUpEnabled(true)
@@ -437,7 +437,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 `with` 함수는 사실상 `run` 함수와 기능이 거의 동일하며, 리시버로 전달할 객체가 어디에 위치하는지만 다르다.
 `run` 함수는 `let` 함수와 `with` 함수를 합쳐놓은 형태로 볼 수 있다.
 
-```kt
+```kotlin
 supportActionBar?.let {
   with(it) {
     setDisplayHomeAsUpEnabled(true)
@@ -454,7 +454,7 @@ supportActionBar?.let {
 
 앞의 예제를 `apply`를 사용하여 고쳐보자
 
-```kt
+```kotlin
 fun alphabet() = StringBuilder().apply {
   for (letter in 'A'..'Z') {
     append(letter)
@@ -467,7 +467,7 @@ fun alphabet() = StringBuilder().apply {
 앞의 예제는 표준 라이브러리의 `buildString` 함수를 사용하여 단순화 할 수 있다.
 `buildString`의 인자는 수신객체 지정 람다이며 수신객체는 항상 `StringBuilder`가 된다
 
-```kt
+```kotlin
 fun alphabet() = buildString {
   for (letter in 'A'..'Z') {
     append(letter)

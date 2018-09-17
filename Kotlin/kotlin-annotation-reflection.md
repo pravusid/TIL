@@ -8,7 +8,7 @@
 
 코틀린의 `@Deprecated` 애노테이션은 `replaceWith` 파라미터를 통해 옛버전을 대신할 수 있는 패턴을 제시할 수 있다.
 
-```kt
+```kotlin
 @Deprecated("Use removeAt(index) instead.", ReplaceWith("removeAt(index)"))
 fun remove(index: Int) { ... }
 ```
@@ -27,7 +27,7 @@ fun remove(index: Int) { ... }
 애노테이션 인자를 컴파일 시점에 알 수 있어야 하므로 임의의 프로퍼티를 인자로 지정할 수는 없다.
 프로퍼티를 애노테이션 인자로 사용하려면 그 앞에 `const` 변경자를 붙여야한다.
 
-```kt
+```kotlin
 const val TEST_TIMEOUT = 100L
 @Test(timeout = TEST_TIMEOUT) fun testMethod() { ... }
 ```
@@ -41,7 +41,7 @@ use-site target 선언으로 애노테이션을 붙일 요소를 정할 수 있�
 
 애노테이션을 사용하는 예를 보자
 
-```kt
+```kotlin
 class HasTempFolder {
   @get:Rule
   val folder = TemporaryFolder()
@@ -72,7 +72,7 @@ class HasTempFolder {
 자바와 달리 코틀린에서는 애노테이션 인자로 클래스나 함수 선언이나 타입 외에 임의의 식을 허용한다.
 다음은 안전하지 못한 캐스팅 경고를 무시하는 로컬 변수 선언이다
 
-```kt
+```kotlin
 fun test(list: List<*>) {
   @Suppress("UNCHECKED_CAST")
   val strings = list as List<String>
@@ -136,7 +136,7 @@ JSON 직렬화를 위한 제이키드 라이브러리 예제를 살펴보자
 제이키드의 `@CustomSerializer` 애노테이션은 커스텀 직렬화 클래스에 대한 참조를 인자로 받는다.
 이 직렬화 클래스는 `ValueSerializer` 인터페이스를 구현해야 한다.
 
-```kt
+```kotlin
 interface ValueSerializer<T> {
   fun toJsonValue(value: T): Any?
   fun fromJsonValue(jsonValue: Any?): T
@@ -145,7 +145,7 @@ interface ValueSerializer<T> {
 
 날짜를 직렬화 한다고 가정하자. 이때 `ValueSerializer<Date>`를 구현하는 `DateSerializer`를 `Person` 클래스에 적용한다면
 
-```kt
+```kotlin
 data class Person(
   val name: String,
   @CustomSerializer(DateSerializer::class) val birthDate: Date
@@ -156,7 +156,7 @@ data class Person(
 `ValueSerializer` 타입을 참조하려면 항상 타입인자를 제공해야 한다.
 하지만 이 애노테이션이 어떤 타입에 쓰일지 알 수 없으므로 스타 프로젝션을 사용할 수 있다.
 
-```kt
+```kotlin
 annotation class CustomSerializer(
   val serializerClass: KClass<out ValueSerializer<*>>
 )
@@ -183,7 +183,7 @@ annotation class CustomSerializer(
 
 `KClass` 에서는 클래스 내부를 살펴볼 때 사용할 수 있는 다양한 메소드가 있다.
 
-```kt
+```kotlin
 interface KClass<T : Any> {
   val simpleName: String?
   val qualifiedName: String?
@@ -198,7 +198,7 @@ interface KClass<T : Any> {
 `KCallable`은 함수와 프로퍼티를 아우르는 공통 상위 인터페이스이고 그 안에는 `call` 메소드가 들어있다.
 `call` 메소드를 사용하면 함수나 프로퍼티의 게터를 호출할 수 있다.
 
-```kt
+```kotlin
 interface KCallable<out R> {
   fun call(vararg args: Any?): R
   ...
@@ -208,7 +208,7 @@ interface KCallable<out R> {
 `call`을 사용할 때는 함수 인자를 `vararg` 리스트로 전달한다.
 다음 코드는 `call`을 사용해 함수를 호출하는 예제이다.
 
-```kt
+```kotlin
 fun foo(x: Int) = println(x)
 >>> val kFunction = ::foo
 >>> kFunction.call(42)
@@ -224,7 +224,7 @@ fun foo(x: Int) = println(x)
 `invoke`는 정해진 개수의 인자만을 받아들이며, 인자 타입은 `KFunction1` 제네릭 인터페이스의 첫 번째 타입 파라미터와 같다.
 또한 `kfunction`을 직접호출할 수도 있다.
 
-```kt
+```kotlin
 fun sum(x: Int, y: Int) = x + y
 >>> val kFunction: KFunction2<Int, Int, Int> = ::sum
 >>> println(kFunction.invoke(1, 2) + kFunction(3, 4))
@@ -257,7 +257,7 @@ fun sum(x: Int, y: Int) = x + y
 
 이제 `serializeObject` 구현을 살펴보자
 
-```kt
+```kotlin
 private fun StringBuilder.serializeObject(obj: Any) {
   val kClass = obj.javaClass.kotlin
   val properties = kClass.memberProperties
@@ -284,7 +284,7 @@ private fun StringBuilder.serializeObject(obj: Any) {
 이 프로퍼티는 소스코드상에서 해당요소에 적용된 (`@Retention`이 `RUNTIME`인) 모든 애노테이션 인스턴스의 컬렉션이다.
 `KProperty`는 `KAnnotatedElement`를 확장하므로 `property.annotations`를 통해 프로퍼티의 모든 애노테이션을 얻을 수 있다.
 
-```kt
+```kotlin
 inline fun <reified T> KAnnotatedElement.findAnnotation(): T? =
   annotations.filterIsInstance<T>().firstOrNull()
 }
@@ -292,13 +292,13 @@ inline fun <reified T> KAnnotatedElement.findAnnotation(): T? =
 
 `findAnnotation` 함수는 인자로 전달받은 타입의 애노테이션이 있으면 반환하고, 타입 파라미터를 `reified`로 만들어 클래스를 타입인자로 전달한다.
 
-```kt
+```kotlin
 val properties = kClass.memberProperties.filter { it.findAnnotation<JsonExclude>() == null }
 ```
 
 `@JsonName`의 경우 애노테이션 존재여부와 함께 애노테이션 인자도 알아야 한다.
 
-```kt
+```kotlin
 val jsonNameAnn = prop.findAnnotation<JsonName>()
 val propName = jsonNameAnn?.name ?: prop.name
 ```
@@ -308,7 +308,7 @@ val propName = jsonNameAnn?.name ?: prop.name
 
 프로퍼티 필터링을 포함하는 객체 직렬화
 
-```kt
+```kotlin
 private fun StringBuilder.serializeObject(obj: Any) {
   obj.javaClass.kotlin.memberProperties
       .filter { it.findAnnotation<JsonExclude>() == null}
@@ -321,14 +321,14 @@ private fun StringBuilder.serializeProperty(prop: KProperty1<Any, *>, obj: Any) 
   val jsonNameAnn = prop.findAnnotation<JsonName>()
   val propName = jsonNameAnn?.name ?: prop.name
   serializeString(propName)
-  append(": )
+  append(": ")
   serializePropertyValue(prop.get(obj))
 }
 ```
 
 마지막으로 `@CustomSerializer` 애노테이션을 구현해보자
 
-```kt
+```kotlin
 annotaion class CustomSerializer {
   val serializerClass: KClass<out ValueSerializer<*>>
 }
@@ -336,7 +336,7 @@ annotaion class CustomSerializer {
 
 이를 사용하기 위한 `getSerializer`를 구현해보자
 
-```kt
+```kotlin
 fun KProperty<*>.getSerializer(): ValueSerializer<Any?>? {
   val customSerializerAnn = findAnnotation<CustomSerializer>() ?: return null
   val serializerClass = customSerializerAnn.serializerClass
@@ -366,7 +366,7 @@ JSON 역직렬화기는 3단계로 구현되어 있다.
 
 최상위 역직렬화 함수를 정의해보자
 
-```kt
+```kotlin
 fun <T : Any> deserialize(json: Reader, targetClass: KClass<T>): T {
   val seed = ObjectSeed(targetClass, CallsInfoCache())
   Parser(json, seed).parse()
@@ -376,7 +376,7 @@ fun <T : Any> deserialize(json: Reader, targetClass: KClass<T>): T {
 
 객체 역직렬화 하기
 
-```kt
+```kotlin
 class ObjectSeed<out T: Any>(targetClass: KClass<T>, val classInfoCache: CallsInfoCache): Seed {
   private val classInfo: ClassInfo<T> = classInfoCache[targetClass]
   private val valueArguments = mutableMapOf<KParameter, Any?>()
@@ -406,7 +406,7 @@ class ObjectSeed<out T: Any>(targetClass: KClass<T>, val classInfoCache: CallsIn
 하지만 디폴트 파라미터 값을 지원하지 않는다는 한계가 있다.
 디폴트 파라미터를 사용하기 위해서는 `KCallable.callBy`를 사용할 수 있다.
 
-```kt
+```kotlin
 interface KCallable<out R> {
   fun callBy(args: Map<KParameter, Any?>): R
   ...
@@ -418,7 +418,7 @@ interface KCallable<out R> {
 여기서는 `args` 맵에 들어있는 각 값의 타입이 생성자의 파라미터 타입과 일치해야 한다. 그렇지 않으면 `Exception`이 발생한다.
 따라서 파라미터 타입이 어떤것인지를 확인하기 위해 `KParameter.type` 프로퍼티를 활용해야 한다.
 
-```kt
+```kotlin
 fun serializerForType(type: Type): ValueSerializer<out Any?>? =
   when(type) {
     Byte::class.java -> ByteSerializer
@@ -431,7 +431,7 @@ fun serializerForType(type: Type): ValueSerializer<out Any?>? =
 
 타입별 `ValueSerializer` 구현은 필요한 타입 검사나 변환을 수행한다
 
-```kt
+```kotlin
 object BooleanSerializer : ValueSerializer<Boolean> {
   override fun fromJsonValue(jsonValue: Any?): Boolean {
     if (jsonValue !is Boolean) throw JKidException("Boolean expected")
@@ -449,7 +449,7 @@ object BooleanSerializer : ValueSerializer<Boolean> {
 애노테이션을 꺼내려면 파라미터에 해당하는 프로퍼티를 찾아야 하는데 JSON에서 모든 키/값 쌍을 읽을 때마다 검색을 수행하면 느려진다.
 따라서 클래스별로 한 번만 검색을 수행하고 검색결과를 캐시에 넣는 기능을 수행한다.
 
-```kt
+```kotlin
 class ClassInfoCache {
   private val cacheData = mutableMapOf<KClass<*>, ClassInfo<*>>()
   @Suppress("UNCHECKED_CAST")
@@ -463,7 +463,7 @@ class ClassInfoCache {
 
 `ClassInfo` 클래스는 대상 클래스의 새 인스턴스를 만들고 필요한 정보를 캐시해 둔다.
 
-```kt
+```kotlin
 class ClassInfo<T : Any>(cls: KClass<T>) {
   private val constructor = cls.primaryConstructor!!
   private val jsonNameToParam = hashMapOf<String, KParameter>()

@@ -15,14 +15,14 @@
 특정 타입을 저장하는 리스트뿐 아니라 제네릭 리스트를 다룰 수 있는 함수가 필요하다.
 제네릭을 다루는 함수의 예를 살펴보자
 
-```kt
+```kotlin
 fun <T> List<T>.slice(indices: IntRange): List<T>
 ```
 
 함수의 타입 파라미터 `T`가 수신 객체와 반환타입에 쓰인다.
 이런 함수를 호출할 때 타입 인자를 명시적으로 지정할 수 있지만, 컴파일러가 추론하므로 불필요 한 경우가 많다.
 
-```kt
+```kotlin
 >>> val letters = ('a'..'z').toList()
 >>> println(letters.slice<Char>(0..2))
 [a, b, c]
@@ -33,7 +33,7 @@ fun <T> List<T>.slice(indices: IntRange): List<T>
 
 마찬가지로 제네릭 확장 프로퍼티를 선언할 수도 있다.
 
-```kt
+```kotlin
 val <T> List<T>.penultimate: T
   get() = this[size -2]
 
@@ -47,7 +47,7 @@ val <T> List<T>.penultimate: T
 
 클래스에서도 제네릭을 선언할 수 있다.
 
-```kt
+```kotlin
 class StringList: List<String> {
   override fun get(index: Int): String = ...
 }
@@ -58,7 +58,7 @@ class ArrayList<T> : List<T> {
 
 클래스가 자기 자신을 타입인자로 참조할 수도 있다.
 
-```kt
+```kotlin
 interface Comparable<T> {
   fun compareTo(other: T): Int
 }
@@ -76,7 +76,7 @@ Type parameter constraint는 클래스나 함수에 사용할 수 있는 타입 
 
 upper bound를 설정하면 제네릭을 선언한 함수 내부에서 해당 타입은 upper bound 타입에 명시된 method를 호출할 수 있다.
 
-```kt
+```kotlin
 fun <T : Number> oneHalf(value: T): Double {
   return value.toDouble()
 }
@@ -84,7 +84,7 @@ fun <T : Number> oneHalf(value: T): Double {
 
 드물게 타입 파라미터에 둘 이상의 제약을 가해야 하는 경우도 있다. 그럴 땐 약간 다른 구문을 사용한다.
 
-```kt
+```kotlin
 fun <T> ensureTrailingPeriod(seq: T) where T : CharSequence, T : Appendable {
   if (!seq.endsWith('.')) {
     seq.append('.')
@@ -96,7 +96,7 @@ fun <T> ensureTrailingPeriod(seq: T) where T : CharSequence, T : Appendable {
 
 아무런 상한을 정하지 않은 타입 파라미터는 결과적으로 `Any?`를 상한으로 정한 파라미터와 같다
 
-```kt
+```kotlin
 class Processor<T> {
   fun process(value: T) {
     value?.hashCode() // T는 널이 될 수 있는 타입이므로 안전한 호출을 사용해야 함
@@ -106,8 +106,8 @@ class Processor<T> {
 
 널이 되지 않으면서 제약이 필요없다면 `Any`를 상한으로 사용하면 된다.
 
-```kt
-`class Processor<T : Any> {
+```kotlin
+class Processor<T : Any> {
   fun process(value: T) {
     value.hashCode()
   }
@@ -125,14 +125,14 @@ JVM의 제네릭스는 타입 소거(type erasure)를 사용해서 구현된다.
 자바와 마찬가지로 코틀린 제네릭 타입 인자 정보는 런타임에 지워진다.
 이는 제네릭 클래스 인스턴스가 그 인스턴스를 생성할 때 쓰인 타입인자에 대한 정보를 유지하지 않는다는 뜻이다.
 
-```kt
+```kotlin
 >>> if (value is List<String>) { ... }
 ERROR: Cannot check for instance of erased type
 ```
 
 즉 다음 두 리스트는 실행시점에 완전히 같은 타입이 된다.
 
-```kt
+```kotlin
 val list1: List<String> = listOf("a", "b")
 val list2: List<Int> = listOf(1, 2)
 ```
@@ -150,7 +150,7 @@ val list2: List<Int> = listOf(1, 2)
 코틀린 제네릭 타입인자 정보는 실행시점에 삭제되지만, 인라인 함수의 타입 파라미터는 실체화 되므로 실행시점에 알 수 있다.
 컴파일 이후 타입 파라미터가 지워지지 않음을 표시하기 위해 제네릭 앞에 `reified` 키워드를 붙인다.
 
-```kt
+```kotlin
 inline fun<reified T> isA(value: Any) = value is T
 >>> print(isA<String>)("abc")
 true
@@ -158,7 +158,7 @@ true
 
 실체화한 타입 파라미터를 사용하는 간단한 예제 중 하나는 표준 라이브러리 함수인 `filterIsInstance`이다
 
-```kt
+```kotlin
 inline fun <reified T> iterable<*>.filterIsInstance(): List<T> {
   val destination = mutableListOf<T>
   for (element in this) {
@@ -192,7 +192,7 @@ val items = listOf("one", 2, "three")
 
 타입파라미터를 사용하기 위해 `loadService` 함수를 정의해 보자
 
-```kt
+```kotlin
 inline fun <reified T> loadService() {
   return ServiceLoader.load(T::class.java)
 }
@@ -226,7 +226,7 @@ inline fun <reified T> loadService() {
 `String`은 `Any`를 확장하므로 `Any` 타입의 파라미터에 `String` 값을 넘기면 안전하겠지만,
 `List`의 인자로 들어가는 경우는 상황이 다르다.
 
-```kt
+```kotlin
 fun addAnswer(list: MutableList<Any>) {
   list.add(42)
 }
@@ -269,7 +269,7 @@ supertype은 subtype의 반대 개념이다.
 A가 B의 하위 타입일 때 `Producer<A>`가 `Producer<B>`의 하위타입이면 `Producer`는 공변적이다.
 코틀린에서 제네릭 클래스가 타입 파라미터에 대해 공변적임을 표시하려면 타입 파라미터 이름 앞에 `out`을 넣어야 한다.
 
-```kt
+```kotlin
 interface Producer<out T> {
   fun produce(): T
 }
@@ -290,7 +290,7 @@ List에 `T` 타입의 값을 추가하거나 기존 값을 변경하는 메소�
 타입 파라미터를 함수의 파라미터 타입이나 반환 타입에만 쓸수있는 것은 아니다.
 타입 파라미터를 다른 타입의 타입 인자로 사용할 수도 있다.
 
-```kt
+```kotlin
 interface List<out T> : Collection<T> {
   fun subList (fromIndex: Int, toIndex: Int): List<T> // T는 out 위치에 있다
 }
@@ -316,7 +316,7 @@ interface List<out T> : Collection<T> {
 코틀린의 `Function` 인터페이스가 대표적인 예이다.
 다음 선언은 파라미터가 하나뿐인 `Function` 인터페이스인 `Function1`이다.
 
-```kt
+```kotlin
 interface Function1<in P, out R> {
   operator fun invoke(p: P): R
 }
@@ -329,7 +329,7 @@ interface Function1<in P, out R> {
 코틀린 표기에서 (P) -> R은 `Function1<P, R>`을 알아보기 쉽게 적은 것이다.
 이를 코틀린 문법에 따라 다시 쓰면 다음과 같다
 
-```kt
+```kotlin
 fun enumerateCats(f: (Cat) -> Number) { ... }
 fun Animal.getIndex(): Int = ...
 
@@ -372,7 +372,7 @@ declaration site variance를 사용하면 매번 변성을 지정하지 않아�
 코틀린의 use-site variance는 자바의 bounded wildcard와 동일한 역할을 수행한다.
 `<out T>`는 `<? extends T>`와 같고 `<in T>`는 `<? super T>`와 같다.
 
-```kt
+```kotlin
 fun <T: R, R> copyData(source: MutableList<out T>, dest: MutableList<in R>) {
   for (item in source) {
     dest.add(item)
@@ -393,7 +393,7 @@ fun <T: R, R> copyData(source: MutableList<out T>, dest: MutableList<in R>) {
 타입 파라미터를 시그니처에서 전혀 언급하지 않거나,
 데이터를 읽기는 하지만 타입에 관심없는 경우처럼 타입 인자정보가 중요하지 않을때 스타 프로젝션을 사용한다.
 
-```kt
+```kotlin
 fun printFirst(list: List<*>) {
   if (list.isNotEmpty()) {
     println(list.first())
@@ -407,7 +407,7 @@ fun printFirst(list: List<*>) {
 `FieldValidator`에 in 파라미터를 정의해 반공변성을 부여한다.
 반공변성이므로 `String` 타입의 필드검증을 위해 `Any`타입을 검증하는 `FieldValidator`를 사용할 수 있다.
 
-```kt
+```kotlin
 interface FieldValidator<in T> {
   fun validate(input: T): Boolean
 }

@@ -599,7 +599,7 @@ public String hello(@RequestHeader(value="Authorization") String authorization) 
 
 아래의 Token은 Resource Server 접근시 Verification을 통과한 것이다
 
-```kt
+```kotlin
 import org.springframework.security.jwt.Jwt
 import org.springframework.security.jwt.JwtHelper
 import org.springframework.security.oauth2.common.util.JsonParserFactory
@@ -626,7 +626,7 @@ class CustomJwtHelper {
 
 Base64 Decode를 통해 JWT를 decoding 할 수 있다
 
-```kt
+```kotlin
 fun decodeJwt(jwt: String) {
     val splits = jwt.split("\\.".toRegex())
     val base64EncodedHeader = splits[0]

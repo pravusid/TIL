@@ -9,7 +9,7 @@
 
 람다를 인자로 받는 함수를 저으이하려면 먼저 람다 인자의 타입을 어떻게 선언할 수 있는지 알아야 한다.
 
-```kt
+```kotlin
 val sum: (Int, Int) -> Int = { x, y -> x + y }
 val action: () -> Unit = { println(40) }
 ```
@@ -27,7 +27,7 @@ val action: () -> Unit = { println(40) }
 
 함수 타입에서 파라미터 이름을 지정할 수도 있다.
 
-```kt
+```kotlin
 fun performRequest(
   url: String,
   callback: (code: Int, content: String) -> Unit) {
@@ -39,7 +39,7 @@ fun performRequest(
 
 간단한 고차 함수를 정의해보자
 
-```kt
+```kotlin
 fun twoAndThree(operation: (Int, Int) -> Int) {
   val result = operation(2, 3)
   println("${result}")
@@ -75,7 +75,7 @@ CollectionsKt.forEach(strings, s -> {
 
 파라미터를 함수 타입으로 선언할 때도 디폴트 값을 지정할 수 있다.
 
-```kt
+```kotlin
 fun <T> Collection<T>.joinToString(
     separator: String = ", ",
     prefix: String = "",
@@ -99,7 +99,7 @@ alpha, beta
 
 널이 될 수 있는 함수 타입을 사용할 수 있다. 널이 될 수 있는 함수 타입으로 함수를 받으면 그 함수를 직접 호출할 수 없게 된다.
 
-```kt
+```kotlin
 fun <T> Collection<T>.joinToString(
     separator: String = ", ",
     prefix: String = "",
@@ -122,7 +122,7 @@ fun <T> Collection<T>.joinToString(
 
 함수를 반환하는 함수 정의하기
 
-```kt
+```kotlin
 enum class Delivery { STANDARD, EXPEDITED }
 
 class Order(val itemCount: Int)
@@ -140,7 +140,7 @@ fun getShippingCostCalculator(
 
 고차 함수를 사용해 중복을 제거한 예
 
-```kt
+```kotlin
 data class SiteVisit (
     val path: String,
     val duration: Double,
@@ -169,7 +169,7 @@ fun List<SiteVisit>.averageDurationFor(predicate: (SiteVisit) -> Boolean) =
 
 어떤 함수를 `inline`으로 선언하면 함수를 호출하는 코드가 있을때 함수호출 대신 함수 본문이 바이트 코드로 컴파일 된다.
 
-```kt
+```kotlin
 inline fun<T> synchronized(lock: Lock, action: () -> T): T {
   lock.lock()
   try {
@@ -190,7 +190,7 @@ fun foo(l: Lock) {
 
 위의 foo 함수는 다음 코틀린 코드와 동등하다
 
-```kt
+```kotlin
 fun __foo__(1: Lock) {
   println("Before sync")
   1.lock()
@@ -209,7 +209,7 @@ fun __foo__(1: Lock) {
 만약 인라인 함수를 호출하면서 람다대신 함수 타입의 변수를 넘기면 인라인 함수를 호출하는 코드위치에서는 변수에 저장된 람다의 코드를 알 수없다.
 따라서 람다 본문은 인라이닝 되지 않고, `synchronized` 함수 본문만 인라이닝 된다.
 
-```kt
+```kotlin
 class LockOwner(val lock: Lock) {
   fun runUnderLock(body: () -> Unit) {
     synchronized(lock, body)
@@ -219,7 +219,7 @@ class LockOwner(val lock: Lock) {
 
 위의 코드는 아래와 동등하다
 
-```kt
+```kotlin
 class LockOwner(val lock: Lock) {
   fun __runUnderLock__(body: () -> Unit) {
     lock.lock()
@@ -240,7 +240,7 @@ class LockOwner(val lock: Lock) {
 예를 들어 시퀀스에 대해 동작하는 메소드 중에는 람다를 받아서 모든 시퀀스 원소에 그 람다를 적용한 새 시퀀스를 반환하는 함수가 많다.
 그런 함수는 인자로 받은 람다를 시퀀스 객체 생성자의 인자를 넘기곤 한다.
 
-```kt
+```kotlin
 fun <T, R> Sequence<T>.map(transform: (T) -> R): Sequence<R> {
   return TransformingSequence(this, transform)
 }
@@ -251,7 +251,7 @@ fun <T, R> Sequence<T>.map(transform: (T) -> R): Sequence<R> {
 
 이런식으로 인라이닝하면 안 되는 람다를 파라미터로 받는다면 `noinline` 변경자를 파라미터 이름앞에 붙여서 인라이닝을 금지할 수 있다.
 
-```kt
+```kotlin
 inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) {
   ...
 }
@@ -302,7 +302,7 @@ static String readFirstLineFromFile(String path) throws IOException {
 
 코틀린에서는 자바 `try-with-resource`와 같은 기능을 제공하는 `use`라는 함수가 표준 라이브러리에 들어있다
 
-```kt
+```kotlin
 fun readFirstLineFromFile(path: String): String {
   BufferedReader(FileReader(path)).use { br ->
     return br.readLine()
@@ -336,7 +336,7 @@ local return 은 람다의 실행을 끝내고 람다를 호출했던 코드의 
 local return 과 non-local return을 구분하기 위해 label을 사용해야 한다.
 `return`으로 실행을 끝내고 싶은 람다 식 앞에 레이블을 붙이고, `return` 키워드 뒤에 그 레이블을 추가하면 된다.
 
-```kt
+```kotlin
 fun lookForAlice(people: List<Person>) {
   people.forEach {
     if (it.name == "Alice") return@forEach
@@ -353,7 +353,7 @@ fun lookForAlice(people: List<Person>) {
 익명함수를 사용하면 non-local 반환문을 쉽게 작성할 수 있다.
 익명함수 안에서 레이블이 붙지 않은 return 식은 무명함수 자체를 반환시킬 뿐 무명함수를 둘러싼 다른 함수를 반환시키지 않는다.
 
-```kt
+```kotlin
 fun lookForAlice(people: List<Person>) {
   people.forEach(fun (person) {
     if (person.name == "Alice") return

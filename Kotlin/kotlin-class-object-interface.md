@@ -26,7 +26,7 @@
 
 코틀린에서는 인터페이스에 추상 프로퍼티 선언을 넣을 수 있다.
 
-```kt
+```kotlin
 interface User {
   val nickname: String
 }
@@ -35,7 +35,7 @@ interface User {
 이는 User 인터페이스를 구현하는 클래스가 nickname의 값을 얻을 수 있는 방법을 제공해야 한다는 뜻이다.
 해당 인터페이스를 구현해 보자
 
-```kt
+```kotlin
 class PrivateUser(override val nickname: String): User
 
 class SubscribingUser(val email: String): User {
@@ -47,16 +47,16 @@ class FacebookUser(val accountId: Int): User {
   override val nickname = getFacebookName(accountId) // 다른곳에 정의되어 있는 함수
 }
 
->>> println(PrivateUser("test@kotlinlang.org").nickname)
+// >>> println(PrivateUser("test@kotlinlang.org").nickname)
 test@kotlinlang.org
->>> println(SubscribingUser("test@kotlinlang.org".nickname))
+// >>> println(SubscribingUser("test@kotlinlang.org").nickname)
 test
 ```
 
 SubscribingUser의 nickname은 매번 호출될 때마다 계산하는 커스텀 게터를 활용하고,
 FacebookUser의 nickname은 객체 초기화 시 계산한 데이터를 뒷받침하는 필더에 저장했다가 불러오는 방식을 활용한다.
 
-```kt
+```kotlin
 interface User {
   val email: String
   val nickname: String
@@ -118,7 +118,7 @@ fragile base class는 어떤 클래스가 자신을 상속하는 방법에 대�
 코틀린에서는 바깥쪽 클래스의 인스턴스를 가리키는 참조를 표기하는 방법도 다르다.
 내부클래스 Inner 에서 바깥쪽 클래스 Outer를 참조하려면 `this@Outer` 라고 써야 한다.
 
-```kt
+```kotlin
 class Outer {
   inner class Inner {
     fun getOuterReference(): Outer = this@Outer
@@ -132,7 +132,7 @@ class Outer {
 sealed 클래스의 하위 클래스를 정의할 때는 반드시 상위 클래스 안에 중첩시켜야 한다.
 sealed class는 기본적으로 `open`이므로 접근 변경자 `open`을 붙일 필요가 없다.
 
-```kt
+```kotlin
 sealed class Expr {
   class Num(val value: Int): Expr()
   class Sum(val left: Expr, val right: Expr): Expr()
@@ -160,7 +160,7 @@ when 식이 모든 하위클래스를 검사하므로 별도의 else 분기가 �
 
 주 생성자를 명시적 선언으로 풀어서 살펴보자
 
-```kt
+```kotlin
 class User constructor(_nickname: String) {
   val nickname: String
   init {
@@ -183,7 +183,7 @@ class User constructor(_nickname: String) {
 
 기반 클래스를 초기화 하려면 기반 클래스 이름 뒤에 괄호 내부로 생성자 인자를 넘겨면 된다.
 
-```kt
+```kotlin
 open class User(val nickname: String) { ... }
 class TwitterUser(nickname: String): User(nickname) { ... }
 ```
@@ -193,7 +193,7 @@ class TwitterUser(nickname: String): User(nickname) { ... }
 이 규칙으로 인해 기반 클래스의 이름 뒤에는 꼭 괄호가 들어간다.
 반면 인터페이스는 생성자가 없기 때문에 어떤 클래스가 인터페이스를 구현하는 경우 인터페이스 이름뒤에는 괄호가 없다.
 
-```kt
+```kotlin
 open class Button
 class RadioButton: Button()
 ```
@@ -209,7 +209,7 @@ class RadioButton: Button()
 코틀린에서는 디폴트 파라미터와 이름을 붙인 인자를 사용해서 생성자를 줄일 수 있다.
 그래도 생성자가 여럿 필요한 경우가 있을 것이다. 일반적으로 프레임워크 클래스 확장을 위해 다양한 생성자를 지원해야 하는 경우이다.
 
-```kt
+```kotlin
 open class View {
   constructor(ctx: Context) {
     ...
@@ -225,7 +225,7 @@ open class View {
 
 마찬가지로 클래스를 확장하면서 부 생성자를 정의 할 수 있다. 이 때 `super()` 키워드를 통해 상위클래스 생성자를 호출한다.
 
-```kt
+```kotlin
 class MyButton: View {
   constructor(ctx: Context): super(ctx) {
     ...
@@ -239,7 +239,7 @@ class MyButton: View {
 
 자바와 마찬가지로 `this()`를 통해 클래스 자신의 다른 생성자를 호출 할 수 있다.
 
-```kt
+```kotlin
 class MyButton: View {
   constructor(ctx: Context): this(ctx, MY_STYLE) { // 아래의 생성자에게 위임한다
     ...
@@ -255,7 +255,7 @@ class MyButton: View {
 
 ### 게터와 세터에서 뒷받침하는 필드에 접근
 
-```kt
+```kotlin
 class User(val name: String) {
   var address: String = "unspecified"
     set(value: String) {
@@ -268,7 +268,7 @@ class User(val name: String) {
 
 접근자의 가시성을 바꿀 필요가 있을때 어떻게 하는지 살펴보자
 
-```kt
+```kotlin
 class LengthCounter {
   var counter: Int = 0
     private set
@@ -301,7 +301,7 @@ class LengthCounter {
 `data`라는 변경자를 클래스 앞에 붙이면 필요한 메소드를 컴파일러가 자동으로 만들어준다. 해당 클래스를 데이터 클래스라고 부른다.
 데이터 클래스의 프로퍼티가 반드시 `val`일 필요는 없지만 불변객체를 생성하기를 권장한다.
 
-```kt
+```kotlin
 data class Client(val name: String, val postalCode: Int)
 ```
 
@@ -327,7 +327,7 @@ Client 데이터 클래스는 아래의 내용을 포함한다.
 
 데코레이터 패턴의 문제점은 준비 코드가 상당히 많이 필요하다는 점이다.
 
-```kt
+```kotlin
 class DelegatingCollection<T>: Collection<T> {
   private val innerList = arrayListOf<T>()
 
@@ -344,7 +344,7 @@ class DelegatingCollection<T>: Collection<T> {
 
 위의 예제를 위임을 사용해 재작성하면 다음과 같다.
 
-```kt
+```kotlin
 class DelegatingCollection<T>(
   innerList: Collection<T> = ArrayList<T>()
 ): Collection<T> by innerList {}
@@ -355,7 +355,7 @@ class DelegatingCollection<T>(
 
 클래스 위임을 사용한 예제를 살펴보자
 
-```kt
+```kotlin
 class CountingSet<T>(
   val innerSet: MutableCollection<T> = HashSet<T>
 ): MutableCollection<T> by innerSet { // MutableCollection의 구현을 innerSet에게 위임함
@@ -387,7 +387,7 @@ object declaration은 singleton을 정의하는 방법 중 하나이다.
 코틀린은 객체 선언 기능을 통해 singleton을 언어에서 기본 지원한다.
 객체 선언은 클래스 선언과 그 클래스에 속한 단일 인스턴스의 선언을 합친 선언이다.
 
-```kt
+```kotlin
 object Payroll {
   val allEmployees = arrayListOf<Person>()
 
@@ -409,7 +409,7 @@ object Payroll {
 `java.util.Comparator` 인터페이스는 두 객체를 인자로 받아 어느객체가 더 큰지 알려주는 정수를 반환한다.
 `Comparator` 안에는 데이터를 저장할 필요가 없다. 따라서 `Comparator` 인스턴스를 만드는 방법으로 객체선언이 가장 좋은 방법이다.
 
-```kt
+```kotlin
 object CaseInsensitiveFileComparator: Comparator<File> {
   override fun compare(file1: File, file2: File): Int {
     return file1.path.compareTo(file2.path, ignoreCase = true)
@@ -424,7 +424,7 @@ object CaseInsensitiveFileComparator: Comparator<File> {
 
 클래스 안에서 객체를 선언할 수도 있다. 그런 객체도 인스턴스는 하나 뿐이다.
 
-```kt
+```kotlin
 data class Person(val name: String) {
   object NameComparator: Comparator<Person> {
     override fun compare(p1: Person, p2 Person): Int = p1.name.compareTo(p2.name)
@@ -449,7 +449,7 @@ data class Person(val name: String) {
 
 결과적으로 동반 객체의 멤버를 사용하는 구문은 자바의 정적 메소드 호출이나 정적 필드 사용 구문과 같아진다
 
-```kt
+```kotlin
 class A {
   companion object {
     fun bar() {
@@ -464,7 +464,7 @@ Companion object called
 
 companion object에서 private 생성자를 호출할 수 있다. 이를 활용한 팩토리 패턴등을 구현할 수 있다.
 
-```kt
+```kotlin
 class User private constructor(val nickname: String) {
   companion object {
     fun newSubscribingUser(email: String) = User(email.substringBefore('@'))
@@ -482,7 +482,7 @@ bob
 
 ##### 동반객체에 이름 붙이기
 
-```kt
+```kotlin
 class Person(val name: String) {
   companion object Loader {
     fun fromJSON(jsonText: String): Pserson = ...
@@ -496,7 +496,7 @@ class Person(val name: String) {
 
 ##### 동반 객체에서 인터페이스 구현
 
-```kt
+```kotlin
 interface JSONFactory<T> {
   fun fromJSON(jsonText: String): T
 }
@@ -510,7 +510,7 @@ class Person(val name: String) {
 
 동반객체가 구현한 인터페이스 인스턴스를 넘길때 동반객체 외부 클래스형을 사용할 수 있다.
 
-```kt
+```kotlin
 fun loadFromJSON<T>(factory: JSONFactory<T>): T {
   ...
 }
@@ -526,7 +526,7 @@ loadFromJSON(Person) // JSONFactory 타입에 Person 타입을 넘겼다
 비즈니스 모듈이 특정 데이터 타입에 의존하기 원하지 않는다. 따라서 역직렬화 함수를 클라이언트/서버 통신을 담당하는 모듈에 포함시키고 싶다.
 확장함수를 사용하면 이런 구조를 잡을 수 있다.
 
-```kt
+```kotlin
 class Person(val firstName: String, val lastName: String) {
   companion object { // 비어있는 동반객체 선언
   }
@@ -546,7 +546,7 @@ val p = Person.fromJSON(json)
 객체 식은 자바의 익명 내부 클래스(annoymous inner class) 대신 쓰인다.
 자바에서 흔히 익명 내부 클래스로 구현하는 이벤트 리스너를 코틀린에서 구현해 보자.
 
-```kt
+```kotlin
 window.addMouseListener(
   object: MouseAdapter() { // 이름이 없고 MouseAdapter를 확장하는 객체선언
     override fun mouseClicked(e: MouseEvent) {
@@ -561,7 +561,7 @@ window.addMouseListener(
 
 만약 이름을 붙여야 한다면 변수에 익명 객체를 대입하면 된다.
 
-```kt
+```kotlin
 val listener = object: MouseAdapter() {
   override fun mouseClicked(e: MouseEvent) { ... }
   ...
@@ -574,7 +574,7 @@ val listener = object: MouseAdapter() {
 자바의 익명 클래스와 같이 객체 식 안의 코드는 그 식이 포함된 함수의 변수에 접근할 수 있다.
 하지만 자바와 달리 final이 아닌 지역변수도 객체 식 안에서 사용할 수 있다.
 
-```kt
+```kotlin
 fun countClicks(window: Window) {
   var clickCount = 0
 

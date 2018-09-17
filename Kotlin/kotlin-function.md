@@ -2,7 +2,7 @@
 
 함수예제
 
-```kt
+```kotlin
 fun <T> joinToString(
   collection: Collection<T>,
   separator: String,
@@ -26,7 +26,7 @@ fun <T> joinToString(
 위에서 만든 함수 호출시 가독성을 위해서 인자의 이름을 명시할 수 있다.
 인자를 명시하고 나면 그 뒤에 오는 모든인자의 이름을 명시해야 한다.
 
-```kt
+```kotlin
 joinToString(collection, separator = " ", prefix = " ", postfix = ".")
 ```
 
@@ -34,7 +34,7 @@ joinToString(collection, separator = " ", prefix = " ", postfix = ".")
 
 코틀린에서는 디폴트 파라미터를 이용하여 불필요한 Method Overloading을 피할 수 있다.
 
-```kt
+```kotlin
 fun <T> joinToString(
   collection: Collection<T>,
   separator: String = ", ",
@@ -59,7 +59,7 @@ collection과 separator 호출시 뒤의 인수 두개는 생략가능
 
 코틀린에서는 특정한 클래스에 포함할 필요가 없는 메소드 (유틸성 메소드)를 클래스 밖에서 선언할 수 있다.
 
-```kt
+```kotlin
 @file:JvmName("StringFunctions") // 클래스 이름을 파일명과 다르게 할 때 어노테이션을 사용할 수 있다.
 package strings
 fun joinToString(...): String { ... }
@@ -71,7 +71,7 @@ fun joinToString(...): String { ... }
 
 프로퍼티 역시 최상위 수준에 놓을 수 있다.
 
-```kt
+```kotlin
 var opCount = 0
 fun performOperation() {
   opCount++
@@ -97,7 +97,7 @@ const 변경자로 자바의 `public static final` 필드로 컴파일 할 수 �
 확장함수를 만드려면 추가하려는 함수 이름 앞에 그 함수가 확장할 클래스의 이름을 덧붙이기만 하면 된다.
 클래스 이름을 receiver type 이라 부르며 확장함수가 호출되는 대상이 되는 값을 receiver object라 부른다.
 
-```kt
+```kotlin
 package strings
 
 fun String.lastChar(): Char = this.get(this.length -1)
@@ -115,7 +115,7 @@ Java뿐만 아니라 Groovy등 다른 JVM언어로 작성된 클래스도 확장
 확장함수를 정의했다고 해도 자동으로 모든 소스코드에서 그 함수를 사용할 수 있지는 않다.
 확장함수를 사용하기 위해서는 임포트를 해야 한다. 코틀린에서는 클래르르 임포트할 때와 동일한 구문으로 개별 함수를 불러올 수 있다.
 
-```kt
+```kotlin
 import strings.lastChar
 
 val c = "Kotlin".lastChar()
@@ -123,7 +123,7 @@ val c = "Kotlin".lastChar()
 
 `as` 키워드를 사용하면 임포트한 클래스나 함수를 다른이름으로 부를 수 있다.
 
-```kt
+```kotlin
 import strings.lastChar as last
 
 val c = "Kotlin".last()
@@ -146,7 +146,7 @@ char c = StringUtilKt.lastChar("Java");
 
 joinToString 함수 예제
 
-```kt
+```kotlin
 fun <T> Collection<T>.joinToString(
   separator: String = ", ",
   prefix: String = "",
@@ -165,7 +165,7 @@ fun <T> Collection<T>.joinToString(
 
 실행시 결과
 
-```kt
+```kotlin
 >>> val list = listOf(1, 2, 3)
 >>> println(list.joinToString(separator="; ", prefix = "(", postfix = ")"))
 (1; 2; 3)
@@ -176,7 +176,7 @@ fun <T> Collection<T>.joinToString(
 
 문자열의 컬렉션에 대해서만 호출할 수 있는 join 함수를 정의하고 싶다면 다음과 같이하면 된다.
 
-```kt
+```kotlin
 fun Collection<String>.join(
   separator: String = ", ",
   prefix: String = "",
@@ -189,7 +189,7 @@ one two eight
 
 위의 함수를 String이 아닌 객체의 리스트에 대해 호출할 수 없다.
 
-```kt
+```kotlin
 >>> listof(1, 2, 8).join()
 Error: Type mismatch: inferred type is List<Int> but Collection<String> was expected.
 ```
@@ -206,7 +206,7 @@ Error: Type mismatch: inferred type is List<Int> but Collection<String> was expe
 
 앞에서 정의한 lastChar라는 함수를 프로퍼티로 변경해 보자.
 
-```kt
+```kotlin
 val String.lastChar: Char
   get() = get(length - 1)
 ```
@@ -215,7 +215,7 @@ val String.lastChar: Char
 뒷받침 필드가 없어 기본 게터 구현을 제공할 수 없으므로 getter는 반드시 정의해야 한다.
 마찬가지로 초기화 코드에서 계산한 값을 담을 장소가 없으므로 초기화 코드도 쓸 수 없다.
 
-```kt
+```kotlin
 var StringBuilder.lastChar: Char
   get() = get(length - 1)
   set(value: Char) {
@@ -225,7 +225,7 @@ var StringBuilder.lastChar: Char
 
 사용법은 멤버 프로퍼티 사용법과 동일하다
 
-```kt
+```kotlin
 >>> println("Kotlin".lastChar)
 n
 >>> val sb = StringBuilder("Kotlin?")
@@ -260,7 +260,7 @@ n
 자바에서는 배열을 그냥 넘기면 되지만 코틀린에서는 배열을 명시적으로 풀어서 배열의 각 원소가 인자로 전달되게 해야한다.
 기술적으로는 스프레드 연산자가 그런 작업을 해준다. 하지만 실제로는 전달하려는 배열앞에 `*`를 붙이기만 하면된다.
 
-```kt
+```kotlin
 fun main(args: Array<String>) {
   val list = listOf("args: ", *args)
   pringln(list)
@@ -277,7 +277,7 @@ fun main(args: Array<String>) {
 
 중위 호출시에는 수신 객체와 유일한 메소드 인자 사이에 메소드 이름을 넣는다.
 
-```kt
+```kotlin
 1.to("one") // to 메소드를 일반적인 방법으로 호출
 1 to "one" // to 메소드를 중위 호출 방식으로 호출
 ```
@@ -300,7 +300,7 @@ Pair 인스턴스 외에도 구조분해를 적용할 수 있다.
 
 루프문에서도 구조 분해 선언을 활용할 수 있다.
 
-```kt
+```kotlin
 for ((index, element) in collection.withIndex()) {
   println("${index}: ${element"}")
 }
@@ -323,11 +323,11 @@ mapOf 함수의 선언을 살펴보면 다음과 같다
 코틀린에서는 다른 조합의 파라미터를 받는 split 확장함수를 제공한다.
 정규식을 파라미터로 받는 함수는 String이 아닌 Regex타입의 값을 받는다.
 
-```kt
+```kotlin
 >>> println("12.345-6.A".split("\\.|-".toRegex()))
 [12, 345, 6, A]
 
->>> println("12.345-6.A.split(".", "-"))
+>>> println("12.345-6.A".split(".", "-"))
 [12, 345, 6, A]
 ```
 
@@ -337,7 +337,7 @@ mapOf 함수의 선언을 살펴보면 다음과 같다
 
 삼중 따옴표를 사용하여 여러줄에 걸쳐 문자열을 사용할 때 들여쓰기를 하려면 TrimMargin(`|`)을 사용하면 된다.
 
-```kt
+```kotlin
 al withoutMargin1 = """ABC
                 |123
                 |456""".trimMargin()
@@ -361,7 +361,7 @@ println(withoutMargin2) // XYZ\nfoo\nbar
 
 중복된 코드가 있는 예제
 
-```kt
+```kotlin
 class User(val id: Int, val name: String, val address: String)
 
 fun saveUser(user: User) {
@@ -385,7 +385,7 @@ fun saveUser(user: User) {
 또한 로컬함수는 자신이 속한 바깥 함수의 모든 파라미터와 변수를 사용할 수 있다.
 이를 이용해서 위 코드를 고쳐보자
 
-```kt
+```kotlin
 class User(val id: Int, val name: String, val address: String)
 
 fun saveUser(user: User) {
@@ -407,7 +407,7 @@ fun saveUser(user: User) {
 
 물론 검증 로직을 User 클래스를 확장한 함수로 만들 수도 있다.
 
-```kt
+```kotlin
 class User(val id: Int, val name: String, val address: String)
 
 fun User.validateBeforeSave() {
