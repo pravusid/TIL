@@ -151,3 +151,93 @@ URI는 리소스를 식별하기 위한 문자열 전반을 나타내는데, URL
 - 프래그먼트 식별자: `#ch1`
 
 ## HTTP 프로토콜의 구조
+
+HTTP는 클라이언트와 서버 간에 통신을 한다
+
+HTTP는 클라이언트로부터 Request가 송신되며 그 결과 서버로부터 Response가 돌아온다.
+반드시 클라이언트측으로 부터 통신이 시작된다.
+
+### HTTP는 상태를 유지하지 않는 프로토콜
+
+HTTP는 상태를 계속 유지하지 않는 stateless 프로토콜이다.
+
+HTTP에서는 새로운 request가 보내질 때마다 새로운 response가 생성된다.
+프로토콜로서 과거의 request나 response 정보를 전혀 가지고 있지 않다.
+
+이는 많은 데이터를 빠르고 확실허게 처리하기 위한 scalability를 확보하기 위해 간단히 설계되어 있는 것이다.
+
+그러나 stateless 특징으로 처리하기 어려운 일이 증가하였다.
+
+HTTP/1.1은 여전히 stateless이지만 Cookie라는 기술이 도입되었다.
+
+### request URI로 리소스 식별
+
+HTTP는 URI를 사용하여 인터넷상의 리소스를 지정한다.
+
+클라이언트는 리소스를 호출할 때 마다 request를 송샌할 때에 request URI를 포함해야 한다.
+
+- 모든 URI를 request URI에 포함: `GET http://google.com/index HTTP/1.1`
+- Host 헤더 필드에 네트워크 로케이션 포함: `GET /index HTTP/1.1 Host:google.com`
+
+특정 리소스가 아닌 서버 자신에게 request를 송신하는 경우 `*` 지정 가능
+
+HTTP 서버가 지원하는 메소드 확인: `OPTIONS * HTTP/1.1`
+
+### 서버에 목적을 말하는 HTTP 메소드
+
+- GET 메소드: request URI로 식별된 리소스를 가져올 수 있도록 요구함
+- POST 메소드: 엔티티를 전송하기 위해서 사용됨
+- PUT 메소드: request중 포함된 엔티티를 request URI로 지정한 곳에 보존하도록 요구함 (파일 전송)
+- HEAD 메소드: GET과 같은 기능이지만 body는 돌려주지 않는다. URI 유효성과 리소스 갱신시간 확인등의 목적으로 쓰임
+- DELETE 메소드: 파일을 삭제하기 위해서 사용됨(PUT 메소드와 반대)
+- OPTIONS 메소드: request URI로 지정한 리소스가 제공하고 있는 메소드를 조사하기 위해 사용
+- TRACE 메소드: Web 서버에 접속해서 자신에게 통신을 되돌려 받는 loop-back을 발생시킨다. (XST등의 문제로 보통사용되지 않음)
+- CONNECT 메소드: 프록시에 터널 접속 확립을 요구하여 TCP 통신을 터널링 시키기 위해 사용됨
+
+### 지속연결
+
+HTTP 초기버전에서는 매 통신마다 TCP에 의해 연결과 종료를 해야 할 필요가 있었다.
+
+HTTP/1.1과 일부의 HTTP/1.0에서는 이러한 문제를 해결하기 위해 Persistent Connection이라는 방법을 고안하였다.
+이 경우 어느 한쪽에서 명시적으로 연결을 종료하지 않는 이상 TCP 연결을 유지한다.
+
+지속 연결은 여러 request를 보낼 수 있다록 HTTP pipelining을 가능하게 한다.
+
+파이프라인화로 request 송신 후에 response를 수신할 때까지 대기하지 않고, 다음 request를 보낼수 있다.
+
+### 쿠키를 사용한 상태관리
+
+HTTP는 stateless 프로토콜이므로 과거 상태를 관리하지 못하는 단점이 존재한다.
+이를 해결하기 위해 쿠키라는 시스템이 도입되었다.
+
+쿠키는 서버에서 response로 보내진 Set-Cookie라는 헤더 필드에 의해 쿠키를 클라이언트에 보존하게 된다.
+다음번에 클라이언트가 같은 서버로 리퀘스트를 보낼 때, 자동으로 쿠키 값을 넣어서 송신한다.
+
+서버는 클라이언트가 보내온 쿠키로 클라이언트를 식별하고 서버상의 기록을 확인할 수 있다.
+
+쿠키를 가지고 있지 않은 상태의 request
+
+```text
+GET /reader HTTP/1.1
+Host: www.google.com
+```
+
+서버가 쿠키를 발행한 response
+
+```text
+HTTP/1.1 200 OK
+Date: Thu, 12 Jul 2012 07:12:20 GMT
+Server: Apache
+<Set-Cookie: sid=1342077140226742; path=/;expires=Wed, => 10-Oct-12 07:12:20 GMT>
+Content-Type: text/plain; charset=UTF-8
+```
+
+클라이언트가 보관하던 쿠키를 포함한 request
+
+```text
+GET /image HTTP/1.1
+Host: www.google.com
+Cookie: sid=1342077140226742
+```
+
+## HTTP 메시지
