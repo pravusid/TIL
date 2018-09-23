@@ -187,40 +187,25 @@ Form에서 명시하지 않은 필드에 validation 어노테이션 사용시
 #### `CustomValidationException`
 
 ```java
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class CustomValidationException extends RuntimeException {
 
-    private Error[] errors;
+    private FieldError error;
 
-    public CustomValidationException(String defaultMessage, String field){
-        this.errors = new Error[]{new Error(defaultMessage, field)};
+    public CustomValidationException(String objectName, String field, String defaultMessage){
+        this.error = new FieldError(objectName, field, defaultMessage);
     }
 
-    public CustomValidationException(Error[] errors) {
-        this.errors = errors;
+    public CustomValidationException(FieldError error) {
+        this.error = error;
     }
 
-    public Error[] getErrors() {
-        return errors;
-    }
-
-    public static class Error {
-
-        private String defaultMessage;
-        private String field;
-
-        private Error(String defaultMessage, String field) {
-            this.defaultMessage = defaultMessage;
-            this.field = field;
-        }
-
-        public String getDefaultMessage() {
-            return defaultMessage;
-        }
-
-        public String getField() {
-            return field;
-        }
+    public FieldError getError() {
+        return error;
     }
 
 }
@@ -240,7 +225,7 @@ public class WebConfig {
                 Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, includeStackTrace);
                 Throwable error = getError(requestAttributes);
                 if (error instanceof CustomValidationException) {
-                    errorAttributes.put("errors", ((CustomValidationException)error).getErrors());
+                    errorAttributes.put("errors", ((CustomValidationException)error).getError());
                 }
                 return errorAttributes;
             }
@@ -255,19 +240,30 @@ public class WebConfig {
 사용자 정의 Exception throw
 
 ```java
-public User save(UserDto userDto) {
-    duplicateCheck(userDto);
-    User user = userRepo.save(userDto.toEntity());
-    UserSessionUtil.applyAuthToCtxHolder(user);
-    return user;
-}
-
-private void duplicateCheck(UserDto dto) {
-    if (userRepo.findByUsername(dto.getUsername()) != null) {
-        throw new CustomValidationException("이미 존재하는 아이디 입니다", "username");
+@PostMapping("/signup")
+public String signup(@Valid UserDto userDto, BindingResult binding) {
+    if (binding.hasErrors()) {
+        return "user/signup";
     }
-    if (userRepo.findByEmail(dto.getEmail()) != null) {
-        throw new CustomValidationException("사용중인 이메일 입니다", "email");
+    try {
+        sessionUserService.applyAuthToCtxHolder(userService.save(userDto));
+    } catch (CustomValidationException e) {
+        binding.addError(e.getError());
+        return "user/signup";
+    }
+    return "redirect:/";
+}
+```
+
+Service Layer에서 중복확인
+
+```java
+private void duplicateCheck(UserDto dto) {
+    if (userRepository.findByUsername(dto.getUsername()) != null) {
+        throw new CustomValidationException("userDto", "username", "이미 존재하는 아이디 입니다");
+    }
+    if (userRepository.findByEmail(dto.getEmail()) != null) {
+        throw new CustomValidationException("userDto", "email", "사용중인 이메일 입니다");
     }
 }
 ```
