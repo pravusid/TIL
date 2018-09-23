@@ -13,7 +13,7 @@ peerDependencies는 현재 모듈과 다른 모듈간의 호환성 표시 (npm i
 
 ### npm삭제, npm global modules 모두 삭제
 
-`sudo npm list -g --depth=0. | awk -F ' ' '{print $2}' | awk -F '@' '{print $1}'  | sudo xargs npm remove -g`
+`npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs npm -g rm`
 
 ## yarn
 
