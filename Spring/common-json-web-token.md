@@ -490,7 +490,7 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
     public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
         OAuth2Authentication authentication = super.extractAuthentication(claims);
         authentication.setDetails(claims);
-        return authentication;급
+        return authentication;
     }
 }
 ```
