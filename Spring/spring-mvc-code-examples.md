@@ -2,56 +2,96 @@
 
 ## 게시판
 
-### 페이징
+### 페이징(Pagination)
 
 ```java
-private int rowSize; // 한 화면에 표시할 행
-private int total; // 전체 게시물 수
-private int start; // 출력 화면의 시작 행
-private int end; // 출력 화면의 종료 행
+package kr.pravusid.dto;
 
-private int blockSize;
-private int totalPage; // 전체 페이지 수
-private int startBlock; // block의 시작
-private int endBlock; // block의 마지막
-private int prevBtn; // 이전 block 버튼
-private int nextBtn; // 다음 block 버튼
+import org.springframework.data.domain.Page;
 
-private int page;
+public class Pagination {
 
-{
-  rowSize = 15;
-  blockSize = 10;
-}
+    private int currPage; // range: 0 ~
+    private int totalPages; // 게시물 없을 때 0, 게시물 있을 때 range: 1 ~
 
-public Map<String, Integer> calcPage(int total) {
-  this.total = total;
-  if (page == 0) { page = 1; }
+    private int firstBlock; // block 시작, range: 0 ~
+    private int lastBlock; // block 마지막, range: 0 ~
 
-  end = rowSize * page;
-  start = end - rowSize + 1;
-  if (end>total) { end=total; }
+    private int prev; // 좌측 화살표 (전 블록 마지막으로)
+    private int next; // 우측 화살표 (다음 블록 처음으로)
 
-  Map<String, Integer> map = new HashMap();
-  map.put("end", end);
-  map.put("start", start);
+    /* 검색 관련 parameter */
+    private String filter;
+    private String keyword;
 
-  calcBlock(map);
+    public enum FilterType {
+        TITLE, CONTENT, USER, COMMENTS, ALL;
+    }
 
-  return map;
-}
+    public Pagination calcPage(Page page, int blockSize) {
+        this.currPage = page.getNumber();
+        this.totalPages= (page.getTotalPages() == 0) ? 0 : page.getTotalPages() - 1;
 
-private void calcBlock(Map<String,Integer> map) {
-  totalPage = (int) (Math.ceil((float)total/rowSize));
-  startBlock = page - (page - 1) % blockSize;
-  endBlock = startBlock + blockSize - 1;
-  if (endBlock > totalPage) { endBlock = totalPage; }
-  prevBtn = (startBlock==1)? 1: startBlock-1;
-  nextBtn = (endBlock==totalPage)? totalPage: endBlock+1;
+        firstBlock = currPage - (currPage % blockSize);
+        lastBlock = (firstBlock + (blockSize - 1) > totalPages) ? totalPages : firstBlock + (blockSize - 1);
+        prev = (firstBlock == 0) ? 0 : firstBlock - 1;
+        next = (lastBlock == totalPages) ? totalPages : lastBlock + 1;
+
+        return this;
+    }
+
+    public int getCurrPage() {
+        return currPage;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public int getFirstBlock() {
+        return firstBlock;
+    }
+
+    public int getLastBlock() {
+        return lastBlock;
+    }
+
+    public int getPrev() {
+        return prev;
+    }
+
+    public int getNext() {
+        return next;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public boolean filterMatcher(FilterType type) {
+        return Pagination.FilterType.valueOf(this.filter.toUpperCase()).equals(type);
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getSearchQuery() {
+        return (filter == null || keyword == null) ? "" : "&filter=" + filter + "&keyword=" + keyword;
+    }
+
 }
 ```
 
-### 게시판 파일 업로드
+### 파일 업로드
 
 ```java
 @RequestMapping("main/board_insert_ok.do")
@@ -114,28 +154,6 @@ public void board_download(String fn, HttpServletResponse resp) {
 ```
 
 ## @ResponseBody 이용
-
-### ResponseBody 일반 활용
-
-```java
-@RequestMapping("main/board_update_ok.do")
-@ResponseBody
-public String board_update_ok(DataBoardVO vo, int page) {
-  boolean bChk = false;
-  String send = null;
-  if (bChk == true) {
-    send = "<script>"
-        +"location.href=\"board_content.do?no="+vo.getNo()+"&page="+page+"\";"
-        +"</script>";
-  } else {
-    send = "<script>"
-        +"alert(\"비밀번호가 일치하지 않습니다\");"
-        +"history.back();"
-        +"</script>";
-  }
-  return send;
-}
-```
 
 ### @ResponseBody에서 Object를 JSON으로 변환해서 반환
 
