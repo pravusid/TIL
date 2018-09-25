@@ -221,13 +221,14 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     private PasswordEncoder passwordEncoder;
     private DataSource dataSource;
     private AuthenticationManager authenticationManager;
+    private UserDetailsService userDetailsService;
 
-    public AuthorizationSeverConfig(PasswordEncoder passwordEncoder,
-            DataSource dataSource,
-            AuthenticationManager authenticationManager) {
+    public AuthorizationSeverConfig(PasswordEncoder passwordEncoder, DataSource dataSource,
+            AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.dataSource = dataSource;
         this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -251,6 +252,7 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
                 .tokenStore(tokenStore())
                 .accessTokenConverter(accessTokenConverter());
     }
@@ -265,7 +267,8 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        KeyStoreKeyFactory keyFactory =new KeyStoreKeyFactory(new ClassPathResource("private.jks"), "storepass".toCharArray());
+        KeyStoreKeyFactory keyFactory =
+                new KeyStoreKeyFactory(new ClassPathResource("private.jks"), "storepass".toCharArray());
         converter.setKeyPair(keyFactory.getKeyPair("jwtserver", "keypass".toCharArray()));
 //        converter.setSigningKey("secret");
         return converter;
@@ -487,7 +490,7 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
     public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
         OAuth2Authentication authentication = super.extractAuthentication(claims);
         authentication.setDetails(claims);
-        return authentication;
+        return authentication;급
     }
 }
 ```
@@ -565,11 +568,17 @@ public class AuthenticationClaimsIntegrationTest {
 
 ### 테스트
 
-`curl -u vueclient:vueclientpwd http://localhost:8080/oauth/token -d "grant_type=password&username=user&password=1111"`
-
 클라이언트에서 발급받은 토큰으로 요청
 
+`curl -u vueclient:vueclientpwd http://localhost:8080/oauth/token -d "grant_type=password&username=user&password=1111"`
+
+액세스토큰으로 인증 테스트
+
 `curl -H "authorization: bearer {access_token}" http://localhost:8080/api/user`
+
+리프레시 토큰으로 액세스토큰 발급
+
+`grant_type=refresh_token&refresh_token=<your refresh token>`
 
 ### 활용
 
