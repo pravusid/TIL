@@ -262,3 +262,88 @@ HTTP에서 교환하는 정보는 HTTP 메시지라고 하는데 request 메시�
 
 HTTP로 데이터를 전송할 경우 인코딩을 통해 전송 효율을 높일 수도 있다.
 단, 인코딩 처리를 해야하므로 CPU 등의 리소스는 보다 많이 소비하게 된다.
+
+#### 메시지 바디와 엔티티 바디
+
+메시지: HTTP 통신의 기본 단위로 Octet(8bit) Sequence로 구성된다
+
+엔티티: 리퀘스트와 리스폰스의 payload로 전송되는 정보로 엔티티 헤더 필드와 엔티티 바디로 구성됨
+
+HTTP 메시지 바디의 역할은 리퀘스트/리스폰스에 관한 엔티티 바디를 운반하는 것.
+기본적으로 메시지 바디와 엔티티 바디는 같지만 전송코딩이 적용된 경우에는 달라진다.
+
+#### Contents Coding
+
+Contents Codings는 엔티티에 적용하는 인코딩인데, 엔티티 정보를 유지한 채로 압축한다.
+
+다음과 같은 콘텐츠 압축이 있다
+
+- gzip(GNU zip)
+- compress(UNIX 표준 압축)
+- deflate(zlib)
+- identity(인코딩 없음)
+
+#### Chunked Transfer Coding
+
+큰 데이터를 전송하는 경우 데이터를 분할할 수 있는데, 엔티티 바디를 분할하는 기능을 청크 전송 코딩이라 한다.
+이 경우 다음 청크 사이즈를 16진수를 사용해 단락을 표시하고 바디 끝에 CR+LF를 기록한다.
+
+#### Multipart
+
+MIME(Multipurpose Internet Mail Extension)는 메일로 텍스트, 영상, 이미지 같은 다른 데이터를 다루기 위한 기능이다.
+
+MIME는 이미지 등의 바이너리 데이터를 ASCII 문자열에 인코딩하는 방법, 데이터 종류를 나타내는 방법등을 규정한다.
+
+MIME의 타입인 Multipart는 하나의 메시지 바디 내부에 엔티티를 어러개 포함시켜 보낸다.
+
+HTTP 메시지로 multipart를 사용할 때는 Content-Type 헤더 필드를 사용한다.
+멀티파트 각각의 엔티티를 구분하기 위해 "boundary" 문자열을 사용하고 앞에는 `--`를 삽입한다.
+
+멀티파트는 파트마다 헤더필드가 포함된다. 또한 파트 중간에 파트를 내부에 포함할 수도 있다.
+
+##### multipart/form-data
+
+Web의 Form으로 부터 파일 업로드에 사용됨
+(user types "Joe Blow" in the name field)
+
+```text
+Content-Type: multipart/form-data; boundary=AaB03x
+
+--AaB03x
+Content-Disposition: form-data; name="field1"
+
+Joe Blow
+---AaB03x
+Content-Disposition: form-data; name="pics"; filename="file1.txt"
+Content-Type: text/plain
+
+...(file1.txt 데이터)...
+--AaB03x
+```
+
+##### multipart/byteranges
+
+상태코드 206(Partial Content) response message가 복수 범위의 내용을 포함하는 때 사용
+
+```text
+HTTP/1.1 206 Partial Content
+Date: Fri, 13 Jul 2012 02:45:26 GMT
+Last-Modified: Fri, 31 Aug 2007 02:02:20 GMT
+Content-Type: multipart/byteranges: boundary=THIS_STRING_SEPARATES
+
+--THIS_STRING_SEPARATES
+
+Content-Type: application/pdf
+Content-Range: bytes 500-999/8000
+
+...(범위내의 데이터)...
+--THIS_STRING_SEPARATES
+
+Content-Type: application/pdf
+Content-Range: bytes 7000-7999/8000
+
+...(범위내의 데이터)...
+--THIS_STRING_SEPARATES
+```
+
+### 레인지 리퀘스트
