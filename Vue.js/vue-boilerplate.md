@@ -67,22 +67,17 @@ Vue 2 + Vue-Router + Vuex + Vue-Meta
 Entry Point and Root Vue Instance : import와 webpack entry
 
 ```js
-import Vue from 'vue';
-import App from './App';
-import router from './router';
-
 new Vue({
-  el: '#app',
+  store,
   router,
-  template: '<App/>',
-  components: { App },
-});
+  render: h => h(App),
+}).$mount('#app');
 ```
 
-- el : `index.html`의 application mount point (id가 app인 div의 DOM을 제어함)
-- router : 라우터 사용 선언
-- template : mount point에 적용될 템플릿 (template)
-- components : 컴포넌트 (App.vue를 import해서 여기에서 사용함)
+- store: vuex 사용
+- router : vue 라우터 사용
+- render 함수
+- el($mount) : `index.html`의 application mount point (id가 app인 div의 DOM을 제어함)
 
 #### `/src/App.vue`
 
