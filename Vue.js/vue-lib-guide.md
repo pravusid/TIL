@@ -25,6 +25,8 @@
 - [vue-progressbar](https://github.com/hilongjw/vue-progressbar)
 - [vue-js-modal](https://github.com/euvl/vue-js-modal)
 - [vue-mugen-scroll: infinite scroll](https://github.com/egoist/vue-mugen-scroll)
+- [vue-scrollto](https://github.com/rigor789/vue-scrollTo)
+- [vue-chat-scroll](https://github.com/theomessin/vue-chat-scroll)
 
 ## input
 
