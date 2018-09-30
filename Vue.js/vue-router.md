@@ -1,5 +1,34 @@
 # Vue Router
 
+Vue.js에서는 라우터 기능을 다음과 같은 형태의 확장으로 제공한다.
+라우트에 따른 컴포넌트를 할당한 뒤, 해당 라우트에 맞춰 컴포넌트를 렌더링하는 방식이다.
+
+```js
+const NotFound = { template: '<p>Page not found</p>' }
+const Home = { template: '<p>home page</p>' }
+const About = { template: '<p>about page</p>' }
+
+const routes = {
+  '/': Home,
+  '/about': About
+}
+
+new Vue({
+  el: '#app',
+  data: {
+    currentRoute: window.location.pathname
+  },
+  computed: {
+    ViewComponent () {
+      return routes[this.currentRoute] || NotFound
+    }
+  },
+  render (h) { return h(this.ViewComponent) }
+})
+```
+
+## 기능
+
 Vue 라우터는 아래의 기능을 포함하고 있다
 
 - 중첩된 라우트/뷰 매핑
