@@ -89,7 +89,7 @@ logging:
 ---
 
 spring:
-  profiles: service
+  profiles: production
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
