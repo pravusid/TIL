@@ -8,6 +8,10 @@
 
 `./gradlew wrapper --gradle-version {version}`
 
+gradle을 실행하면 버전 변경사항을 확인하고 새로운 wrapper를 다운로드 함
+
+`./gradlew tasks`
+
 ## tips
 
 ### dependency 포함한 jar build
