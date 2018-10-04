@@ -139,4 +139,3 @@ create sequence seq
 
 - `nextval` : 마지막 sequence 다음 수
 - `currval` : 현재 sequence
-
