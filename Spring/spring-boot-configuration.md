@@ -81,7 +81,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect # auto-detected by default
     show-sql: true
     hibernate:
-      ddl-auto: update # create-drop
+      ddl-auto: create-drop
 
 logging:
   config: classpath:logback-spring-debug.xml
