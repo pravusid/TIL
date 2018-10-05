@@ -71,14 +71,12 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:mem:dbname;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:idpravus;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
-    data: classpath:import.sql
 
-  # JPA로 사용할 데이터베이스 명시
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect # auto-detected by default
+    database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
     hibernate:
       ddl-auto: create-drop
@@ -97,10 +95,28 @@ spring:
     password: pwd
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # auto-detected by default
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
 server:
   port: 80
 ```
+
+### Hibernate / JPA를 사용한 데이터 초기화
+
+`spring.jpa.hibernate.ddl-auto` 옵션을 통해서 데이터 초기화 전략을 설정할 수 있음.
+
+옵션: `none`(기본값), `validate`, `update`, `create`, and `create-drop`(기본값-embedded db without schema manager)
+
+> classpath 루트에 `import.sql` 파일이 있다면 시작할 때 Hibernate가 이를 실행함: `spring.datasource.data`를 정의했다면 중복실행될 수 있음
+
+Spring Boot는 시작할 때 자동으로 classpath 루트의 `schema.sql`과 `data.sql`을 실행시킨다.
+
+또한, Spring Boot는 `schema-${platform}.sql`과 `data-${platform}.sql` 파일이 있다면 실행시켜 데이터베이스에 맞춘 스크립트 실행이 가능하다.
+플랫폼 정의는 `spring.datasource.platform`값을 따른다
+
+Spring Boot는 `spring.datasource.initialization-mode`값에 따라 자동으로 embedded DataSource의 schema를 생성한다. (기본값: `always`)
+
+Spring Boot는 Spring JDBC initializer 동작시 fail-fast이므로, 스크립트에서 문제가 발생하면 어플리케이션 동작에 실패한다.
+`spring.datasource.continue-on-error` 설정값(기본값: `false`)을 `true`로 변경하여 종료되지 않게 할 수 있다.
