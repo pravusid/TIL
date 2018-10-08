@@ -347,3 +347,30 @@ Content-Range: bytes 7000-7999/8000
 ```
 
 ### 레인지 리퀘스트
+
+엔티티의 범위를 지정해서 요청을 보내는 것을 Range Request라 한다.
+Range Header Field를 사용해서 리소스 레인지를 지정한다.
+
+`Ranage: bytes = -3000, 5001-10000`: 처음부터 3000바이트 까지, 그리고 5001 ~ 10000 바이트
+
+- Range Request에 대한 Response는 상태코드 206(Partial Content)이 돌아온다.
+- 복수 범위의 Range Request에 대해서는 `multipart/byteranges` response가 돌아온다.
+- 서버가 range request를 지원하지 않으면 완전한 엔티티와 함께 상태코드 200이 돌아온다
+
+### Content Negotiation
+
+Content Negotiation은 클라이언트와 서버가 제공하는 리소스를 언어와 문자세트, 인코딩 방식을 기준으로 구분한다.
+
+판단기준은 다음과 같은 헤더필드 내용에 근거한다.
+
+- Accept
+- Accept-Charset
+- Accept-Encoding
+- Accept-Language
+- Content-Language
+
+Content Negotiation의 종류는 다음이 있다.
+
+- Server-driven Negotiation: 서버측에서 리퀘스트 헤더필드의 내용을 참고해서 처리함
+- Agent-driven Negotiation: 클라이언트 측에서 처리, OS 종류, 브라우저 종류, User Agent에 따라 전환하는 것등이 포함됨
+- Transparent Negotiation: 서버와 에이전트 방식을 혼합한 것, 각각 Negotiation을 한다
