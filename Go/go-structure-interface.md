@@ -560,8 +560,8 @@ type Interface interface {
 
 ```go
 type FileSystem interface {
-    func Rename(oldpath, newpath string) error
-    func Remove(name string) error
+    Rename(oldpath, newpath string) error
+    Remove(name string) error
 }
 
 type OSFileSystem struct{}
