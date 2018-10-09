@@ -374,3 +374,48 @@ Content Negotiation의 종류는 다음이 있다.
 - Server-driven Negotiation: 서버측에서 리퀘스트 헤더필드의 내용을 참고해서 처리함
 - Agent-driven Negotiation: 클라이언트 측에서 처리, OS 종류, 브라우저 종류, User Agent에 따라 전환하는 것등이 포함됨
 - Transparent Negotiation: 서버와 에이전트 방식을 혼합한 것, 각각 Negotiation을 한다
+
+## HTTP 상태 코드
+
+### Request 결과
+
+클라이언트로부터 서버로 리퀘스트를 보낼 때 서버에서 처리된 상태를 알려주는 것이 상태코드이다.
+
+리스폰스 클래스는 5개가 정의되어 있다
+
+- 1xx (Informational): 리퀘스트를 받아 처리중
+- 2xx (Success): 리퀘스트를 정상적으로 처리함
+- 3xx (Redirection): 리퀘스트 완료를 위해 추가 동작 필요
+- 4xx (Client Error): 클랄이언트 원인으로 서버에서 리퀘스트 이해 불능
+- 5xx (Server Error): 서버에서 리퀘스트 처리 실패
+
+### 2xx (Success)
+
+- 200 OK: 클라이언트가 보낸 리퀘스트를 서버가 정상 처리했을 경우, HTTP 메소드에 따라 되돌아오는 데이터는 다르다
+- 204 No Content: 리스폰스에 entity body를 포함하지 않는 경우
+- 206 Partial Content: Range가 지정된 리퀘스트에 의해서 Content-Range로 지정된 범위의 엔티티가 포함
+
+### 3xx (Redirection)
+
+- 301 Moved Permanently: 요청된 리소스에 새로운 URI가 부여되어, 이후로 변경된 URI를 사용해야 함을 리스폰스한다
+- 302 Found: 요청된 리소스에 새로운 URI가 부여되어 있지만, 301과 다르게 일시적인 변경이다
+- 303 See Other: 요청된 리소스는 다른 URI이므로 GET 메소드를 통해 얻어야 함을 나타낸다
+- 304 Not Modified: 조건부 리퀘스트에서 접근은 가능하나 조건을 만족하지 않는 경우이다. 비어있는 리스폰스 바디를 반환한다.
+- 307 Temporary Redirect: 302 Found와 동일하다
+
+301, 302, 303 리스폰스 코드가 오면 대부분의 브라우저는 POST를 GET으로 변경하고 엔티티 바디를 삭제하여 리퀘스트를 재송신한다.
+303 코드에서 GET 메소드를 사용할 것을 명시하고 있으나 다른코드에서도 그런 방식으로 작동한다.
+
+### 4xx (Client Error)
+
+- 400 Bad Request: 리퀘스트 구문이 잘못되었음을 나타낸다
+- 401 Unauthorized: 송신한 리퀘스트에 HTTP 인증이 필요하다는 것을 나타낸다(첫 번째), 인증에 실패했음을 표시한다(두 번째)
+- 403 Forbidden: 요청한 리소스의 접근이 거부되었음을 나타낸다. 거부된 이유를 엔티티 바디에 포함해 반환할 수 있다.
+- 404 Not Found: 요청한 리소스가 서버상에 없다는 것을 나타낸다. (혹은 이유 없이 거부할 때)
+
+### 5xx (Server Error)
+
+- 500 Internal Server Error: 서버에서 요청을 처리하는 도중 에러가 발생한 경우
+- 503 Service Unavailable: 일시적으로 서버를 사용할 수 없어 리퀘스트가 처리되지 않는 경우. Retry-After 헤더필드 값을 반환할 수 있다.
+
+## HTTP 웹서버
