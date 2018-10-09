@@ -5,7 +5,7 @@
 ```groovy
 buildscript {
     ext {
-        springBootVersion = '1.5.13.RELEASE'
+        springBootVersion = '1.5.16.RELEASE'
         thymeleafVersion = '3.0.1.RELEASE'
     }
     repositories {
@@ -18,7 +18,6 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 version = '1.0.0'
@@ -32,26 +31,17 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-aop")
     compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.security:spring-security-jwt:1.0.9.RELEASE")
-    compile("org.springframework.security.oauth:spring-security-oauth2:2.3.3.RELEASE")
+    compile("org.springframework.security:spring-security-jwt")
+    compile("org.springframework.security.oauth:spring-security-oauth2")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.thymeleaf:thymeleaf:${thymeleafVersion}")
     compile("org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:${thymeleafVersion}")
-    runtime('com.h2database:h2')
+    compile("mysql:mysql-connector-java")
+    compile("com.h2database:h2")
     runtime("org.springframework.boot:spring-boot-devtools")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.springframework.security:spring-security-test")
-}
-
-jar {
-    manifest {
-        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
-    }
-    dependsOn configurations.runtime
-    from {
-        configurations.compile.collect {it.isDirectory()? it: zipTree(it)}
-    }
 }
 ```
 
@@ -63,6 +53,22 @@ jar {
 spring:
   profiles.active: dev
 
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+      jwt:
+        key-value:
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs1HLWx//4CM7PYYDdsE7
+          0Ji42U/JIjkI8jlRp+Urx4P0/I2bPVZePw9WNDjcen560fmBlqt4NNzsEhOqi1tv
+          25LvknTvNrUTl4L+u/jRY0kJpGcSBP/VtqdY0Yt6u+L/05VzMSLXr9PbhDw8nyhq
+          7M/Y0wv7VQiFmeV4zK5lsYN787ii3ctouAg/VWFT2V5ZP24MLBGjb3s7Ipi8Wngp
+          NIz/2umG/VYfnpZIy5cpqJLyLJKFJ02fTYsGcl6I23aQPpcsHhabEsjKUpF/ck4H
+          XrBmadVQz9vFWxQVkUwpbMt827Zzkf2VnqIyVzmXsuY9gfiQeWLtmRvpw8KAZcOR
+          jwIDAQAB
+          -----END PUBLIC KEY-----
+
 ---
 
 spring:
@@ -71,6 +77,7 @@ spring:
     console:
       enabled: true
   datasource:
+    driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:idpravus;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
