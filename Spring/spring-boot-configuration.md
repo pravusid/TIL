@@ -81,6 +81,7 @@ spring:
     url: jdbc:h2:mem:idpravus;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
+    sql-script-encoding: UTF-8
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
@@ -100,6 +101,7 @@ spring:
     url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
     username: user
     password: pwd
+    initialize: false
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -127,3 +129,14 @@ Spring Boot는 `spring.datasource.initialization-mode`값에 따라 자동으로
 
 Spring Boot는 Spring JDBC initializer 동작시 fail-fast이므로, 스크립트에서 문제가 발생하면 어플리케이션 동작에 실패한다.
 `spring.datasource.continue-on-error` 설정값(기본값: `false`)을 `true`로 변경하여 종료되지 않게 할 수 있다.
+
+데이터 초기화를 방지하려면 다음 설정을 하면 된다
+
+```properties
+spring.datasource.initialization-mode=never # Property for Spring boot 2.0
+spring.datasource.initialize=false # Property for Spring boot 1.0
+```
+
+초기화되는 데이터 인코딩 설정을 위해서는 다음을 사용하면 된다
+
+`spring.datasource.sql-script-encoding=UTF-8`
