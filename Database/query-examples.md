@@ -1,23 +1,39 @@
 # SQL 예제
 
-## 데이터 출력
+## 페이징 (Paging)
 
-### 페이징 (Paging)
-
-#### 오라클 (Oracle)
+### 오라클 (Oracle)
 
 ```sql
 SELECT *
 FROM (
-  SELECT X.*, ROWNUM rnum
+  SELECT x.*, ROWNUM rnum
   FROM (
-    SELECT M.ID AS ID, M.AGE AS AGE, M.NAME AS NAME
-    FROM MEMBER M
-    ORDER BY M.NAME
-    ) X
+    SELECT m.id AS id, m.username AS username
+    FROM member m
+    ORDER BY M.id
+  ) X
   WHERE ROWNUM <= ?
-  )
+)
 WHERE rnum > ?
+```
+
+### MySQL
+
+```sql
+SELECT id, username
+FROM member
+ORDER BY id
+LIMIT ?, ? -- 시작위치, 가져올 row 숫자
+```
+
+### PostgreSQL
+
+```sql
+SELECT id, username
+FROM member
+ORDER BY id
+LIMIT ? OFFSET ? -- 가져올 row 숫자, 시작위치
 ```
 
 ## 검색
