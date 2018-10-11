@@ -11,8 +11,8 @@ FROM (
   FROM (
     SELECT m.id AS id, m.username AS username
     FROM member m
-    ORDER BY M.id
-  ) X
+    ORDER BY m.id
+  ) x
   WHERE ROWNUM <= ?
 )
 WHERE rnum > ?

@@ -249,3 +249,53 @@ public List<IngredientVO> selectIngrList(Map map);
   + " WHERE i.religion_id=r.id AND ingredient_id=#{id}")
 public List<ReligionVO> selectIngrReligion();
 ```
+
+### 활용
+
+```xml
+<!-- 해당하는 회원ID 숫자 -->
+<select id="checkId" parameterType="Map" resultType="int">
+  SELECT count(member_idx) FROM member WHERE member_id=#{memberId}
+</select>
+
+<!-- 회원 조회 / 동적쿼리 -->
+<select id="mList" parameterType="Map" resultType="Map">
+  SELECT
+    member_idx,
+    member_id AS memberId,
+    member_nick AS memberNick,
+    member_name AS memberName,
+    email, DATE_FORMAT(create_date, '%Y-%m-%d') AS createDate
+  FROM member
+  WHERE 1=1
+  <if test="searchType!=null and searchType==1">
+    AND ( member_id like concat('%',#{searchText},'%') OR email like concat('%',#{searchText},'%') )
+  </if>
+  <if test="searchType!=null and searchType==2">
+    AND member_id like concat('%',#{searchText},'%')
+  </if>
+  <if test="searchType!=null and searchType==3">
+    AND email like concat('%',#{searchText},'%')
+  </if>
+  ORDER BY ${sidx} ${sord}
+  LIMIT ${startIdx}, ${rows}
+</select>
+
+<!-- 자동증가하는 PK의 값을 boardSeq를 Key로 반환하여 돌려줌.  -->
+<insert id="write" parameterType="Map" useGeneratedKeys="true" keyProperty="boardSeq">
+  INSERT INTO board (`type_seq`,`member_idx`,`member_id`, `member_nick`, `title`, `content`, `has_file`, `create_date`)
+  VALUES (#{typeSeq},#{memberIdx},#{memberId},#{memberNick},#{title},#{contents}, '0' ,now())
+</insert>
+
+<!-- 조회수 1 증가 -->
+<update id="updateHit" parameterType="int">
+  UPDATE board SET hits=hits+1
+  WHERE `type_seq`=#{0} AND `board_seq`=#{1}
+</update>
+
+<!-- 해당 PK를 가지는 게시글의 내용과 수정 날짜를 변경 -->
+<update id="updateBoard" parameterType="Map">
+  UPDATE board SET title=#{title}, content = #{contents}, update_date = now()
+  WHERE `type_seq`= #{typeSeq} AND `board_seq`= #{boardSeq}
+</update>
+```
