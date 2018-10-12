@@ -47,17 +47,18 @@ Java Util Logging : `logging.properties`
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+  <property name="LOG_TEMP" value="./logs"/>
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
   <appender name="dailyRollingFileAppender"
-    class="ch.qos.logback.core.rolling.RollingFileAppender">
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
     <prudent>true</prudent>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
       <maxHistory>30</maxHistory>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level> <!-- 로그 파일 기본 레벨 -->
+      <level>INFO</level>
     </filter>
 
     <encoder>
@@ -69,9 +70,10 @@ Java Util Logging : `logging.properties`
   <logger name="org.thymeleaf" level="INFO"/>
   <logger name="org.hibernate.SQL" level="INFO"/>
   <logger name="org.quartz.core" level="INFO"/>
+  <logger name="kr.pravusid" level="INFO"/>
 
-  <root level="INFO"> <!-- 콘솔 출력 로그 레벨 -->
-    <appender-ref ref="dailyRollingFileAppender" />
+  <root level="INFO">
+    <appender-ref ref="dailyRollingFileAppender"/>
   </root>
 </configuration>
 ```
