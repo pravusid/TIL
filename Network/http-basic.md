@@ -477,3 +477,123 @@ HTTP 통신에서는 여러대의 프록시 서버를 경유하는 것도 가능
 마찬가지로 캐시 유효성에 의해 다시 데이터를 획득하러 갈 수도 있다.
 
 ## HTTP Header
+
+### HTTP 메시지 헤더
+
+HTTP 리퀘스트와 리스폰스에는 반드시 메시지 헤더가 포함되어 있다.
+
+#### 리퀘스트 HTTP 메시지
+
+메시지 헤더는 메소드, URI, HTTP 버전, HTTP 헤더필드 등으로 구성되어 있다.
+
+#### 리스폰스 HTTP 메시지
+
+메시지 헤더는 HTTP버전, 상태코드, HTTP 헤더필드 등으로 구성되어 있다.
+
+### HTTP 헤더 필드
+
+HTTP 헤더 필드: `헤더필드명:헤더필드값`
+
+하나의 헤더 필드가 여러 개의 필드 값을 가질 수 있으며 쉽표 `,`로 구분한다
+
+#### 헤더 필드의 종류
+
+- General Header Fields: 리퀘스트/리스폰스 메시지 두 곳다 사용됨
+- Request Header Fields: 클라이언트에서 서버 방향, 리퀘스트 부가정보, 클라이언트 정보, 리스폰스 콘텐츠에 관한 우선순위 등...
+- Response Header Fields: 서버에서 클라이언트 방향, 리스폰스 정보와 서버 정보, 클라이언트의 추가 정보 요구 등...
+- Entity Header Fields: 리퀘스트/리스폰스 메시지에 포함된 엔티티에 사용되는 헤더로 콘텐츠 갱신 시간 등에 관한 정보를 부가
+
+#### HTTP/1.1 헤더 필드
+
+##### 일반 헤더 필드
+
+- Cache-Control: 캐싱 동작 지정
+- Connection: Hop-by-hop 헤더, 커넥션 관리
+- Date: 메시지 생성 날짜
+- Pragma: 메시지 제어
+- Trailer: 메시지 끝에 있는 헤더의 일람
+- Transfer-Encoding: 메시지 바디의 전송 코딩 형식 지정
+- Upgrade: 다른 프로토콜에 업그레이드
+- Via: 프록시 서버에 관한 정보
+- Warning: 에러 통지
+
+##### 리퀘스트 헤더 필드
+
+- Accept: 유저 에이전트가 처리 가능한 미디어 타입
+- Accept-Charset: 문자셋 우선 순위
+- Accept-Encoding: 콘텐츠 인코딩 우선 순위
+- Accept-Language: 자연어 우선 순위
+- Authorization: 웹 인증을 위한 정보
+- Expect: 서버에 대한 특정 동작의 기대
+- From: 유저의 메일 주소
+- Host: 요구된 리소스의 호스트
+- If-Match: 엔티티 태그의 비교
+- If-None-Match: 엔티티 태그의 비교(If-Match의 반대)
+- If-Range: 리소스가 갱신되지 않은 경우에 엔티티의 바이트 범위 요구를 송신
+- If-Modified-Since: 리소스의 갱신 시간 비교
+- If-Unmodified-Since: 리소스의 갱신시간 비교(If-Modified-Since의 반대)
+- Max-Forwards: 최대 전송 홉 수
+- Proxy-Authorization: 프록시 서버의 클라이언트 인증을 위한 정보
+- Range: 엔티티 바이트 범위 요구
+- Referer: 리퀘스트중의 URI를 취등하는 곳
+- TE: 전송 인코딩 우선순위
+- User-Agent: HTTP 클라이언트 정보
+
+##### 리스폰스 헤더 필드
+
+- Accept-Ranges: 바이트 단위의 요구를 수신할 수 있는지 여부
+- Age: 리소스의 지정 경과 시간
+- Etag: 리소스를 특정하기 위한 정보
+- Location: 클라이언트를 지정한 URI에 리다이렉트
+- Proxy-Authenticate: 프록시 서버의 클라이언트 인증을 위한 정보
+- Retry-After: 리퀘스트 재시행의 타이밍 요구
+- Server: HTTP 서버 정보
+- Vary: 프록시 서버에 대한 캐시 관리 정보
+- WWW-Authenticate: 서버의 클라이언트 인증을 위한 정보
+
+##### 엔티티 헤더 필드
+
+- Allow: 리소스가 제공하는 HTTP 메소드
+- Content-Encoding: 엔티티 바디에 적용되는 콘텐츠 인코딩
+- Content-Language: 엔티티의 자연어
+- Content-Length: 엔티티 바디의 사이즈(byte)
+- Content-Location: 리소스에 대응하는 대체 URI
+- Content-MD5: 엔티티 바디의 메시지 다이제스트
+- Content-Range: 엔티티 바디의 범위 위치
+- Content-Type: 엔티티 바디의 미디어 타입
+- Expires: 엔티티 바디의 유효기한 날짜
+- Last-Modified: 리소스의 최종 갱신 날짜
+
+#### HTTP/1.1 이외의 헤더필드
+
+HTTP 헤더 필드는 RFC2616에 정의된 47종류만 있는 것은 아니다.
+
+Set-Cookie, Content-Disposition ...
+
+비표준 헤더필드는 RFC4229 HTTP Header Field Registrations에 정리되어 있다
+
+#### E2E 헤더와 Hop-by-hop 헤더
+
+HTTP 헤더 필드는 캐시와 비캐시 프록시의 동작을 정의하기 위해서 두 가지 카테고리로 분류되어 있다.
+
+##### E2E 헤더
+
+E2E 분류 헤더는 리퀘스트나 리스폰스의 최종 수신자에게 전송된다.
+
+##### Hop-by-hop 헤더
+
+이 카테고리의 헤더는 한 번 전송에 대해서만 유효하고 캐시와 프록시에를 통하면 전송되지 않는 것도 있다.
+
+사용되는 Hop-by-hop 헤더는 Connection 헤더 필드에 열거해야 한다.
+
+HTTP/1.1의 Hop-by-hop 헤더에는 다음과 같은 것이 있다.
+다음 8개의 헤더필드 이외에는 모두 E2E 헤더로 분류된다.
+
+- Connection
+- Keep-Alive
+- Proxy-Authenticate
+- Proxy-Authorization
+- Trailer
+- TE
+- Transfer-Encoding
+- Upgrade
