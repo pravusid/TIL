@@ -503,21 +503,134 @@ HTTP 헤더 필드: `헤더필드명:헤더필드값`
 - Response Header Fields: 서버에서 클라이언트 방향, 리스폰스 정보와 서버 정보, 클라이언트의 추가 정보 요구 등...
 - Entity Header Fields: 리퀘스트/리스폰스 메시지에 포함된 엔티티에 사용되는 헤더로 콘텐츠 갱신 시간 등에 관한 정보를 부가
 
-#### HTTP/1.1 헤더 필드
+#### General Header Fields
 
-##### 일반 헤더 필드
+##### Cache-Control
 
-- Cache-Control: 캐싱 동작 지정
-- Connection: Hop-by-hop 헤더, 커넥션 관리
-- Date: 메시지 생성 날짜
-- Pragma: 메시지 제어
-- Trailer: 메시지 끝에 있는 헤더의 일람
-- Transfer-Encoding: 메시지 바디의 전송 코딩 형식 지정
-- Upgrade: 다른 프로토콜에 업그레이드
-- Via: 프록시 서버에 관한 정보
-- Warning: 에러 통지
+- 디렉티브로 불리는 명령을 사용하여 캐싱동작 지정
 
-##### 리퀘스트 헤더 필드
+- 디렉티브는 파리미터가 있을 수도/없을 수도 있으며, 여러개를 지정하는 경우 `,`로 구분
+
+- 캐시 리퀘스트 디렉티브 (디렉티브/파라미터/설명)
+  - `no-cache`: orogin 서버에 강제적 재검증
+  - `no-store`: 캐시는 리퀘스트/리스폰스의 일부분을 보존하면 안됨
+  - `max-age=초`: 필수: 리스폰스 최대 보존시간, `Expires`헤더보다 우선함
+  - `max-state=[초]`: 생략가능: 기한이 지난 리스폰스 수신, 최대 혀용기간 지정 가능
+  - `min-fresh=초`: 필수: 지정한 시간 이상의 유효기간이 남은 리소스를 요청함
+  - `no-transform`: 프록시 캐시는 엔티티 바디의 미디어 타입을 변경해서는 안됨
+  - `only-if-cached`: 목적 리소스가 로컬 캐시에 있는 경우에만 리스폰스를 반환하도록 요구함
+
+- 캐시 리스폰스 디렉티브 (디렉티브/파라미터/설명)
+  - `public`: 유저에게 돌려줄 수 있는 리스폰스 캐시 가능
+  - `private`: 생략가능: 특정 유저에 대해서만 리스폰스 (public과 반대)
+  - `no-cache`: 생략가능: origin 서버에 유효성 재확인 없이 캐시 사용불가, 파라미터로 캐시할 수 없는 헤더필드를 명시할 수 있음
+  - `no-store`: 캐시는 리퀘스트/리스폰스 일부분을 보존하면 안됨
+  - `no-transform`: 프록시는 미디어 타입을 변경해서는 안됨
+  - `must-revalidate`: 캐시 가능하지만 오리진 서버에 리소스 재확인 요구, 리퀘스트의 `max-state` 헤더를 무시함
+  - `proxy-revalidate`: 모든 캐시서버에 대해 이후의 리퀘스트로 리스폰스를 반환할 때 반드시 유효성 재확인 요구
+  - `max-age=초`: 필수: 리스폰스 최대 보존시간, `Expires`헤더보다 우선함
+  - `s-max-age=초`: 필수: 여러 유저가 이용하는 공유 캐시 서버 리스폰스 최대 보존시간 (이경우 `Expires`와 `max-age`는 무시됨)
+
+- 확장 토큰: `cache-extension`: 디렉티브를 해석할 수 있는 서버로 보낼경우만 유효
+
+##### Connection
+
+- 프록시에 더 이상 전송하지 않는 헤더필드(Hop-by-hop 헤더) 지정
+
+- 지속적 접속(Keep-alive) 관리
+  - HTTP/1.1에서는 Keep-alive가 디폴트임
+  - 서버에서 명시적으로 접속을 끊고 싶을 때 `Connection`헤더 필드에 `Close`를 지정함
+
+##### Date
+
+메시지 생성 날짜를 표기하며, HTTP/1.1의 날짜 포맷은 RFC1123에 지정되어 있음
+
+`Date: Tue, 03 Jul 2012 04:40:59 GMT`
+
+##### Pragma
+
+Pragma 필드는 HTTP/1.0과의 호환을 위해서만 정의되어 있음
+
+`Pragma: no-cache`만 사용 가능하며 클라이언트 리퀘스트에서만 사용한다.
+중간 서버들에 캐시된 리소스의 리스폰스가 필요없음을 알린다.
+
+##### Trailer
+
+HTTP/1.1에 구현되어있는 청크 전송 인코딩을 사용하고 있는 경우,
+메시지 바디 뒤에 기술되어 있는 헤더 필드를 미리 전달할 수 있다.
+
+```text
+...
+Trailer: Expires
+...
+... 메시지 바디 ...
+0
+Expires: Tue, 28 Sep 2004 23:59:59 GMT
+```
+
+##### Transfer-Encoding
+
+메시지 바디의 전송 코딩 형식을 지정하는 경우 사용된다
+
+`Transfer-Encoding: chunked`
+
+##### Upgrade
+
+HTTP 및 다른 프로토콜의 새로운 버전이 통신에 이용되는 경우 사용된다.
+
+리퀘스트에서 Upgrade 헤더 필드에 명시한 프로토콜 사용을 요청한다.
+요청은 인접한 서버에만 적용되므로 `Connection: Upgrade`도 함께 사용한다.
+
+```text
+GET /index.html HTTP/1.1
+Upgrade: TLS/1.0
+Connection: Upgrade
+```
+
+서버에서는 상태코드 101 `Switching Protocols` 리스폰스로 응답한다.
+
+```text
+HTTP/1.1 101 Switching Protocols
+Upgrade: TLS/1.0, HTTP/1.1
+Connection: Upgrade
+```
+
+##### Via
+
+클라이언트-서버간의 리퀘스트/리스폰스 메시지의 경로를 알기 위해서 사용됨
+
+프록시나 게이트웨이는 자신의 서버정보를 Via 헤더 필드에 추가한 뒤 메시지를 전송한다.
+(traceroute나 메일의 Received Header와 유사)
+
+Via 헤더 필드는 메시지 추적과 리퀘스트 루프회피등에 사용되므로 프록시를 경유하는 경우 반드시 붙여야 할 필요가 있다.
+
+```text
+GET / HTTP/1.1
+
+GET / HTTP/1.1
+Via: 1.0 gw.hackr.jr (Squid/3.1)
+
+GET / HTTP/1.1
+Via: 1.0 gw.hackr.jr (Squid/3.1), 1.1 a1.example.com (Squid/2.7)
+```
+
+##### Warning
+
+Warning 헤더는 HTTP/1.0 Retry-After라 변경된 것으로, 리스폰스에 관한 추가정보를 전달한다.
+
+`Warning: [경고코드][경고한호스트:포트번호]"[경고문]" ([날짜])`
+
+HTTP/1.1에는 7개의 경고코드가 정의되어 있다(권장사항)
+
+- 110: Response is state: 프록시가 유효기간이 지난 리소스 반환
+- 111: Revalidation failed: 프록시가 리소스의 유효성 재확인에 실패함
+- 112: Disconnection Operation: 프록시의 네트워크가 연결되어있지 않다
+- 113: Heuristic expiration: 캐시 유효기한을 경과한 리스폰스
+- 199: Miscellaneous warning: 임의 경고문
+- 214: Transformation applied: 프록시가 인코딩/미디어 타입에 대응하여 처리한 경우
+- 288: Miscellaneous persistent warning: 임의 경고문
+
+#### Request Header Fields
 
 - Accept: 유저 에이전트가 처리 가능한 미디어 타입
 - Accept-Charset: 문자셋 우선 순위
@@ -539,7 +652,7 @@ HTTP 헤더 필드: `헤더필드명:헤더필드값`
 - TE: 전송 인코딩 우선순위
 - User-Agent: HTTP 클라이언트 정보
 
-##### 리스폰스 헤더 필드
+#### Response Header Fields
 
 - Accept-Ranges: 바이트 단위의 요구를 수신할 수 있는지 여부
 - Age: 리소스의 지정 경과 시간
@@ -551,7 +664,7 @@ HTTP 헤더 필드: `헤더필드명:헤더필드값`
 - Vary: 프록시 서버에 대한 캐시 관리 정보
 - WWW-Authenticate: 서버의 클라이언트 인증을 위한 정보
 
-##### 엔티티 헤더 필드
+#### Entity Header Fields
 
 - Allow: 리소스가 제공하는 HTTP 메소드
 - Content-Encoding: 엔티티 바디에 적용되는 콘텐츠 인코딩
