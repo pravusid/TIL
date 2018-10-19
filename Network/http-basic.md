@@ -632,25 +632,174 @@ HTTP/1.1에는 7개의 경고코드가 정의되어 있다(권장사항)
 
 #### Request Header Fields
 
-- Accept: 유저 에이전트가 처리 가능한 미디어 타입
-- Accept-Charset: 문자셋 우선 순위
-- Accept-Encoding: 콘텐츠 인코딩 우선 순위
-- Accept-Language: 자연어 우선 순위
-- Authorization: 웹 인증을 위한 정보
-- Expect: 서버에 대한 특정 동작의 기대
-- From: 유저의 메일 주소
-- Host: 요구된 리소스의 호스트
-- If-Match: 엔티티 태그의 비교
-- If-None-Match: 엔티티 태그의 비교(If-Match의 반대)
-- If-Range: 리소스가 갱신되지 않은 경우에 엔티티의 바이트 범위 요구를 송신
-- If-Modified-Since: 리소스의 갱신 시간 비교
-- If-Unmodified-Since: 리소스의 갱신시간 비교(If-Modified-Since의 반대)
-- Max-Forwards: 최대 전송 홉 수
-- Proxy-Authorization: 프록시 서버의 클라이언트 인증을 위한 정보
-- Range: 엔티티 바이트 범위 요구
-- Referer: 리퀘스트중의 URI를 취등하는 곳
-- TE: 전송 인코딩 우선순위
-- User-Agent: HTTP 클라이언트 정보
+##### Accept
+
+`Accept: text/html, application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`
+
+유저 에이전트에 처리할 수 있는 미디어 타입과 타입 우선순위를 전달하기 위해 사용됨
+
+미디어 타입 지정은 `타입/서브타입`으로 한번에 여러 개를 설정할 수 있음
+
+미디어 타입에 우선순위를 붙이려면 세미콜론(`;`)으로 구분하고 `q=1(기본값(최대)`로 품질지수를 표기한다.
+
+- 텍스트 파일
+  - text/html, text/plain, text/css ...
+  - application/xhtml+xml, application/xml, application/json ...
+- 이미지 파일
+  - image/jpeg, image/gif, image/png ...
+- 동영상 파일
+  - vedio/mpeg, video/quicktime ...
+- 바이너리 파일
+  - application/octet-stream, application/zip
+
+##### Accept-Charset
+
+`Accept-Charset:iso-8859-5, unicode-1-1:q+0.8`
+
+유저 에이전트에서 문자셋의 상대적 우선순위를 전달하기 위해서 사용된다.
+여러개를 지정할 수 있으며, 품질지수에 의해 상대적 우선순위를 표시한다.
+
+##### Accept-Encoding
+
+`Accept-Encoding: gzip, deflate`
+
+유저 에이전트가 처리할 수 있는 콘텐츠 코딩의 우선순위를 전달한다.
+
+콘텐츠 코딩은 한 번에 여러개를 지정할 수 있으며, 품질지수에 의해서 상대적인 우선순위를 표시한다.
+또한 `*`를 지정하면 모든 인코딩 포맷을 가리킨다.
+
+- gzip: 파일 압축 GNU zip에서 생성된 인코딩 포맷(RFC1952)으로 LZ77 부호와 32비트 CRC 사용
+- compress: UNIX 압축 compress의 인코딩 포맷으로 LZW다
+- deflate: Zlib(RFC1950) 포맷과 deflate 압축 알고리다 의해 만들어진 인코딩 포맷 조합
+- identity: 압축/변형을 하지 않는 디폴트 인코딩 포맷다
+
+##### Accept-Language
+
+`Accept-Language: ko-kr, en-us;q=0.7,en;q=o.3`
+
+유저 에이전트가 처리할 수 있는 자연어 세트와 세트의 우선순위를 전달한다.
+
+자연어 세트는 ㅎ나번에 여러개를 지정할 수 있으며, 품질지수에 의해 상대적인 우선순위를 나타낸다.
+
+##### Authorization
+
+`Authorization: Basic dWVUB3NIbjpwYXNzd29yZA==`
+
+유저 에이전트의 인증 정보(크리덴셜 값)를 전달하기 위해 사용됨.
+
+##### Expect
+
+`Expect: 100-continue`
+
+클라이언트가 서버에 특정 동작 요구를 전달한다.
+기대하고 있는 요구에 서버가 응답하지 못하는 경우 417 Expectation Failed를 반환한다.
+
+##### From
+
+`From: info@hackr.jp`
+
+유저 에이전트를 사용하고 있는 유저의 메일 주소를 전달한다.
+
+##### Host
+
+`Host: www.google.com`
+
+리퀘스트한 리소스의 인터넷 호스트와 포트번호를 전달한다.
+1대의 서버에 복수도메인 할당이 가능하므로, Host 헤더 필드는 HTTP/1.1에서 유일한 필수 헤더이다.
+
+##### If-Match
+
+`If-Match: "etag"`
+
+조건부 리퀘스트의 하나로 서버 상의 리소스를 특정하기 위해서 엔티티 태그(ETag) 값을 전달한다.
+
+서버는 If-Match 필드 값과 리소스 ETag 값이 일치하는 경우에만 리퀘스트를 받아들인다.
+만약 일치하지 않는경우 상태코드 412 Precondition Failed를 반환한다.
+
+If-Match 필드값으로 `*`를 지정하면 ETag 값과 상관없이 리소스가 존재하면 리퀘스트를 처리한다.
+
+##### If-None-Match
+
+조건부 리퀘스트의 하나로 If-Match와 반대로 동작한다.
+
+GET과 HEAD 메소드에서 If-None-Match 헤더 필드를 사용하면 최신 리소스를 요구하는 것이 되므로
+If-Modified-Since 헤더 필드를 사용하는 것과 비슷해진다.
+
+##### If-Modified-Since
+
+`If-Modified-Since: Thu, 15 Apr 2004 00:00:00 GMT`
+
+조건부 리퀘스트의 하나로 리소스 갱신날짜가 필드값 시점보다 최신인경우 리퀘스트를 받아들인다.
+리소스가 outdated인 경우 상태코드 304 Not Modified 리스폰스를 반환한다.
+
+##### If-Unmodified-Since
+
+If-Modified-Since 헤더 필드와 반대로 동작한다.
+
+지정된 리소스가 필드 값 시점 이전에 갱신된 리퀘스트만 받는다.
+
+##### If-Range
+
+조건부 리퀘스트의 하나로 If-Range로 지정한 필드값(ETag or 날짜)과 지정 리소스의 Etag or 날짜가 일치하면 Range 리퀘스트로 처리한다.
+일치하지 않는 경우 리소스 전체를 반환한다.
+
+만약 서버의 리소스가 갱신되어 있는 경우, If-Range 헤더 필드를 사용하지 않은 Range 리퀘스트라면 무효한 요청이되어
+상태코드 412 Precondition Failed를 반환하고 클라이언트에게 다시 리퀘스트를 요청하게 된다.
+
+If-Range를 사용하는경우 갱신된 리소스의 경우 전체를 반환하므로 통신과정이 줄어들게 된다.
+
+##### Max-Forwards
+
+`Max-Forwards: 10`
+
+TRACE 혹은 OPTIONS 메소드에 의해 리퀘스트를 할 때 거쳐갈 최대 서버 수를 10진 정수로 지정한다.
+
+따라서 서버는 다음 서버에 리퀘스트를 전송할 때 Max-Forwards 갑셍서 1을 빼서 보내고,
+값이 0인 리퀘스트를 받은 경우 리스폰스를 반환한다.
+
+##### Proxy-Authorization
+
+`Proxy-Authorization: Basic dGIwOjkpNLAGfFY5`
+
+프록시 서버에서 인증요구를 받아들인 때 인증에 필요한 클라이언트의 정보를 전달한다.
+
+클라이언트와 서버의 경우에 사용되는 Authorization 헤더 필드의 역할이 클라이언트와 프록시 사이에서 이루저이는 것이다.
+
+##### Range
+
+`Range: bytes=5001-10000`
+
+리소스의 일부분만 취득하는 Range 리퀘스트를 할 때 지정 범위를 전달한다.
+
+서버가 Range 헤더필드가 있는 리퀘스트를 처리할 수 있는 경우에는 상태코드 206 Partial Content 리스폰스를 반환하고,
+처리할 수 없는 경우 상태코드 200 OK 리스폰스와 함께 리소스 전체를 반환한다.
+
+##### Referer
+
+리퀘스트가 발생한 본래 리소스의 URI를 전달한다.
+브라우저 주소창에 직접 URI를 입력한 경우 전달되지 않는다.
+
+리소스의 URI 쿼리에 민감정보가 포함되어 있는경우 Referer를 통해 해당 정보가 보내질 수 있다.
+
+##### TE
+
+`TE; gzip, deflate;q=0.5`
+
+리스폰스로 받을 수 있는 전송 코딩의 형식과 우선순위를 전달한다.
+
+Accept-Encoding 헤더 필드와 유사하지만, 전송 코딩에 적용된다는 점이 다르다.
+
+TE 헤더 필드는 전송 코딩의 지정 외에 Trailer를 동반하는 Chunk 전송 인코딩 형식을 지정할 수 있다.
+이 경우 `TE; Trailers`와 같이 표기한다.
+
+##### User-Agent
+
+`User-Agent:Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.19 (KHTML,like Gecko) Chrome/18.0.1025.162 Safari/535.195)`
+
+리퀘스트를 생성한 브라우저와 유저 에이전트의 정보를 전달하기위한 필드이다.
+
+로봇의 리퀘스트는 로봇 엔진의 책임자 메일주소가 들어있기도 하다.
+또는 프록시를 경유한 리퀘스트의 경우 프록시 서버의 이름등이 표시되어 있기도 하다.
 
 #### Response Header Fields
 
