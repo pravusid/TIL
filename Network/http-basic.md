@@ -803,15 +803,93 @@ TE 헤더 필드는 전송 코딩의 지정 외에 Trailer를 동반하는 Chunk
 
 #### Response Header Fields
 
-- Accept-Ranges: 바이트 단위의 요구를 수신할 수 있는지 여부
-- Age: 리소스의 지정 경과 시간
-- Etag: 리소스를 특정하기 위한 정보
-- Location: 클라이언트를 지정한 URI에 리다이렉트
-- Proxy-Authenticate: 프록시 서버의 클라이언트 인증을 위한 정보
-- Retry-After: 리퀘스트 재시행의 타이밍 요구
-- Server: HTTP 서버 정보
-- Vary: 프록시 서버에 대한 캐시 관리 정보
-- WWW-Authenticate: 서버의 클라이언트 인증을 위한 정보
+서버 측으로부터 클라이언트 측으로 송신되는 리스폰스 메시지에 적용된 헤더로
+리스폰스의 부가정보나 서버의 정보, 클라이언트에 부가정보 요구등을 나타냄
+
+##### Accept-Ranges
+
+`Accept-Range: bytes`
+
+서버가 리소스의 일부분만 지정해서 취득할 수 있는 Range 리퀘스트를 받을 수 있는지 여부전달
+
+가능할 경우 `bytes`, 불가능할 경우 `none`
+
+##### Age
+
+`Age: 600`
+
+얼마나 오래 전에 오리진 서버에서 리스폰스가 생성되었는지 전달한다.
+
+리스폰스한 서버가 프록시 서버면 Age 헤더 필드는 필수 값이다
+
+##### ETag
+
+`ETag: "82e22293907ce725faf67773957acd12"`
+
+엔티티 태그라고 불리며 리소스를 특정하기 위한 문자열을 전달한다.
+서버는 리소스마다 ETag 값을 할당한다.
+
+리소스가 갱신되는 경우 ETag 값도 갱싱되어야 할 필요가 있다.
+ETag 값은 룰이 있지는 않고 서버에 따라 다양한 값을 할당한다.
+
+URI만으로 캐시했던 리소스를 특정하기 어려운 경우 ETag를 참조해서 리소스를 특정할 수 있다.
+
+- 강한 ETag 값
+  - 엔티티가 아주 조금 다르더라도 반드시 값이 변함
+  - `ETag: "Usagi-1234'`
+- 약한 ETag 값
+  - 약한 ETag 값은 리소스가 같다는 것만 나타냄
+  - `ETag: W/"usagi-1234"`
+
+##### Location
+
+`Location: http://www.usagidesign.jp/sample.html`
+
+리스폰스의 수신자에 대해서 Request-URI 이외의 리소스 액세스를 유도하는 경우 사용됨
+
+기본적으로 3xx Redirection 리스폰스에 대해서 리다이렉트 URI를 기술함
+
+##### Proxy-Authenticate
+
+`Proxy-Authenticate: Basic realm="Usagidesign Auth"`
+
+프록시 서버의 인증요구를 클라이언트에 전달한다.
+클라이언트와 서버의 경우 WWW-Authorization 필드와 같은역할을 한다.
+
+##### Retry-After
+
+`Retry-After: 120`
+
+클라이언트가 일정 시간 후에 리퀘스트를 다시 시행해야 하는지를 전달함
+주로 상태코드 503 Service Unavailable, 3xx Redirect 리스폰스와 함께 사용된다
+
+값으로는 날짜나 리스폰스 이후 지연시간(seconds)을 지정할 수 있다.
+
+##### Server
+
+`Server: Apache/2.2.17(Unix)`
+
+서버에 설치되어 있는 HTTP 서버 소프트웨어를 전달함
+
+##### Vary
+
+`Vary: Accept-Language`
+
+오리진 서버가 프록시 서버에 로컬 캐시를 사용하는 방법에 대한 지시를 전달함
+
+오리진 서버로부터 Vary에 지정되었던 리스폰스를 받아들인 프록시 서버는
+캐시된 때의 리퀘스트와 같은 Vary 헤더필드를 가진 리퀘스트에 대해서만 캐시를 반환한다.
+
+리퀘스트에 Vary에 지정된 헤더 필드가 다른경우, 오리진 서버로 부터 리소스를 취득해야 한다.
+
+##### WWW-Authenticate: 서버의 클라이언트 인증을 위한 정보
+
+`WWW-Authenticate: Basic realm="Usagidesign Auth"`
+
+HTTP 액세스 인증에 사용되고, Request-URI의 리소스에 적용할 수 있는
+인증 스키마 (Basic / Digest)와 파라미터를 나타내는 challenge를 전달한다.
+
+WWW-Authenticate 헤더필드는 상태코드 401 Unauthorized 리스폰스에 반드시 포함된다.
 
 #### Entity Header Fields
 
