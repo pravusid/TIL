@@ -503,6 +503,32 @@ HTTP 헤더 필드: `헤더필드명:헤더필드값`
 - Response Header Fields: 서버에서 클라이언트 방향, 리스폰스 정보와 서버 정보, 클라이언트의 추가 정보 요구 등...
 - Entity Header Fields: 리퀘스트/리스폰스 메시지에 포함된 엔티티에 사용되는 헤더로 콘텐츠 갱신 시간 등에 관한 정보를 부가
 
+#### E2E 헤더와 Hop-by-hop 헤더
+
+HTTP 헤더 필드는 캐시와 비캐시 프록시의 동작을 정의하기 위해서 두 가지 카테고리로 분류되어 있다.
+
+##### E2E 헤더
+
+E2E 분류 헤더는 리퀘스트나 리스폰스의 최종 수신자에게 전송된다.
+
+##### Hop-by-hop 헤더
+
+이 카테고리의 헤더는 한 번 전송에 대해서만 유효하고 캐시와 프록시에를 통하면 전송되지 않는 것도 있다.
+
+사용되는 Hop-by-hop 헤더는 Connection 헤더 필드에 열거해야 한다.
+
+HTTP/1.1의 Hop-by-hop 헤더에는 다음과 같은 것이 있다.
+다음 8개의 헤더필드 이외에는 모두 E2E 헤더로 분류된다.
+
+- Connection
+- Keep-Alive
+- Proxy-Authenticate
+- Proxy-Authorization
+- Trailer
+- TE
+- Transfer-Encoding
+- Upgrade
+
 #### General Header Fields
 
 ##### Cache-Control
@@ -893,47 +919,185 @@ WWW-Authenticate 헤더필드는 상태코드 401 Unauthorized 리스폰스에 �
 
 #### Entity Header Fields
 
-- Allow: 리소스가 제공하는 HTTP 메소드
-- Content-Encoding: 엔티티 바디에 적용되는 콘텐츠 인코딩
-- Content-Language: 엔티티의 자연어
-- Content-Length: 엔티티 바디의 사이즈(byte)
-- Content-Location: 리소스에 대응하는 대체 URI
-- Content-MD5: 엔티티 바디의 메시지 다이제스트
-- Content-Range: 엔티티 바디의 범위 위치
-- Content-Type: 엔티티 바디의 미디어 타입
-- Expires: 엔티티 바디의 유효기한 날짜
-- Last-Modified: 리소스의 최종 갱신 날짜
+##### Allow
 
-#### HTTP/1.1 이외의 헤더필드
+`Allow: GET, HEAD`
 
-HTTP 헤더 필드는 RFC2616에 정의된 47종류만 있는 것은 아니다.
+Request-URI에 지정된 리소스가 제공하는 메소드의 목록
 
-Set-Cookie, Content-Disposition ...
+서버가 받을 수 없는 메소드를 수신한 경우에는 상태코드 405 Method Not Allowed 리스폰스와 함께
+수신가능한 메소드 목록을 기술한 Allow 헤더필드를 반환한다.
 
-비표준 헤더필드는 RFC4229 HTTP Header Field Registrations에 정리되어 있다
+##### Content-Encoding
 
-#### E2E 헤더와 Hop-by-hop 헤더
+`Content-Encoding: gzip`
 
-HTTP 헤더 필드는 캐시와 비캐시 프록시의 동작을 정의하기 위해서 두 가지 카테고리로 분류되어 있다.
+엔티티 바디의 콘텐츠 코딩형식을 전달한다.
 
-##### E2E 헤더
+주로 4가지 콘텐츠 코딩 형식이 사용된다. (Accept-Encoding 헤더 필드 항목과 동일)
 
-E2E 분류 헤더는 리퀘스트나 리스폰스의 최종 수신자에게 전송된다.
+- Gzip
+- Compress
+- Deflate
+- Identity
 
-##### Hop-by-hop 헤더
+##### Content-Language
 
-이 카테고리의 헤더는 한 번 전송에 대해서만 유효하고 캐시와 프록시에를 통하면 전송되지 않는 것도 있다.
+`Content-Language: en`
 
-사용되는 Hop-by-hop 헤더는 Connection 헤더 필드에 열거해야 한다.
+엔티티 바디에 사용된 자연어를 전달함
 
-HTTP/1.1의 Hop-by-hop 헤더에는 다음과 같은 것이 있다.
-다음 8개의 헤더필드 이외에는 모두 E2E 헤더로 분류된다.
+##### Content-Length
 
-- Connection
-- Keep-Alive
-- Proxy-Authenticate
-- Proxy-Authorization
-- Trailer
-- TE
-- Transfer-Encoding
-- Upgrade
+`Content-Length: 15000`
+
+엔티티 바디의 크기(bytes)를 전달한다.
+
+엔티티 바디에 전송 코딩이 사용된 경우 Content-Length 필드를 사용하면 안된다. (RFC2616 4.4)
+
+##### Content-Location
+
+`Content-Location: http://pravusid.kr/index.html`
+
+메시지 바디에 대응하는 URI를 전달함
+
+Location이 리다이렉션의 대상(혹은 새롭게 만들어진 문서의 URL)을 가르키는데 반해,
+Content-Location은 더 이상의 컨텐츠 협상없이, 리소스 접근에 필요한 직접적인 URL을 지시함.
+
+##### Content-MD5
+
+`Content-MD5: OGFkZDUwNGVhNGY3N2MxMDIwZmQ4NTBmY2IyTY==`
+
+메시지 바디가 변경되지 않고 도착했는지 확인하기 위해 MD5 해시값을 Base64 인코딩하여 전달한다.
+
+리퀘스트시 콘텐츠와 함께 MD5 해시값도 변조하여 보내는 것도 가능하므로 서버측에서 원래 의도한 데이터인지 여부와는 관계없다.
+
+##### Content-Range
+
+`Content-Range: bytes 5001-10000/10000`
+
+범위를 지정해서 일부분만을 리퀘스트하는 Range 리퀘스트에 대해서 리스폰스 할 때 사용된다.
+
+필드 값은 반환하는 엔티티 범위와 전체사이즈이다.
+
+##### Content-Type
+
+`Content-Type: text/html; charset=UTF-8`
+
+엔티티 바디에 포함되는 오브젝트의 미디어 타입을 전달한다. 필드 값은 타입/서브타입으로 구성된다.
+
+##### Expires
+
+`Expires: Wed, 04 Jul 2012 08:26:05 GMT`
+
+리소스의 유효 기한 날짜를 전달한다.
+
+캐시 서버가 Expires 헤더필드를 포함한 리소스를 수신한 경우 필드 값으로 지정된 날짜까지 리스폰스의 복사본으로 리퀘스트에 응답한다.
+지정된 날짜가 지나면 리퀘스트가 왔을 때 오리진 서버에 리소스를 요청한다.
+
+`Cache-Control` 헤더필드의 `max-age` 디렉티브는 `Expires` 헤더필드보다 우선순위가 높다.
+
+##### Last-Modified
+
+`Last-Modified: Wed, 23 May 2012 09:59:55 GMT`
+
+리소스가 마지막으로 갱신되었던 날짜 정보를 전달한다.
+
+#### 쿠키를 위한 헤더 필드
+
+쿠키는 HTTP/1.1의 사양인 RFC2616에 포함된 것은 아니지만 널리 사용되고 있다.
+
+현재 사용되는 쿠기의 사양은 RFC6256이다.
+쿠키에 관련한 헤더필드는 다음의 것이 사용되고 있다.
+
+- Set-Cookie: 리스폰스: 상태 관리 개시를 위한 쿠키 정보
+- Cookie: 리퀘스트: 서버에서 수신한 쿠키 정보
+
+##### Set-Cookie
+
+`Set-Cookie: status-enable; expires=Tue, 05 Jul 2011 07:26:31 GMT; =>path=/;domain=.hack.jp;`
+
+서버가 클라이언트에 대해서 상태 관리를 시작할 때 정보를 전달한다.
+
+- NAME=VALUE
+  - 쿠키에 부여된 이름과 값
+
+- Expires=DATE
+  - 브라우저가 쿠키를 송출할 수 있는 유효기한
+  - 값이 없으면 세션이 유지되고 있는 동안만 유효함
+  - 한번 송출한 클라이언트 쿠키를 명시적으로 삭제하는 방법은 없고, 덮어쓰는 것으로 실질적으로 삭제가능
+
+- Path=PATH
+  - 쿠키 송출 범위를 특정 디렉토리(도메인의)에 한정할 수 있다
+
+- Domain=도메인명
+  - domain을 지정하고 값을 비교할 때 후방 일치여부를 확인함
+
+- Secure
+  - `Set-Cookie: name=value; secure`
+  - HTTPS에서 열렸을 때만 쿠키를 송출함
+
+- HttpOnly
+  - `Set-Cookie: name=value; HttpOnly`
+  - 자바스크립트를 경유하여 쿠키를 취득하지 못하도록 함
+  - XSS로부터 쿠키 도청을 막기 위함이 목적이다
+
+##### Cookie
+
+`Cookie: status=enable`
+
+클라이언트가 서버로부터 수신한 쿠키를 이후의 리퀘스트에 포함해서 전달함
+
+쿠키를 여러개 수신하고 있다면, 여러개의 쿠키를 보내는 것도 가능하다.
+
+### 이외의 헤더 필드
+
+HTTP 헤더 필드는 독자적으로 확장할 수 있다.
+여러곳에서 지원하는 확장 헤더 필드들은 다음과 같다.
+
+#### X-frame-Option
+
+`X-Frame-Option: DENY`
+
+다른 웹 사이트의 프레임에서 표시를 제어하는 리스폰스 헤더로, Click jacking 공격 방지를 목적으로 한다.
+
+필드값으로 설정할 수 있는 값은 다음과 같다
+
+- DENY: 거부
+- SAMEORIGIN: Top-level-browsing-context가 일치하는 경우에만 허가
+
+#### X-XSS-Protection
+
+`X-XSS-Protection: 1`
+
+크로스 사이트 스크립팅(XSS) 대책으로 브라우저의 XSS 보호기능을 제어하는 리스폰스 헤더이다
+
+헤더 필드에 지정할 수 있는 값은 다음과 같다
+
+- 0: XSS 필터를 무효화
+- 1: XSS 필터를 유효화
+
+#### DNT
+
+`DNT: 1`
+
+Do Not Track의 약어로 개인정보 수집을 거부하는 의사를 표시하는 리퀘스트 헤더이다.
+
+헤더 필드에 지정할 수 있는 값은 다음과 같다
+
+- 0: 트래킹 동의
+- 1: 트래킹 거부
+
+#### P3P
+
+`P3P: CP="CAO DSP LAW CURa ADMa DEVa TAIa PSAa PSDa IVAa IVDa OUR BUS IND UNI COM NAV INT"`
+
+웹사이트 상의 프라이버시 정책에 The Platform for Privacy Preferences를 사용하기 위한 리스폰스 헤더이다.
+
+P3P 정책은 다음 순서로 실행된다
+
+1. P3P 정책 작성
+2. P3P 정책 참조 파일을 작성하여 `/w3c/p3p.xml`에 배치
+3. P3P 정책으로부터 콤팩트 정책을 작성하고 HTTP 리스폰스 헤더에 출력
+
+## HTTPS 프로토콜
