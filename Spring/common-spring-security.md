@@ -286,7 +286,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
-특정 요청 (token 발급)에서 OPTIONS method가 막히는 경우 서블릿 필터에서 OPTIONS 처리 등록
+위의 처리로 Simple Request만 통과 가능한 경우 서블릿 필터에서 HTTP Origin, Method 처리 등록
 
 ```java
 @Component
@@ -302,7 +302,7 @@ public class CustomCorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         HttpServletRequest request = (HttpServletRequest) req;
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        response.setHeader("Access-Control-Allow-Methods", "OPTIONS");
+        response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",
                 "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
