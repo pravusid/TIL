@@ -1149,3 +1149,110 @@ HTTP는 리퀘스트나 리스폰스가 발신된 후 상대가 수신하는 사
 
 HTTPS는 새로운 애플리케이션 계층의 프로토콜이 아니다.
 HTTP 통신을 하는 소켓 부분을 SSL(Secure Socket Layer)이나 TLS(Transport Layer Security) 프로토콜로 대체한 것이다.
+
+보통 HTTP는 직접 TCP와 통신하지만 SSL을 사용한 경우에는 HTTP는 SSL과 통신하고 SSL이 TCP와 통신하게 된다.
+
+HTTPS는 공통키 암호화 공개키 암호 두 방식을 동시에 사용하여 암호화 한다.
+공통키 암호는 안전하게 키를 교환하기 어렵고, 공개키 암호는 처리속도가 느리기 때문이다.
+
+따라서 공통키 암호의 키를 교환할 때 공개키 암호화를 사용하고 이후로는 공통키 암호화 방식을 사용한다.
+
+문제는 공개키가 진짜인지 아닌지를 증명할 필요도 있다는 것이다.
+이 문제 해결을 위해 인증 기관(Certificate Authority)과 그 기관이 발행하는 공개키 증명서가 이용된다.
+
+인증 기관은 클라이언트와 서버 모두가 신뢰하는 3자 기관이다.
+
+인증 기관을 경유한 암호키 교환 순서는 다음과 같다
+
+1. 서버의 공개키를 인증기관에 등록
+2. 인증기관의 비밀키로 서버의 공개키에 디지털 서명으로 공개키 증명서를 작성 등록
+3. 서버의 공개키 증명서를 입수하고 디지털 서명을 인증기관의 공개키로 검증한다
+4. 서버의 공개키로 암호화 해서 메시지를 서버로 보낸다
+5. 서버의 비밀키로 메시지를 복호화 한다
+
+> 주요 인증기관의 공개키는 사전에 브라우저에 내장되어 있다
+
+#### EV SSL 증명서
+
+상대방이 실제 존재하는 기업인지 확인하는 역할을 하는 증명서를 EV SSL 증명서라 한다.
+EV SSL 증명서로 증명된 웹사이트에 접속하면 주소창의 색이 녹색으로 변하는 것을 확인할 수 있다.
+
+#### 클라이언트 증명서
+
+HTTPS에서는 클라이언트 증명서도 이용할 수 있다.
+
+그러나 클라이언트 증명서는 몇 가지 문제점이 있다.
+
+- 유저가 클라이언트 증명서를 직접 구비해야 한다
+- 유저 수 만큼 비용이 들게된다
+- 클라이언트를 증명할 뿐 사용자의 존재를 증명하지는 않는다
+
+#### 자가 인증기관
+
+OpenSSL등을 활용하면 자체적으로 인증 기관을 구축하여 서버 증명서를 발행할 수 있다.
+그러나 신뢰할 수 있는 제3자 기관이 인증하는 것이 아닌이상 증명서로 구실을 하지 못할 수 있다.
+
+마찬가지로 메이저 인증기관이 아닌 마이너 인증기관을 이용한다면 브라우저에 따라 인증서 신뢰성 인식에 문제가 발생할 수 있다.
+
+### HTTPS 구조
+
+1. (C→S) Handshake: ClientHello
+    - 클라이언트가 Client Hello 메시지를 보내며 SSL 통신시작
+    - 메시지에는 클라이언트 SSL 버전지정, Cipher Suite(사용하는 암호화의 알고리즘, 키 사이즈 등)
+
+2. (C←S) Hansshake: ServerHello
+    - 서버가 SSL 통신이 가능한 경우 Server Hello 메시지로 응답
+    - 메시지에는 SSL 버전, Cipher Suite 포함 (클라이언트에서 받은 내용에서 선택됨)
+
+3. (C←S) Handshake: Certificate
+    - 서버가 공개키 증명서가 포함된 Certificate 메시지를 송신
+
+4. (C←S) Handshake: ServerHelloDone
+    - 서버가 Server Hello Done 메시지를 송신하여 최초 SSL negotiation이 끝났음을 통지함
+
+5. (C→S) Handshake: ClientKeyExchange
+    - 최초 SSL negotiation이 종료되면 클라이언트가 Client Key Exchange 메시지로 응답
+    - 메시지에는 통신을 암호화하는데 사용하는 Pre-Master secret 포함
+    - 메시지는 `3`의 공개키 증명서에서 추출한 공개키로 암호화 됨
+
+6. (C→S) ChangeCipherSpec
+    - 클라이언트는 Change Cipher Spec 메시지를 송신함
+    - 메시지 이후의 통신은 암호키를 사용하여 진행한다는 것을 표현하는 것
+
+7. (C→S) Handshake: Finished
+    - 클라이언트는 Finished 메시지를 송신함
+    - 메시지는 접속 전체의 체크 값을 포함함
+    - Negotiation이 성공했다면 서버가 이 메시지를 복호화 할 수 있다
+
+8. (C←S) ChangeCipherSpec
+    - 서버에서도 Change Cipher Spec 메시지를 송신함
+
+9. (C←S) Handshake: Finished
+    - 서버에서도 Finished 메시지를 송신함
+
+10. (C→S) Application Data (HTTP)
+    - 서버와 클라이언트의 Finished 메시지 교환이 완료되면 SSL 접속이 완료됨
+    - 이후로는 애플리케이션 계층의 프로토콜(HTTP)로 통신(HTTP 리퀘스트 송신)
+
+11. (C←S) Application Data (HTTP)
+    - HTTP 리스폰스를 송신
+
+12. (C→S) Alert: warning, close notify
+    - 클라이언트가 접속을 끊으면 close notify 메시지를 송신함
+    - 이후 TCP FIN 메시지를 보내 TCP 통신을 종료함
+
+> 애플리케이션 계층의 데이터를 송신할 때 MAC(Message Authentication Code)라 불리는 메시지 다이제스트를 덧붙일 수 있다. MAC을 이용해 변조를 감지할 수 있다.
+
+#### SSL과 TLS
+
+SSL은 넷스케이프의 프로토콜로 현재는 IETF로 이관되었다.
+SSL3.0을 기반으로하여 TLS1.0이 만들어졌고 현재 TLS1.1 TLS1.2 TLS1.3이 있다.
+
+TLS는 SSL을 바탕으로 한 프로토콜이고 이를 총칭해서 SSL이라 부르기도 한다.
+
+### HTTPS의 속도
+
+HTTPS를 사용하게 되면 TCP 접속과 HTTP 리퀘스트/리스폰스외에도 SSL에 필요한 통신이 추가된다.
+또한 암호화 처리를 위해서 서버와 클라이언트의 리소스를 사용하게된다.
+
+SSL 엑셀레이터라는 하드웨어를 사용해서 이 문제를 해결하기도 한다.
