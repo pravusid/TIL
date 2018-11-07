@@ -18,13 +18,12 @@
 
 ## Component
 
-- [vue-pagination-2](https://github.com/matfish2/vue-pagination-2)
 - [vue-notification](https://github.com/euvl/vue-notification)
 - [vue-toasted](https://github.com/shakee93/vue-toasted)
 - [vue-wait: loader](https://github.com/f/vue-wait)
 - [vue-progressbar](https://github.com/hilongjw/vue-progressbar)
 - [vue-js-modal](https://github.com/euvl/vue-js-modal)
-- [vue-mugen-scroll: infinite scroll](https://github.com/egoist/vue-mugen-scroll)
+- [vue-infinite-loading](https://github.com/PeachScript/vue-infinite-loading)
 - [vue-scrollto](https://github.com/rigor789/vue-scrollTo)
 - [vue-chat-scroll](https://github.com/theomessin/vue-chat-scroll)
 
