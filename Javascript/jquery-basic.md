@@ -8,6 +8,10 @@
 - Class
 - 내장객체
 
+제이쿼리의 선택자는 엘리먼트셋을 반환한다. 따라서 결과값이 하나인 경우 0번째 배열 인자를 선택하여 사용할 수도 있다.
+
+`$(this)[0] === this`, `$("#myDiv")[0] === document.getElementById("myDiv")`
+
 ## Events
 
 Mouse Events | Keyboard Events | Form Events | Document/Window Events
