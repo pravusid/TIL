@@ -248,7 +248,9 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
-                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
+                        // 인증정보 withCredentials: true를 위해서는 origin을 특정해야함 (모두허용: * 안됨)
+                        .allowCredentials(false);
             }
         };
     }
@@ -277,7 +279,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
+        // 인증정보 withCredentials: true를 위해서는 origin을 특정해야함 (모두허용: * 안됨)
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -299,14 +302,17 @@ public class CustomCorsFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) resp;
         HttpServletRequest request = (HttpServletRequest) req;
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        HttpServletResponse response = (HttpServletResponse) resp;
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers",
-                "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader(
+                "Access-Control-Allow-Headers",
+                "X-Requested-With, Content-Type, Authorization, X-XSRF-TOKEN"
+        );
+        // 인증정보 withCredentials: true를 위해서는 origin을 특정해야함 (모두허용: * 안됨)
+        response.setHeader("Access-Control-Allow-Credentials", "false");
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
