@@ -34,11 +34,13 @@ classes 속성 : `@Configuration`이 선언된 설정파일의 `@Bean`으로 생
 기존에 Configuration을 커스터마이징 하려면 TestConfiguration 기능을 사용함.
 TestConfiguration은 ComponentScan 과정에서 생성되고, TestConfig이 속한 테스트가 실행될때 정의된 빈을 생성하여 등록한다.
 
-ComponentScan 과정에서 생성되므로 `@SpringBootTest`의 classes 속성을 이용하여 특정 클래스만을 지정했을 경우에는 TestConfiguation은 감지되지 않는다. 그런 경우 `@Import` 어노테이션을 통해서 직접 사용할 TestConfiguration을 명시함.
+ComponentScan 과정에서 생성되므로 `@SpringBootTest`의 classes 속성을 이용하여 특정 클래스만을 지정했을 경우에는 TestConfiguation은 감지되지 않는다.
+그런 경우 `@Import` 어노테이션을 통해서 직접 사용할 TestConfiguration을 명시함.
 
 ### MockBean
 
-기존에 방식대로 Mock 객체를 생성해서 테스트하는 방법도 있지만, `@MockBean` 어노테이션을 사용해서 Mock 객체를 빈으로써 등록할 수 있다. `@MockBean`으로 bean을 주입받는다면 (@Autowired 같은 어노테이션 등을 통해서) ApplicationContext는 Mock 객체를 주입해준다.
+기존에 방식대로 Mock 객체를 생성해서 테스트하는 방법도 있지만, `@MockBean` 어노테이션을 사용해서 Mock 객체를 빈으로써 등록할 수 있다.
+`@MockBean`으로 bean을 주입받는다면 (@Autowired 같은 어노테이션 등을 통해서) ApplicationContext는 Mock 객체를 주입해준다.
 
 만약 @MockBean으로 선언한 객체와 같은 이름과 타입의 bean이 등록되어있다면 해당 빈은 새로운 Mock bean으로 대체된다.
 
@@ -60,9 +62,11 @@ public class FooTest {
 
 ### TestRestTemplate
 
-MockMvc는 Servlet Container를 생성하지 않는 반면, TestRestTemplate은 Servlet Container를 사용해서 실제 서버가 동작하는 것처럼 테스트를 수행할 수 있다.
+MockMvc는 Servlet Container를 생성하지 않는 반면,
+TestRestTemplate은 Servlet Container를 사용해서 실제 서버가 동작하는 것처럼 테스트를 수행할 수 있다.
 
-MockMvc는 서버 입장에서 구현한 API를 통해 비즈니스 로직이 문제없이 수행되는지 테스트를 할 수 있다면, TestRestTemplate은 클라이언트 입장에서 RestTemplate을 사용하듯이 테스트를 수행한다.
+MockMvc는 서버 입장에서 구현한 API를 통해 비즈니스 로직이 문제없이 수행되는지 테스트를 할 수 있다면,
+TestRestTemplate은 클라이언트 입장에서 RestTemplate을 사용하듯이 테스트를 수행한다.
 
 ```java
 @RunWith(SpringRunner.class)
@@ -158,3 +162,93 @@ JDBC테스트에 이용하며 `JdbcTemplate`을 사용한다.
 `@Entity`가 아닌 `@Document`를 스캔하며 MongoTemplate을 사용한다.
 
 in-memory db를 사용하지 않으려면 `@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)` 옵션을 이용한다.
+
+## AssertJ
+
+static import: `import static org.assertj.core.api.Assertions.*;`
+
+단언문 시작: `assertThat(objectUnderTest)`
+
+### 조건문
+
+#### is / isNot
+
+```java
+assertThat("Yoda").is(jedi);
+assertThat("Vader").isNot(jedi);
+
+try {
+  // condition not verified to show the clean error message
+  assertThat("Vader").is(jedi);
+} catch (AssertionError e) {
+  assertThat(e).hasMessage("expecting:<'Vader'> to be:<jedi>");
+}
+```
+
+#### has/doesNotHave
+
+```java
+assertThat("Yoda").has(jediPower);
+assertThat("Solo").doesNotHave(jediPower);
+
+try {
+  // condition not verified to show the clean error message
+  assertThat("Vader").has(jediPower);
+} catch (AssertionError e) {
+  assertThat(e).hasMessage("expecting:<'Vader'> to have:<jedi power>");
+}
+```
+
+#### 컬렉션객체(iterable/array)에 대한 검증
+
+```java
+// import static org.assertj.util.Sets.newLinkedHashSet;
+assertThat(newLinkedHashSet("Luke", "Yoda")).are(jedi);
+assertThat(newLinkedHashSet("Leia", "Solo")).areNot(jedi);
+
+assertThat(newLinkedHashSet("Luke", "Yoda")).have(jediPower);
+assertThat(newLinkedHashSet("Leia", "Solo")).doNotHave(jediPower);
+
+assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).areAtLeast(2, jedi);
+assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).haveAtLeast(2, jediPower);
+
+assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).areAtMost(2, jedi);
+assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).haveAtMost(2, jediPower);
+
+assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).areExactly(2, jedi);
+assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).haveExactly(2, jediPower);
+```
+
+#### 조건 결합
+
+- AND 조건: allOf(Condition...)
+- OR 조건: anyOf(Condition...)
+
+메소드로 결합할 수 있다
+
+```java
+assertThat("Vader").is(anyOf(jedi, sith));
+assertThat("Solo").is(allOf(not(jedi), not(sith)));
+
+static Set<String> SITHS = newHashSet("Sidious", "Vader", "Plagueis");
+Condition<String> sith = new Condition<>(SITHS::contains, "sith"); 
+```
+
+## Mockito
+
+### stub, mock, spy
+
+- Mock은 특정 행위에 대한 반환값을 정의하여 요청이 왔을 때 이를 재현한다
+- Spy는 실제 객체를 감싼 객체이며 해당 객체에 요청/반환된 내용을 알아낼 때 사용된다
+
+### 사용
+
+- mock()/@Mock: Mock을 생성한다
+  - `@Mock` 애노테이션의 경우 `MockitoAnnotations.initMocks(this);`를 실행해서 인스턴스를 생성한다
+  - `when()`/`given()` 메소드는 Mock의 행위를 지정한다
+
+- spy()/@Spy: 메소드호출에 대한 정보를 얻는데 사용되는 Spy 생성
+
+- @InjectMocks: 의존성을 주입받을 (이미 생성된 객체의 타입에 맞춰 DI) Mock 객체이다
+
+- verify(): 주어진 인자의 메소드 동작여부를 검증한다
