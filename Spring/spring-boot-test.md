@@ -169,7 +169,15 @@ static import: `import static org.assertj.core.api.Assertions.*;`
 
 단언문 시작: `assertThat(objectUnderTest)`
 
-### 조건문
+### 일반 조건문
+
+```java
+import static org.assertj.core.util.Sets.newLinkedHashSet;
+
+static Set<String> JEDIS = newLinkedHashSet("Luke", "Yoda", "Obiwan");
+
+Condition<String> jediPower = new Condition<>(JEDIS::contains, "jedi power");
+```
 
 #### is / isNot
 
@@ -199,6 +207,23 @@ try {
 }
 ```
 
+#### 조건 결합
+
+- AND 조건: allOf(Condition...)
+- OR 조건: anyOf(Condition...)
+
+메소드로 결합할 수 있다
+
+```java
+assertThat("Vader").is(anyOf(jedi, sith));
+assertThat("Solo").is(allOf(not(jedi), not(sith)));
+
+static Set<String> SITHS = newHashSet("Sidious", "Vader", "Plagueis");
+Condition<String> sith = new Condition<>(SITHS::contains, "sith");
+```
+
+### Collection 검사
+
 #### 컬렉션객체(iterable/array)에 대한 검증
 
 ```java
@@ -219,19 +244,58 @@ assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).areExactly(2, jedi);
 assertThat(newLinkedHashSet("Luke", "Yoda", "Leia")).haveExactly(2, jediPower);
 ```
 
-#### 조건 결합
-
-- AND 조건: allOf(Condition...)
-- OR 조건: anyOf(Condition...)
-
-메소드로 결합할 수 있다
+#### 특정 요소 포함여부
 
 ```java
-assertThat("Vader").is(anyOf(jedi, sith));
-assertThat("Solo").is(allOf(not(jedi), not(sith)));
+assertThat(beasts).contains(direwolf);
+assertThat(beasts).contains(werewolf);
 
-static Set<String> SITHS = newHashSet("Sidious", "Vader", "Plagueis");
-Condition<String> sith = new Condition<>(SITHS::contains, "sith"); 
+// 위와 같다
+assertThat(beasts).contains(werewolf, direwolf);
+
+assertThat(beasts).doesNotContain(vampire);
+```
+
+#### 컬렉션 구성요소가 모두 같은가
+
+순서에 상관없이 요소가 모두 일치하는지 확인한다
+
+```java
+assertThat(beasts).containsExactlyInAnyOrder(direwolf, werewolf);
+assertThat(beasts).containsExactlyInAnyOrder(werewolf, direwolf);
+```
+
+컬렉션 요소의 순서까지 확인한다
+
+```java
+assertThat(beasts).containsExactly(direwolf, werewolf);
+```
+
+#### 컬렉션이 특정 요소로만 이루어져 있는가
+
+```java
+List<Monster> group = Lists.newArrayList(direwolf, direwolf, werewolf, werewolf, werewolf);
+
+assertThat(group).containsOnly(direwolf, werewolf);
+assertThat(group).containsOnly(werewolf, direwolf);
+```
+
+#### 컬렉션에 특정요소가 하나만 포함되어 있는가
+
+```java
+List<Monster> group = Lists.newArrayList(direwolf, direwolf, werewolf, vampire);
+
+assertThat(group).containsOnlyOnce(vampire);
+assertThat(group).containsOnlyOnce(werewolf);
+
+// 아래의 결과는 false이다
+assertThat(group).containsOnlyOnce(direwolf);
+```
+
+#### 컬렉션 요소들이 주어진 property를 가지고 있는가
+
+```java
+assertThat(beasts).extracting(Monster::getName).containsExactly("Direwolf", "Werewolf");
 ```
 
 ## Mockito
