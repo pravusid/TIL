@@ -82,9 +82,105 @@ delete foo.name;
 
 ## 제어문
 
-조건문 (if)
+### 조건문 (if, switch)
 
-반복문 (for, while)
+#### if문
+
+```js
+if (조건1) {
+  명령문1
+} else if (조건2) {
+  명령문2
+  ...
+} else {
+  기본명령
+}
+```
+
+#### switch문
+
+```js
+switch (expression) {
+  case value1:
+    //Statements executed when the result of expression matches value1
+    [break;]
+  case value2:
+    //Statements executed when the result of expression matches value2
+    [break;]
+  ...
+  case valueN:
+    //Statements executed when the result of expression matches valueN
+    [break;]
+  default:
+    //Statements executed when none of the values match the value of the expression
+    [break;]
+}
+```
+
+### 반복문 (for, while)
+
+#### 기본 for 반복문
+
+```js
+for (var i = 0; i < 10; i ++) {
+  console.log(i);
+}
+```
+
+#### forEach 반복문
+
+forEach 반복문은 Array 객체에서만 사용가능하다.(ES6의 Map, Set에서도 가능하다)
+배열내의 각 요소에 대해 콜백함수가 적용된다.
+
+```js
+var items = ['item1', 'item2', 'item3'];
+
+items.forEach(function(item) {
+  console.log(item);
+});
+```
+
+#### for-in 반복문
+
+for in 반복문은 배열이나 객체의 속성에 대상으로 반복한다
+객체의 key 값에 접근할 수 있지만, value에는 접근할 수 없다. (`객체[key]`로 접근)
+
+```js
+var obj = { a: 1, b: 2, c: 3 };
+
+for (var key in obj) {
+  console.log(obj[key]);
+}
+```
+
+#### for-of 반복문
+
+for of 반복문은 ES6에서 추가되었다.
+`[Symbol.iterator]` 속성과 `iterable` 인터페이스를 구현하고 있어야 한다
+
+```js
+var iterable = [10, 20, 30];
+
+for (var value of iterable) {
+  console.log(value); // 10, 20, 30
+}
+```
+
+#### do-while문
+
+```js
+do
+  // sth to do
+while (조건문);
+```
+
+#### while문
+
+```js
+while (조건문) {
+  // sth to do
+}
+```
 
 ## 함수 : 코드의 재사용
 
@@ -518,7 +614,7 @@ console.dir(String.prototype) // testMethod가 추가되어 있음
 이러한 특성을 활용하여 객체지향의 상속을 구현할 수 있다.
 
 생성자 함수의 프로토타입 객체가 변경되면 변경된 시점 이후에 생성된 객체들은
-변경된 프로토타입 객체로 [[Prototype]] ㄹ이크를 연결한다.
+변경된 프로토타입 객체로 [[Prototype]] 링크를 연결한다.
 
 생성자 함수의 프로토타입이 변경되기 이전에 생성된 객체들은 기존 프로토타입 객체로 [[Prototype]] 링크를 유지한다.
 
