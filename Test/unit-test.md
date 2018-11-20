@@ -86,7 +86,82 @@
 디버깅 전 실패하는 테스트케이스를 우선 작성해본다.
 기존에 작성한 테스트케이스에 문제가 있는지 확인을 할 필요가 있다.
 
-리팩토링 하기 전 코드를 깨보고 테스트케이스가 정상인지 확인해본다.
+리팩토링 하기 전 코드를 깨보고 테스트케이스가 정상인지 확인해본다. (mutation testing)
 제대로 작동하는 테스트케이스가 존재해야 리팩토링이 가능하기 때문이다.
 
 ## Mocking
+
+검증할 클래스가 외부 자원에 종속성이 있는 경우 외부 자원을 Mocking 하여 사용할 수 있다.
+
+코드의 유형에 따라 다양한 수준의 Mocking이 필요하다.
+I/O를 다루는 코드는 I/O 를 테스트하는 것 이외에 다른 방법은 거의 없다.
+
+Side-Effect가 없는 코드는(파이프와 순수 함수들로만 이루어진) 유닛 테스트 커버리지가 0%가 되어도 괜찮다.
+대신 통합 또는 기능 테스트 커버리지가 100 %에 가까워질 것입니다.
+그러나 Side-Effect(조건식, 변수 할당, 메소드 호출 등)이 있다면 유닛 테스트 커버리지가 필요하다.
+
+### Obvious abuses
+
+#### Using partial Mock
+
+Dependency를 Totally Real / Totally Fake 둘 중 하나가 안전하다.
+실제 의존객체와 Mock 객체를 섞어 쓰면 문제 발생가능성이 높다.
+
+#### Partially mocking out parts of your subject
+
+테스트되어야 할 부분을 테스트 더블 객체로 테스트하면 안된다
+
+큰 모듈이 있다고 할 때, 모듈 내부에서도 서로 의존하고 있는 코드가 다수 존재할 수 있고,
+이를 피해 테스트하기 위해 모듈 내부 부분을 Mocking 한다면 제대로 된 테스트 결과를 얻을 수 없다.
+
+#### Replacing some(not all) of your dependencies
+
+지나치게 많은 Mock 객체를 피하기 위해 일부를 실제 의존객체로 변경하면 테스트 케이스에 문제가 발생할 수 있다.
+
+얼마나 많이 Mocking을 하는지가 중요한게 아니라, 해당 객체를 왜 Mocking 하는지가 중요하다.
+
+### Less obvious abuses
+
+#### Mocking out 3rd-party code
+
+서드파티 라이브러리에 너무나 많은 SetUp이 필요하거나
+라이브러리 업데이트로 인해 기존 코드가 모두 변하는 경우는 Mocking하기 어렵다.
+
+Mocking 대신 Wrapping하여 의도한 요청과 결과만을 사용하면 된다.
+(3rd-party 라이브러리의 안정성은 해당 라이브러리 테스트코드에 맡겨야 한다)
+
+#### Tangling logic and delegation
+
+Logic을 테스트하거나, Relationships을 테스트 하거나 둘 중 하나를 택해야 한다.
+동시에 둘다 테스트하여 결과를 얻기는 어렵다. (혼재된 수준의 추상화)
+
+functions shold do or delegate, but not both
+
+#### Mocking dependencies halfway down the stack
+
+단위테스트의 경우 바로 인접 레이어를 Mocking해야 하고 테스트할 데이터의 경우 작고 명확해야 한다.
+
+회귀 테스트의 경우 외부와 접하는 레이어(External system)를 Mocking해서 시행해야 한다.
+
+### Questionable uses
+
+#### Mocking in tests of existing code
+
+테스트에 필요한 계층이 있는 value object의 경우 생성하려 할 때 많은 의존관계가 필요할 때가 있다,
+대신 객체를 Mocking 하여 테스트를 진행할 수 있다. (객체 자체에 대한 테스트가 아닌경우)
+
+#### Enableing highly layered designs
+
+테스트를 진행하다 보면 코드를 잘게 쪼게게 된다. (물론 작다고 합쳐져 있는 코드보다 반드시 좋은것은 아니다)
+
+이 경우 외부 의존성이 강한 하위 레이어에(DB 처리 레이어) 수정이 발생하면,
+상위 레이어의 테스트가 모두 깨지는 경우가 발생할 수도 있다.
+
+그런 경우 인접 레이어를 Mocking 했다면, 테스트코드에는 문제가 발생하지 않을 수 있다.
+
+#### Relying too heavily on call verification
+
+테스트가 지나치게 테스트 케이스의 검증구문에 의존하는 경우,
+사실은 코드의 책임이 제대로 분리되지 않았을 가능성이 크다.
+
+반드시 확인해야 하는 입출력에 대해 확인하는 것이 중요하다.
