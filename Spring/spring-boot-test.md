@@ -300,8 +300,6 @@ assertThat(beasts).extracting(Monster::getName).containsExactly("Direwolf", "Wer
 
 ## Mockito
 
-### stub, mock, spy
-
 - Mock은 특정 행위에 대한 반환값을 정의하여 요청이 왔을 때 이를 재현한다
 - Spy는 실제 객체를 감싼 객체이며 해당 객체에 요청/반환된 내용을 알아낼 때 사용된다
 
@@ -311,8 +309,8 @@ assertThat(beasts).extracting(Monster::getName).containsExactly("Direwolf", "Wer
   - `@Mock` 애노테이션의 경우 `MockitoAnnotations.initMocks(this);`를 실행해서 인스턴스를 생성한다
   - `when()`/`given()` 메소드는 Mock의 행위를 지정한다
 
-- spy()/@Spy: 메소드호출에 대한 정보를 얻는데 사용되는 Spy 생성
+- spy()/@Spy: 실제 객체를 감싼 Spy 생성
 
-- @InjectMocks: 의존성을 주입받을 (이미 생성된 객체의 타입에 맞춰 DI) Mock 객체이다
+- @InjectMocks: 의존성을 주입받아 생성할 (이미 생성된 객체의 타입에 맞춰 DI) Mock 객체이다
 
-- verify(): 주어진 인자의 메소드 동작여부를 검증한다
+- verify(): mock 객체의 행위 검증을 한다
