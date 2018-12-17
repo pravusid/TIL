@@ -481,6 +481,7 @@ void printDetails(double amount) {
 - 둘 이상의 변수를 반환해야 할 때
   - 최선의 방법은 각기 다른 값을 하나씩 반환하는 여러개의 메소드를 만드는 방법이다.
   - 자신이 사용하는 언어가 출력 매개변수 기능이 있다면 출력 매개변수를 사용해도 된다.
+- 테스트를 실시한다
 
 ### 메소드 내용 직접 삽입
 
@@ -515,6 +516,7 @@ int getRating() {
 - 메소드가 재정의되어 있지 않은지 확인한다(재정의 되어 있다면 실시X)
 - 해당 메소드를 호출하는 부분을 모두 찾는다
 - 각 호출 부분을 메소드 내용으로 교체한다
+- 테스트를 실시한다
 
 ### 임시변수 내용 직접 삽입
 
@@ -591,6 +593,7 @@ private double discountFactor() {
 - 대입문 우변을 분리하여 private 메소드로 만든다
 - 만약 메소드가 객체변경등을 한다면 상태 변경메소드와 값 반환 메소드를 분리한다
 - 임시변수를 대상으로 임시변수 내용 직접 삽입을 실시한다
+- 테스트를 실시한다
 
 ### 직관적 임시변수 사용
 
@@ -666,6 +669,7 @@ System.out.println(area);
 - 임시변수의 다음 대입문 전 범위의 임시변수 참조를 모두 수정한다
 - 두 번째 대입문에 있는 임시변수를 선언한다
 - 임시변수마다 차례대로 수정한다
+- 테스트를 실시한다
 
 ### 매개변수로의 값 대입 제거
 
@@ -702,6 +706,7 @@ int discount(int inputVal, int quantity, int yearToDate) {
 - 매개변수 대신 사용할 임시변수를 선언한다
 - 매개변수로 값을 대입하는 코드 뒤에 나오는 매개변수 참조를 모두 임시변수로 수정한다
 - 매개변수로의 값 대입을 임시변수로의 값 대입으로 수정한다
+- 테스트를 실시한다
 
 ### 메소드를 메소드 객체로 전환
 
@@ -777,6 +782,7 @@ class Account {
 - 새 클래스에 compute라는 이름의 메소드를 작성한다
 - 원본 메소드 내용을 compute 메소드 안에 복사해넣는다
 - 원본 객체에 있는 메소드 호출시 원본 객체를 나타내는 필드를 사용한다
+- 테스트를 실시한다
 
 ### 알고리즘 전환
 
@@ -794,3 +800,489 @@ class Account {
 - 새 알고리즘을 실행하면서 여러 번의 테스트를 실시한다
 
 ## 객체 간의 기능 이동
+
+### 메소드 이동
+
+> Move Method
+
+```java
+class Account {
+  private AccountType type;
+  private int daysOverdrawn;
+
+  double overdraftCharge() {
+    if (type.isPremium()) {
+      double result = 10;
+      if (daysOverdrawn > 7) {
+        result += (daysOverdrawn - 7) * 0.85;
+        return result;
+      }
+    } else {
+      return daysOverdrawn * 1.75;
+    }
+  }
+
+  double bankCharge() {
+    double result = 4.5;
+    if (daysOverdrawn > 0) {
+      result += overdraftCharge();
+      return result;
+    }
+  }
+}
+```
+
+객체 간의 기능 이동 적용
+
+```java
+class AccountType {
+  double overdraftCharge(int daysOverdrawn) {
+    if (isPremium()) {
+      double result = 10;
+      if (daysOverdrawn > 7) {
+        result += (daysOverdrawn - 7) * 0.85;
+        return result;
+      }
+    } else {
+      return daysOverdrawn * 1.75;
+    }
+  }
+}
+
+class Account {
+  private AccountType type;
+  private int daysOverdrawn;
+
+  // 메소드는 위임으로 변경한거나 삭제한다
+  double overdraftCharge() {
+    return type.overdraftCharge(daysOverdrawn);
+  }
+
+  double bankCharge() {
+    double result = 4.5;
+    if (daysOverdrawn > 0) {
+      result += overdraftCharge();
+      return result;
+    }
+  }
+}
+```
+
+#### 메소드 이동: 동기
+
+- 클래스에 기능이 너무 많거나 클래스가 다른 클래스와 과하게 연동되어 의존성이 지나친 경우 메소드를 옮기는 것이 좋다
+- 자신이 속한 객체보다 다른 객체를 더 많이 참조하는 것 같은 메소드를 찾는다
+  - 그 메소드를 호출하는 메소드, 그 메소드가 호출하는 메소드, 상속계층에서 재정의 메소드를 확인한다
+  - 옮기려는 메소드가 더 많이 참조한다고 보이는 메소드가 들어있는 객체를 기준으로 진행여부를 판단한다
+
+#### 메소드 이동: 방법
+
+- 원본 메소드에서 사용한 기능 중 원본 클래스에 정의되어 있는 기능을 확인한다
+  - 원본 메소드에서만 사용하는 기능이라면 그 메소드와 함께 옮겨야 한다
+  - 그 기능이 다른 메소드에서도 사용된다면 또 다른 메소드도 옮길지를 확인해보자
+- 원본 클래스의 하위 클래스와 상위 클래스에서 그 메소드에 대한 다른 선언이 있는지를 검사한다
+- 원본 메소드를 대상 클래스 안에 선언한다
+- 원본 메소드의 코드를 대상 메소드에 복사한 후 대상 클래스에 맞춰 수정한다
+- 원본 객체에서 대상 객체를 참조할 방법을 정한다
+- 원본 메소드를 위임 메소드로 전환하거나 삭제한다
+- 테스트를 실시한다
+
+### 필드 이동
+
+> Move Field
+
+```java
+class Account {
+  private AccountType type;
+  private double interestRate;
+
+  double interestForAmountDays(double amount, int days) {
+    return interestRate * amount * days / 365;
+  }
+  // ...
+}
+```
+
+필드 이동 적용
+
+```java
+class AccountType {
+  private double interestRate;
+
+  void getInterestRate() {
+    return interestRate;
+  }
+
+  void setInterestRate(double arg) {
+    interestRate = arg;
+  }
+}
+
+class Account {
+  private AccountType type;
+
+  double interestForAmountDays(double amount, int days) {
+    return type.getInterestRate() * amount * days / 365;
+  }
+  // ...
+}
+```
+
+#### 필드 이동: 동기
+
+- 어떤 필드가 자신이 속한 클래스보다 다른 클래스에 있는 메소드를 더 많이 참조할 때
+  - 필드를 해당 클래스로 옮기는 것을 고려한다
+  - 인터페이스에 따라 메소드를 옮길수도 있지만, 메소드의 위치가 적절하다고 판단되면 필드를 옮긴다
+- 클래스 추출을 실시하는 중에서 필드 이동이 수반된다. 이 경우 필드가 판단 기준에서 우선한다.
+
+#### 필드 이동: 방법
+
+- 필드가 public이면 필드 캡슐화 기법을 실시한다
+- 대상 클래스 안에 읽기/쓰기 메소드와 함께 필드를 작성한다
+- 원본 객체에서 대상 객체를 참조할 방법을 정한다
+  - 기존 필드나 메소드에 대상 클래스를 참조하는 기능이 있을 수도 있다
+  - 기존 기능이 없다면 얼마나 간편히 그런 기능의 메소드를 작성할 수 있는지 확인한다
+- 원본 클래스에서 필드를 삭제한다
+- 원본 필드를 참조하는 모든 부분을 대상 클래스에 있는 적절한 메소드를 참조하도록 수정한다
+  - 변수 접근 참조는 대상객체의 getter 메소드로 대입 참조 부분은 setter 메소드 호출로 수정한다
+- 테스트를 실시한다
+
+### 클래스 추출
+
+> Extract Class
+
+```java
+class Person {
+  private String name;
+  private String officeAreaCode;
+  private String officeNumber;
+
+  public String getName() {
+    return name;
+  }
+  
+  public String getTelephoneNumber() {
+    return "(" + officeAreaCode + ")" + officeNumber;
+  }
+
+  String getOfficeAreaCode() {
+    return officeAreaCode;
+  }
+
+  void setOfficeAreaCode(String arg) {
+    officeAreaCode = arg;
+  }
+
+  String getOfficeNumber() {
+    return officeNumber;
+  }
+
+  void setOfficeNumber(String arg) {
+    officeNumber = arg;
+  }
+}
+```
+
+클래스 추출 적용
+
+```java
+class TelephoneNumber {
+  private String number;
+  private String areaCode;
+
+  public String getTelephoneNumber() {
+    return "(" + areaCode + ")" + number;
+  }
+
+  String getAreaCode() {
+    return areaCode;
+  }
+
+  void setAreaCode(String arg) {
+    areaCode = arg;
+  }
+
+  String getNumber() {
+    return number;
+  }
+
+  void setNumber(String arg) {
+    number = arg;
+  }
+}
+
+class Person {
+  private String name;
+  private TelephoneNumber officeTelephone = new TelephoneNumber();
+
+  public String getName() {
+    return name;
+  }
+  
+  public String getTelephoneNumber() {
+    return officeTelephone.getTelephoneNumber();
+  }
+
+  TelephoneNumber getOfficeTelephone() {
+    return officeTelephone;
+  }
+}
+```
+
+#### 클래스 추출: 동기
+
+- 클래스는 확실히 추상화되어야 하며 명확한 기능을 담당해야 한다
+- 개발이 진행되며 클래스에 많은 메소드와 데이터가 추가되어 방대해진다
+  - 데이터와 메소드가 한 덩어리인 경우
+  - 함께 변화하거나 서로 의존적인 데이터
+
+#### 클래스 추출: 방법
+
+- 클래스의 기능 분리 방법을 정한다
+- 분리한 기능을 넣을 새 클래스를 작성한다
+  - 원본 클래스의 기능이 변했다면 원본 클래스의 이름을 변경한다
+- 원본 클래스에서 새 클래스의 링크를 만든다
+  - 필요할때까지는 양방향 링크(역방향 링크 추가)를 만들지 않는다
+- 옮길 필드마다 필드이동을 실시한다
+- 필드 이동마다 테스트를 실시한다
+- 메소드 이동을 실시하여 원본 클래스의 메소드를 새 클래스로 옮긴다
+  - 피호출 메소드부터 시작해서 호출 메소드 순으로 적용한다
+- 메소드 이동을 실시할 때마다 테스트를 실시한다
+- 각 클래스를 다시 검사하여 인터페이스를 줄인다
+  - 양방향 링크가 있다면 단방향으로 바꿀수 있는지 확인한다
+- 여러 곳에서 클래스에 접근할 수 있도록 할지 결정한다
+
+### 클래스 내용 직접 삽입
+
+> Inline Class
+
+클래스 추출의 역순으로 수행한다
+
+#### 클래스 내용 직접 삽입: 동기
+
+- 클래스 내용 직접 삽입은 클래스 추출과 반대이다
+- 클래스의 기능 대부분을 다른곳으로 옮기는 리팩토링을 실시하여 남은 기능이 거의 없을 때
+- 작은 클래스를 가장 많이 사용하는 다른 클래스에 병합한다
+
+#### 클래스 내용 직접 삽입: 방법
+
+- 원본 클래스의 public 프로토콜 메소드를 합칠 클래스에 선언하고, 이 메소드를 전부 원본 클래스에 위임한다
+  - 원본 클래스의 메소드 대신 별도의 인터페이스가 필요하다고 판단되면 인터페이스 추출을 실시한다
+- 원본 클래스의 모든 참조를 합칠 클래스 참조로 수정한다
+  - 원본 클래스를 private로 선언하고 패키지 밖의 참조를 삭제한다
+- 테스트를 실시한다
+- 메소드 이동과 필드 이동을 실시해서 원본 클래스의 모든 기능을 합칠 클래스로 옮긴다
+- 원본 클래스를 삭제한다
+
+### 대리 객체 은폐
+
+> Hide Delegate
+
+```java
+class Person {
+  private Department department;
+
+  public Department getDepartment() {
+    return department;
+  }
+
+  public void setDepartment(Department arg) {
+    department = arg;
+  }
+}
+
+class Department {
+  private String chargeCode;
+  private Person manager;
+
+  public Department(Person manager) {
+    this.manager = manager;
+  }
+
+  public Person getManager() {
+    return manager;
+  }
+  // ...
+}
+```
+
+클라이언트 클래스는 매니저를 알아내려면 우선 부서를 알아야 한다: `manager = kim.getDepartment().getManager();`
+
+이런 의존성을 줄이려면 Department 클래스를 클라이언트가 알 수 없게 감춰야 한다.
+그러려면 Person 클래스에 위임 메소드를 작성하면 된다.
+
+대리 객체 은폐 적용하면 다음과 같다
+
+```java
+class Person {
+  private Department department;
+
+  // ...
+
+  public Person getManager() {
+    return department.getManager();
+  }
+}
+```
+
+#### 대리 객체 은폐: 동기
+
+- 객체의 핵심 개념중 하나가 캡슐화이다
+- 클라이언트가 서버 객체의 필드 중 하나에 정의된 메소드를 호출할 때 클라이언트는 대리객체에 관해 알아야 한다
+  - 대리객체가 변경될 때 클라이언트도 변경해야 할 가능성이 있다
+  - 이런 의존성을 없애려면 대리객체를 감추는 위임 메소드를 서버에 두면 된다
+  - 이 경우 변경은 서버에만 이루어지고 클라이언트에는 영향을 주지 않는다
+- 서버의 일부 클라이언트나 모든 클라이언트에 대리 객체 은폐를 실시하는 것이 좋다
+  - 모든 클라이언트를 대상으로 대리 객체를 감출 경우 서버의 인터페이스에서 대리객체에 관한 부분을 삭제해도 된다
+
+#### 대리 객체 은폐: 방법
+
+- 대리 객체에 들어 있는 각 메소드를 대상으로 서버에 간단한 위임 메소드를 작성한다
+- 클라이언트를 수정해서 서버를 호출하게 만든다
+- 각 메소드를 수정할 때마다 테스트를 실시한다
+- 대리 객체를 읽고 써야 할 클라이언트가 하나도 남지 않게 되면 서버에서 대리 객체가 사용하는 읽기/쓰기 메소드를 삭제한다
+
+### 과잉 중개 메소드 제거
+
+> Remove Middle Man
+
+대리 객체 은폐의 역순으로 수행한다
+
+#### 과잉 중개 메소드 제거: 동기
+
+- 대리 객체 은폐를 사용하면 장점을 얻는 대신 단점도 생긴다
+  - 클라이언트가 대리 객체의 새 기능을 사용할 때마다 서버에 위임 메소드를 추가해야 한다
+- 은폐의 적절한 정도를 알기란 쉽지 않다
+  - 대리 객체 은폐와 과잉 중개 메소드 제거를 실시할 때는 은폐의 정도를 몰라도 된다
+  - 시스템이 변경되면 은폐 정도의 기준도 변한다
+
+#### 과잉 중개 메소드 제거: 방법
+
+- 대리 객체에 접근하는 메소드를 작성한다
+- 서버에서 위임 메소드를 제거하고 클라이언트에서 호출을 대리 메소드 호출로 교체한다
+- 메소드를 수정할 때마다 테스트를 실시한다
+
+### 외래 클래스에 메소드 추가
+
+> Introduce Foreign Method
+
+```java
+Date newStart = new Date(prevEnd.getYear()), prevEnd.getMonth(), prevEnd.getDate() + 1);
+```
+
+외래 클래스에 메소드 추가 적용
+
+```java
+Date newStart = nextDay(prevEnd);
+
+// ...
+
+private static Date nextDay(Date arg) {
+  // Date 클래스의 외래 메소드
+  return new Date(prevEnd.getYear()), prevEnd.getMonth(), prevEnd.getDate() + 1);
+}
+```
+
+#### 외래 클래스에 메소드 추가: 동기
+
+- 현재 클래스에 없는 한가지 기능이 필요한데 원본 클래스를 수정할 수 없다면
+  - 외래 클래스에 메소드로 추가 기법을 사용
+- 서버 클래스에 수많은 외래 메소드를 작성해야 하거나 하나의 외래 메소드를 여러 클래스가 사용해야 할 때
+  - 국소적 상속확장 클래스 사용 기법을 대신 사용한다
+- 외래 메소드는 임시방편에 불과하다
+  - 가능하다면 외래 메소드를 원래 있어야 할 위치로 옮겨야 한다
+
+#### 외래 클래스에 메소드 추가: 방법
+
+- 필요한 기능의 메소드를 우선 클라이언트 클래스안에 작성한다
+  - 해당 메소드는 클라이언트 클래스의 어느 기능에도 접근하면 안된다
+  - 값이 필요할 때는 매개변수로 전달해야 한다
+- 서버 클래스의 인스턴스를 찾아 첫 번째 매개변수로 만든다
+- 그 메소드에 '서버 클래스의 외래 메소드'와 같은 주석을 추가한다
+
+### 국소적 상속확장 클래스 사용
+
+> Introduce Local Extension
+
+#### 국소적 상속확장 클래스 사용: 동기
+
+- 원본 클래스를 수정하는 것이 불가능 할 경우
+  - 필요 메소드가 적다면 외래 클래스에 메소드 추가 기법을 사용할 수 있다
+  - 그러나 세 개이상이라면 필요 메소드를 적당한 곳에 모아두어야 한다
+  - 이 경우 하위클래스화와 wrapper화를 적용한 국소적 상속확장 클래스를 사용한다
+- 국소적 상속확장 클래스는 별도의 클래스지만 상속확장하는 클래스의 하위타입이다
+- Wrapper 클래스와 하위 클래스 중 방식을 선택할 수 있다
+  - 하위클래스의 작업량이 적다
+  - 하위클래스의 문제점은 객체를 생성함과 동시에 하위클래스로 만들어야 한다는 점이다
+  - 원본객체가 mutable이면 한 객체를 수정해도 다른객체가 수정되지 않으므로 이때는 wrapper 클래스를 사용해야 한다
+
+#### 국소적 상속확장 클래스 사용: 방법
+
+- 상속확장 클래스를 작성한 후 원본 클래스의 하위클래스나 래퍼클래스로 만든다
+- 상속확장 클래스에 변환생성자 메소드를 작성한다
+  - 생성자는 원본클래스를 인자로 받는다
+- 상속확장 클래스에 새 기능을 추가한다
+- 필요한 위치마다 원본 클래스를 상속확장 클래스로 수정한다
+- 해당 클래스용으로 정의된 외래 메소드를 모두 상속확장 클래스로 옮긴다
+
+#### 국소적 상속확장 클래스 사용: 예제
+
+Date 클래스를 확장해서 사용하는 경우를 살펴보자
+
+##### 하위 클래스 사용
+
+```java
+class MfDateSub extends Date {
+  public MfDateSub(String dateString) {
+    super(dateString);
+  }
+
+  public MfDateSub(Date arg) {
+    super(arg.getTime());
+  }
+
+  Date nextDay(Date arg) {
+    return new Date(prevEnd.getYear()), prevEnd.getMonth(), prevEnd.getDate() + 1);
+  }
+}
+```
+
+##### 래퍼 클래스 사용
+
+```java
+class MfDateWrap {
+  private Date date;
+  
+  public MfDateWrap(String dateString) {
+    date = new Date(dateString);
+  }
+
+  public MfDateWrap(Date arg) {
+    date = arg;
+  }
+
+  // 원본 Date 클래스의 모든 메소드를 위임
+  public int getYear() {
+    return date.getYear();
+  }
+
+  // 중략 ...
+
+  Date nextDay(Date arg) {
+    return new Date(prevEnd.getYear()), prevEnd.getMonth(), prevEnd.getDate() + 1);
+  }
+}
+```
+
+Wrapper 클래스를 사용하는 경우 `equals`와 같은 시스템의 메소드를 재정의하는 것은 위험하다.
+이런 경우 `public boolean equalsDate(Date arg)`와 같은 메소드명을 사용할 수 밖에 없다.
+
+## 데이터 체계화
+
+### 필드 자체 캡슐화
+
+> Self Encapsulate Field
+
+#### 필드 자체 캡슐화: 동기
+
+#### 필드 자체 캡슐화: 방법
