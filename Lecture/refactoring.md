@@ -429,3 +429,156 @@ published 인터페이스(공개한 라이브러리 인터페이스의 경우) �
 테스트를 실시할 때는 반드시 예상한 에러가 제대로 발생하는지 검사해야 한다.
 
 ## 메소드 정리
+
+리팩토링의 주된 작업은 메소드를 적절히 정리하는 것이다. 거의 모든 문제점은 장황한 메소드로 인해 생긴다.
+
+### 메소드 추출(Extract Method)
+
+```java
+void printOwing(double amount) {
+  printBanner();
+
+  System.out.println("name" + _name);
+  System.out.println("amount" + amount);
+}
+```
+
+메소드 추출을 적용하면
+
+```java
+void printOwing(double amount) {
+  printBanner();
+  printDetails(amount);
+}
+
+void printDetails(double amount) {
+  System.out.println("name" + _name);
+  System.out.println("amount" + amount);
+}
+```
+
+#### 메소드 추출 동기
+
+- 메소드가 너무 길거나 코드에 주석을 달아야만 의도를 이해할 수 있을 때
+  - 메소드가 적절히 잘게 쪼개져 있으면 다른 메소드에서 쉽게 사용할 수 있다
+  - 상위계층의 메소드에서 메소드 이름으로 더 많은 정보를 읽어들일 수 있다
+  - 재정의하기도 훨씬 수월하다
+
+- 메소드 내용이 간결한 것도 중요하지만, 메소드 이름도 잘 지어야 한다
+  - 메소드 추출로 코드의 명료성이 향상된다면 메소드명이 추출한 코드보다 길어도 추출을 실시해야 한다
+
+#### 메소드 추출 방법
+
+- 기존 메소드에서 추출할 코드를 새로운 메소드로 이동시킨다
+- 옮긴 코드에서 기존 메소드의 모든 지역변수 참조를 찾아, 새로 생성한 메소드의 지역변수나 매개변수로 만든다
+- 추출 코드에 의해 변경되는 지역변수를 파악하여 처리한다
+- 생성한 코드에서 사용하는 지역변수를 대상 메소드에 매개변수로 전달한다
+- 둘 이상의 변수를 반환해야 할 때
+  - 최선의 방법은 각기 다른 값을 하나씩 반환하는 여러개의 메소드를 만드는 방법이다.
+  - 자신이 사용하는 언어가 출력 매개변수 기능이 있다면 출력 매개변수를 사용해도 된다.
+
+### 메소드 내용 직접 삽입(Inline Method)
+
+```java
+int getRating() {
+  return (moreThanFiveLateDeliveries()) ? 2 : 1;
+}
+
+boolean moreThanFiveLateDeliveries() {
+  return _numberOfLateDeliveries > 5;
+}
+```
+
+메소드 내용 직접 삽입을 적용하면
+
+```java
+int getRating() {
+  return (_numberOfLateDeliveries > 5) ? 2 : 1;
+}
+```
+
+#### 메소드 내용 직접 삽입 동기
+
+- 간혹 메소드명에 모든 기능이 반영될 정도로 지나치게 단순한 경우 해당 메소드를 없애야 한다
+- 잘못 쪼개진 메소드의 내용을 하나의 큰 메소드에 직접 삽입 후, 합쳐진 메소드를 다시 각각 작은 메소드로 추출한다
+- 과다한 인다이렉션과 동시에 모든 메소드가 다른 메소드에 단순 위임을 하고 있어 코드가 지나치게 복잡할 때 실시한다
+
+#### 메소드 내용 직접 삽입 방법
+
+- 메소드가 재정의되어 있지 않은지 확인한다(재정의 되어 있다면 실시X)
+- 해당 메소드를 호출하는 부분을 모두 찾는다
+- 각 호출 부분을 메소드 내용으로 교체한다
+
+### 임시변수 내용 직접 삽입(Inline Temp)
+
+```java
+double basePrice = anOrder.basePrice();
+return (basePrice > 1000);
+```
+
+임시변수 내용 직접 삽입을 적용하면
+
+```java
+return (anOrder.basePrice() > 1000);
+```
+
+#### 임시변수 내용 직접 삽입 동기
+
+- 임시변수 내용 직접 삽입은 임시변수를 메소드 호출로 전환을 실시하는 도중에 병용하게 되는 경우가 많음
+- 메소드 호출의 결과가 임시변수에 대입될 때, 임시변수가 다른 리팩토링에 방해가 되면 내용 직접삽입을 한다
+
+#### 임시변수 내용 직접 삽입 방법
+
+- 대입문의 우변에 문제가 없는지 확인
+- 문제가 없다면 임시변수를 `final`로 선언하고 확인해보자
+- 임시변수를 참조하는 모든 부분을 찾아서 대입문 우변의 수식으로 바꾸자
+- 하나씩 수정할 때마다 테스트를 실시한다
+
+### 임시변수를 메소드 호출로 전환(Replace Temp with Query)
+
+```java
+double getPrice() {
+  double basePrice = _quantity * _itemPrice;
+  double discountFactor;
+  if (basePrice > 1000) {
+    discountFactor = 0.95;
+  } else {
+    discountFactor = 0.98;
+  }
+  return basePrice * discountFactor;
+}
+```
+
+임시변수를 메소드 호출로 전환을 적용하면
+
+```java
+double getPrice() {
+  return basePrice() * discountFactor();
+}
+// ...
+
+double basePrice() {
+  return _quantity * _itemPrice;
+}
+
+private double discountFactor() {
+  if (basePrice() > 1000) return 0.95;
+  else return 0.98;
+}
+```
+
+#### 임시변수를 메소드 호출로 전환 동기
+
+- 임시변수는 일시적이고 국소 범위로 제한된다
+- 임시변수를 메소드 호출로 수정하면 클래스 안 모든 메소드가 그 정보에 접근할 수 있다
+- 임시변수를 메소드 호출로 전환은 대부분의 경우 메소드 추출을 적용하기 전에 반드시 적용해야 한다
+- 지역변수가 많을 수록 메소드 추출이 힘들어진다
+
+#### 임시변수를 메소드 호출로 전환 방법
+
+- 값이 한번만 대입되는 임시변수를 찾는다
+- 값이 여러번 대입되는 임시변수는 임시변수 분리 기법을 실시한다
+- 임시변수를 final로 선언한다
+- 대입문 우변을 분리하여 private 메소드로 만든다
+- 만약 메소드가 객체변경등을 한다면 상태 변경메소드와 값 반환 메소드를 분리한다
+- 임시변수를 대상으로 임시변수 내용 직접 삽입을 실시한다
