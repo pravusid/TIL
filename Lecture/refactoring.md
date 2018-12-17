@@ -462,7 +462,7 @@ void printDetails(double amount) {
 }
 ```
 
-#### 메소드 추출 동기
+#### 메소드 추출: 동기
 
 - 메소드가 너무 길거나 코드에 주석을 달아야만 의도를 이해할 수 있을 때
   - 메소드가 적절히 잘게 쪼개져 있으면 다른 메소드에서 쉽게 사용할 수 있다
@@ -472,7 +472,7 @@ void printDetails(double amount) {
 - 메소드 내용이 간결한 것도 중요하지만, 메소드 이름도 잘 지어야 한다
   - 메소드 추출로 코드의 명료성이 향상된다면 메소드명이 추출한 코드보다 길어도 추출을 실시해야 한다
 
-#### 메소드 추출 방법
+#### 메소드 추출: 방법
 
 - 기존 메소드에서 추출할 코드를 새로운 메소드로 이동시킨다
 - 옮긴 코드에서 기존 메소드의 모든 지역변수 참조를 찾아, 새로 생성한 메소드의 지역변수나 매개변수로 만든다
@@ -504,13 +504,13 @@ int getRating() {
 }
 ```
 
-#### 메소드 내용 직접 삽입 동기
+#### 메소드 내용 직접 삽입: 동기
 
 - 간혹 메소드명에 모든 기능이 반영될 정도로 지나치게 단순한 경우 해당 메소드를 없애야 한다
 - 잘못 쪼개진 메소드의 내용을 하나의 큰 메소드에 직접 삽입 후, 합쳐진 메소드를 다시 각각 작은 메소드로 추출한다
 - 과다한 인다이렉션과 동시에 모든 메소드가 다른 메소드에 단순 위임을 하고 있어 코드가 지나치게 복잡할 때 실시한다
 
-#### 메소드 내용 직접 삽입 방법
+#### 메소드 내용 직접 삽입: 방법
 
 - 메소드가 재정의되어 있지 않은지 확인한다(재정의 되어 있다면 실시X)
 - 해당 메소드를 호출하는 부분을 모두 찾는다
@@ -531,12 +531,12 @@ return (basePrice > 1000);
 return (anOrder.basePrice() > 1000);
 ```
 
-#### 임시변수 내용 직접 삽입 동기
+#### 임시변수 내용 직접 삽입: 동기
 
 - 임시변수 내용 직접 삽입은 임시변수를 메소드 호출로 전환을 실시하는 도중에 병용하게 되는 경우가 많음
 - 메소드 호출의 결과가 임시변수에 대입될 때, 임시변수가 다른 리팩토링에 방해가 되면 내용 직접삽입을 한다
 
-#### 임시변수 내용 직접 삽입 방법
+#### 임시변수 내용 직접 삽입: 방법
 
 - 대입문의 우변에 문제가 없는지 확인
 - 문제가 없다면 임시변수를 `final`로 선언하고 확인해보자
@@ -576,14 +576,14 @@ private double discountFactor() {
 }
 ```
 
-#### 임시변수를 메소드 호출로 전환 동기
+#### 임시변수를 메소드 호출로 전환: 동기
 
 - 임시변수는 일시적이고 국소 범위로 제한된다
 - 임시변수를 메소드 호출로 수정하면 클래스 안 모든 메소드가 그 정보에 접근할 수 있다
 - 임시변수를 메소드 호출로 전환은 대부분의 경우 메소드 추출을 적용하기 전에 반드시 적용해야 한다
 - 지역변수가 많을 수록 메소드 추출이 힘들어진다
 
-#### 임시변수를 메소드 호출로 전환 방법
+#### 임시변수를 메소드 호출로 전환: 방법
 
 - 값이 한번만 대입되는 임시변수를 찾는다
 - 값이 여러번 대입되는 임시변수는 임시변수 분리 기법을 실시한다
@@ -616,7 +616,7 @@ if (isMacOs && isIEBrowser && wasInitialized() && wasResized) {
 }
 ```
 
-#### 직관적 임시변수 사용 동기
+#### 직관적 임시변수 사용: 동기
 
 - 수식이 너무 복잡해져 이해하기 어려운 경우 임시변수를 사용하여 수식을 쪼갤 수 있다
 - 직관적 임시변수 사용은 조건문에서 각 조건절을 가져와서 직관적 이름의 임시변수로 의미를 설명할 때 사용한다
@@ -625,7 +625,7 @@ if (isMacOs && isIEBrowser && wasInitialized() && wasResized) {
   - 하지만 지역변수로 인해 메소드추출을 적용하기 힘들다면 임시변수 사용 기법을 활용한다
 - 나중에 코드나 로직의 복잡함이 덜해지면 임시변수를 메소드 호출로 전환 기법을 적용한다
 
-#### 직관적 임시변수 사용 방법
+#### 직관적 임시변수 사용: 방법
 
 - 임시변수를 final로 선언하고 복잡한 수식에서 한 부분의 결과를 그 임시변수에 대입
 - 수식에서 한 부분의 결과를 임시변수의 값으로 교체한다(여러개가 있어도 순차적으로 진행한다)
@@ -651,7 +651,7 @@ final double area = _height * _width;
 System.out.println(area);
 ```
 
-#### 임시변수 분리 동기
+#### 임시변수 분리: 동기
 
 - 임시변수를 사용하다보면 임시변수에 값이 여러번 대입될 경우가 있다
 - 많은 임시변수는 긴 코드의 계산 결과를 나중에 간편히 참조할 수 있게 하는 용도로 사용된다
@@ -659,10 +659,138 @@ System.out.println(area);
   - 값이 두 번 이상 대입된다는 것은 변수가 메소드 안에서 여러 용도로 사용된다는 반증이다
   - 임시변수 하나를 여러 용도로 사용하면 코드분석시 혼란을 줄 수 있다
 
-#### 임시변수 분리 방법
+#### 임시변수 분리: 방법
 
 - 선언문과 첫 번째 대입문에 있는 임시변수 이름을 변경한다(값 누적용 임시변수는 분리하지 않는다)
 - 이름을 바꾼 새 임시변수를 final로 선언한다
 - 임시변수의 다음 대입문 전 범위의 임시변수 참조를 모두 수정한다
 - 두 번째 대입문에 있는 임시변수를 선언한다
 - 임시변수마다 차례대로 수정한다
+
+### 매개변수로의 값 대입 제거
+
+> Remove Assignments to Parameters
+
+```java
+int discount(int inputVal, int quantity, int yearToDate) {
+  if (inputVal > 50) inputVal -= 2;
+  // ...
+}
+```
+
+매개변수로의 값 대입 제거 적용
+
+```java
+int discount(int inputVal, int quantity, int yearToDate) {
+  int result = inputVal;
+  if (result > 50) result -= 2;
+  // ...
+}
+```
+
+#### 매개변수로의 값 대입 제거: 동기
+
+- 전달받은 매개변수에 다른 객체 참조를 대입할 때의 문제
+  - 코드의 명료성이 떨어진다
+  - 값을 통한 전달과 참조를 통한 전달을 혼동하게 된다 (자바는 값을 통한 전달만 사용한다)
+
+- 매개변수로의 값 대입 제거 규칙은 출력 매개변수가 사용되는 다른언어에서는 사용하지 않아도 된다
+  - 그러나 출력 매개변수는 가능하면 적게 사용하는 것이 좋다
+
+#### 매개변수로의 값 대입 제거: 방법
+
+- 매개변수 대신 사용할 임시변수를 선언한다
+- 매개변수로 값을 대입하는 코드 뒤에 나오는 매개변수 참조를 모두 임시변수로 수정한다
+- 매개변수로의 값 대입을 임시변수로의 값 대입으로 수정한다
+
+### 메소드를 메소드 객체로 전환
+
+> Replace Method with Method Object
+
+```java
+class Account {
+  int gamma(int inputVal, int quantity, int yearToDate) {
+    int importantValue1 = (inputVal * quantity) + delta();
+    int importantValue2 = (inputVal * yearToDate) + 100;
+    if ((yearToDate - importantValue1) > 100) {
+      importantValue2 -= 20;
+    }
+    int importantValue3 = importantValue2 * 7;
+    return importantValue3 - 2 * importantValue1;
+  }
+}
+```
+
+메소드를 메소드 객체로 전환 적용
+
+```java
+class Gamma {
+  private final Account account;
+  private int inputVal;
+  private int quantity;
+  private int yearToDate;
+  private int importantValue1;
+  private int importantValue2;
+  private int importantValue3;
+
+  Gamma(Account account, int inputVal, int quantity, int yearToDate) {
+    this.account = account;
+    this.inputVal = inputVal;
+    this.quantity = quantity;
+    this.yearToDate = yearToDate;
+  }
+
+  int compute() {
+    importantValue1 = (inputVal * quantity) + account.delta();
+    importantValue2 = (inputVal * yearToDate) + 100;
+    // 아래의 계산에 메소드 추출을 적용할 수 있다!!
+    if ((yearToDate - importantValue1) > 100) {
+      importantValue2 -= 20;
+    }
+    importantValue3 = importantValue2 * 7;
+    return importantValue3 - 2 * importantValue1;
+  }
+}
+
+class Account {
+  int gamma(int inputVal, int quantity, int yearToDate) {
+    return new Gamma(this, inputVal, quantity, yearToDate).compute();
+  }
+}
+```
+
+#### 메소드를 메소드 객체로 전환: 동기
+
+- 메소드 분해를 어렵게 많드는 것은 지역변수이다
+  - 임시변수를 메소드 호출로 전환하면 어려움이 어느정도 해소된다
+
+- 메소드를 메소드 객체로 전환을 적용하면
+  - 모든 지역변수가 메소드 객체의 속성이된다
+  - 그 객체에 메소드 추출을 적용해서 원래의 메소드를 쪼개어 여러개의 추가 메소드를 만든다
+
+#### 메소드를 메소드 객체로 전환: 방법
+
+- 전환할 메소드의 이름과 같은 이름으로 새 클래스를 생성한다
+- 클래스에 원본 메소드가 들어있던 객체를 나타내는 final 필드를 추가한다
+- final 필드는 원본 메소드안의 각 임시변수와 매개변수에 해당하는 속성이다
+- 새 클래스에 원본 객체와 각 매개변수를 받는 생성자 메소드를 작성한다
+- 새 클래스에 compute라는 이름의 메소드를 작성한다
+- 원본 메소드 내용을 compute 메소드 안에 복사해넣는다
+- 원본 객체에 있는 메소드 호출시 원본 객체를 나타내는 필드를 사용한다
+
+### 알고리즘 전환
+
+> Substitute Algorithm
+
+#### 알고리즘 전환: 동기
+
+- 기능을 수행하기 위한 비교적 간단한 방법이 있다면 복잡한 방법을 좀 더 간단한 방법으로 교체해야 한다
+- 문제를 해결해나가다 더 간단한 방법이 있음을 발견하면 알고리즘을 교체해야 하는 상황이다
+- 알고리즘 교체를 위해서는 메소드를 최대한 잘게 쪼개야 한다
+
+#### 알고리즘 전환: 방법
+
+- 교체할 간결한 알고리즘을 준비한다
+- 새 알고리즘을 실행하면서 여러 번의 테스트를 실시한다
+
+## 객체 간의 기능 이동
