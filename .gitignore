@@ -5,3 +5,6 @@
 !.vscode/extensions.json
 
 .ipynb_checkpoints/
+
+.wiki/docs/
+node_modules/

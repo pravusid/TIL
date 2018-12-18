@@ -1,0 +1,15 @@
+{
+  "name": "til-wiki",
+  "version": "1.0.0",
+  "description": "TIL wiki",
+  "scripts": {
+    "deploy": "./deploy.sh",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "author": "Sangdon Park",
+  "license": "MIT",
+  "dependencies": {
+    "vuepress": "^0.14.8"
+  }
+}
