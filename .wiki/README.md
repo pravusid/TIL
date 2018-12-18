@@ -15,25 +15,14 @@ cd .wiki
 source ./deploy.sh
 ```
 
+## Index 생성
+
+[첫 페이지에서 문서를 링크하기 위해서 디렉토리 구조 파싱 후 Index 생성](create.index.js)
+
 ## deploy script
 
 [deploy.sh](deploy.sh)
 
 ## Vuepress 설정
 
-`docs/.vuepress/config.js`
-
-```js
-module.exports = {
-  base: "/wiki/",
-  title: "TIL wiki",
-  themeConfig: {
-    repo: 'pravusid/TIL',
-    sidebar: 'auto',
-    searchMaxSuggestions: 10,
-  },
-  markdown: {
-    lineNumbers: true
-  }
-}
-```
+[config.js](docs/.vuepress/config.js)

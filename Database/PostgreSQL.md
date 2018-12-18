@@ -1,4 +1,6 @@
-# [PostgreSQL](http://postgresql.kr/docs/9.6/index.html)
+# PostgreSQL
+
+<http://postgresql.kr/docs/9.6/index.html>
 
 ## 설치
 

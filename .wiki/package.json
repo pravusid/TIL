@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "TIL wiki",
   "scripts": {
-    "deploy": "./deploy.sh",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   },
@@ -11,5 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "vuepress": "^0.14.8"
+  },
+  "devDependencies": {
+    "directory-tree": "^2.2.0"
   }
 }

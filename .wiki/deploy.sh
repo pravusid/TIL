@@ -6,6 +6,9 @@ set -e
 rm -rf docs/*
 cp -r ../* docs
 
+node create.index.js
+cat index.md >> docs/README.md
+
 # build
 npm run docs:build
 
