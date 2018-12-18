@@ -1,68 +1,5 @@
 # JAVA
 
-<!-- TOC -->
-
-- [JAVA](#java)
-  - [자바 정의](#자바-정의)
-  - [환경설정](#환경설정)
-    - [개발에 필요한 환경설정](#개발에-필요한-환경설정)
-    - [환경변수](#환경변수)
-      - [윈도우즈 기준](#윈도우즈-기준)
-  - [자료형](#자료형)
-    - [기본자료형 (Primitive Type)](#기본자료형-primitive-type)
-    - [참조 자료형 (Reference Type)](#참조-자료형-reference-type)
-    - [Call by Reference, Call by Value](#call-by-reference-call-by-value)
-    - [(자료)형변환](#자료형변환)
-      - [자동형변환](#자동형변환)
-      - [강제형변환](#강제형변환)
-  - [수정자](#수정자)
-  - [JVM 메모리구조](#jvm-메모리구조)
-    - [Garbage Collection(가비지 컬렉션)](#garbage-collection가비지-컬렉션)
-  - [클래스간의 관계](#클래스간의-관계)
-    - [상속](#상속)
-  - [Overloading vs Overriding](#overloading-vs-overriding)
-  - [추상클래스와 인터페이스](#추상클래스와-인터페이스)
-    - [추상메소드](#추상메소드)
-    - [추상클래스](#추상클래스)
-      - [추상클래스 선언](#추상클래스-선언)
-      - [추상클래스의 목적](#추상클래스의-목적)
-    - [인터페이스](#인터페이스)
-      - [인터페이스 용도](#인터페이스-용도)
-      - [인터페이스의 디폴트 메소드](#인터페이스의-디폴트-메소드)
-  - [String Class](#string-class)
-    - [String 클래스 메소드](#string-클래스-메소드)
-  - [Wrapper Class](#wrapper-class)
-    - [Wrapper Class 목록](#wrapper-class-목록)
-  - [클래스와 인터페이스 중첩](#클래스와-인터페이스-중첩)
-    - [중첩클래스(Nested Class)](#중첩클래스nested-class)
-    - [중첩 인터페이스](#중첩-인터페이스)
-    - [익명객체](#익명객체)
-  - [Collection Framework](#collection-framework)
-  - [스트림](#스트림)
-  - [데이터 처리방법에 따른 스트림 유형](#데이터-처리방법에-따른-스트림-유형)
-  - [File](#file)
-  - [예외처리](#예외처리)
-    - [예외 유형](#예외-유형)
-    - [예외처리 방식](#예외처리-방식)
-    - [try-with-resources 예제](#try-with-resources-예제)
-  - [Thread](#thread)
-    - [Thread의 생명주기](#thread의-생명주기)
-    - [Thread 클래스 정의방법 3가지](#thread-클래스-정의방법-3가지)
-  - [Annotation](#annotation)
-    - [어노테이션의 용도](#어노테이션의-용도)
-    - [유지 정책(@Retention)](#유지-정책retention)
-    - [대상(@Target)](#대상target)
-    - [Annotation 정의](#annotation-정의)
-  - [JDBC](#jdbc)
-    - [JDBC 주요객체](#jdbc-주요객체)
-      - [ResultSet](#resultset)
-    - [JDBC드라이버](#jdbc드라이버)
-    - [바인드변수](#바인드변수)
-    - [Connection Pooling](#connection-pooling)
-    - [JNDI (Java Naming Directory Interface)](#jndi-java-naming-directory-interface)
-
-<!-- /TOC -->
-
 ## 자바 정의
 
 - sun micro >> oracle
@@ -112,13 +49,13 @@ classpath : java.exe가 기본적으로 참조하는 경로
 
     > char c = ‘A’; char c = 65;
 
-1. 숫자
+2. 숫자
 
     정수 : Byte(1byte) Short(2byte) Int(4byte) Long(8byte)
 
     실수 : Float(4byte) Double(8byte)
 
-1. 논리값 Boolean : 자바에서 논리값은 숫자로 대체될 수 없다.
+3. 논리값 Boolean : 자바에서 논리값은 숫자로 대체될 수 없다.
 
 > 문자열은 기본 자료형이 아닌 참조자료형이다.
 
