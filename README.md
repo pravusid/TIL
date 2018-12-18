@@ -4,4 +4,4 @@
 
 ## Wiki
 
-<https://pravusid.kr/wiki>
+<https://wiki.pravusid.kr>
