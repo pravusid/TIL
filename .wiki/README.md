@@ -1,10 +1,14 @@
 # 개인 Wiki
 
+> Markdown + Github Pages + Node.js + Vuepress + Git Hooks + Shell Script
+
 매일 학습한 내용을 기록한 [TIL](https://github.com/pravusid/TIL)을 Vue.js 정적 웹사이트 생성기인 vuepress로 출력하여 개인 wiki로 활용
 
 ## Git hooks
 
 `.git/hooks/pre-push` 훅을 사용한다
+
+git hook을 실행하지 않으려면 `git push --no-verify` 옵션을 사용한다
 
 ```sh
  #!/bin/bash

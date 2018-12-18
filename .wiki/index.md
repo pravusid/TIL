@@ -24,7 +24,7 @@
 
 - [MySQL / MariaDB](Database/MySQL.html)
 - [ORACLE DB](Database/Oracle.html)
-- [[PostgreSQL](http://postgresql.kr/docs/9.6/index.html)](Database/PostgreSQL.html)
+- [PostgreSQL](Database/PostgreSQL.html)
 - [MONGODB](Database/mongodb.html)
 - [SQL 예제](Database/query-examples.html)
 
