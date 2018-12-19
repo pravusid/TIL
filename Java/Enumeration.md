@@ -104,4 +104,4 @@ enum Type{
     }
 }
 
-`enum` 생성자의 가시성은 `private`으로 하는 것이 좋다(상속받은 하위타입들이 `public static final` 이므로))
+`enum` 생성자의 가시성은 `private`으로 하는 것이 좋다(상속받은 하위타입들이 `public static final` 이므로)

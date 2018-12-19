@@ -9,7 +9,7 @@
 
 ## :scroll: Wiki
 
-<https://wiki.pravusid.kr>
+<https://pravusid.kr/wiki>
 
 [개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/master/.wiki)
 
