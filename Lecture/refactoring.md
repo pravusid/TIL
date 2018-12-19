@@ -1283,6 +1283,134 @@ Wrapper 클래스를 사용하는 경우 `equals`와 같은 시스템의 메소�
 
 > Self Encapsulate Field
 
+```java
+class IntRange {
+  private int low;
+
+  IntRange(int low) {
+    this.low = low;
+  }
+
+  boolean includes(int arg) {
+    return arg >= low;
+  }
+}
+```
+
+필드 자체 캡슐화 적용
+
+```java
+class IntRange {
+  private int low;
+
+  IntRange(int low) {
+    this.low = low;
+  }
+
+  boolean includes(int arg) {
+    return arg >= getLow();
+  }
+
+  int getLow() {
+    return low;
+  }
+
+  int setLow(int arg) {
+    this.low = arg;
+  }
+}
+```
+
 #### 필드 자체 캡슐화: 동기
 
+- 변수 간접 접근 방식
+  - 하위클래스가 메소드에 해당 정보를 가져오는 방식을 재정의 할수 있다
+  - 속성 초기화 시점을 바꾸는 등의 데이터 관리가 더 유연해진다
+- 변수 직접 접근 방식
+  - 코드를 알아보기 쉽다
+- 필드 자체 캡슐화를 실시해야 할 시점
+  - 상위클래스의 안의 필드에 접근하되 변수 접근을 하위클래스에서 계산된 값으로 재정의 해야 할 때
+
 #### 필드 자체 캡슐화: 방법
+
+- 필드 읽기 메소드와 쓰기 메소드를 작성한다
+- 필드를 private으로 만든다
+- 필드 참조 부분을 전부 찾아서 일긱 메소드와 쓰기 메소드로 연결한다
+- 테스트를 실시한다
+
+### 데이터 값을 객체로 전환
+
+> Replace Data Value with Object
+
+```java
+class Order {
+  private String customer;
+
+  public Order(String customer) {
+    this.customer = customer;
+  }
+  
+  public String getCustomer() {
+    return customer;
+  }
+
+  public void setCustomer(String arg) {
+    this.customer = arg;
+  }
+}
+```
+
+데이터 값을 객체로 전환 적용
+
+```java
+class Customer {
+  private final String name;
+
+  public Customer(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+}
+
+class Order {
+  private Customer customer;
+
+  public Order(String customerName) {
+    this.customer = new Customer(customerName);
+  }
+  
+  public String getCustomer() {
+    return customer.getName();
+  }
+
+  public void setCustomer(String customerName) {
+    this.customer = new Customer(customerName);
+  }
+}
+```
+
+#### 데이터 값을 객체로 전환: 동기
+
+- 개발 초기 단계에서는 단순 정보를 간단한 데이터 항목으로 표현하는 사안이 개발 진행과 함께 복잡해진다
+  - 한동안은 전화번호를 문자열로 표현해도 되지만 시간이 흐르면 형식화, 지역번호 추출등의 기능이 필요하다
+  - 한두 항목은 객체 안에 메소드를 넣어도 되겠지만 금방 Code Smell이 발생하게된다
+
+#### 데이터 값을 객체로 전환: 방법
+
+- 데이터 값을 넣을 클래스를 작성한다
+- 클래스에 원본 클래스 안의 값과 같은 타입의 필드를 추가하고 필드를 인자로 받는 생성자와 읽기 메소드를 추가한다
+- 원본 클래스의 필드 타입을 새 클래스로 바꾼다
+- 원본 클래스 안의 읽기 메소드를 새 클래스의 읽기 메소드를 호출하도록 수정한다
+- 필드값 생성은 새 클래스의 생성자를 이용한다
+- 테스트를 실시한다
+
+### 값을 참조로 전환
+
+> Change Value to Reference
+
+#### 값을 참조로 전환: 동기
+
+#### 값을 참조로 전환: 방법
