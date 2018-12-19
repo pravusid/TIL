@@ -112,6 +112,49 @@ server:
   port: 80
 ```
 
+### 다수의 설정파일 읽기
+
+설정파일(Property Source) 우선순위는 다음과 같다
+
+1. Devtools global settings properties on your home directory (~/.spring-boot-devtools.properties when devtools is active).
+1. @TestPropertySource annotations on your tests.
+1. properties attribute on your tests. Available on @SpringBootTest and the test annotations for testing a particular slice of you1. application.
+1. Command line arguments.
+1. Properties from SPRING_APPLICATION_JSON (inline JSON embedded in an environment variable or system property).
+1. ServletConfig init parameters.
+1. ServletContext init parameters.
+1. JNDI attributes from java:comp/env.
+1. Java System properties (System.getProperties()).
+1. OS environment variables.
+1. A RandomValuePropertySource that has properties only in random.*.
+1. Profile-specific application properties outside of your packaged jar (application-{profile}.properties and YAML variants).
+1. Profile-specific application properties packaged inside your jar (application-{profile}.properties and YAML variants).
+1. Application properties outside of your packaged jar (application.properties and YAML variants).
+1. Application properties packaged inside your jar (application.properties and YAML variants).
+1. @PropertySource annotations on your @Configuration classes.
+1. Default properties (specified by setting SpringApplication.setDefaultProperties).
+
+`SpringApplication.class`의 builder를 호출하여 properties 위치를 입력할 수 있다
+
+spring.config 옵션과는 상관없이 항상 불러오는 설정파일 위치는 다음과 같다 (해당위치에서 `spring.config.name` 파일이름을 가져온다)
+
+- `classpath:/`
+- `classpath:/config/`
+- `file:./`
+- `file:./config/`
+
+```java
+public static void main(String[] args) {
+    new SpringApplicationBuilder(Application.class)
+            .properties(
+                "spring.config.location=" +
+                "classpath:/another-properties.yml," +
+                "file:/some-config/," +
+                "/home/idpravus/springboot-vue/application-prod.yml"
+            ).run(args);
+}
+```
+
 ### Hibernate / JPA를 사용한 데이터 초기화
 
 `spring.jpa.hibernate.ddl-auto` 옵션을 통해서 데이터 초기화 전략을 설정할 수 있음.
