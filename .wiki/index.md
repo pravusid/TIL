@@ -73,7 +73,7 @@
 - [JAVA](Java/Java.html)
 - [JAVA GUI](Java/JavaGUI.html)
 - [JSR-310](Java/LocalDateTime.html)
-- [1. Java Logging](Java/Logging.html)
+- [Java Logging](Java/Logging.html)
 - [Lombok](Java/Lombok.html)
 - [Optional](Java/Optional.html)
 - [RxJava](Java/RxJava.html)
