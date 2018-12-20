@@ -108,6 +108,8 @@ HTTP 모듈 설정은 세 가지 계층 블럭을 제공한다
   - 웹사이트의 특정 위치에 적용할 설정 그룹 정의
   - server 블럭이나 다른 location 블럭 안에 삽입할 수 있다
 
+> 설정에 사용할 수 있는 변수 참고: <http://nginx.org/en/docs/http/ngx_http_core_module.html#var_arg_>
+
 ## 리버스 프록시
 
 `/etc/nginx/sites-available/default`
@@ -124,12 +126,17 @@ server 아래의 location을 다음과 같이 수정
   - 요청의 헤더에 정의한 값 할당
   - <http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header>
 
+- SSL을 사용하는 경우
+  - 헤더설정: <https://www.nginx.com/resources/wiki/start/topics/examples/likeapache/>
+  - 프록시 리다이렉트: <http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_redirect>
+
 ```text
 location / {
-    proxy_pass       http://localhost:8000;
-    proxy_set_header Host      $host;
-    proxy_set_header X-Real-IP $remote_addr;
-}
+    proxy_set_header X-Forwarded-Host $host:$server_port;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass http://localhost:8000;
+    proxy_redirect http://localhost:8000 https://$host:$server_port;
 ```
 
 해당 위치를 변수로 설정하고 싶으면
