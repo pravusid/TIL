@@ -16,6 +16,12 @@
 
 `vue create <project-name>`
 
+### 개발환경 port 변경
+
+`package.json` 파일 수정
+
+`"serve": "vue-cli-service serve --port 3000"`
+
 ### modules 다운로드
 
 `yarn` or `npm install`
