@@ -8,7 +8,7 @@ Let’s Encrypt is a free, automated, and open Certificate Authority
 
 <https://certbot.eff.org/>
 
-Let's Encrypt 인증서는 3개월의 유효기간을 갖고 있으므로, 자동 발급/갱신을 도와주는 certbot을 이용함
+Let's Encrypt 인증서는 3개월의 유효기간을 갖고 있으며, 자동 발급/갱신을 도와주는 certbot을 이용함
 
 ```shell
 sudo apt-get install software-properties-common
@@ -73,12 +73,27 @@ sudo service nginx restart
 
 인증서 발급: `sudo certbot --nginx -d example.com`
 
+## 도메인 변경
+
+`certbot certonly --cert-name <인증서 이름> -d <도메인1>,<도메인2>`
+
 ## 갱신
 
 갱신 가능여부 확인: `sudo certbot renew --dry-run`
 
 Ubuntu의 경우 `/etc/cron.d/`에 certbot이 생성되어있음
 
+cron job을 등록한다
+
+```shell
+crontab -e
+0 19 * * * certbot renew --post-hook "service nginx reload"
+```
+
+등록된 job을 확인한다: `crontab -l`
+
 ## 제거
 
 인증제거: `sudo certbot delete --cert-name example.com`
+
+인증서 revoke: <https://certbot.eff.org/docs/using.html#revoking-certificates>
