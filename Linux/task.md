@@ -9,6 +9,7 @@
 ```sh
 java –jar foo.jar &
 nohup java -jar foo.jar
+nohup java -jar foo.jar &
 ```
 
 ### CRTL + Z
@@ -26,3 +27,13 @@ nohup java -jar foo.jar
 - 특정 프로세스 목록: `pgrep [프로세스이름]` (위 명령어의 alias)
 - 종료(pid) : `kill -[옵션] (pid)`: `l`(옵션목록)), `9`(강제종료), `15`(종료시그널)
 - 종료(pname): `pkill -[옵션] [프로세스이름]`
+
+### kill signal
+
+주로 사용하는 시그널은 다음과 같다
+
+- -1 (-HUP) - restart a process
+- -2 (-INT) - terminate a process
+- -9 (-KILL) - let the kernel kick the process out
+- -11 (-SEGV) - have the program crash brutally
+- -15 (-TERM) - the default, ask the program kindly to terminate.

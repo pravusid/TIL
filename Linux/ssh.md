@@ -14,7 +14,7 @@
 
 RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private key를 활용해 인증한다.
 
-`ssh-keygen -t rsa`
+`ssh-keygen -t rsa -C "comment"`
 
 ## 비대칭 키를 사용해 인증 (비밀번호 입력 대신))
 
@@ -26,6 +26,14 @@ RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 ```
+
+## 공개키 복사
+
+`ssh-copy-id <user>@<host>`
+
+## permissions are too open 오류
+
+비공개 키의 권한을 변경한다: `chmod 400 ~/.ssh/id_rsa`
 
 ## Secure Copy (SCP)
 
