@@ -249,7 +249,7 @@ public class WebConfig {
                 registry.addMapping("/**")
                         // 보안상 Origin을 특정하는 것이 좋음
                         .allowedOrigins("*")
-                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
+                        .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH")
                         // 인증정보 withCredentials: true를 위해서는 origin을 특정해야함 (모두허용: * 안됨)
                         .allowCredentials(false);
             }
@@ -308,7 +308,8 @@ public class CustomCorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         // 보안상 Origin을 특정하는 것이 좋음
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "*");
+        // Method를 asterisk(*) 처리하면 firefox에서 작동하지 않음
+        response.setHeader("Access-Control-Allow-Methods", "HEAD,GET,POST,PUT,DELETE,PATCH");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader(
                 "Access-Control-Allow-Headers",
