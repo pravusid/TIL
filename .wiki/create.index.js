@@ -13,8 +13,8 @@ function createIndex() {
 
   items = items.map(item => {
     const file = path.parse(item.path);
-    const dir = file.dir.split(path.sep);
-    file.path = dir[dir.indexOf(target) + 1];
+    const dir = file.dir.split("/");
+    file.topics = dir.slice(dir.indexOf(target) + 1).join("/");
     return file.name !== "README" ? file : null;
   });
 
@@ -30,18 +30,23 @@ function createIndex() {
 
 function parseItem(last, item) {
   if (item === undefined || item === null) return;
-  if (last.dir === null) last.dir = item.path;
 
-  if (last.dir === item.path) {
+  if (last.topic === null) last.topic = topicExtractor(item.topics);
+
+  if (last.topic === topicExtractor(item.topics)) {
     return addFile(item);
   }
 
-  last.dir = item.path;
+  last.topic = item.topics;
   return addDir(item) + addFile(item);
 }
 
+function topicExtractor(topics) {
+  return topics.split("/")[0];
+}
+
 function addDir(item) {
-  return `\n### ${item.path}\n\n`;
+  return `\n### ${item.topics}\n\n`;
 }
 
 function addFile(item) {
@@ -49,12 +54,12 @@ function addFile(item) {
   const name = title
     ? title.replace(/[\n\r]/, "").replace("# ", "")
     : item.name;
-  return `- [${name}](${item.path}/${item.name}.html)\n`;
+  return `- [${name}](${item.topics}/${item.name}.html)\n`;
 }
 
 function readTitle(item) {
   const lines = fs
-    .readFileSync(item.dir + path.sep + item.base, "utf-8")
+    .readFileSync(`${item.dir}/${item.base}`, "utf-8")
     .split(/[\n\r]/);
   return lines.filter(line => line.startsWith("# "))[0];
 }

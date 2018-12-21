@@ -7,4 +7,5 @@
 .ipynb_checkpoints/
 
 .wiki/docs/
+.wiki/index.md
 node_modules/
