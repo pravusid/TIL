@@ -1,4 +1,4 @@
-# Spring
+# Spring MVC Basics
 
 Spring을 하나의 단어로 요약하라고 한다면 Dependency Injection Framework
 

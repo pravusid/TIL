@@ -1,4 +1,4 @@
-# 스프링 Validation
+# Spring Validation
 
 ## @Valid
 

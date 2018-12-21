@@ -1,4 +1,4 @@
-# LocalDateTime
+# JPA: LocalDateTime
 
 자바의 복잡한 날짜처리를 간편하게 하기 위해 1.8에서 도입된 API
 

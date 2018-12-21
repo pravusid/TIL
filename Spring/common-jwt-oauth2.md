@@ -1,26 +1,6 @@
-# JWT
+# JWT / OAuth2
 
-OAuth와 JSON Web Token의 개념, 그리고 Spring Security 적용법
-
-## OAuth
-
-OAuth 2은 인증 authentication과 허가 authorization를 제공하는 서비스와 상호 연동을 위한 방식이고 JWT가 다수 활용되고 있음
-
-두 가지 토큰 타입: access token, refresh token
-
-- 최초 인증시 두개의 토큰을 발급받는다
-- 액세스 토큰 만료 기한을 짧게 두고 만료시킨다
-- 엑세스 토큰이 만료되면 리프레시 토큰으로 새로운 토큰을 획득한다
-
-### OAuth Token
-
-access token을 제공하고 서버세어 토큰과 연관된 정보를 찾아 서비스를 제공한다.
-
-1. 클라이언트가 토큰 발급 서버로 토큰을 요청한다. 요청시 사용자의 계정과 권한을 같이 전송한다.
-2. 토큰 발급 서버는 사용자 계정의 진위를 확인한 후, token에 대한 정보를 token 저장소에 저장한다.
-3. 생성된 토큰을 클라이언트가 다시 받아간다.
-4. 클라이언트는 API를 호출할 때 보유한 token을 이용해서 리소스 서버의 API를 호출한다.
-5. 리소스 서버는 호출이 발생하면 token 저장소에서 권한정보를 조회하고, 권한에 맞는 응답을 보낸다.
+JSON Web Token의 개념과 OAuth2, 그리고 Spring Security 적용법
 
 ## JWT 개념
 
@@ -94,7 +74,27 @@ try {
 
 파싱 도중 예외가 발생할 수 있다. JJWT의 에외들은 모두 `RuntimeExceptions`와 `JwtException`의 하위 클래스이다.
 
-## Spring Security: OAuth2 & JWT
+## OAuth
+
+OAuth 2은 인증 authentication과 허가 authorization를 제공하는 서비스와 상호 연동을 위한 방식이고 JWT가 다수 활용되고 있음
+
+두 가지 토큰 타입: access token, refresh token
+
+- 최초 인증시 두개의 토큰을 발급받는다
+- 액세스 토큰 만료 기한을 짧게 두고 만료시킨다
+- 엑세스 토큰이 만료되면 리프레시 토큰으로 새로운 토큰을 획득한다
+
+### OAuth Token
+
+access token을 제공하고 서버세어 토큰과 연관된 정보를 찾아 서비스를 제공한다.
+
+1. 클라이언트가 토큰 발급 서버로 토큰을 요청한다. 요청시 사용자의 계정과 권한을 같이 전송한다.
+2. 토큰 발급 서버는 사용자 계정의 진위를 확인한 후, token에 대한 정보를 token 저장소에 저장한다.
+3. 생성된 토큰을 클라이언트가 다시 받아간다.
+4. 클라이언트는 API를 호출할 때 보유한 token을 이용해서 리소스 서버의 API를 호출한다.
+5. 리소스 서버는 호출이 발생하면 token 저장소에서 권한정보를 조회하고, 권한에 맞는 응답을 보낸다.
+
+## Spring Security: JWT & OAuth2
 
 <https://projects.spring.io/spring-security-oauth/docs/oauth2.html>
 

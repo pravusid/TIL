@@ -1,4 +1,4 @@
-# Configuration
+# Spring Boot Configuration
 
 ## build.gralde
 
