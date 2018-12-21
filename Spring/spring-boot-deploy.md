@@ -1,6 +1,12 @@
 # Spring Boot 배포
 
-## Jar로 배포
+## Build 및 실행
+
+- 빌드: `./gradlew clean build`
+- 빌드 결과물: `build/libs/*.jar`
+- 실행: `nohup java -jar -Dspring.profiles.active=<활성화프로필> <파일명>.jar &`
+
+## Fully executable jar
 
 `build.gradle` 수정
 
@@ -20,7 +26,7 @@ buildscript {
 
 jar {
     manifest {
-        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'com.talsist.TalsistApplication'
+        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
     }
     dependsOn configurations.runtime
     from {
@@ -29,4 +35,6 @@ jar {
 }
 ```
 
-gradle `build > build` 실행
+## 운영환경 분리
+
+운영환경의 설정파일(properties)은 개발소스와 분리하여 서버에 별도 보관하는 것이 좋음
