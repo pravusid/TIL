@@ -1411,6 +1411,141 @@ class Order {
 
 > Change Value to Reference
 
+```java
+class Customer {
+  private final String name;
+
+  public Customer(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+}
+
+class Order {
+  private Customer customer;
+  // ...
+
+  public Order(string customerName) {
+    cumstomer = new Customer(customerName);
+  }
+
+  // ...
+}
+```
+
+값을 참조로 전환 적용
+
+```java
+class Customer {
+  private final String name;
+  private static Map<Customer> instances = new HashMap<>();
+
+  public static Customer getNamed(String name) {
+    return instances.get(name);
+  }
+
+  private Customer(String name) {
+    this.name = name;
+  }
+
+  static void loadCustomers() {
+    new Customer("고객1").store();
+    new Customer("고객2").store();
+  }
+
+  private void store() {
+    instances.put(this.getName(), this);
+  }
+
+  public String getName() {
+    return name;
+  }
+}
+
+class Order {
+  private Customer customer;
+  // ...
+
+  public Order(string customerName) {
+    cumstomer = Customer.getNamed(customerName)
+  }
+
+  // ...
+}
+```
+
 #### 값을 참조로 전환: 동기
 
+- 참조 객체와 값 객체중 어느 것을 사용할지 결정하기 애매할 때도 있다
+
 #### 값을 참조로 전환: 방법
+
+- 생성자를 팩토리 메소드로 전환한다
+- 참조 객체로 접근을 담당할 객체를 정한다
+  - 이 기능은 정적 딕셔너리나 레지스트리 객체가 담당할 수 있다
+  - 참조 객체로의 접근을 둘 이상의 객체가 담당할 수도 있다
+- 객체를 미리생성할지 사용하기 직전에 생성할지를 정한다
+- 참조 객체를 반환하도록 팩토리 메소드를 수정한다
+  - 객체를 미리생성하는 경우 존재하지 않는 객체 요청에 대한 예외처리 해야함
+  - 팩토리 메소드가 원본 객체를 반환함을 알수있도록 메소드명 변경을 적용해야 할 수도 있다
+- 테스트를 실시한다
+
+### 참조를 값으로 전환
+
+> Change Reference to Value
+
+```java
+class Currency {
+  private String code;
+
+  public String getCode() {
+    return code;
+  }
+
+  private Currency(String code) {
+    this.code = code;
+  }
+}
+
+new Currency("KRW").equals(new Currency("KRW")) // false
+```
+
+참조를 값으로 전환
+
+```java
+class Currency {
+  private String code;
+
+  // ...
+
+  public boolean equals(Object arg) {
+    if (!(arg instanceof Currency)) return false;
+    Currency other = (Currency) arg;
+    return (code.equals(other.code));
+  }
+
+  public int hashCode() {
+    return code.hashCode();
+  }
+}
+
+new Currency("KRW").equals(new Currency("KRW")) // true
+```
+
+#### 참조를 값으로 전환: 동기
+
+- 참조 객체를 사용한 작업이 복잡해지는 순간 참조를 값으로 바꿔야 할 시점이다
+- 값 객체는 변경할 수 없어야 한다는 특성이 있다
+  - 값 객체는 분산 시스템이나 병렬 시스템에 주로 사용된다
+  - 값이 바뀌는 경우 기존의 객체를 새 객체로 교체해야 한다
+
+#### 참조를 값으로 전환: 방법
+
+- 전환할 객체가 변경불가인지 변경가능인지 확인한다
+  - 전환할 객체가 변경불가가 아니면 변경불가가 될 때 까지 쓰기 메소드 제거 실시
+- equals / hashCode 메소드를 작성한다
+- 팩토리 메소드를 삭제하고 생성자를 public으로 만들어야 좋은지 생각해본다
+- 테스트 실시
