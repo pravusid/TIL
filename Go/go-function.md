@@ -126,12 +126,12 @@ func WriteTo(w io.Writer, lines []string) (n int64, err error) {
 가변인자를 위해서는 `...` 키워드를 사용한다
 
 ```go
-func WriteTo(w io.Writer, lines... string) (n int64, err error) { }
+func WriteTo(w io.Writer, lines ...string) (n int64, err error) { }
 ```
 
 `lines`를 가변인자로 변경하여도 `lines`는 슬라이스가 된다
 
- 이미 자료형이 슬라이스인 경우 가변인자를 받는 함수로 넘기려면 함수 호출시 `...` 키워드를 사용하면 된다
+이미 자료형이 슬라이스인 경우 가변인자를 받는 함수로 넘기려면 함수 호출시 `...` 키워드를 사용하면 된다
 
  ```go
 lines := []string{"hello", "world", "Go"}
