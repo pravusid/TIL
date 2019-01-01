@@ -1,4 +1,4 @@
-# Functional InterFace
+# Functional Interface
 
 메소드를 first-class-citizen으로 활용하기 위해
 추상 메소드가 하나만 선언된 인터페이스를 함수형 인터페이스로 정의한다.
