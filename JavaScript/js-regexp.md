@@ -1,4 +1,4 @@
-# JavaScript 정규식 예제
+# JavaScript 정규표현식
 
 <https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/%EC%A0%95%EA%B7%9C%EC%8B%9D>
 
@@ -52,6 +52,9 @@
 ## 예제
 
 ```js
+// 줄바꿈
+const linebreak = /[\r|\n|\r\n]$/
+
 // 아이디 체크
 const regExpId = /^[a-z0-9_-]\w{5,20}$/;
 
