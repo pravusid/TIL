@@ -15,15 +15,6 @@ FROM ubuntu:16.04
 
 베이스 이미지를 반드시 지정해야 하며 기본값으로 쓸 수 있는 베이스 이미지는 [Docker hub](https://hub.docker.com/explore/)에서 확인가능
 
-### MAINTAINER
-
-```sh
-MAINTAINER <name>
-MAINTAINER subicura@subicura.com
-```
-
-Dockerfile을 관리하는 사람의 정보
-
 ### COPY
 
 ```sh
