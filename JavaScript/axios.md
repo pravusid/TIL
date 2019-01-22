@@ -41,3 +41,41 @@ axios.put(url[, data[, config]]);
 
 axios.patch(url[, data[, config]]);
 ```
+
+## Response object key를 camelcase로 parsing
+
+`axios/lib/defaults.js` 참조
+
+```ts
+import axios from 'axios';
+
+const camelize = (data: any) => {
+  let result = data;
+  if (typeof data === 'string') {
+    try {
+      result = JSON.parse(data, (key, value) => {
+        if (value && typeof value === 'object') {
+          for (const k in value) {
+            if (/^[A-Z]/.test(k) && Object.hasOwnProperty.call(value, k)) {
+              value[k.charAt(0).toLowerCase() + k.substring(1)] = value[k];
+              delete value[k];
+            }
+          }
+        }
+        return value;
+      });
+    } catch (e) {
+      /* Ignore */
+    }
+  }
+  return result;
+};
+
+const createAxiosInstance = (() => {
+  const instance = axios.create();
+  instance.defaults.transformResponse = [camelize];
+  return instance;
+})();
+
+export default createAxiosInstance;
+```
