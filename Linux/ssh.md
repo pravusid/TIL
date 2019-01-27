@@ -16,7 +16,7 @@ RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private
 
 `ssh-keygen -t rsa -C "comment"`
 
-## 비대칭 키를 사용해 인증 (비밀번호 입력 대신))
+## 비대칭 키를 사용해 인증 (비밀번호 입력 대신)
 
 공개키를 서버의 `authorized_keys`에 등록: `ssh-copy-id user@host`
 
@@ -24,7 +24,19 @@ RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private
 
 ```sh
 chmod 700 ~/.ssh
-chmod 600 ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub  
+chmod 644 ~/.ssh/authorized_keys
+chmod 644 ~/.ssh/known_hosts
+```
+
+### ssh 연결을 비대칭 키만 사용(비밀번호 사용X)
+
+`/etc/ssh/sshd_config` 설정파일 수정
+
+```text
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication no
 ```
 
 ## 공개키 복사
