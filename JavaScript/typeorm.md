@@ -138,3 +138,42 @@ export class MyCustomLogger implements Logger {
   - `getRepository({Type}, {connection-name?})`: 연결로부터 repository를 얻음
   - `getTreeRepository({Type}, {connection-name?})`: 연결로부터 tree repository를 얻음
   - `getCustomRepository({Type}, {connection-name?})`: `AbstractRepository<T>`를 상속하거나 클래스에 `@EntityRepository()`를 사용하여 정의한 사용자 정의 repository를 얻는다
+
+## Transaction 예시
+
+```ts
+export class PostController {
+
+    @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
+    async save(post: Post, category: Category, @TransactionManager() entityManager: EntityManager) {
+        await entityManager.save(post);
+        await entityManager.save(category);
+    }
+
+    // this save is not wrapped into the transaction
+    async nonSafeSave(entityManager: EntityManager, post: Post, category: Category) {
+        await entityManager.save(post);
+        await entityManager.save(category);
+    }
+
+    @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
+    async saveWithRepository(
+        post: Post,
+        category: Category,
+        @TransactionRepository(Post) postRepository: Repository<Post>,
+        @TransactionRepository() categoryRepository: CategoryRepository,
+    ) {
+        await postRepository.save(post);
+        await categoryRepository.save(category);
+
+        return categoryRepository.findByName(category.name);
+    }
+
+    @Transaction({ connectionName: "mysql", isolation: "SERIALIZABLE" }) // "mysql" is a connection name. you can not pass it if you are using default connection.
+    async saveWithNonDefaultIsolation(post: Post, category: Category, @TransactionManager() entityManager: EntityManager) {
+        await entityManager.save(post);
+        await entityManager.save(category);
+    }
+
+}
+```
