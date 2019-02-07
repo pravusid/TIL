@@ -420,3 +420,254 @@ class Image implements SelectableControl {
   select() {}
 }
 ```
+
+## 클래스
+
+### 상속
+
+`extends` 키워드를 사용하여 클래스를 확장할 수 있다.
+
+```ts
+class Animal {
+  name: string;
+  constructor(theName: string) {
+    this.name = theName;
+  }
+
+  move(distanceInMeters: number = 0) {
+    console.log(`${this.name} moved ${distanceInMeters}m.`);
+  }
+}
+
+class Snake extends Animal {
+  constructor(name: string) {
+    super(name);
+  }
+
+  move(distanceInMeters = 5) {
+    console.log("Slithering...");
+    super.move(distanceInMeters);
+  }
+}
+
+class Horse extends Animal {
+  constructor(name: string) {
+    super(name);
+  }
+
+  move(distanceInMeters = 45) {
+    console.log("Galloping...");
+    super.move(distanceInMeters);
+  }
+}
+
+const sam = new Snake("Sammy the Python");
+const tom: Animal = new Horse("Tommy the Palomino");
+
+sam.move();
+// > Slithering...
+// > Sammy the Python moved 5m.
+tom.move(34);
+// > Galloping...
+// > Tommy the Palomino moved 34m.
+```
+
+### 접근 제한자
+
+#### public
+
+TypeScript에서 멤버들의 기본 접근 제한자는 `public`이다.
+
+따라서 public은 명시하지 않아도 되고, 아무런 접근자가 없는 상태는 public이다.
+
+#### private
+
+private으로 선언된 멤버는 클래스 외부에서 접근할 수 없다.
+
+해당 클래스를 확장한 클래스에서도 접근 제한레벨은 동일하다.
+
+만약 private 멤버를 가진 클래스를 확장한 클래스에서 부모의 private 멤버 변수와 동일한 이름의 변수를 선언하면,
+해당 변수는 부모의 멤버 변수와 별개로 존재하는 것이다.
+
+#### protected
+
+protected 접근 제한자는 해당 클래스 내부와 해당 클래스를 확장한 클래스에서 접근 가능하다.
+
+생성자 역시 protected로 표시할 수 있으며, 이는 해당 클래스를 인스턴스화 할 수는 없지만 확장 할 수는 있음을 말한다.
+
+### readonly modifier
+
+`readonly` 키워드를 통해 읽기 전용 프로퍼티를 선언할 수 있다.
+읽기 전용 프로피티는 선언시, 혹은 생성자에서 초기화 해야 한다.
+
+```ts
+class Octopus {
+  readonly name: string;
+  readonly numberOfLegs: number = 8;
+
+  constructor (theName: string) {
+    this.name = theName;
+  }
+}
+let dad = new Octopus("Man with the 8 strong legs");
+dad.name = "Man with the 3-piece suit"; // ERROR!
+```
+
+#### Parameter Properties
+
+생성자 매개변수에서 접근 제한자(`public`, `protected`, `private`) or `readonly` 키워드 or 둘 다를 사용하여,
+멤버변수의 선언과 할당을 동시에 할 수 있다.
+
+```ts
+class Octopus {
+  readonly numberOfLegs: number = 8;
+
+  constructor(readonly name: string) {}
+}
+```
+
+### Accessors (getter/setter)
+
+TypeScript의 getter/setter는 객체 멤버에 대한 접근을 가로채는 방법을 사용한다.
+
+별도의 getter/setter를 지정하기 위해서 `get`, `set` 키워드를 사용한다.
+
+```ts
+let passcode = "secret passcode";
+
+class Employee {
+  private _fullName: string;
+
+  get fullName(): string {
+    return this._fullName;
+  }
+
+  set fullName(newName: string) {
+    if (passcode && passcode == "secret passcode") {
+      this._fullName = newName;
+    }
+    else {
+      console.log("오류 : employee의 무단 업데이트!");
+    }
+  }
+}
+
+let employee = new Employee();
+employee.fullName = "Bob Smith";
+if (employee.fullName) {
+  console.log(employee.fullName);
+}
+```
+
+get 접근자는 있지만 set 접근자가 없다면 자동으로 `readonly`로 추론된다.
+
+### Static Properties
+
+클래스에 static 멤버도 생성할 수 있다.
+
+```ts
+class Grid {
+  static origin = 'hello';
+}
+
+console.log(Grid.origin); // > hello
+```
+
+### 추상 클래스
+
+Java의 추상 클래스와 거의 동일하다.
+직접적으로 인스턴스화 할 수 없으며, 확장하여 인스턴스화 해야 한다.
+
+세부 구현을 포함할 수도 있고, `abstract` 키워드를 활용하여 추상 메소드를 선언할 수 있다.
+추상 메소드 선언시 접근 제한자를 표시할 수 있다.
+
+### Advanced Techniques
+
+#### 생성자 함수(Constructor Functions)
+
+TypeScript의 클래스 선언은 실제로는 여러개의 선언을 동시에 생성한다.
+**클래스 인스턴스의 타입**을 생성하고, **생성자 함수**라고 부르는 값을 생성한다.
+
+생성자 함수는 `new` 키워드가 사용되면 호출되는 함수이다.
+
+```ts
+class Greeter {
+  greeting: string;
+  constructor(message: string) {
+    this.greeting = message;
+  }
+  greet() {
+    return "Hello, " + this.greeting;
+  }
+}
+
+let greeter: Greeter;
+greeter = new Greeter("world");
+```
+
+이와 같은 클래스 선언과 생성자 함수 호출은 실제로는 아래와 같은 방식으로 진행된다.
+
+```ts
+let Greeter = (function () {
+  function Greeter(message) {
+    this.greeting = message;
+  }
+  Greeter.prototype.greet = function () {
+    return "Hello, " + this.greeting;
+  };
+  return Greeter;
+})();
+
+let greeter;
+greeter = new Greeter("world");
+```
+
+#### 생성자 함수와 타입
+
+아래의 `greeterMaker` 변수의 타입은 `typeof Greeter`이다.
+이는 인스턴스 타입이 아닌 Greeter 클래스 자체의 타입이며,
+보다 정확히 말하자면 생성자 함수 타입인 Greeter라는 symbol 타입이다.
+
+생성자 함수 타입에는 생성자와 함께 해당 클래스의 모든 static 멤버가 포함된다.
+
+```ts
+class Greeter {
+  static standardGreeting = "Hello, there";
+  greeting: string;
+  greet() {
+    if (this.greeting) {
+      return "Hello, " + this.greeting;
+    }
+    else {
+      return Greeter.standardGreeting;
+    }
+  }
+}
+
+let greeter1: Greeter;
+greeter1 = new Greeter();
+console.log(greeter1.greet());
+
+let greeterMaker: typeof Greeter = Greeter;
+greeterMaker.standardGreeting = "Hey there!";
+
+let greeter2: Greeter = new greeterMaker();
+console.log(greeter2.greet());
+```
+
+#### 클래스를 인터페이스로 사용
+
+클래스 선언시 클래스 인스턴스의 타입이 생성되는데, 생성된 타입을 인터페이스 사용되는 위치에서 사용할 수 있다.
+
+```ts
+class Point {
+  x: number;
+  y: number;
+}
+
+interface Point3d extends Point {
+  z: number;
+}
+
+let point3d: Point3d = {x: 1, y: 2, z: 3};
+```
