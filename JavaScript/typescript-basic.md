@@ -567,7 +567,7 @@ get 접근자는 있지만 set 접근자가 없다면 자동으로 `readonly`로
 
 ```ts
 class Grid {
-  static origin = 'hello';
+  static origin = "hello";
 }
 
 console.log(Grid.origin); // > hello
@@ -669,5 +669,184 @@ interface Point3d extends Point {
   z: number;
 }
 
-let point3d: Point3d = {x: 1, y: 2, z: 3};
+let point3d: Point3d = { x: 1, y: 2, z: 3 };
 ```
+
+## 함수
+
+TypeScript도 이름이 있는 함수와 익명함수를 생성할 수 있다.
+
+JavaScript와 마찬가지로 함수는 함수 외부의 변수를 capture 할 수 있다.
+
+### Function Type
+
+함수는 반환값에 따라 반환 타입을 추론할 수 있으므로 함수 선언시 반환타입은 선택적으로 작성할 수 있다.
+
+```ts
+const myAdd: (baseValue: number, increment: number) => number =
+  function(x: number, y: number): number {
+    return x + y;
+  };
+```
+
+`myAdd` 변수 타입은 함수형 타입이다.
+TypeScript는 타입추론을 지원하므로 할당문 양쪽 중 한쪽은 타입을 생략할 수 있다.
+
+### Parameters
+
+#### Optional Parameters
+
+TypeScript 함수에서 인수의 개수는 선언된 함수의 매개변수의 수와 같아야 한다.
+
+만약 매개변수를 선택적으로 사용하려면 매개변수 선언시에 변수의 끝에 `?`를 추가하면 된다.
+
+```ts
+function buildName(firstName: string, lastName?: string) {
+  if (lastName)
+    return firstName + " " + lastName;
+  else
+    return firstName;
+}
+
+let result1 = buildName("Bob");                  // OK
+let result2 = buildName("Bob", "Adams", "Sr.");  // ERROR
+```
+
+필수 매개변수의 앞에 선택적 매개변수를 선언할 수 없다.
+
+#### Default Parameters
+
+함수 / 메소드를 사용할 때 매개변수를 전달하지 않거나(생략) undefined를 전달하더라도 매개변수에 할당되는 기본값을 정할 수 있다.
+
+```ts
+function buildName(firstName: string, lastName = "Smith") {
+  return firstName + " " + lastName;
+}
+
+let result1 = buildName("Bob");                  // Bob Smith
+let result2 = buildName("Bob", undefined);       // Bob Smith
+let result3 = buildName("Bob", "Adams", "Sr.");  // ERROR: 매개변수가 너무 많음
+```
+
+선택적 매개변수와는 달리 필수 매개변수 앞이라도 기본값을 설정할 수 있다.
+
+#### Rest Parameters
+
+`...` 키워드를 사용하여 매개변수를 묶어서 표현할 수 있다.
+
+```ts
+function buildName(firstName: string, ...restOfName: string[]) {
+    return firstName + " " + restOfName.join(" ");
+}
+
+let employeeName = buildName("Joseph", "Samuel", "Lucas", "MacKinzie");
+```
+
+### `this`
+
+#### `this` and arrow function
+
+JavaScript에서 `this` 바인딩은 함수 호출 환경과 관련되어 있으므로, 호출환경을 알아야한다는 문제가 있다
+
+```ts
+let deck = {
+  suits: ["hearts", "spades", "clubs", "diamonds"],
+  cards: Array(52),
+  createCardPicker: function() {
+    return function() {
+      let pickedCard = Math.floor(Math.random() * 52);
+      let pickedSuit = Math.floor(pickedCard / 13);
+
+      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
+    }
+  }
+}
+
+let cardPicker = deck.createCardPicker();
+let pickedCard = cardPicker(); // ERROR: this.suits의 this는 window(strict에서는 undefined)이다
+```
+
+ES6의 Arrow Fuction에서 `this`는 함수가 생성된 곳에서 `this`를 capture 한다
+
+```ts
+let deck = {
+  suits: ["hearts", "spades", "clubs", "diamonds"],
+  cards: Array(52),
+  createCardPicker: function() {
+    // 아래 화살표 함수는 현재 위치의 this를 캡쳐한다
+    return () => {
+      let pickedCard = Math.floor(Math.random() * 52);
+      let pickedSuit = Math.floor(pickedCard / 13);
+
+      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
+    }
+  }
+}
+
+let cardPicker = deck.createCardPicker();
+let pickedCard = cardPicker();
+```
+
+#### `this` parameters
+
+하지만 위의 `this`는 여전히 `any` 타입이다.
+
+이를 해결하기 위해서 명시적으로 `this` 매개변수를 사용할 수 있다.
+
+```ts
+interface Card {
+  suit: string;
+  card: number;
+}
+interface Deck {
+  suits: string[];
+  cards: number[];
+  createCardPicker(this: Deck): () => Card;
+}
+let deck: Deck = {
+  suits: ["hearts", "spades", "clubs", "diamonds"],
+  cards: Array(52),
+  createCardPicker: function(this: Deck) {
+    // 현재 함수의 this 타입을 명시하였다 (해당 메소드가 Deck 타입의 객체에서 호출될 것을 기대함)
+    return () => {
+      let pickedCard = Math.floor(Math.random() * 52);
+      let pickedSuit = Math.floor(pickedCard / 13);
+
+      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
+    }
+  }
+}
+
+let cardPicker = deck.createCardPicker();
+let pickedCard = cardPicker();
+```
+
+##### `this` parameters in callbacks
+
+라이브러리를 사용할 때 전달하는 콜백함수에서 `this`를 사용한다면 오류가 발생할 수 있다.
+
+이럴 때 `this` parameter를 사용해서 오류를 방지할 수 있다.
+
+`this`를 `void`로 선언하면 콜백함수에서 `this`타입이 필요하지 않다는 것을 의미한다.
+
+```ts
+interface UIElement {
+  addClickListener(onclick: (this: void, e: Event) => void): void;
+}
+```
+
+화살표 함수는 `this`를 capture하지 않으므로 항상 `this: void`를 넘겨줄 수 있다.
+
+```ts
+class Handler {
+  info: string;
+  onClickGood = (e: Event) => { this.info = e.message }
+}
+```
+
+다만 메소드는 핸들러의 프로토타입에 속하여 하나만 만들어지고,
+화살표 함수는 Handler 타입의 객체마다 하나씩 생성된다.
+
+### Overloads
+
+TypeScript에서는 동일 함수에 다른 parameter type을 제공하여 Overloading을 사용할 수 있다
