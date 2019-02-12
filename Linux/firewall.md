@@ -2,22 +2,36 @@
 
 ## iptables
 
+`/etc/sysconfig/iptables`
+
 설정이후 재시작: `service iptables restart`
 
-### 명령어
+### 명령어/설정
 
-`target = -j targetname [per-target-options]`
+- OPTION
+  - `-s`: source
+  - `-d`: destination
+  - `-m`: match
+  - `-j targetname [per-target-options]`: target
 
-- 특정 IP 허용: `iptables -A INPUT -s {ip주소} -j ACCEPT`
-- 특정 IP 차단: `iptables -A INPUT -s {ip주소} -j DROP`
-- 특정 Port 허용: `iptables -A INPUT -p tcp –dport {포트} -j ACCEPT`
-- 특정 Port 차단: `iptables -A INPUT -p tcp –dport {포트} -j DROP`
-- 특정 IP와 Port 차단: `iptables -A INPUT -s {ip주소} -p tcp –dport {port} -j DROP`
-- 로그 설정: `iptables -I INPUT -s {ip주소} -p tcp –dport {port} -j LOG –log-prefix “[denied]”`
+- IP
+  - 특정 IP 허용/차단: `iptables -A INPUT -s <ip주소> -j <ACCEPT/DROP>`
+  - 다수의 IP 허용/차단: `iptables -A INPUT -s <ip주소1,ip주소2,ip주소3...> -j <ACCEPT/DROP>`
+  - 연속 범위 IP 허용/차단: `iptables -A INPUT -s <192.168.1.0/24> -j <ACCEPT/DROP>`: subnet mask 활용
+
+- PORT
+  - 특정 Port 허용/차단: `iptables -A INPUT -p tcp –dport <포트> -j <ACCEPT/DROP>`
+  - 연속 범위 Port 허용/차단: `iptables -A INPUT -p tcp –dport <포트시작:포트끝> -j <ACCEPT/DROP>`
+
+- IP & PORT
+  - 특정 IP와 Port 차단: `iptables -A INPUT -s <ip주소> -p tcp –dport <포트> -j DROP`
+  - 다수의 IP 및 포트 범위는 위와 같은 방식으로 적용
+
+- 로그 설정: `iptables -I INPUT -s <ip주소> -p tcp –dport <port> -j LOG –log-prefix “[denied]”`
 
 ## CentOS
 
-- centos7 이전 iptables 사용: `/etc/sysconfig/iptables`
+- centos7 이전 iptables 사용
 - centos7 부터 firewall 사용
 
 ### 설정
