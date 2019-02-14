@@ -850,3 +850,25 @@ class Handler {
 ### Overloads
 
 TypeScript에서는 동일 함수에 다른 parameter type을 제공하여 Overloading을 사용할 수 있다
+
+## 제네릭
+
+제네릭을 통해서 여러 타입을 입력/출력할 때 타입을 유지하면서 코드를 재사용한다.
+
+```ts
+function identity<T>(arg: T): T {
+  return arg;
+}
+```
+
+타입변수 `T`를 추가한 함수를 사용할 때는 두 가지 방법으로 호출할 수 있다.
+
+```ts
+// 타입인수를 명시
+let output = identity<string>("myString");
+
+// 전달하는 인자를 통해 타입추론
+let output = identity("myString");
+```
+
+### 제네릭 타입 변수
