@@ -1,4 +1,4 @@
-# Docker 배포
+# Dockerfile
 
 Dockerfile을 이용해서 배포용 이미지 파일을 생성한다
 

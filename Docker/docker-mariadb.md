@@ -39,3 +39,21 @@ bash shell로 container 실행
 명령어로 직접 실행
 
 `docker exec -it [CONTAINER_NAME] mysql -uroot -p`
+
+## Dockerfile
+
+```dockerfile
+FROM mariadb:latest
+
+ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+ENV MYSQL_USER=${MYSQL_USER}
+ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ENV MYSQL_DATABASE=${MYSQL_DATABASE}
+
+CMD ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+
+ADD script.sql /docker-entrypoint-initdb.d/
+RUN chown -R mysql:mysql /docker-entrypoint-initdb.d/
+
+EXPOSE 3306
+```
