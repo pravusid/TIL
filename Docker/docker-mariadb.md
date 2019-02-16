@@ -57,3 +57,6 @@ RUN chown -R mysql:mysql /docker-entrypoint-initdb.d/
 
 EXPOSE 3306
 ```
+
+- prefix MYSQL_ 환경변수는 하나씩만 입력가능(배열... 불가)
+- `entrypoint-initdb.d`에 넣은 초기화 스크립트는 도커 인스턴스 최초 실행시 파일이름 오름차순으로 구동됨
