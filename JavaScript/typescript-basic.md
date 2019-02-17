@@ -871,4 +871,114 @@ let output = identity<string>("myString");
 let output = identity("myString");
 ```
 
-### 제네릭 타입 변수
+### 제네릭 타입
+
+```ts
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+// 제네릭 함수의 타입은 일반 함수 타입의 앞에 제네릭 파라미터를 표기한 모양이다
+let myIdentity: <T>(arg: T) => T = identity;
+// 제네릭 타입 변수명을 다르게 사용할 수도 있다
+let myIdentity: <U>(arg: U) => U = identity;
+// 제네릭 함수의 타입을 객체 리터럴의 호출 시그니처 형태로 쓸수도 있다
+let myIdentity: {<T>(arg: T): T} = identity;
+```
+
+### 제네릭 인터페이스 / 클래스
+
+인터페이스를 사용하여 제네릭 타입을 표기할 수 있다
+
+```ts
+interface GenericIdentityFn {
+    <T>(arg: T): T;
+}
+interface GenericIdentityFn<T> {
+  (arg: T): T;
+}
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let myIdentityA: GenericIdentityFn = identity;
+let myIdentityB: GenericIdentityFn<number> = identity;
+```
+
+클래스에서도 인터페이스와 비슷한 형태로 사용할 수 있다
+
+```ts
+class GenericNumber<T> {
+  zeroValue: T;
+  add: (x: T, y: T) => T;
+}
+
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function(x, y) { return x + y; };
+```
+
+### 제네릭 제약조건
+
+`extends` 키워드를 사용하여 제네릭 타입에 대한 제약조건을 작성할 수 있다
+
+```ts
+interface Lengthwise {
+  length: number;
+}
+
+function loggingIdentity<T extends Lengthwise>(arg: T): T {
+  console.log(arg.length); // T 타입은 length 프로퍼티를 갖고있는 타입이다
+  return arg;
+}
+
+```
+
+#### Using Type Parameters in Generic Constraints
+
+여러 제네릭 타입이 사용될 때 한 타입 매개변수로 다른 타입매개변수의 제약조건을 작성할 수 있다
+
+```ts
+function getProperty<T, K extends keyof T>(obj: T, key: K) {
+  return obj[key];
+}
+
+let x = { a: 1, b: 2, c: 3, d: 4 };
+
+getProperty(x, "a");
+getProperty(x, "m"); // ERROR: "m"을 a | b | c | d 에 할당할 수 없음
+```
+
+#### Using Class Types in Generics
+
+생성자 함수를 갖는 클래스 타입에서 제네릭을 사용할 수 있다. 여러 타입을 사용한 예제를 보자.
+
+```ts
+class BeeKeeper {
+  hasMask: boolean;
+}
+
+class ZooKeeper {
+  nametag: string;
+}
+
+class Animal {
+  numLegs: number;
+}
+
+class Bee extends Animal {
+  keeper: BeeKeeper;
+}
+
+class Lion extends Animal {
+  keeper: ZooKeeper;
+}
+
+function createInstance<A extends Animal>(c: new () => A): A {
+  return new c();
+}
+
+createInstance(Lion).keeper.nametag;
+createInstance(Bee).keeper.hasMask;
+```
