@@ -69,11 +69,9 @@ network.host: [ "_local_", "0.0.0.0" ]
 
 ### Visualize
 
-## Security
+## Search Guard (Community)
 
-### Search Guard (Community)
-
-#### Search Guard 설치
+### Search Guard 설치
 
 <https://docs.search-guard.com/latest/search-guard-installation>
 
@@ -85,7 +83,7 @@ network.host: [ "_local_", "0.0.0.0" ]
 
 - 라이선스 제한(`elasticsearch.yml`): `searchguard.enterprise_modules_enabled: false`
 
-#### TLS 설정
+### TLS 설정
 
 <https://docs.search-guard.com/latest/offline-tls-tool>
 
@@ -95,7 +93,7 @@ network.host: [ "_local_", "0.0.0.0" ]
 
 - 해당 파일을 수정하여 `tlsconfig.yml` 파일을 생성함 (node URI)
 
-- 이후 스크립트 실행: `<installation directory>/tools/` 디렉토리에서 `./sgtlstool.sh -c ../config/tlsconfig.yml -ca -crt`
+- 이후 스크립트 실행: `<installation directory>/tools/` 디렉토리에서 `sgtlstool.sh -c ../config/tlsconfig.yml -ca -crt`
 
 - 인증서 관련 설정파일이 생성됨: `<installation directory>/tools/out/<node>_elasticsearch_config_snippet.yml`
 
@@ -126,7 +124,7 @@ network.host: [ "_local_", "0.0.0.0" ]
 - `[name].key`: Private key of the client certificate
 - `client-certificates.readme`: Contains the auto-generated passwords for the certificates
 
-#### 계정 설정
+### 계정 설정
 
 - 기본 계정정보: `/usr/share/elasticsearch/plugins/search-guard-6/sgconfig/sg_internal_users.yml`
 
@@ -154,7 +152,7 @@ network.host: [ "_local_", "0.0.0.0" ]
 
 - 설정 업데이트: 스크립트(sgadmin 실행) 재실행
 
-#### kibana 설정
+### kibana 설정
 
 플러그인 URL: <https://search.maven.org/search?q=g:com.floragunn%20AND%20a:search-guard-kibana-plugin>
 
@@ -206,7 +204,7 @@ elasticsearch.ssl.key: client.key
 elasticsearch.ssl.key.passphrase: "PASSWORD"
 ```
 
-#### LogStash 설정
+### LogStash 설정
 
 <https://docs.search-guard.com/latest/elasticsearch-logstash-search-guard>
 
@@ -235,32 +233,41 @@ output {
 }
 ```
 
-### X-Pack (상용)
+## X-Pack (Commercial)
 
-#### X-Pack 설정
+### X-Pack 설정
 
 ElasticSearch
 
 - `bin/elasticsearch-plugin install x-pack`
+
 - Confirm that you want to grant X-Pack additional permissions
+
 - action.auto_create_index in elasticsearch.yml to allow X-Pack to create the following indices:
   - `action.auto_create_index: .security,.monitoring*,.watches,.triggered_watches,.watcher-history*,.ml*`
 
 Kibana
 
 - `bin/kibana-plugin install x-pack`
+
 - `kibana.yml`
   - `elasticsearch.username: "kibana"`
-  - `elasticsearch.password: "kibanapassword"`
+  - `elasticsearch.password: "password"`
 
 LogStash
 
 - `bin/logstash-plugin install x-pack`
-- `logstash.yml`
-  - `xpack.monitoring.elasticsearch.username: logstash_system`
-  - `xpack.monitoring.elasticsearch.password: logstashpassword`
 
-#### Disable X-Pack
+- `logstash.yml`
+  - `xpack.monitoring.elasticsearch.username: logstash`
+  - `xpack.monitoring.elasticsearch.password: password`
+
+기본 계정/비밀번호
+
+- elastic / changeme
+- kibana / changme
+
+### Disable X-Pack
 
 elasticsearch.yml, kibana.yml and logstash.yml configuration files
 
@@ -275,45 +282,9 @@ elasticsearch.yml, kibana.yml and logstash.yml configuration files
 | xpack.security.enabled   | Set to false to disable X-Pack security features         |
 | xpack.watcher.enabled    | Set to false to disable Watcher                          |
 
-#### X-Pack API
+### X-Pack User Management APIs
 
-- 기본 계정/비밀번호
-  - elastic / changeme
-  - kibana / changme
-
-- 계정 목록
-
-  ```sh
-  GET /_xpack/security/user
-  ```
-
-- 계정 생성
-
-  ```sh
-  POST /_xpack/security/user/<username>
-  {
-    "password" : "비밀번호",
-    "roles" : [ "superuser" ],
-    "full_name" : "Gildong Hong",
-    "email" : "hgd@foo.kr",
-    "metadata" : {
-      "intelligence" : 7
-    },
-    "enabled": true
-  }
-  ```
-
-- 계정 비활성화
-
-  ```sh
-  PUT /_xpack/security/user/<username>/_disable
-  ```
-
-- 계정 삭제
-
-  ```sh
-  DELETE /_xpack/security/user/<username>
-  ```
+<https://www.elastic.co/guide/en/elasticsearch/reference/6.6/security-api-users.html>
 
 ## Logstash
 
@@ -342,7 +313,7 @@ output.logstash:
   hosts: ["127.0.0.1:9600"]
 ```
 
-### FileBeat DashBoard 설정
+### FileBeat Dashboard 설정
 
 ```sh
 filebeat setup -e \
@@ -387,7 +358,7 @@ metricbeat modules disable <module>
 metricbeat modules list
 ```
 
-### MetricBeat DashBoard 설정
+### MetricBeat Dashboard 설정
 
 `/etc/metricbeat/metricbeat.yml`
 
