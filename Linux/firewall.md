@@ -9,6 +9,7 @@
 ### 명령어/설정
 
 - OPTION
+  - `-p`: protocol
   - `-s`: source
   - `-d`: destination
   - `-m`: match
