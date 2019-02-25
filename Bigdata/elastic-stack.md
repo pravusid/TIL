@@ -29,9 +29,7 @@
 
 - B-2: `sysctl -w vm.max_map_count=262144`
 
-A로 해결되지 않으면
-
-`/etc/security/limits.d/90-nproc.conf`
+A로 해결되지 않으면: `/etc/security/limits.d/90-nproc.conf`
 
 ```sh
 # changed original soft nproc 1024 to 4096
@@ -49,17 +47,13 @@ start() {
 
 ### ES 설정
 
-<https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html>
+<https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html>
 
 `config/elasticsearch.yml`
 
 ```yml
 network.host: [ "_local_", "0.0.0.0" ]
 ```
-
-### Curator
-
-인덱스 limit
 
 ## Kibana
 
@@ -69,13 +63,11 @@ network.host: [ "_local_", "0.0.0.0" ]
 
 <https://www.elastic.co/guide/en/kibana/current/settings.html>
 
-### 데이터 다루기
+### Management: index pattern
 
-- Management: index pattern
+### Discover
 
-- Discover
-
-- Visualize
+### Visualize
 
 ## Security
 
@@ -86,32 +78,60 @@ network.host: [ "_local_", "0.0.0.0" ]
 <https://docs.search-guard.com/latest/search-guard-installation>
 
 - 호환 버전 확인: <https://docs.search-guard.com/latest/search-guard-versions>
+
 - 설치: `bin/elasticsearch-plugin install -b com.floragunn:search-guard-6:<version>`
+
 - 라이선스 확인: `https://example.com:9200/_searchguard/license`
+
 - 라이선스 제한(`elasticsearch.yml`): `searchguard.enterprise_modules_enabled: false`
 
 #### TLS 설정
 
 <https://docs.search-guard.com/latest/offline-tls-tool>
 
+<https://www.elastic.co/guide/en/elasticsearch/reference/6.6/certutil.html>
+
 - TLS-Tool을 다운로드 받아 압축을 풀면 `config` 디렉토리에 `example.yml`과 `template.yml` 파일이 있음
-- 해당 파일을 수정하여 `tlsconfig.yml` 파일을 생성함
+
+- 해당 파일을 수정하여 `tlsconfig.yml` 파일을 생성함 (node URI)
+
 - 이후 스크립트 실행: `<installation directory>/tools/` 디렉토리에서 `./sgtlstool.sh -c ../config/tlsconfig.yml -ca -crt`
+
 - 인증서 관련 설정파일이 생성됨: `<installation directory>/tools/out/<node>_elasticsearch_config_snippet.yml`
+
 - 생성된 설정파일을 elastic 설정에 적용: `elasticsearch.yml`
+
 - sgadmin 실행:
 
   ```sh
-  ./sgadmin.sh -icl -nhnv -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig \
-  -cacert /etc/elasticsearch/certs/root-ca.pem \
-  -cert /etc/elasticsearch/certs/<admin>.pem \
-  -key /etc/elasticsearch/certs/<admin>.key -keypass <certificatepassword>
+  sgadmin.sh -icl -nhnv -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig \
+    -cacert /etc/elasticsearch/certs/root-ca.pem \
+    -cert /etc/elasticsearch/certs/<admin>.pem \
+    -key /etc/elasticsearch/certs/<admin>.key -keypass <certificatepassword>
   ```
+
+생성되는 파일들
+
+- `root-ca.pem`: Root certificate
+- `root-ca.key`: Private key of the Root CA
+- `root-ca.readme`: Passwords of the root and intermediate CAs
+
+- `[nodename].pem`: Node(Server) certificate
+- `[nodename].key`: Private key of the node(server) certificate
+- `[nodename]_http.pem`: REST certificate, only generated if reuseTransportCertificatesForHttp is false
+- `[nodename]_http.key`: Private key of the REST certificate, only generated if reuseTransportCertificatesForHttp is false
+- `[nodename]_elasticsearch_config_snippet.yml`: Search Guard configuration snippet for this node, add this to elasticsearch.yml
+
+- `[name].pem`: Client certificate
+- `[name].key`: Private key of the client certificate
+- `client-certificates.readme`: Contains the auto-generated passwords for the certificates
 
 #### 계정 설정
 
 - 기본 계정정보: `/usr/share/elasticsearch/plugins/search-guard-6/sgconfig/sg_internal_users.yml`
+
 - 비밀번호 해싱: `plugins/search-guard-6/tools/hash.sh -p mycleartextpassword`
+
 - internal user 사용을 위한 `sg_config.yml` 설정
 
   ```yml
@@ -171,14 +191,48 @@ authc:
 ```yml
 server.host: "pravusid.kr"
 elasticsearch.hosts: ["https://pravusid.kr:9200"]
-elasticsearch.username: "kibana"
+elasticsearch.username: "username"
 elasticsearch.password: "password"
 
 xpack.spaces.enabled: false
 xpack.security.enabled: false
 
 elasticsearch.ssl.verificationMode: none
-elasticsearch.ssl.certificateAuthorities: /etc/kibana/root-ca.pem
+
+searchguard.allow_client_certificates: true
+elasticsearch.ssl.certificateAuthorities: ["root-ca.crt"]
+elasticsearch.ssl.certificate: client.crt
+elasticsearch.ssl.key: client.key
+elasticsearch.ssl.key.passphrase: "PASSWORD"
+```
+
+#### LogStash 설정
+
+<https://docs.search-guard.com/latest/elasticsearch-logstash-search-guard>
+
+```conf
+input {
+  beats {
+    port => 9600
+    ssl => true
+    ssl_certificate_authorities => ["root-ca.crt"]
+    ssl_certificate => "server.crt"
+    ssl_key => "server.key"
+    ssl_key_passphrase => "PASSWORD"
+  }
+}
+
+output {
+  elasticsearch {
+    user => logstash
+    password => logstash
+    ssl => true
+    ssl_certificate_authorities => ["root-ca.crt"]
+    ssl_certificate => "client.crt"
+    ssl_key => "client.key"
+    ssl_key_passphrase => "PASSWORD"
+  }
+}
 ```
 
 ### X-Pack (상용)
@@ -206,50 +260,9 @@ LogStash
   - `xpack.monitoring.elasticsearch.username: logstash_system`
   - `xpack.monitoring.elasticsearch.password: logstashpassword`
 
-#### X-Pack 계정 관련
-
-기본 계정/비밀번호
-
-- elastic / changeme
-- kibana / changme
-
-계정 목록
-
-```sh
-GET /_xpack/security/user
-```
-
-계정 생성
-
-```sh
-POST /_xpack/security/user/<username>
-{
-  "password" : "비밀번호",
-  "roles" : [ "superuser" ],
-  "full_name" : "Gildong Hong",
-  "email" : "hgd@foo.kr",
-  "metadata" : {
-    "intelligence" : 7
-  },
-  "enabled": true
-}
-```
-
-계정 비활성화
-
-```sh
-PUT /_xpack/security/user/<username>/_disable
-```
-
-계정 삭제
-
-```sh
-DELETE /_xpack/security/user/<username>
-```
-
 #### Disable X-Pack
 
-elasticsearch.yml, kibana.yml, and logstash.yml configuration files
+elasticsearch.yml, kibana.yml and logstash.yml configuration files
 
 `xpack.security.enabled: false`
 
@@ -261,6 +274,46 @@ elasticsearch.yml, kibana.yml, and logstash.yml configuration files
 | xpack.reporting.enabled  | Set to false to disable X-Pack reporting features        |
 | xpack.security.enabled   | Set to false to disable X-Pack security features         |
 | xpack.watcher.enabled    | Set to false to disable Watcher                          |
+
+#### X-Pack API
+
+- 기본 계정/비밀번호
+  - elastic / changeme
+  - kibana / changme
+
+- 계정 목록
+
+  ```sh
+  GET /_xpack/security/user
+  ```
+
+- 계정 생성
+
+  ```sh
+  POST /_xpack/security/user/<username>
+  {
+    "password" : "비밀번호",
+    "roles" : [ "superuser" ],
+    "full_name" : "Gildong Hong",
+    "email" : "hgd@foo.kr",
+    "metadata" : {
+      "intelligence" : 7
+    },
+    "enabled": true
+  }
+  ```
+
+- 계정 비활성화
+
+  ```sh
+  PUT /_xpack/security/user/<username>/_disable
+  ```
+
+- 계정 삭제
+
+  ```sh
+  DELETE /_xpack/security/user/<username>
+  ```
 
 ## Logstash
 
@@ -274,6 +327,104 @@ elasticsearch.yml, kibana.yml, and logstash.yml configuration files
 
 `filebeat.yml`
 
-## HeartBeat
+```yml
+# user inputs
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/*.log
+
+output.elasticsearch:
+  enabled: false
+
+output.logstash:
+  hosts: ["127.0.0.1:9600"]
+```
+
+### FileBeat DashBoard 설정
+
+```sh
+filebeat setup -e \
+  -E setup.kibana.host=localhost:5601 \
+  -E setup.dashboards.index=customname-* \
+  -E output.logstash.enabled=false \
+  -E output.elasticsearch.hosts=['localhost:9200'] \
+  -E output.elasticsearch.username=USERNAME \
+  -E output.elasticsearch.password=PASSWORD \
+  -E output.elasticsearch.ssl.verification_mode=none
+
+  # 아래의 값을 명시하지 않으면 Elasticsearch output username/password 사용
+  -E setup.kibana.username=<username> \
+  -E setup.kibana.password=<password> \
+```
+
+### FileBeat Template 생성
+
+By default, Filebeat automatically loads the recommended template file, fields.yml,
+if the Elasticsearch output is enabled.
+
+```sh
+filebeat setup --template \
+  -E setup.template.name=customname \
+  -E setup.template.pattern=customname-* \
+  -E setup.dashboards.index=customname-* \
+  -E output.logstash.enabled=false \
+  -E output.elasticsearch.index=customname-%{+yyyy.MM.dd} \
+  -E output.elasticsearch.hosts=['localhost:9200'] \
+  -E output.elasticsearch.username=USERNAME \
+  -E output.elasticsearch.password=PASSWORD \
+  -E output.elasticsearch.ssl.verification_mode=none
+```
 
 ## MetricBeat
+
+### 설정
+
+```sh
+metricbeat modules enable <module>
+metricbeat modules disable <module>
+metricbeat modules list
+```
+
+### MetricBeat DashBoard 설정
+
+`/etc/metricbeat/metricbeat.yml`
+
+```sh
+metricbeat setup \
+  -E setup.kibana.host=localhost:5601 \
+  -E setup.dashboards.index=customname-* \
+  -E output.logstash.enabled=false \
+  -E output.elasticsearch.hosts=['localhost:9200'] \
+  -E output.elasticsearch.username=USERNAME \
+  -E output.elasticsearch.password=PASSWORD \
+  -E output.elasticsearch.ssl.verification_mode=none
+
+  # 아래의 값을 명시하지 않으면 Elasticsearch output username/password 사용
+  -E setup.kibana.username=<username> \
+  -E setup.kibana.password=<password> \
+```
+
+### MetricBeat Template 생성
+
+```sh
+metricbeat setup --template \
+  -E setup.template.name=customname \
+  -E setup.template.pattern=customname-* \
+  -E setup.dashboards.index=customname-* \
+  -E output.logstash.enabled=false \
+  -E output.elasticsearch.index=customname-%{+yyyy.MM.dd} \
+  -E output.elasticsearch.hosts=['localhost:9200'] \
+  -E output.elasticsearch.username=USERNAME \
+  -E output.elasticsearch.password=PASSWORD \
+  -E output.elasticsearch.ssl.verification_mode=none
+```
+
+## HeartBeat
+
+## Curator
+
+## SlackAction
+
+<https://www.elastic.co/guide/en/elastic-stack-overview/current/actions-slack.html>
