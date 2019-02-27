@@ -225,6 +225,7 @@ output {
     user => logstash
     password => logstash
     ssl => true
+    ssl_certificate_verification => false
     ssl_certificate_authorities => ["root-ca.crt"]
     ssl_certificate => "client.crt"
     ssl_key => "client.key"
@@ -288,13 +289,17 @@ elasticsearch.yml, kibana.yml and logstash.yml configuration files
 
 ## Logstash
 
+조건식: <https://www.elastic.co/guide/en/logstash/current/event-dependent-configuration.html#conditionals>
+
+정규표현식: <https://www.elastic.co/guide/en/beats/filebeat/current/regexp-support.html>
+
 ### input
 
 ### filter
 
 ### output
 
-## FileBeat
+## Beats (FileBeats, MetricBeats ...)
 
 `filebeat.yml`
 
@@ -305,18 +310,39 @@ filebeat.inputs:
   enabled: true
   paths:
     - /var/log/*.log
+  include_lines: ['^ERROR', '^WARN']
+  exclude_lines: ['^DEBUG']
 
 output.elasticsearch:
   enabled: false
 
 output.logstash:
   hosts: ["127.0.0.1:9600"]
+
+queue.mem:
+  events: 4096
+  flush.min_events: 128
+  flush.timeout: 30s
 ```
 
-### FileBeat Dashboard 설정
+### 모듈
+
+```sh
+filebeat modules enable <module>
+filebeat modules disable <module>
+filebeat modules list
+
+metricbeat modules enable <module>
+metricbeat modules disable <module>
+metricbeat modules list
+```
+
+### Dashboard 설정
 
 ```sh
 filebeat setup -e \
+metricbeat setup \
+
   -E setup.kibana.host=localhost:5601 \
   -E setup.dashboards.index=customname-* \
   -E output.logstash.enabled=false \
@@ -330,59 +356,18 @@ filebeat setup -e \
   -E setup.kibana.password=<password> \
 ```
 
-### FileBeat Template 생성
+### Template 적용
 
 By default, Filebeat automatically loads the recommended template file, fields.yml,
 if the Elasticsearch output is enabled.
 
 ```sh
 filebeat setup --template \
-  -E setup.template.name=customname \
-  -E setup.template.pattern=customname-* \
-  -E setup.dashboards.index=customname-* \
-  -E output.logstash.enabled=false \
-  -E output.elasticsearch.index=customname-%{+yyyy.MM.dd} \
-  -E output.elasticsearch.hosts=['localhost:9200'] \
-  -E output.elasticsearch.username=USERNAME \
-  -E output.elasticsearch.password=PASSWORD \
-  -E output.elasticsearch.ssl.verification_mode=none
-```
-
-## MetricBeat
-
-### 설정
-
-```sh
-metricbeat modules enable <module>
-metricbeat modules disable <module>
-metricbeat modules list
-```
-
-### MetricBeat Dashboard 설정
-
-`/etc/metricbeat/metricbeat.yml`
-
-```sh
-metricbeat setup \
-  -E setup.kibana.host=localhost:5601 \
-  -E setup.dashboards.index=customname-* \
-  -E output.logstash.enabled=false \
-  -E output.elasticsearch.hosts=['localhost:9200'] \
-  -E output.elasticsearch.username=USERNAME \
-  -E output.elasticsearch.password=PASSWORD \
-  -E output.elasticsearch.ssl.verification_mode=none
-
-  # 아래의 값을 명시하지 않으면 Elasticsearch output username/password 사용
-  -E setup.kibana.username=<username> \
-  -E setup.kibana.password=<password> \
-```
-
-### MetricBeat Template 생성
-
-```sh
 metricbeat setup --template \
+
   -E setup.template.name=customname \
   -E setup.template.pattern=customname-* \
+  -E setup.kibana.host=localhost:5601 \
   -E setup.dashboards.index=customname-* \
   -E output.logstash.enabled=false \
   -E output.elasticsearch.index=customname-%{+yyyy.MM.dd} \
