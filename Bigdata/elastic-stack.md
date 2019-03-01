@@ -97,32 +97,32 @@ network.host: [ "_local_", "0.0.0.0" ]
 
 - 인증서 관련 설정파일이 생성됨: `<installation directory>/tools/out/<node>_elasticsearch_config_snippet.yml`
 
-- 생성된 설정파일을 elastic 설정에 적용: `elasticsearch.yml`
+  - 생성되는 파일들
+
+    - `root-ca.pem`: Root certificate
+    - `root-ca.key`: Private key of the Root CA
+    - `root-ca.readme`: Passwords of the root and intermediate CAs
+
+    - `[nodename].pem`: Node(Server) certificate
+    - `[nodename].key`: Private key of the node(server) certificate
+    - `[nodename]_http.pem`: REST certificate, only generated if reuseTransportCertificatesForHttp is false
+    - `[nodename]_http.key`: Private key of the REST certificate, only generated if reuseTransportCertificatesForHttp is false
+    - `[nodename]_elasticsearch_config_snippet.yml`: Search Guard configuration snippet for this node, add this to elasticsearch.yml
+
+    - `[name].pem`: Client certificate
+    - `[name].key`: Private key of the client certificate
+    - `client-certificates.readme`: Contains the auto-generated passwords for the certificates
+
+  - 생성된 설정파일을 elastic 설정에 적용: `elasticsearch.yml`
 
 - sgadmin 실행:
 
   ```sh
-  sgadmin.sh -icl -nhnv -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig \
+  ./sgadmin.sh -icl -nhnv -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig \
     -cacert /etc/elasticsearch/certs/root-ca.pem \
     -cert /etc/elasticsearch/certs/<admin>.pem \
     -key /etc/elasticsearch/certs/<admin>.key -keypass <certificatepassword>
   ```
-
-생성되는 파일들
-
-- `root-ca.pem`: Root certificate
-- `root-ca.key`: Private key of the Root CA
-- `root-ca.readme`: Passwords of the root and intermediate CAs
-
-- `[nodename].pem`: Node(Server) certificate
-- `[nodename].key`: Private key of the node(server) certificate
-- `[nodename]_http.pem`: REST certificate, only generated if reuseTransportCertificatesForHttp is false
-- `[nodename]_http.key`: Private key of the REST certificate, only generated if reuseTransportCertificatesForHttp is false
-- `[nodename]_elasticsearch_config_snippet.yml`: Search Guard configuration snippet for this node, add this to elasticsearch.yml
-
-- `[name].pem`: Client certificate
-- `[name].key`: Private key of the client certificate
-- `client-certificates.readme`: Contains the auto-generated passwords for the certificates
 
 ### 계정 설정
 
@@ -299,7 +299,7 @@ elasticsearch.yml, kibana.yml and logstash.yml configuration files
 
 ### output
 
-## Beats (FileBeats, MetricBeats ...)
+## Beats (FileBeat, MetricBeat, HeartBeat...)
 
 `filebeat.yml`
 
@@ -312,7 +312,11 @@ filebeat.inputs:
     - /var/log/*.log
   include_lines: ['^ERROR', '^WARN']
   exclude_lines: ['^DEBUG']
+```
 
+`__beat.yml`
+
+```yml
 output.elasticsearch:
   enabled: false
 
@@ -324,6 +328,8 @@ queue.mem:
   flush.min_events: 128
   flush.timeout: 30s
 ```
+
+HeartBeat 설정: <https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-reference-yml.html>
 
 ### 모듈
 
@@ -342,6 +348,7 @@ metricbeat modules list
 ```sh
 filebeat setup -e \
 metricbeat setup \
+heartbeat setup -e \
 
   -E setup.kibana.host=localhost:5601 \
   -E setup.dashboards.index=customname-* \
@@ -364,6 +371,7 @@ if the Elasticsearch output is enabled.
 ```sh
 filebeat setup --template \
 metricbeat setup --template \
+heartbeat setup -e \
 
   -E setup.template.name=customname \
   -E setup.template.pattern=customname-* \
@@ -377,9 +385,101 @@ metricbeat setup --template \
   -E output.elasticsearch.ssl.verification_mode=none
 ```
 
-## HeartBeat
-
 ## Curator
+
+### 설치
+
+`pip install elasticsearch-curator`
+
+`sg_roles.yml`
+
+```yml
+sg_curator:
+  cluster:
+    - CLUSTER_MONITOR  
+    - CLUSTER_COMPOSITE_OPS_RO
+  indices:
+    'logstash-*':
+      '*':
+        - UNLIMITED
+```
+
+`sg_internal_users.yml`
+
+```yml
+curator:
+  hash: $2y$12$Y7znAYZWqJBTJSrT8.iHreCyCVhRE5RQ4dKbbLKXtnutdTE2IP2n.
+```
+
+`sg_roles_mapping.yml`
+
+```yml
+sg_curator:
+  users:
+    - curator
+```
+
+`sg_config.yml`
+
+```yml
+clientcert_auth_domain:
+  enabled: true
+  order: 1
+  http_authenticator:
+    type: clientcert
+    config:
+      username_attribute: cn
+    challenge: false
+  authentication_backend:
+    type: noop
+```
+
+### 설정
+
+`curator.yml`
+
+```yml
+client:
+  hosts:
+    - 127.0.0.1
+  port: 9200
+  url_prefix:
+  use_ssl: True
+  certificate: /etc/elasticsearch/config/root-ca.pem
+  ssl_no_validate: True
+  http_auth: curator:curator
+  timeout: 30
+  master_only: False
+```
+
+`action-delete.yml`
+
+```yml
+actions:
+  1:
+    action: delete_indices
+    description: Delete indices older than 30 days (based on index name)
+    options:
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+      - filtertype: pattern
+        kind: prefix
+        value: logstash-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 30
+```
+
+### 실행
+
+- 목록보기: `curator_cli --config ./curator.yml show_indices --verbose`
+- 액션 실행
+  - `curator --config curator.yml [--run-dry] delete.yml`
+  - `--run-dry` 옵션으로 테스트 해볼 수 있음
 
 ## SlackAction
 
