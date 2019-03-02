@@ -2,16 +2,54 @@
 
 ## 기본 타입
 
-- 부울: `boolean`: true / false
-- 숫자: `number`: 자바스크립트와 마찬가지로 64비트 부동 소수점 값이다
+- 부울: `boolean`: `true` | `false`
+
+- 숫자: `number`: 자바스크립트와 마찬가지로 64비트 부동 소수점 값이다. 16/2/8 진수를 할당할 수 있다
+
+  ```ts
+  let decimal: number = 6;
+  let hex: number = 0xf00d;
+  let binary: number = 0b1010;
+  let octal: number = 0o744;
+  ```
+
 - 문자: `string`: 큰 따옴표, 작은 따옴표, 템플릿 문자열을 위한 백 쿼트를 사용할 수 있다
+
 - 배열: `T[]`, `Array<T>`: 두 가지 방식으로 선언할 수 있다
-- 튜블: `[T, U]`: 고정된 개수의 요소와 타입(같을 필요 없음)을 표현한다
+
+- 튜플: `[T, U]`: 고정된 개수의 요소와 타입(같을 필요 없음)을 표현한다
+
 - 열거: `enum T {A, B, C}`: enumeration 타입의 요소는 순서대로 0부터 시작하는 키값을 갖는다
+
 - `any`: 알지 못하는 변수 타입 (최상위 타입으로 쓸 수도 있다)
-- `void`: 일반적으로 반환이 없는 함수의 반환타입으로 사용됨. `undefined` 또는 `null`만 할당할 수 있다
-- `undefined` / `null`: 다른 모든 타입의 서브 타입이다
-- `never`: 절대로 발생하지 않는 값의 타입, 다른 모든 타입의 서브 타입니다
+
+- `void`
+  - `undefined` 또는 `null`만 할당할 수 있다
+  - 일반적으로 반환이 없는 함수의 반환타입으로 사용됨
+  - 변수 선언시 타입으로 `void`는 유용하지 않다
+
+- `undefined` / `null`
+  - 다른 모든 타입의 서브 타입이다
+  - `void`타입과 마찬가지로 변수의 타입으로 사용하기는 적절하지 않다
+  - 컴파일러의 `--strictNullChecks` 옵션을 켜면 `void` 타입 혹은 각자의 타입인 `undefined` 또는 `null`에만 할당 가능하다
+  - `undefined` vs `null`
+    - `undefined`: primitive value used when a variable has **not been assigned a value** (ECMA)
+    - `null`: primitive value that represents the intentional **absence of any object value** (ECMA)
+    - TS coding guidelines of MS: [Use undefined. Do not use null](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined)
+      - 명시적으로 nullable variable|property 할당하지 않아도 됨
+      - runtime 타입검사에 유리하다
+        - `typeof val === 'object'` for both null and object value
+        - `typeof val === 'undefined'` for undefined.
+
+- `never`
+  - 다른 모든 타입의 서브 타입이다 하지만 `never`타입의 서브타입은 없으며 어떠한 타입도 `never`타입에 위치에 할당할 수 없다
+  - 절대로 발생하지 않는 값의 타입이다
+    - 항상 `Error`를 반환하는 함수(`throw new Error()` | `return error`)
+    - end point에 도달하지 않는 함수(무한루프 ...)
+
+- `object`
+  - primitive 타입이 아닌 모든타입
+  - `number`, `string`, `boolean`, `symbol`, `null`, or `undefined` 이외의 타입
 
 ### Type assertions
 
@@ -30,11 +68,10 @@ const strLength: number = (someValue as string).length;
 
 ```ts
 function f(shouldInitialize: boolean) {
-    if (shouldInitialize) {
-        var x = 10;
-    }
-
-    return x;
+  if (shouldInitialize) {
+    var x = 10;
+  }
+  return x;
 }
 
 f(true);  // 10
@@ -47,14 +84,12 @@ let은 var와 달리 lexical-scope 규칙을 갖는다
 
 ```ts
 function f(input: boolean) {
-    let a = 100;
-
-    if (input) {
-        let b = a + 1;
-        return b;
-    }
-
-    return b; // 오류 발생: b는 존재하지 않음
+  let a = 100;
+  if (input) {
+    let b = a + 1;
+    return b;
+  }
+  return b; // 오류 발생: b는 존재하지 않음
 }
 ```
 
@@ -63,7 +98,7 @@ let은 루프의 일부로 선언될 때 반복마다 새로운 스코프를 생
 
 ```ts
 for (let i = 0; i < 10 ; i++) {
-    setTimeout(function() { console.log(i); }, 100 * i);
+  setTimeout(function() { console.log(i); }, 100 * i);
 }
 ```
 
@@ -982,3 +1017,74 @@ function createInstance<A extends Animal>(c: new () => A): A {
 createInstance(Lion).keeper.nametag;
 createInstance(Bee).keeper.hasMask;
 ```
+
+## Enums
+
+### Numeric Enums
+
+enum을 선언하면 순서대로 숫자 0부터 값이 부여된다.
+만약 첫 멤버의 초기값을 선언하였다면 이후의 멤버의 값은 자동 증가한다.
+
+```ts
+enum Direction {
+  Up,     // 0
+  Down,   // 1
+  Left,   // 2
+  Right,  // 3
+}
+
+enum Direction {
+  Up = 1, // 1
+  Down,   // 2
+  Left,   // 3
+  Right,  // 4
+}
+```
+
+만약 한 멤버가 상수가 아닌 초기 값을 가진다면, 다른 멤버도 초기화 되어야 한다
+
+```ts
+enum E {
+  A = getSomeValue(),
+  B, // ERROR: A가 상수가 아니므로 B도 초기화 필요
+}
+```
+
+### String Enums
+
+```ts
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+```
+
+string enum은 자동증가 하지 않지만 직렬화시 장점이 있다.
+
+### Heterogeneous Enums
+
+숫자와 문자 값을 섞어 쓸 수 있으나 그렇게 하지 않는 것이 좋다
+
+```ts
+enum BooleanLikeHeterogeneousEnum {
+  No = 0,
+  Yes = "YES",
+}
+```
+
+### Computed and constant members
+
+enum 멤버는 computed 이거나 constant인 값이다
+상수형 enum 멤버는 컴파일 시간에 완전히 평가 될 수 있다.
+
+다음과 같은 경우의 표현식은 상수 enum 표현식이고, 이외의 경우 computed 멤버이다.
+
+1. 문자 리터럴 혹은 숫자 리터럴
+2. 이전에 정의된 enum 멤버에 대한 참조(다른 enum에서 올 수 있음)
+3. 괄호 내부의 상수 enum 표현식
+4. 상수 enum 표현식에 사용된 단항연산자 `+`, `-`, `~` 중의 하나
+5. `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `&`, `|`, `^` 다음 이항 연산자와 함께 사용된 피연산자 상수 enum 표현식. 상수 enum 표현식이 `NaN`이나 `Infinity`인 경우 컴파일 에러이다.
+
+### Union enums and enum member types
