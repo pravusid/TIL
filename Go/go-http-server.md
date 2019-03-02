@@ -1,8 +1,60 @@
-# Go HTTP server
+# Golang HTTP Server
+
+## Simple HTTP Server
+
+```go
+package main
+
+import (
+    "bytes"
+    "fmt"
+    "io/ioutil"
+    "net"
+)
+
+func main() {
+    l, err := net.Listen("tcp", "0.0.0.0:8080")
+    if err != nil {
+        panic(err)
+    }
+
+    for {
+        conn, _ := l.Accept()
+        go handle(conn)
+    }
+}
+
+var get []byte
+var sleep []byte
+
+func init() {
+    get = []byte("GET / HTTP/1.1\r\n")
+}
+
+func handle(conn net.Conn) {
+    // net.http 패키지에서는 32kb(32*1024 bytes) sync.Pool을 사용함
+    buffer := make([]byte, 1024)
+    conn.Read(buffer)
+
+    var statusline, filename string
+    if bytes.HasPrefix(buffer, get) {
+        statusline, filename = "HTTP/1.1 200 OK\r\n\r\n", "hello.html"
+    } else {
+        statusline, filename = "HTTP/1.1 404 NOT FOUND\r\n\r\n", "404.html"
+    }
+
+    content, _ := ioutil.ReadFile(filename)
+    response := fmt.Sprintf("%s%s", statusline, content)
+    conn.Write([]byte(response))
+    conn.Close()
+}
+```
+
+## `net/http` package
 
 Go 표준 패키지 `net/http`에서 웹서버 기능을 제공한다: <https://godoc.org/net/http>
 
-## ListenAndServe()
+### ListenAndServe()
 
 `ListenAndServe()` 메소드는 지정한 포트로 웹 서버를 열고 Request를 고루틴에 할당한다.
 
@@ -13,7 +65,7 @@ Go 표준 패키지 `net/http`에서 웹서버 기능을 제공한다: <https://
 
 ServeMux는 기본적으로 HTTP Request Router (혹은 Multiplexor)인데, 별도의 ServeMux를 만들어 Routing 부분을 다르게 정의할 수 있다.
 
-## http.Handle()
+### http.Handle()
 
 DefaultServeMux를 사용하는 경우, `Handle()` 혹은 `HandleFunc()`을 사용하여 라우팅을 정의한다.
 
@@ -49,7 +101,7 @@ func (h *testHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 ```
 
-## Static 파일 핸들러
+### Static 파일 핸들러
 
 Request URL 패스에 표시된 정적 파일을 서버 상의 특정 폴더(wwwroot) 에서 읽어 들여 파일 내용을 전달한다.
 
