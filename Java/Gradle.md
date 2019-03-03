@@ -12,29 +12,19 @@ gradle을 실행하면 버전 변경사항을 확인하고 새로운 wrapper를 
 
 `./gradlew tasks`
 
-## tips
+## build
 
-### dependency 포함한 jar build
+`build.gradle`에 다음 내용 추가 후 `build` 실행한다
 
-`build.gradle`에 다음 내용 추가 후 `fatJar` 실행
+> Kotlin의 경우 MainClass의 끝에 `Kt`를 붙인다
 
 ```groovy
 jar {
     manifest {
-        attributes 'Main-Class': 'kr.pravusid'
+        attributes 'Main-Class': 'kr.pravusid.Application'
     }
-}
-
-task fatJar(type: Jar) {
-    manifest.from jar.manifest
-    classifier = 'all'
     from {
-        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-    } {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
-    with jar
 }
 ```
