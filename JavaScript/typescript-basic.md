@@ -1088,3 +1088,107 @@ enum 멤버는 computed 이거나 constant인 값이다
 5. `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `&`, `|`, `^` 다음 이항 연산자와 함께 사용된 피연산자 상수 enum 표현식. 상수 enum 표현식이 `NaN`이나 `Infinity`인 경우 컴파일 에러이다.
 
 ### Union enums and enum member types
+
+계산되지 않은 상수형 enum 멤버의 특수하위집합이 있는데, 리터럴 enum 멤버이다.
+
+리터럴 enum 멤버는 초기값이 없거나, 다음으로 초기화된 상수 enum 멤버이다
+
+- any string literal (e.g. "foo", "bar, "baz")
+- any numeric literal (e.g. 1, 100)
+- a unary minus applied to any numeric literal (e.g. -1, -100)
+
+모든 멤버가 리터럴 enum일 때 enum은 특수한 기능을 갖는다
+
+- enum 멤버는 타입이 될 수 있다
+
+  ```ts
+  enum ShapeKind {
+    Circle,
+    Square,
+  }
+
+  interface Circle {
+    kind: ShapeKind.Circle;
+    radius: number;
+  }
+
+  interface Square {
+    kind: ShapeKind.Square;
+    sideLength: number;
+  }
+  ```
+
+- enum 타입 자체가 각 enum 멤버의 합집합(union)이 된다
+
+  ```ts
+  enum E {
+    Foo,
+    Bar,
+  }
+
+  function f(x: E) {
+    if (x !== E.Foo || x !== E.Bar) {
+      // Error! Operator '!==' cannot be applied to types 'E.Foo' and 'E.Bar'
+      // x는 이미 E 타입이다
+    }
+  }
+  ```
+
+### Enums at runtime
+
+enum은 런타임에 존재하는 real objects이다
+
+```ts
+enum E {
+  X, Y, Z
+}
+
+function f(obj: { X: number }) {
+  return obj.X;
+}
+
+f(E); // Works, since 'E' has a property named 'X' which is a number
+```
+
+#### Reverse mappings
+
+숫자 enum 멤버는 enum 값에서 이름으로 역 매핑을 할 수 있다.
+문자 enum 멤버는 역매핑을 생성하지 않는다.
+
+```ts
+enum Enum {
+    A
+}
+let a = Enum.A;
+let nameOfA = Enum[a]; // "A"
+```
+
+타입스크립트는 다음과 같은 자바스크립트로 컴파일 될 것이다
+
+```js
+var Enum;
+(function (Enum) {
+    Enum[Enum["A"] = 0] = "A";
+})(Enum || (Enum = {}));
+var a = Enum.A;
+var nameOfA = Enum[a]; // "A"
+```
+
+#### const enums
+
+enum 사용시 추가적인 비용을 줄이기 위해서 const enums를 사용할 수 있다
+
+const enum은 상수 enum 표현식만 사용할 수 있으면 일반 enum과 달리 컴파일 하는 동안 완전히 제거되어 사용장소에서 인라이닝 된다.
+
+```ts
+const enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right]
+
+// 컴파일 되면 다음과 같아질 것이다
+var directions = [0 /* Up */, 1 /* Down */, 2 /* Left */, 3 /* Right */];
+```
