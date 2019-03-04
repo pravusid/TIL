@@ -110,6 +110,31 @@ HTTP 모듈 설정은 세 가지 계층 블럭을 제공한다
 
 > 설정에 사용할 수 있는 변수 참고: <http://nginx.org/en/docs/http/ngx_http_core_module.html#var_arg_>
 
+## URL matching
+
+```conf
+server {
+    listen 80;
+    server_name *.example.com;
+
+    location optional_modifier location_match {
+        # ...
+    }
+}
+```
+
+- `none`: prefix match
+  - `/site` 경로에 대해 `/site/page1/index.html` 혹은 `/site/index.html` 등이 대응될 수 있다
+
+- `=`: 정확히 일치하는 경로
+
+- `~`: 대소문자를 구분하는 regular expression match
+
+- `~*`: 대소문자를 구분하지 않는 regular expression match
+
+- `^~`: prefix match에서 가장 일치하는 결과인 경우 regular expression match를 하지 않고 연결함
+  - `^~ /costumes`인 경우 `/costumes/ninja.html` 경로는 정규식 매칭을 하지 않고 바로 연결함
+
 ## 리버스 프록시
 
 `/etc/nginx/sites-available/default`

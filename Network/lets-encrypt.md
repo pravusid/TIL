@@ -4,22 +4,45 @@
 
 Let’s Encrypt is a free, automated, and open Certificate Authority
 
-## 발급: NGINX + certbot stand alone
+Let's Encrypt 인증서는 3개월의 유효기간을 갖고 있으며, 자동 발급/갱신을 도와주는 certbot을 이용함
 
-`sudo certbot certonly --webroot -w /var/www/example -d example.com -d www.example.com`
+```sh
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get install python-certbot-nginx
+```
+
+## 발급: NGINX + certbot webroot
+
+Challenge Seed를 외부에서 접근 가능한 경로에(`/.well-known`)에 위치시켜 인증받는다
+
+`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d www.example.com`
 
 인증서 생성 도중 대상 도메인에 대한 소유권 확인 과정을 거친다
 
 `http://example.com/.well-known/acme-challenge/<RANDOM_STRING>` 경로로 접속할 때 값이 출력되어야 함
 
-`/etc/nginx/conf.d/letsencrypt.conf` 파일에 다음을 임시로 추가한다
+WebRoot로 사용할 디렉토리를 생성한다
+
+```sh
+mkdir /var/www/certbot
+chown nginx:nginx /var/www/certbot
+chmod 700 /var/www/certbot
+```
+
+`/etc/nginx/conf.d/letsencrypt.conf` 파일에서 well-known 디렉토리와 WebRoot를 연결한다
 
 ```conf
+location /.well-known {
+    root /var/www/certbot/;
+}
+
+# 또는
+
 location ^~ /.well-known/acme-challenge/ {
-    allow all;
-    root /var/lib/letsencrypt/;
     default_type "text/plain";
-    try_files $uri =404;
+    root /home/www/letsencrypt;
 }
 ```
 
@@ -28,20 +51,12 @@ location ^~ /.well-known/acme-challenge/ {
 ```conf
 server {
     server_name domain.tld
-    # ..
+    # ...
     include conf.d/letsencrypt.conf;
 }
 ```
 
-임시파일을 생성할 디렉토리를 만든다
-
-```sh
-mkdir -p /var/lib/letsencrypt/.well-known
-chgrp http /var/lib/letsencrypt
-chmod g+s /var/lib/letsencrypt
-```
-
-random key 처리를 삭제하고 sites-available 에서 다음을 추가한다
+`sites-available`에서 다음을 추가한다
 
 ```conf
 server {
@@ -56,17 +71,6 @@ server {
 ```
 
 ## 발급: NGINX + certbot auto
-
-<https://certbot.eff.org/>
-
-Let's Encrypt 인증서는 3개월의 유효기간을 갖고 있으며, 자동 발급/갱신을 도와주는 certbot을 이용함
-
-```sh
-sudo apt-get install software-properties-common
-sudo add-apt-repository universe
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get install python-certbot-nginx
-```
 
 - `/etc/nginx/sites-available/default`
 - `/etc/nginx/sites-available/example.com`
