@@ -1,10 +1,26 @@
 # Promises Chaining
 
+## 내장 reduce 함수 사용
+
 JavaScript의 reduce를 활용하여 promise를 순서대로 실행하고 결과값을 모아서 반환
 
-클래스 내부의 method(`this.methodName()`)를 `promiseFn`으로 넘길 때는 `this` 바인딩을 해야 함
+method를 `promiseFn`으로 넘길 때는 `bind()`를 사용하여 `this` 바인딩을 한다
 
-`const results = await chainPromisesAccumulator(promiseFn.bind(this), conditions);`
+```ts
+const results = await chainPromisesAccumulator(foo.promiseFn.bind(foo), conditions);
+```
+
+method 실행이전 명령을 정의하기 위해서 method를 포함한 lambda 함수를 작성하여 넘긴다면,
+`call()`을 사용하여 `this` 바인딩을 한다
+
+```ts
+const results = await chainPromisesAccumulator(() => {
+  // ...
+  foo.promiseFn.call(foo);
+}, conditions);
+```
+
+`promiseFn`을 받아서 연쇄 실행하는 함수는 다음과 같다
 
 ```ts
 export const chainPromisesAccumulator = <R, U>(
@@ -20,3 +36,9 @@ export const chainPromisesAccumulator = <R, U>(
   }, Promise.resolve(<R[]>[]));
 };
 ```
+
+## Async 라이브러리
+
+<https://caolan.github.io/async/docs.html>
+
+`Collection` 카테고리의 `---Series` 함수를 사용하여 순차실행한다
