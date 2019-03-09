@@ -52,22 +52,41 @@ start() {
 `config/elasticsearch.yml`
 
 ```yml
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
 network.host: [ "_local_", "0.0.0.0" ]
+http.compression: true
+
+xpack.security.enabled: false
+xpack.monitoring.enabled: true
+xpack.monitoring.collection.enabled: true
+
+searchguard.enterprise_modules_enabled: false
 ```
 
 ## Kibana
 
 ### Kibana 설치
 
+<https://www.elastic.co/guide/en/kibana/current/install.html>
+
 ### Kibana 설정
 
 <https://www.elastic.co/guide/en/kibana/current/settings.html>
 
-### Management: index pattern
+```yml
+elasticsearch.hosts: ["https://localhost:9200"]
+elasticsearch.username: "kibana"
+elasticsearch.password: "password"
 
-### Discover
+xpack.spaces.enabled: false
+xpack.security.enabled: false
+xpack.monitoring.enabled: true
 
-### Visualize
+elasticsearch.ssl.verificationMode: none
+elasticsearch.ssl.certificateAuthorities: /etc/kibana/root-ca.pem
+```
 
 ## Search Guard (Community)
 
@@ -76,11 +95,8 @@ network.host: [ "_local_", "0.0.0.0" ]
 <https://docs.search-guard.com/latest/search-guard-installation>
 
 - 호환 버전 확인: <https://docs.search-guard.com/latest/search-guard-versions>
-
 - 설치: `bin/elasticsearch-plugin install -b com.floragunn:search-guard-6:<version>`
-
 - 라이선스 확인: `https://example.com:9200/_searchguard/license`
-
 - 라이선스 제한(`elasticsearch.yml`): `searchguard.enterprise_modules_enabled: false`
 
 ### TLS 설정
@@ -293,11 +309,75 @@ elasticsearch.yml, kibana.yml and logstash.yml configuration files
 
 정규표현식: <https://www.elastic.co/guide/en/beats/filebeat/current/regexp-support.html>
 
+실행 옵션: <https://www.elastic.co/guide/en/logstash/6.0/running-logstash-command-line.html>
+
+```sh
+nohup /usr/share/logstash/bin/logstash \
+  --path.settings /etc/logstash/ \
+  -f /etc/logstash/conf.d/ --config.reload.automatic \
+  >> /var/log/logstash/logstash-stdout.log \
+  2>> /v    ar/log/logstash/logstash-stderr.log &
+```
+
 ### input
+
+<https://www.elastic.co/guide/en/logstash/current/input-plugins.html>
+
+#### beats
+
+````conf
+beats {
+    port => 9600
+    type => foo-type
+}
+````
 
 ### filter
 
+<https://www.elastic.co/guide/en/logstash/current/filter-plugins.html>
+
+#### json 필터
+
+```conf
+filter {
+    json {
+        source => "message"
+        target => "message"
+    }
+    json {
+        source => "[message][atts]"
+        target => "[message][atts]"
+    }
+}
+```
+
 ### output
+
+<https://www.elastic.co/guide/en/logstash/current/output-plugins.html>
+
+#### elastic search
+
+```conf
+output {
+    elasticsearch {
+        hosts => ["https://localhost:9200"]
+        index => "logstash-name-%{+YYYY.MM.dd}"
+        user => username
+        password => password
+        ssl => true
+        ssl_certificate_verification => false
+        cacert => "/etc/logstash/root-ca.pem"
+    }
+}
+```
+
+### stdout for debug
+
+```conf
+output {
+    stdout { codec => rubydebug }
+}
+```
 
 ## Beats (FileBeat, MetricBeat, HeartBeat...)
 
@@ -452,6 +532,15 @@ client:
   master_only: False
 ```
 
+### 실행
+
+- 목록보기: `curator_cli --config ./curator.yml show_indices --verbose`
+- 액션 실행
+  - `curator --config curator.yml [--run-dry] delete.yml`
+  - `--run-dry` 옵션으로 테스트 해볼 수 있음
+
+### 주기적 삭제
+
 `action-delete.yml`
 
 ```yml
@@ -473,13 +562,6 @@ actions:
         unit: days
         unit_count: 30
 ```
-
-### 실행
-
-- 목록보기: `curator_cli --config ./curator.yml show_indices --verbose`
-- 액션 실행
-  - `curator --config curator.yml [--run-dry] delete.yml`
-  - `--run-dry` 옵션으로 테스트 해볼 수 있음
 
 ## SlackAction
 
