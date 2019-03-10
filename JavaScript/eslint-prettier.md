@@ -27,6 +27,10 @@ DevDependencies 추가: `npm i -D prettier eslint-plugin-prettier eslint-config-
 }
 ```
 
+<https://github.com/prettier/tslint-plugin-prettier>
+
+<https://github.com/prettier/tslint-config-prettier>
+
 DevDependencies 추가: `npm i -D prettier tslint-plugin-prettier tslint-config-prettier`
 
 `.tslint.json` 설정에 추가
