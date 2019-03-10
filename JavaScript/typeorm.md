@@ -26,7 +26,7 @@ import 'reflect-metadata';
 
 프로젝트 루트에 `ormconfig.json`을 작성하고 db연결정보를 기록한다
 
-json 뿐만 아니라 js, yml, .env 등의 다양한 방식으로 작성 가능하다
+json 뿐만 아니라 `js`, `yml`, `.env` 등의 다양한 방식으로 작성 가능하다
 
 ```json
 [
