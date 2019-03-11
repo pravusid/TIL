@@ -1192,3 +1192,35 @@ let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Ri
 // 컴파일 되면 다음과 같아질 것이다
 var directions = [0 /* Up */, 1 /* Down */, 2 /* Left */, 3 /* Right */];
 ```
+
+## 타입 추론
+
+TypeScript의 타입추론은 변수나 멤버를 초기화하거나 파라미터의 기본값을 설정하거나 함수의 반환 타입을 결정할 때 발생한다.
+
+### Best common type
+
+컴파일러는 타입 추론을 위해 제공된 후보를 분석하여 가장 적합한 공통유형을 찾는다.
+
+하지만 모든 유형의 super type이 명시적으로 존재하지 않으면 union array type으로 처리되므로(`(Rhino | Elephant | Snake)[].`) 필요하다면 super type을 명시해야 한다.
+
+```ts
+let zoo: Animal[] = [new Rhino(), new Elephant(), new Snake()];
+```
+
+### Contextual Typing
+
+문맥상 타이핑은 위치에 의해 표현식의 타입이 암시될 때 발생한다.
+
+아래애서 mouseEvent의 문맥이 없다면 `any` 타입으로 처리되어 `button` 프로퍼티를 사용할 수 없을 것이다.
+
+```ts
+window.onmousedown = function(mouseEvent) {
+  console.log(mouseEvent.button);   //<- OK
+  console.log(mouseEvent.kangaroo); //<- Error!
+};
+```
+
+함수가 문맥이 없는 위치에 있다면 인수는 암시적으로 `any` 유형이 되므로 위의 오류는 발생하지 않는다.
+(컴파일러에서 `--noImplicitAny` 옵션을 사용하여 이를 방지할 수 있다)
+
+문맥상 타이핑은 함수 호출의 인수, 할당문의 우측, type assertion, 객체와 배열 리터럴의 멤버와 반환문 등에 적용된다.
