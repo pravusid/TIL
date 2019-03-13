@@ -65,6 +65,19 @@ xpack.monitoring.collection.enabled: true
 searchguard.enterprise_modules_enabled: false
 ```
 
+### APIs (kibana Dev Tools Console)
+
+#### index
+
+<https://www.elastic.co/guide/en/elasticsearch/reference/current/indices.html>
+
+#### template
+
+<https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
+
+- 전체조회: GET /_template
+- 삭제: DELETE /_template/{name}
+
 ## Kibana
 
 ### Kibana 설치
@@ -444,6 +457,8 @@ heartbeat setup -e \
 ```
 
 ### Template 적용
+
+(그다지 추천하는 방법은 아님... -> 기본 템플릿 필드가 모두 들어가버림)
 
 By default, Filebeat automatically loads the recommended template file, fields.yml,
 if the Elasticsearch output is enabled.
