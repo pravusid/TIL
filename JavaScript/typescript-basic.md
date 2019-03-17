@@ -1224,3 +1224,194 @@ window.onmousedown = function(mouseEvent) {
 (컴파일러에서 `--noImplicitAny` 옵션을 사용하여 이를 방지할 수 있다)
 
 문맥상 타이핑은 함수 호출의 인수, 할당문의 우측, type assertion, 객체와 배열 리터럴의 멤버와 반환문 등에 적용된다.
+
+## 타입 호환성
+
+TypeScript의 타입 호환성은 구조적 서브타이핑을 기반으로 한다.
+
+아래에서 Person 클래스는 Named 인터페이스 구현을 명시하지 않았으나, 해당 인터페이스의 구조를 따르고 있다.
+
+```ts
+interface Named {
+  name: string;
+}
+
+class Person {
+  name: string;
+}
+
+let p: Named;
+p = new Person();
+```
+
+TypeScript 구조적 타입 시스템의 기본 규칙은, y가 x의 멤버를 모두 구성한다면 x가 y와 호환된다는 것이다.
+
+### 함수 비교
+
+```ts
+let x = (a: number) => 0;
+let y = (b: number, s: string) => 0;
+
+y = x;
+x = y; // ERROR
+```
+
+두 함수가 서로 호환 가능한지 확인하기 위해 우선 매개 변수 목록을 확인한다.
+함수의 매개 변수 비교는 상응하는 호환 가능한 타입의 매개변수에 대응되고, 이름은 고려되지 않는다.
+
+y의 매개변수는 두 개이지만, x는 매개변수가 하나 밖에 없다.
+하지만 JavaScript에서 함수의 매개 변수가 무시하는 것이 허용되므로 할당이 가능하다.
+
+```ts
+let x = () => ({name: "Alice"});
+let y = () => ({name: "Alice", location: "Seattle"});
+
+x = y;
+y = x; // ERROR
+```
+
+타입시스템은 원본 함수 반환형이 대상 타입 반환형의 서브타입이 되도록 강제한다 (공변성)
+
+#### Function Parameter Bivariance
+
+함수 파라미터의 타입을 비교할 때, 원본 파라미터가 대상 파라미터에 할당 가능하거나 그 반대일 경우 할당이 성공한다.
+하지만, 호출한 쪽에서 less specialized type argument로 함수를 호출할 수도 있는데 이는 바람직 하지 않다.
+
+```ts
+enum EventType { Mouse, Keyboard }
+
+interface Event { timestamp: number; }
+interface MouseEvent extends Event { x: number; y: number }
+interface KeyEvent extends Event { keyCode: number }
+
+function listenEvent(eventType: EventType, handler: (n: Event) => void) {
+  /* ... */
+}
+
+// 바람직하지 않지만, 유용하고 일반적이다
+listenEvent(EventType.Mouse, (e: MouseEvent) => console.log(e.x + "," + e.y));
+
+// 바람직하지 않은 대안
+listenEvent(EventType.Mouse, (e: Event) => console.log((<MouseEvent>e).x + "," + (<MouseEvent>e).y));
+listenEvent(EventType.Mouse, <(e: Event) => void>((e: MouseEvent) => console.log(e.x + "," + e.y)));
+
+// 명백한 오류: 완전히 호환되지 않는 타입이 강제됨
+listenEvent(EventType.Mouse, (e: number) => console.log(e));
+```
+
+#### Optional Parameters and Rest Parameters
+
+함수를 비교할 때 선택적 파라미터와 필수 파라미터는 서로 바꿔 사용할 수 있다.
+
+원본 타입에 추가적인 선택적 파라미터는 오류가 아니며,
+대상 타입의 선택적 파라미터에 원본타입에 대응하는 파라미터가 없더라도 오류가 아니다.
+
+함수가 rest 파라미터를 가지고 있다면, 무한대의 선택적 파라미터 연속으로 처리된다.
+
+이는 타입시스템의 관점에서 보면 적절하지 않지만,
+런타임 관점에서 본다면 대부분의 함수에서 해당위치에 `undefined`를 전달하기 때문에 선택적 파라미터의 개념은 일반적으로 잘 적용된다 보기 어렵다.
+
+```ts
+function invokeLater(args: any[], callback: (...args: any[]) => void) {
+  /* ... Invoke callback with 'args' ... */
+}
+
+// 부적절함: invokeLater는 아마도 정해지지 않은 수의 인수를 제공할 것이다
+invokeLater([1, 2], (x, y) => console.log(x + ", " + y));
+
+// 혼란스러움: x, y 는 실제로 필요하다
+invokeLater([1, 2], (x?, y?) => console.log(x + ", " + y));
+```
+
+#### Functions with overloads
+
+오버로딩한 함수는 원본 유형과 대상유형의 호환가능한 시그니처와 일치해야 한다
+
+### Enums 타입 호환성
+
+Enum 타입은 number 타입과 상호호환된다.
+하지만 다른 Enum에서 가져온 Enum 값은 호환되지 않는다.
+
+```ts
+enum Status { Ready, Waiting };
+enum Color { Red, Blue, Green };
+
+let status = Status.Ready;
+status = Color.Green;  // ERROR
+```
+
+### Class 타입 호환성
+
+클래스는 한 가지만 제외하고 객체 리터럴 타입이나 인터페이스와 동일하게 작동한다.
+
+클래스유형의 두 객체를 비교할 때 인스턴스 멤버만 비교하고, 정적 멤버 및 생성자는 호환성에 영향을 주지 않는다.
+
+```ts
+class Animal {
+  feet: number;
+  constructor(name: string, numFeet: number) { }
+}
+
+class Size {
+  feet: number;
+  constructor(numFeet: number) { }
+}
+
+let a: Animal;
+let s: Size;
+
+a = s;  // OK
+s = a;  // OK
+```
+
+#### Private and protected members in classes
+
+클래스의 private | protected 멤버는 호환성에 영향을 준다.
+
+이를 통해 클래스는 super class와 호환되어 할당 가능하지만, 동일한 형태의 다른 상속 계층 클래스와는 호환되지 않는다.
+
+### Generics 타입 호환성
+
+TypeScript는 구조적 타입 시스템이므로 타입 파라미터는 멤버의 일부로 사용될 때만 결과 타입에 영향을 준다.
+
+```ts
+interface Empty<T> { }
+let x: Empty<number>;
+let y: Empty<string>;
+
+x = y;  // OK, because y matches structure of x
+```
+
+위의 경우는 타입 파라미터를 다르게 사용하지 않으므로 구조적으로 호환 가능하다.
+
+```ts
+interface NotEmpty<T> {
+  data: T;
+}
+let x: NotEmpty<number>;
+let y: NotEmpty<string>;
+
+x = y;  // Error, because x and y are not compatible
+```
+
+타입 인자가 명시된 제네릭 타입은 실제로는 비-제네릭 타입처럼 작동한다.
+
+타입 인자가 지정되지 않은 제네릭 타입의 경우 지정되지 않은 타입 인자 대신 `any`를 지정하여 호환성을 확인한다.
+그리고 나서, 비-제네릭 타입과 같은 방식으로 결과 타입을 확인한다.
+
+```ts
+let identity = function<T>(x: T): T {
+  // ...
+}
+let reverse = function<U>(y: U): U {
+  // ...
+}
+
+identity = reverse;  // OK, because (x: any) => any matches (y: any) => any
+```
+
+### Subtype vs Assignment
+
+TypeScript Spec에는 subtype과 assignment는 두 가지 종류의 호환성이 있다.
+
+두 호환성은 할당이 하위타입 규칙 호환성(`any` 혹은 숫자값에 대응하는 `enum`에 할당되거나 할당을 허용하는)을 확장할 때만 다르다.
