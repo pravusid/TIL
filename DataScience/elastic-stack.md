@@ -67,16 +67,63 @@ searchguard.enterprise_modules_enabled: false
 
 ### APIs (kibana Dev Tools Console)
 
-#### index
+#### Index
 
 <https://www.elastic.co/guide/en/elasticsearch/reference/current/indices.html>
 
-#### template
+#### Template
 
 <https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
 
 - 전체조회: GET /_template
 - 삭제: DELETE /_template/{name}
+
+### Data Types
+
+#### Core datatypes
+
+- String
+  - [text](https://www.elastic.co/guide/en/elasticsearch/reference/current/text.html): 전체 텍스트 값을 인덱싱
+  - [keyword](https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html): 구조화된 값(정확한 값으로만 검색)
+
+- [Numeric](https://www.elastic.co/guide/en/elasticsearch/reference/current/number.html)
+  - long: 64bit 정수
+  - integer: 32bit 정수
+  - short: 16bit 정수
+  - byte: 8bit 정수
+  - double: double precision 64bit IEEE 754 실수
+  - float: single precision 32bit IEEE 754 실수
+  - half_float: half precision 16bit IEEE 754 실수
+  - scaled_float: 고정 `double` scale factor에 의해 확장된 유한 실수
+
+- [Date](https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html)
+  - 날짜 포맷으로 작성된 string
+  - epoch miliseconds을 표현하는 long
+  - epoch seconds를 표현하는 integer
+
+- [Boolean](https://www.elastic.co/guide/en/elasticsearch/reference/current/boolean.html): 참, 거짓
+
+#### Complex datatypes
+
+- [Array](https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html)
+  - 모든 필드는 0개 이상의 값이 포함 될 수 있으나 모든 값은 동일한 타입이어야 한다
+  - 객체의 배열은 예상 대로 작동하지 않으므로 중첩 데이터 유형을 사용해야 한다
+
+- [Object](https://www.elastic.co/guide/en/elasticsearch/reference/current/object.html)
+  - JSON 문서는 계층적이고 내부에 객체를 포함할 수 있다
+
+- [Nested](https://www.elastic.co/guide/en/elasticsearch/reference/current/nested.html)
+  - 중첩 타입은 객체 타입의 특수한 형태로 객체 배열을 서로 독립적으로 쿼리할 수 있도록 인덱싱 한다
+
+#### Geo datatypes
+
+<https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-point.html>
+
+- Geo-point expressed as an object, with lat and lon keys
+- Geo-point expressed as a string with the format: "lat,lon"
+- Geo-point expressed as a geohash
+- Geo-point expressed as an array with the format: [lon, lat]
+- A geo-bounding box query which finds all geo-points that fall inside the box
 
 ## Kibana
 
@@ -348,6 +395,10 @@ beats {
 ### filter
 
 <https://www.elastic.co/guide/en/logstash/current/filter-plugins.html>
+
+#### grok 필터
+
+구조화되지 않은 데이터의 구조를 선언하여 파싱함
 
 #### json 필터
 
