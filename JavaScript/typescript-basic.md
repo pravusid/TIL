@@ -1415,3 +1415,187 @@ identity = reverse;  // OK, because (x: any) => any matches (y: any) => any
 TypeScript Spec에는 subtype과 assignment는 두 가지 종류의 호환성이 있다.
 
 두 호환성은 할당이 하위타입 규칙 호환성(`any` 혹은 숫자값에 대응하는 `enum`에 할당되거나 할당을 허용하는)을 확장할 때만 다르다.
+
+## 고급 타입
+
+### Intersection Types (`&`)
+
+교차 타입은 여러 타입을 하나로 결합한다.
+교차 타입은 주로 믹스인이나 고전적인 객체지향 틀에서 벗어난 개념에 사용되는 것을 볼 수 있다.
+
+```ts
+function extend<First, Second>(first: First, second: Second): First & Second {
+  const result: Partial<First & Second> = {};
+  for (const prop in first) {
+    if (first.hasOwnProperty(prop)) {
+      (<First>result)[prop] = first[prop];
+    }
+  }
+  for (const prop in second) {
+    if (second.hasOwnProperty(prop)) {
+      (<Second>result)[prop] = second[prop];
+    }
+  }
+  return <First & Second>result;
+}
+
+class Person {
+  constructor(public name: string) { }
+}
+
+interface Loggable {
+  log(name: string): void;
+}
+
+class ConsoleLogger implements Loggable {
+  log(name) {
+    console.log(`Hello, I'm ${name}.`);
+  }
+}
+
+const jim = extend(new Person('Jim'), ConsoleLogger.prototype);
+jim.log(jim.name);
+```
+
+### Union Types (`|`)
+
+조합 타입은 여러 타입중 하나가 될 수 있는 타입을 설명한다.
+만약 조합 타입을 가진 값이 있다면 조합 타입에서 공통적으로 존재하는 멤버들만 접근할 수 있다.
+
+```ts
+interface Bird {
+  fly();
+  layEggs();
+}
+interface Fish {
+  swim();
+  layEggs();
+}
+
+function getSmallPet(): Fish | Bird {
+  // ...
+}
+
+let pet = getSmallPet();
+pet.layEggs(); // okay
+pet.swim();    // errors
+```
+
+### Type Guards and Differentiating Types
+
+조합 타입은 공통으로 존재하는 멤버에만 접근 가능하므로,
+존재하지만 타입 때문에 접근할 수 없는 멤버에 접근하기 위해서는 type assertion을 활용할 것이다.
+
+```ts
+let pet = getSmallPet();
+
+if ((<Fish>pet).swim) {
+  (<Fish>pet).swim();
+} else {
+  (<Bird>pet).fly();
+}
+```
+
+#### User-Defined Type Guards
+
+type assertion을 여러번 사용하지 않고 타입 확인을 한 번만 할 수 있다.
+TypeScript의 Type Guard는 타입이 특정 범위 내에 있음을 보장하는 runtime check를 수행하는 표현식이다.
+
+타입 가드를 정의하기 위해서는 반환 타입을 타입 서술로 표기하면 된다. (`parameterName is Type`)
+
+```ts
+function isFish(pet: Fish | Bird): pet is Fish {
+  return (<Fish>pet).swim !== undefined;
+}
+
+if (isFish(pet)) {
+  pet.swim();
+} else {
+  pet.fly();
+}
+```
+
+TypeScript 컴파일러는 조건문에서 `Fish`임을 확인한다면 다른 경우는 `Bird` 타입임을 알고 있다.
+
+#### `typeof` type guards
+
+typename은 다음의 "number", "string", "boolean", or "symbol" 중의 하나를 사용해야 하며,
+`typeof v === "typename"` 또는 `typeof v !== "typename"`의 두 가지 형태로 사용할 수 있다.
+
+```ts
+function padLeft(value: string, padding: string | number) {
+  if (typeof padding === "number") {
+    return Array(padding + 1).join(" ") + value;
+  }
+  if (typeof padding === "string") {
+    return padding + value;
+  }
+  throw new Error(`Expected string or number, got '${padding}'.`);
+}
+```
+
+#### `instanceof` type guards
+
+`instanceof` 타입 가드는 생성성자 삼수를 사용하여 타입을 한정하는 방법이다.
+
+`instanceof`의 오른쪽은 생성자 함수여야 하며, TypeScript는 다음 순서로 범위를 한정한다.
+
+1. 함수의 prototype 프로퍼티의 타입이 `any`가 아닌 경우, 그 타입
+2. 타입의 생성자 시그니처에의해 반환되는 union type
+
+```ts
+interface Padder {
+  getPaddingString(): string
+}
+
+class SpaceRepeatingPadder implements Padder {
+  constructor(private numSpaces: number) { }
+  getPaddingString() {
+    return Array(this.numSpaces + 1).join(" ");
+  }
+}
+
+class StringPadder implements Padder {
+  constructor(private value: string) { }
+  getPaddingString() {
+    return this.value;
+  }
+}
+
+function getRandomPadder() {
+  return Math.random() < 0.5 ?
+    new SpaceRepeatingPadder(4) :
+    new StringPadder("  ");
+}
+
+// Type is 'SpaceRepeatingPadder | StringPadder'
+let padder: Padder = getRandomPadder();
+
+if (padder instanceof SpaceRepeatingPadder) {
+  padder; // type narrowed to 'SpaceRepeatingPadder'
+}
+if (padder instanceof StringPadder) {
+  padder; // type narrowed to 'StringPadder'
+}
+```
+
+### Nullable types
+
+TypeScript에는 `null` 및 `undefined` 값을 갖는 두 특수한 타입이 있다.
+기본적으로 타입체커는 `null`과 `undefined`는 모든 타입의 값으로 유효한 것으로 간주한다.
+
+`--strictNullChecks` 플래그를 사용하면 변수를 선언할 때 `null` 또는 `undefined`를 자동으로 포함하지 않는다.
+Union 타입을 사용해서 명시적으로 포함할 수는 있다.
+
+```ts
+let s = "foo";
+s = null; // error, 'null' is not assignable to 'string'
+let sn: string | null = "bar";
+sn = null; // ok
+
+sn = undefined; // error, 'undefined' is not assignable to 'string | null'
+```
+
+TypeScript는 JavaScript 처럼 `null`과 `undefined`를 다르게 처리한다.
+
+#### Optional parameters and properties
