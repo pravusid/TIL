@@ -1420,8 +1420,8 @@ TypeScript Spec에는 subtype과 assignment는 두 가지 종류의 호환성이
 
 ### Intersection Types (`&`)
 
-교차 타입은 여러 타입을 하나로 결합한다.
-교차 타입은 주로 믹스인이나 고전적인 객체지향 틀에서 벗어난 개념에 사용되는 것을 볼 수 있다.
+intersection 타입은 여러 타입을 하나로 결합한다.
+intersection 타입은 주로 믹스인이나 고전적인 객체지향 틀에서 벗어난 개념에 사용되는 것을 볼 수 있다.
 
 ```ts
 function extend<First, Second>(first: First, second: Second): First & Second {
@@ -1459,8 +1459,8 @@ jim.log(jim.name);
 
 ### Union Types (`|`)
 
-조합 타입은 여러 타입중 하나가 될 수 있는 타입을 설명한다.
-만약 조합 타입을 가진 값이 있다면 조합 타입에서 공통적으로 존재하는 멤버들만 접근할 수 있다.
+union 타입은 여러 타입중 하나가 될 수 있는 타입을 설명한다.
+만약 union 타입을 가진 값이 있다면 union 타입에서 공통적으로 존재하는 멤버들만 접근할 수 있다.
 
 ```ts
 interface Bird {
@@ -1483,7 +1483,7 @@ pet.swim();    // errors
 
 ### Type Guards and Differentiating Types
 
-조합 타입은 공통으로 존재하는 멤버에만 접근 가능하므로,
+union 타입은 공통으로 존재하는 멤버에만 접근 가능하므로,
 존재하지만 타입 때문에 접근할 수 없는 멤버에 접근하기 위해서는 type assertion을 활용할 것이다.
 
 ```ts
@@ -1599,3 +1599,255 @@ sn = undefined; // error, 'undefined' is not assignable to 'string | null'
 TypeScript는 JavaScript 처럼 `null`과 `undefined`를 다르게 처리한다.
 
 #### Optional parameters and properties
+
+`--strictNullChecks`를 사용하면 선택적 매개변수 및 선택적 프로퍼티에 `| undefined`가 추가된다
+
+```ts
+function f(x: number, y?: number) {
+  return x + (y || 0);
+}
+f(1);
+f(1, undefined);
+f(1, null); // error, 'null' is not assignable to 'number | undefined'
+
+
+class C {
+  a: number;
+  b?: number;
+}
+let c = new C();
+c.a = undefined; // error, 'undefined' is not assignable to 'number'
+c.b = undefined; // ok
+c.b = null; // error, 'null' is not assignable to 'number | undefined'
+```
+
+#### Type guards and type assertions
+
+nullable 타입은 union type으로 구현되므로 타입 가드를 사용해서 null을 제거해야 한다
+
+```ts
+function f(sn: string | null): string {
+  if (sn == null) {
+    return "default";
+  }
+  else {
+    return sn;
+  }
+}
+```
+
+null 제거를 위해서 간결하게 연산자를 사용할 수 있다
+
+```ts
+function f(sn: string | null): string {
+  return sn || "default";
+}
+```
+
+컴파일러가 null 또는 undefined를 제거할 수 없는 경우 type assertion 연산자를 사용해서 수동으로 제거할 수 있다
+
+null 제거를 위한 연산자는 postfix `!`이다
+
+```ts
+function fixed(name: string | null): string {
+  function postfix(epithet: string) {
+    return name!.charAt(0) + ". the " + epithet; // ok
+  }
+  name = name || "Bob";
+  return postfix("great");
+}
+```
+
+### Type Aliases
+
+Type Alias는 타입의 새로운 이름을 생성한다.
+
+인터페이스와 유사해보이지만 원시 타입 및 union, tuple 및 기타 여러 타입을 대상으로 이름을 지정할 수 있다.
+
+```ts
+type Name = string;
+type NameResolver = () => string;
+type NameOrResolver = Name | NameResolver;
+function getName(n: NameOrResolver): Name {
+  if (typeof n === "string") {
+    return n;
+  }
+  else {
+    return n();
+  }
+}
+```
+
+Aliasing은 새 타입을 생성하지 않으며 해당 타입을 가리키는 이름을 만드는 것이다.
+원시타입에 대한 alias를 작성하는 것은 전혀 쓸모가 없다.
+
+인터페이스와 마찬가지로 type alias에 generic도 사용 가능하다.
+
+```ts
+type Container<T> = { value: T };
+```
+
+또한 type alias를 정의할 때 프로퍼티에서 해당 alias를 바로 사용할 수 있다.
+
+```ts
+type Tree<T> = {
+  value: T;
+  left: Tree<T>;
+  right: Tree<T>;
+}
+```
+
+intersection 타입과 함께 사용해서 상당히 혼란스러운 타입을 만들 수도 있다
+
+```ts
+type LinkedList<T> = T & { next: LinkedList<T> };
+
+interface Person {
+  name: string;
+}
+
+var people: LinkedList<Person>;
+var s = people.name;
+var s = people.next.name;
+var s = people.next.next.name;
+var s = people.next.next.next.name;
+```
+
+그러나 별칭은 선언 우측에서 바로 사용될 수 없다
+
+```ts
+type Yikes = Array<Yikes>; // error
+```
+
+#### Interfaces vs Type Aliases
+
+타입 별칭과 다르게 인터페이스는 어디에서나 사용될 수 있는 이름을 생성한다.
+아래의 코드에서 `aliased`는 객체 리터럴 타입을 반환하지만 `interfaced`는 인터페이스를 반환한다.
+
+```ts
+type Alias = { num: number }
+interface Interface {
+  num: number;
+}
+declare function aliased(arg: Alias): Alias;
+declare function interfaced(arg: Interface): Interface;
+```
+
+또한, t타입 별칭을 확장(extend)하거나 구현(implement)할 수 없으며, 다른 타입으로부터 확장/구현할 수도 없다.
+
+소프트웨어는 개방-폐쇄원칙을 지키는 것이 이상적이므로, 확장이 필요한 경우 인터페이스를 사용해야 한다.
+반면, 인터페이스를 통해서 형태를 표현할 수 없고 union 타입이나 튜플이 필요한 경우 타입 별칭이 사용된다.
+
+### String Literal Types
+
+문자열 리터럴 타입을 사용해서 문자열에 있어야 하는 정확한 값을 지정할 수 있다.
+
+문자열 리터럴 타입은 union type, 타입 가드, 타입 별칭과 함께 사용하기 좋다.
+그러한 기능을 함께 사용해서 문자열에서 enum과 비슷한 결과를 얻을 수 있다.
+
+```ts
+type Easing = "ease-in" | "ease-out" | "ease-in-out";
+class UIElement {
+  animate(dx: number, dy: number, easing: Easing) {
+    if (easing === "ease-in") {
+      // ...
+    }
+    else if (easing === "ease-out") {
+    }
+    else if (easing === "ease-in-out") {
+    }
+    else {
+      // error! should not pass null or undefined.
+    }
+  }
+}
+
+let button = new UIElement();
+button.animate(0, 0, "ease-in");
+button.animate(0, 0, "uneasy"); // ERROR: Argument of type '"uneasy"' is not assignable to parameter of type '"ease-in" | "ease-out" | "ease-in-out"'
+```
+
+overloading을 구분하기 위해서 문자열 리터럴 타입을 비슷한 방식으로 사용할 수 있다
+
+```ts
+function createElement(tagName: "img"): HTMLImageElement;
+function createElement(tagName: "input"): HTMLInputElement;
+// ... more overloads ...
+function createElement(tagName: string): Element {
+    // ... code goes here ...
+}
+```
+
+### Numeric Literal Types
+
+TypeScript에는 숫자 리터럴 타입도 있다
+
+```ts
+function rollDice(): 1 | 2 | 3 | 4 | 5 | 6 {
+  // ...
+}
+```
+
+숫자 리터럴을 명시적으로 사용하는 경우는 거의 없으며, 버그를 잡기 위해 범위를 좁히는데 유용하다.
+
+```ts
+function foo(x: number) {
+  if (x !== 1 || x !== 2) {  // ERROR: Operator '!==' cannot be applied to types '1' and '2'.
+    // ...
+  }
+}
+```
+
+x가 타입 `2`와 비교될 때는 이미 타입 `1`인 경우이므로 오류 발생
+
+### Enum Member Types
+
+Enum 멤버는 모든 멤버가 리터럴로 초기화 될 때 타입이된다.
+
+싱글톤 타입을 말할 때 숫자/문자 리터럴 타입뿐만 아니라 enum 멤버 타입 둘다를 가리키는 것이다.
+그러나 많은 사람들은 싱글톤 타입과 리터럴 타입을 혼용하고 있다.
+
+### Discriminated Unions
+
+싱글톤 타입, union 타입, 타입 가드, 타입 별칭을 결합해서 discriminated unions라고 불리는 고급 패턴을 만들 수 있다.
+
+tagged union / algebraic data types로도 불리는 discriminated unions은 함수형 프로그래밍에 유용하다.
+
+1. discriminant: 공통, 싱글턴 타입 프로퍼티를 갖는 타입
+2. union: 해당 타입들의 union을 갖는 타입 별칭
+3. 공통 프로퍼티에 타입가드 존재
+
+```ts
+interface Square {
+  kind: "square";
+  size: number;
+}
+interface Rectangle {
+  kind: "rectangle";
+  width: number;
+  height: number;
+}
+interface Circle {
+  kind: "circle";
+  radius: number;
+}
+
+type Shape = Square | Rectangle | Circle;
+```
+
+결합하기 위해 선언한 인터페이스에는 서로 다른 문자열 리터럴 타입을 가진 `kind` 프로퍼티가 있다.
+`kind` 프로퍼티를 discriminant 또는 tag라고 한다.
+
+discriminated union은 다음과 같이 사용한다.
+
+```ts
+function area(s: Shape) {
+  switch (s.kind) {
+    case "square": return s.size * s.size;
+    case "rectangle": return s.height * s.width;
+    case "circle": return Math.PI * s.radius ** 2;
+  }
+}
+```
+
+#### Exhaustiveness checking
