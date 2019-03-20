@@ -1,4 +1,4 @@
-# Kotlin
+# Kotlin Intro
 
 > Kotlin in Action을 읽으며 발췌, 요약 및 기타내용 추가하였음
 

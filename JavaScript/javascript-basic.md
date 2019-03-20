@@ -1,4 +1,4 @@
-# JavaScript
+# Inside JavaScript
 
 ## 변수
 

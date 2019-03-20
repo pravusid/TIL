@@ -1,4 +1,4 @@
-# 자바스크립트 변화 추세
+# Modern JavaScript
 
 ## 자바스크립트 표준
 

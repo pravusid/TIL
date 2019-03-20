@@ -1,4 +1,4 @@
-# TypeScript
+# TypeScript HandBook
 
 ## 기본 타입
 

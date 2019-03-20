@@ -1,4 +1,4 @@
-# XML
+# XML parsing
 
 ## 자바에서 XML 파싱방법
 

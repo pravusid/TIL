@@ -1,4 +1,4 @@
-# Kotlin Type System
+# Type System
 
 ## Nullability
 

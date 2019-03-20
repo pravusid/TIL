@@ -1,4 +1,4 @@
-# Java Enumeration
+# Enumeration
 
 Java 1.5 버전에서 추가된 열거형 상수
 
