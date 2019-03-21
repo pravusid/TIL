@@ -43,3 +43,20 @@ AWS Lambda와 연결하여 거의 실시간으로 관심있는 정보를 처리�
 ### LSI
 
 <https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/LSI.html>
+
+## 에러처리
+
+<https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/Programming.Errors.html>
+
+JS error object 예시
+
+```json
+{
+  "code": "ConditionalCheckFailedException",
+  "time": "2019-03-21T14:40:32.171Z",
+  "requestId": "94033QGK80J454DT5CR78O862NVV4KQNSO5AEMVJF66Q9ASUAAJG",
+  "statusCode": 400,
+  "retryable": false,
+  "retryDelay": 13.794078870110315
+}
+```
