@@ -13,6 +13,10 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 
 ### jest설정 (ts기준)
 
+<https://jest-bot.github.io/jest/docs/configuration.html>
+
+`npm i -D @types/jest jest ts-jest`
+
 `packages.json`
 
 ```json
@@ -22,19 +26,18 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
   },
-  "devDependencies": {
-    "@types/jest": "^23.3.12",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.5"
-  },
   "jest": {
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "rootDir": "test",
-    "testRegex": ".spec.ts$",
+    "moduleFileExtensions": [
+      "js", "jsx", "json", "ts", "tsx"
+    ],
+    "testRegex": "^.+\\.spec\\.(js|jsx|ts|tsx)$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(ts|tsx)$": "ts-jest"
     },
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
     "testEnvironment": "node"
   }
 }
