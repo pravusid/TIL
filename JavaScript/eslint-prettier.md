@@ -107,7 +107,7 @@ VSCode 설정에서 다음을 추가
 ```json
 {
   "defaultSeverity": "error",
-  "extends": "tslint-config-airbnb",
+  "extends": ["tslint-config-airbnb"],
   "jsRules": {},
   "rules": {
     "align": false,
