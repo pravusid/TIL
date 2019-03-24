@@ -13,11 +13,39 @@ sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get install python-certbot-nginx
 ```
 
-## 발급: NGINX + certbot webroot
+## 인증서
+
+아래의 발급 과정을 거치면 다음 인증서가 생성됨
+
+`/etc/letsencrypt/archive` -> (symbolic link) `/etc/letsencrypt/live/<domain_name>`
+
+- `fullchain.pem` : cert.pem + chain.pem
+- `cert.pem` : 도메인 인증서
+- `chain.pem` : Let’s Encrypt chain 인증서
+- `privkey.pem` : 인증서 개인키
+
+## 발급
+
+### 발급: manual
+
+DNS의 TXT record로 인증 후 발급
+
+```sh
+certbot certonly --manual --preferred-challenges dns -d pravusid.kr -d *.pravusid.kr
+
+# Are you OK with your IP being logged?:
+# -> Yes
+
+# Please deploy a DNS TXT record under the name
+# -> 출력되는 random string을 _acme-challenge.pravusid.kr TXT record에 등록함
+# -> 등록후 $ nslookup -q=TXT _acme-challenge.pravusid.kr 입력하여 적용 확인
+```
+
+### 발급: NGINX + certbot webroot
 
 Challenge Seed를 외부에서 접근 가능한 경로에(`/.well-known`)에 위치시켜 인증받는다
 
-`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d www.example.com`
+`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d *.example.com`
 
 인증서 생성 도중 대상 도메인에 대한 소유권 확인 과정을 거친다
 
@@ -42,7 +70,7 @@ location /.well-known {
 
 location ^~ /.well-known/acme-challenge/ {
     default_type "text/plain";
-    root /home/www/letsencrypt;
+    root /home/www/certbot;
 }
 ```
 
@@ -66,11 +94,11 @@ server {
 
     ssl_certificate /etc/letsencrypt/live/www.mysite.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/www.mysite.com/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/www.mysite.com/fullchain.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/www.mysite.com/chain.pem;
 }
 ```
 
-## 발급: NGINX + certbot auto
+### 발급: NGINX + certbot auto
 
 - `/etc/nginx/sites-available/default`
 - `/etc/nginx/sites-available/example.com`

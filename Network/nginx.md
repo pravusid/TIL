@@ -22,74 +22,86 @@ Web Server (Apache와 2강 구도를 형성하고 있다)
 
 ## 설정
 
-- 설정파일 위치: `/etc/nginx/nginx.conf`
-- 환경설정 구문 체크: `nginx -t`
+설정파일 위치: `/etc/nginx/nginx.conf`
 
-### 기본 설정파일 내용
+환경설정 구문 체크: `nginx -t`
+
+설정 생성후 심볼릭 링크, 적용
+
+```sh
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/<conf_name>.conf /etc/nginx/sites-enabled/<conf_name>.conf
+
+sudo nginx -t
+sudo systemctl stop nginx
+sudo systemctl start nginx
+```
+
+### 설정 파일 예시
+
+`site-available/<conf_name>.conf`
+
+동일 sub-domain에서 443(https default), 8080 포트를 각각 listen
 
 ```conf
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
+# Default server configuration
 
-events {
-    worker_connections 768;
-    # multi_accept on;
+server {
+    root /var/www/html;
+
+    # Add index.php to the list if you are using PHP
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name aws.pravusid.kr;
+
+    location / {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to displaying a 404.
+        # try_files $uri $uri/ =404;
+        try_files $uri $uri/ /index.html;
+    }
+
+    port_in_redirect off;
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/aws.pravusid.kr/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/aws.pravusid.kr/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
-http {
+server {
+    server_name aws.pravusid.kr;
 
-    ##
-    # Basic Settings
-    ##
+    port_in_redirect off;
 
-    sendfile on;
-    tcp_nopush on;
-    tcp_nodelay on;
-    keepalive_timeout 65;
-    types_hash_max_size 2048;
-    # server_tokens off;
+    location / {
+        proxy_set_header X-Forwarded-Host $host:$server_port;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://localhost:8000;
+        proxy_redirect http://localhost:8000 https://$host:$server_port;
+    }
 
-    # server_names_hash_bucket_size 64;
-    # server_name_in_redirect off;
+    listen [::]:8080 ssl ipv6only=on; # managed by Certbot
+    listen 8080 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/aws.pravusid.kr/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/aws.pravusid.kr/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
 
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
+server {
+    if ($host = aws.pravusid.kr) {
+        return 301 https://$host$request_uri;
+    }
 
-    ##
-    # SSL Settings
-    ##
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
-    ssl_prefer_server_ciphers on;
-
-    ##
-    # Logging Settings
-    ##
-
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
-
-    ##
-    # Gzip Settings
-    ##
-
-    gzip on;
-
-    # gzip_vary on;
-    # gzip_proxied any;
-    # gzip_comp_level 6;
-    # gzip_buffers 16 8k;
-    # gzip_http_version 1.1;
-    # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-
-    ##
-    # Virtual Host Configs
-    ##
-
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
+    server_name aws.pravusid.kr;
+    return 404;
 }
 ```
 
