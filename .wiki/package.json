@@ -9,9 +9,9 @@
   "author": "Sangdon Park",
   "license": "MIT",
   "dependencies": {
-    "vuepress": "^0.14.8"
+    "vuepress": "^0.14.10"
   },
   "devDependencies": {
-    "directory-tree": "^2.2.0"
+    "directory-tree": "^2.2.1"
   }
 }
