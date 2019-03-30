@@ -111,10 +111,8 @@ VSCode 설정에서 다음을 추가
   "jsRules": {},
   "rules": {
     "align": false,
-    "max-line-length": [
-      true,
-      { "limit": 100, "ignore-pattern": "^import |^export {(.*?)}" }
-    ]
+    "max-line-length": [true, { "limit": 100, "ignore-pattern": "^import |^export {(.*?)}" }],
+    "ter-arrow-parens": [true, "as-needed"]
   },
   "rulesDirectory": []
 }
