@@ -24,11 +24,13 @@
 - `any`: 알지 못하는 변수 타입 (최상위 타입으로 쓸 수도 있다)
 
 - `void`
+
   - `undefined` 또는 `null`만 할당할 수 있다
   - 일반적으로 반환이 없는 함수의 반환타입으로 사용됨
   - 변수 선언시 타입으로 `void`는 유용하지 않다
 
 - `undefined` / `null`
+
   - 다른 모든 타입의 서브 타입이다
   - `void`타입과 마찬가지로 변수의 타입으로 사용하기는 적절하지 않다
   - 컴파일러의 `--strictNullChecks` 옵션을 켜면 `void` 타입 혹은 각자의 타입인 `undefined` 또는 `null`에만 할당 가능하다
@@ -42,6 +44,7 @@
         - `typeof val === 'undefined'` for undefined.
 
 - `never`
+
   - 다른 모든 타입의 서브 타입이다 하지만 `never`타입의 서브타입은 없으며 어떠한 타입도 `never`타입에 위치에 할당할 수 없다
   - 절대로 발생하지 않는 값의 타입이다
     - 항상 `Error`를 반환하는 함수(`throw new Error()` | `return error`)
@@ -74,7 +77,7 @@ function f(shouldInitialize: boolean) {
   return x;
 }
 
-f(true);  // 10
+f(true); // 10
 f(false); // undefined
 ```
 
@@ -97,8 +100,10 @@ let은 루프의 일부로 선언될 때 반복마다 새로운 스코프를 생
 반복 횟수가 많은 경우 상대적으로 성능 저하를 불러올 수 있다.
 
 ```ts
-for (let i = 0; i < 10 ; i++) {
-  setTimeout(function() { console.log(i); }, 100 * i);
+for (let i = 0; i < 10; i++) {
+  setTimeout(function() {
+    console.log(i);
+  }, 100 * i);
 }
 ```
 
@@ -142,8 +147,7 @@ let search = { ...defaults, food: "rich" };
 ```ts
 class C {
   p = 12;
-  m() {
-  }
+  m() {}
 }
 let c = new C();
 let clone = { ...c };
@@ -540,7 +544,7 @@ class Octopus {
   readonly name: string;
   readonly numberOfLegs: number = 8;
 
-  constructor (theName: string) {
+  constructor(theName: string) {
     this.name = theName;
   }
 }
@@ -580,8 +584,7 @@ class Employee {
   set fullName(newName: string) {
     if (passcode && passcode == "secret passcode") {
       this._fullName = newName;
-    }
-    else {
+    } else {
       console.log("오류 : employee의 무단 업데이트!");
     }
   }
@@ -643,11 +646,11 @@ greeter = new Greeter("world");
 이와 같은 클래스 선언과 생성자 함수 호출은 실제로는 아래와 같은 방식으로 진행된다.
 
 ```ts
-let Greeter = (function () {
+let Greeter = (function() {
   function Greeter(message) {
     this.greeting = message;
   }
-  Greeter.prototype.greet = function () {
+  Greeter.prototype.greet = function() {
     return "Hello, " + this.greeting;
   };
   return Greeter;
@@ -672,8 +675,7 @@ class Greeter {
   greet() {
     if (this.greeting) {
       return "Hello, " + this.greeting;
-    }
-    else {
+    } else {
       return Greeter.standardGreeting;
     }
   }
@@ -718,10 +720,12 @@ JavaScript와 마찬가지로 함수는 함수 외부의 변수를 capture 할 �
 함수는 반환값에 따라 반환 타입을 추론할 수 있으므로 함수 선언시 반환타입은 선택적으로 작성할 수 있다.
 
 ```ts
-const myAdd: (baseValue: number, increment: number) => number =
-  function(x: number, y: number): number {
-    return x + y;
-  };
+const myAdd: (baseValue: number, increment: number) => number = function(
+  x: number,
+  y: number
+): number {
+  return x + y;
+};
 ```
 
 `myAdd` 변수 타입은 함수형 타입이다.
@@ -737,14 +741,12 @@ TypeScript 함수에서 인수의 개수는 선언된 함수의 매개변수의 
 
 ```ts
 function buildName(firstName: string, lastName?: string) {
-  if (lastName)
-    return firstName + " " + lastName;
-  else
-    return firstName;
+  if (lastName) return firstName + " " + lastName;
+  else return firstName;
 }
 
-let result1 = buildName("Bob");                  // OK
-let result2 = buildName("Bob", "Adams", "Sr.");  // ERROR
+let result1 = buildName("Bob"); // OK
+let result2 = buildName("Bob", "Adams", "Sr."); // ERROR
 ```
 
 필수 매개변수의 앞에 선택적 매개변수를 선언할 수 없다.
@@ -758,9 +760,9 @@ function buildName(firstName: string, lastName = "Smith") {
   return firstName + " " + lastName;
 }
 
-let result1 = buildName("Bob");                  // Bob Smith
-let result2 = buildName("Bob", undefined);       // Bob Smith
-let result3 = buildName("Bob", "Adams", "Sr.");  // ERROR: 매개변수가 너무 많음
+let result1 = buildName("Bob"); // Bob Smith
+let result2 = buildName("Bob", undefined); // Bob Smith
+let result3 = buildName("Bob", "Adams", "Sr."); // ERROR: 매개변수가 너무 많음
 ```
 
 선택적 매개변수와는 달리 필수 매개변수 앞이라도 기본값을 설정할 수 있다.
@@ -771,7 +773,7 @@ let result3 = buildName("Bob", "Adams", "Sr.");  // ERROR: 매개변수가 너�
 
 ```ts
 function buildName(firstName: string, ...restOfName: string[]) {
-    return firstName + " " + restOfName.join(" ");
+  return firstName + " " + restOfName.join(" ");
 }
 
 let employeeName = buildName("Joseph", "Samuel", "Lucas", "MacKinzie");
@@ -792,10 +794,10 @@ let deck = {
       let pickedCard = Math.floor(Math.random() * 52);
       let pickedSuit = Math.floor(pickedCard / 13);
 
-      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
-    }
+      return { suit: this.suits[pickedSuit], card: pickedCard % 13 };
+    };
   }
-}
+};
 
 let cardPicker = deck.createCardPicker();
 let pickedCard = cardPicker(); // ERROR: this.suits의 this는 window(strict에서는 undefined)이다
@@ -813,10 +815,10 @@ let deck = {
       let pickedCard = Math.floor(Math.random() * 52);
       let pickedSuit = Math.floor(pickedCard / 13);
 
-      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
-    }
+      return { suit: this.suits[pickedSuit], card: pickedCard % 13 };
+    };
   }
-}
+};
 
 let cardPicker = deck.createCardPicker();
 let pickedCard = cardPicker();
@@ -847,10 +849,10 @@ let deck: Deck = {
       let pickedCard = Math.floor(Math.random() * 52);
       let pickedSuit = Math.floor(pickedCard / 13);
 
-      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
-    }
+      return { suit: this.suits[pickedSuit], card: pickedCard % 13 };
+    };
   }
-}
+};
 
 let cardPicker = deck.createCardPicker();
 let pickedCard = cardPicker();
@@ -875,7 +877,9 @@ interface UIElement {
 ```ts
 class Handler {
   info: string;
-  onClickGood = (e: Event) => { this.info = e.message }
+  onClickGood = (e: Event) => {
+    this.info = e.message;
+  };
 }
 ```
 
@@ -918,7 +922,7 @@ let myIdentity: <T>(arg: T) => T = identity;
 // 제네릭 타입 변수명을 다르게 사용할 수도 있다
 let myIdentity: <U>(arg: U) => U = identity;
 // 제네릭 함수의 타입을 객체 리터럴의 호출 시그니처 형태로 쓸수도 있다
-let myIdentity: {<T>(arg: T): T} = identity;
+let myIdentity: { <T>(arg: T): T } = identity;
 ```
 
 ### 제네릭 인터페이스 / 클래스
@@ -927,7 +931,7 @@ let myIdentity: {<T>(arg: T): T} = identity;
 
 ```ts
 interface GenericIdentityFn {
-    <T>(arg: T): T;
+  <T>(arg: T): T;
 }
 interface GenericIdentityFn<T> {
   (arg: T): T;
@@ -951,7 +955,9 @@ class GenericNumber<T> {
 
 let myGenericNumber = new GenericNumber<number>();
 myGenericNumber.zeroValue = 0;
-myGenericNumber.add = function(x, y) { return x + y; };
+myGenericNumber.add = function(x, y) {
+  return x + y;
+};
 ```
 
 ### 제네릭 제약조건
@@ -967,7 +973,6 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
   console.log(arg.length); // T 타입은 length 프로퍼티를 갖고있는 타입이다
   return arg;
 }
-
 ```
 
 #### Using Type Parameters in Generic Constraints
@@ -1027,17 +1032,17 @@ enum을 선언하면 순서대로 숫자 0부터 값이 부여된다.
 
 ```ts
 enum Direction {
-  Up,     // 0
-  Down,   // 1
-  Left,   // 2
-  Right,  // 3
+  Up, // 0
+  Down, // 1
+  Left, // 2
+  Right // 3
 }
 
 enum Direction {
   Up = 1, // 1
-  Down,   // 2
-  Left,   // 3
-  Right,  // 4
+  Down, // 2
+  Left, // 3
+  Right // 4
 }
 ```
 
@@ -1046,7 +1051,7 @@ enum Direction {
 ```ts
 enum E {
   A = getSomeValue(),
-  B, // ERROR: A가 상수가 아니므로 B도 초기화 필요
+  B // ERROR: A가 상수가 아니므로 B도 초기화 필요
 }
 ```
 
@@ -1057,7 +1062,7 @@ enum Direction {
   Up = "UP",
   Down = "DOWN",
   Left = "LEFT",
-  Right = "RIGHT",
+  Right = "RIGHT"
 }
 ```
 
@@ -1070,7 +1075,7 @@ string enum은 자동증가 하지 않지만 직렬화시 장점이 있다.
 ```ts
 enum BooleanLikeHeterogeneousEnum {
   No = 0,
-  Yes = "YES",
+  Yes = "YES"
 }
 ```
 
@@ -1104,7 +1109,7 @@ enum 멤버는 computed 이거나 constant인 값이다
   ```ts
   enum ShapeKind {
     Circle,
-    Square,
+    Square
   }
 
   interface Circle {
@@ -1123,7 +1128,7 @@ enum 멤버는 computed 이거나 constant인 값이다
   ```ts
   enum E {
     Foo,
-    Bar,
+    Bar
   }
 
   function f(x: E) {
@@ -1140,7 +1145,9 @@ enum은 런타임에 존재하는 real objects이다
 
 ```ts
 enum E {
-  X, Y, Z
+  X,
+  Y,
+  Z
 }
 
 function f(obj: { X: number }) {
@@ -1157,7 +1164,7 @@ f(E); // Works, since 'E' has a property named 'X' which is a number
 
 ```ts
 enum Enum {
-    A
+  A
 }
 let a = Enum.A;
 let nameOfA = Enum[a]; // "A"
@@ -1167,8 +1174,8 @@ let nameOfA = Enum[a]; // "A"
 
 ```js
 var Enum;
-(function (Enum) {
-    Enum[Enum["A"] = 0] = "A";
+(function(Enum) {
+  Enum[(Enum["A"] = 0)] = "A";
 })(Enum || (Enum = {}));
 var a = Enum.A;
 var nameOfA = Enum[a]; // "A"
@@ -1182,12 +1189,12 @@ const enum은 상수 enum 표현식만 사용할 수 있으면 일반 enum과 �
 
 ```ts
 const enum Directions {
-    Up,
-    Down,
-    Left,
-    Right
+  Up,
+  Down,
+  Left,
+  Right
 }
-let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right]
+let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
 
 // 컴파일 되면 다음과 같아질 것이다
 var directions = [0 /* Up */, 1 /* Down */, 2 /* Left */, 3 /* Right */];
@@ -1215,7 +1222,7 @@ let zoo: Animal[] = [new Rhino(), new Elephant(), new Snake()];
 
 ```ts
 window.onmousedown = function(mouseEvent) {
-  console.log(mouseEvent.button);   //<- OK
+  console.log(mouseEvent.button); //<- OK
   console.log(mouseEvent.kangaroo); //<- Error!
 };
 ```
@@ -1263,8 +1270,8 @@ y의 매개변수는 두 개이지만, x는 매개변수가 하나 밖에 없다
 하지만 JavaScript에서 함수의 매개 변수가 무시하는 것이 허용되므로 할당이 가능하다.
 
 ```ts
-let x = () => ({name: "Alice"});
-let y = () => ({name: "Alice", location: "Seattle"});
+let x = () => ({ name: "Alice" });
+let y = () => ({ name: "Alice", location: "Seattle" });
 
 x = y;
 y = x; // ERROR
@@ -1278,11 +1285,21 @@ y = x; // ERROR
 하지만, 호출한 쪽에서 less specialized type argument로 함수를 호출할 수도 있는데 이는 바람직 하지 않다.
 
 ```ts
-enum EventType { Mouse, Keyboard }
+enum EventType {
+  Mouse,
+  Keyboard
+}
 
-interface Event { timestamp: number; }
-interface MouseEvent extends Event { x: number; y: number }
-interface KeyEvent extends Event { keyCode: number }
+interface Event {
+  timestamp: number;
+}
+interface MouseEvent extends Event {
+  x: number;
+  y: number;
+}
+interface KeyEvent extends Event {
+  keyCode: number;
+}
 
 function listenEvent(eventType: EventType, handler: (n: Event) => void) {
   /* ... */
@@ -1292,7 +1309,9 @@ function listenEvent(eventType: EventType, handler: (n: Event) => void) {
 listenEvent(EventType.Mouse, (e: MouseEvent) => console.log(e.x + "," + e.y));
 
 // 바람직하지 않은 대안
-listenEvent(EventType.Mouse, (e: Event) => console.log((<MouseEvent>e).x + "," + (<MouseEvent>e).y));
+listenEvent(EventType.Mouse, (e: Event) =>
+  console.log((<MouseEvent>e).x + "," + (<MouseEvent>e).y)
+);
 listenEvent(EventType.Mouse, <(e: Event) => void>((e: MouseEvent) => console.log(e.x + "," + e.y)));
 
 // 명백한 오류: 완전히 호환되지 않는 타입이 강제됨
@@ -1333,11 +1352,18 @@ Enum 타입은 number 타입과 상호호환된다.
 하지만 다른 Enum에서 가져온 Enum 값은 호환되지 않는다.
 
 ```ts
-enum Status { Ready, Waiting };
-enum Color { Red, Blue, Green };
+enum Status {
+  Ready,
+  Waiting
+}
+enum Color {
+  Red,
+  Blue,
+  Green
+}
 
 let status = Status.Ready;
-status = Color.Green;  // ERROR
+status = Color.Green; // ERROR
 ```
 
 ### Class 타입 호환성
@@ -1349,19 +1375,19 @@ status = Color.Green;  // ERROR
 ```ts
 class Animal {
   feet: number;
-  constructor(name: string, numFeet: number) { }
+  constructor(name: string, numFeet: number) {}
 }
 
 class Size {
   feet: number;
-  constructor(numFeet: number) { }
+  constructor(numFeet: number) {}
 }
 
 let a: Animal;
 let s: Size;
 
-a = s;  // OK
-s = a;  // OK
+a = s; // OK
+s = a; // OK
 ```
 
 #### Private and protected members in classes
@@ -1375,11 +1401,11 @@ s = a;  // OK
 TypeScript는 구조적 타입 시스템이므로 타입 파라미터는 멤버의 일부로 사용될 때만 결과 타입에 영향을 준다.
 
 ```ts
-interface Empty<T> { }
+interface Empty<T> {}
 let x: Empty<number>;
 let y: Empty<string>;
 
-x = y;  // OK, because y matches structure of x
+x = y; // OK, because y matches structure of x
 ```
 
 위의 경우는 타입 파라미터를 다르게 사용하지 않으므로 구조적으로 호환 가능하다.
@@ -1391,7 +1417,7 @@ interface NotEmpty<T> {
 let x: NotEmpty<number>;
 let y: NotEmpty<string>;
 
-x = y;  // Error, because x and y are not compatible
+x = y; // Error, because x and y are not compatible
 ```
 
 타입 인자가 명시된 제네릭 타입은 실제로는 비-제네릭 타입처럼 작동한다.
@@ -1402,12 +1428,12 @@ x = y;  // Error, because x and y are not compatible
 ```ts
 let identity = function<T>(x: T): T {
   // ...
-}
+};
 let reverse = function<U>(y: U): U {
   // ...
-}
+};
 
-identity = reverse;  // OK, because (x: any) => any matches (y: any) => any
+identity = reverse; // OK, because (x: any) => any matches (y: any) => any
 ```
 
 ### Subtype vs Assignment
@@ -1440,7 +1466,7 @@ function extend<First, Second>(first: First, second: Second): First & Second {
 }
 
 class Person {
-  constructor(public name: string) { }
+  constructor(public name: string) {}
 }
 
 interface Loggable {
@@ -1453,7 +1479,7 @@ class ConsoleLogger implements Loggable {
   }
 }
 
-const jim = extend(new Person('Jim'), ConsoleLogger.prototype);
+const jim = extend(new Person("Jim"), ConsoleLogger.prototype);
 jim.log(jim.name);
 ```
 
@@ -1478,7 +1504,7 @@ function getSmallPet(): Fish | Bird {
 
 let pet = getSmallPet();
 pet.layEggs(); // okay
-pet.swim();    // errors
+pet.swim(); // errors
 ```
 
 ### Type Guards and Differentiating Types
@@ -1545,27 +1571,25 @@ function padLeft(value: string, padding: string | number) {
 
 ```ts
 interface Padder {
-  getPaddingString(): string
+  getPaddingString(): string;
 }
 
 class SpaceRepeatingPadder implements Padder {
-  constructor(private numSpaces: number) { }
+  constructor(private numSpaces: number) {}
   getPaddingString() {
     return Array(this.numSpaces + 1).join(" ");
   }
 }
 
 class StringPadder implements Padder {
-  constructor(private value: string) { }
+  constructor(private value: string) {}
   getPaddingString() {
     return this.value;
   }
 }
 
 function getRandomPadder() {
-  return Math.random() < 0.5 ?
-    new SpaceRepeatingPadder(4) :
-    new StringPadder("  ");
+  return Math.random() < 0.5 ? new SpaceRepeatingPadder(4) : new StringPadder("  ");
 }
 
 // Type is 'SpaceRepeatingPadder | StringPadder'
@@ -1610,7 +1634,6 @@ f(1);
 f(1, undefined);
 f(1, null); // error, 'null' is not assignable to 'number | undefined'
 
-
 class C {
   a: number;
   b?: number;
@@ -1629,8 +1652,7 @@ nullable 타입은 union type으로 구현되므로 타입 가드를 사용해�
 function f(sn: string | null): string {
   if (sn == null) {
     return "default";
-  }
-  else {
+  } else {
     return sn;
   }
 }
@@ -1671,8 +1693,7 @@ type NameOrResolver = Name | NameResolver;
 function getName(n: NameOrResolver): Name {
   if (typeof n === "string") {
     return n;
-  }
-  else {
+  } else {
     return n();
   }
 }
@@ -1694,7 +1715,7 @@ type Tree<T> = {
   value: T;
   left: Tree<T>;
   right: Tree<T>;
-}
+};
 ```
 
 intersection 타입과 함께 사용해서 상당히 혼란스러운 타입을 만들 수도 있다
@@ -1725,7 +1746,7 @@ type Yikes = Array<Yikes>; // error
 아래의 코드에서 `aliased`는 객체 리터럴 타입을 반환하지만 `interfaced`는 인터페이스를 반환한다.
 
 ```ts
-type Alias = { num: number }
+type Alias = { num: number };
 interface Interface {
   num: number;
 }
@@ -1751,12 +1772,9 @@ class UIElement {
   animate(dx: number, dy: number, easing: Easing) {
     if (easing === "ease-in") {
       // ...
-    }
-    else if (easing === "ease-out") {
-    }
-    else if (easing === "ease-in-out") {
-    }
-    else {
+    } else if (easing === "ease-out") {
+    } else if (easing === "ease-in-out") {
+    } else {
       // error! should not pass null or undefined.
     }
   }
@@ -1774,7 +1792,7 @@ function createElement(tagName: "img"): HTMLImageElement;
 function createElement(tagName: "input"): HTMLInputElement;
 // ... more overloads ...
 function createElement(tagName: string): Element {
-    // ... code goes here ...
+  // ... code goes here ...
 }
 ```
 
@@ -1792,7 +1810,8 @@ function rollDice(): 1 | 2 | 3 | 4 | 5 | 6 {
 
 ```ts
 function foo(x: number) {
-  if (x !== 1 || x !== 2) {  // ERROR: Operator '!==' cannot be applied to types '1' and '2'.
+  if (x !== 1 || x !== 2) {
+    // ERROR: Operator '!==' cannot be applied to types '1' and '2'.
     // ...
   }
 }
@@ -1843,11 +1862,31 @@ discriminated union은 다음과 같이 사용한다.
 ```ts
 function area(s: Shape) {
   switch (s.kind) {
-    case "square": return s.size * s.size;
-    case "rectangle": return s.height * s.width;
-    case "circle": return Math.PI * s.radius ** 2;
+    case "square":
+      return s.size * s.size;
+    case "rectangle":
+      return s.height * s.width;
+    case "circle":
+      return Math.PI * s.radius ** 2;
   }
 }
 ```
 
 #### Exhaustiveness checking
+
+모든 discriminated union을 변형을 커버하지 않으려 할 때 이를 컴파일러에게 알려주고 싶을 때가 있다.
+
+```ts
+type Shape = Square | Rectangle | Circle | Triangle;
+function area(s: Shape) {
+  switch (s.kind) {
+    case "square":
+      return s.size * s.size;
+    case "rectangle":
+      return s.height * s.width;
+    case "circle":
+      return Math.PI * s.radius ** 2;
+  }
+  // should error here - we didn't handle case "triangle"
+}
+```
