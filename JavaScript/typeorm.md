@@ -95,11 +95,16 @@ const connection = await createConnection(connectionOptions);
 db 연결 설정 파일을 변경할 수 있다
 
 ```ts
-const connectionOptions = await (process.env.NODE_ENV === 'production' ? getConnectionOptions()
-    : new ConnectionOptionsReader({ configName: 'ormconfig.dev' }).get('default'));
-await createConnection(Object.assign(connectionOptions, {
-  namingStrategy: new CustomNamingStrategy(),
-}));
+const env = process.env.NODE_ENV;
+const configName = env === 'production' ? 'ormconfig' : `ormconfig.${env}`;
+const connectionOptions = new ConnectionOptionsReader({ configName }).all();
+const [connectionOption] = await connectionOptions;
+
+return createConnection(
+  Object.assign(connectionOption, {
+    namingStrategy: new CustomNamingStrategy(),
+  }),
+);
 ```
 
 ### Custom Naming Stragegy
