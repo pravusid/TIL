@@ -11,7 +11,13 @@
 | `prettier` 커맨드를 별도로 실행하는가? | No | No | Yes |
 | 다른 것을 추가로 사용해야 하는가?| No | You may want to turn off conflicting rules using `eslint-config-prettier`. | No |
 
-## 방법1: Prettier + (ESLint | TSLint)
+## ESLint
+
+`npm install --save-dev eslint eslint-config-airbnb-base eslint-plugin-import`
+
+## 방법1: Prettier + ESLint
+
+### ESLint @javascript
 
 <https://prettier.io/docs/en/eslint.html>
 
@@ -27,47 +33,56 @@ DevDependencies 추가: `npm i -D prettier eslint-plugin-prettier eslint-config-
 }
 ```
 
-<https://github.com/prettier/tslint-plugin-prettier>
+### ESLint @typescript
 
-<https://github.com/prettier/tslint-config-prettier>
+`npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin`
 
-DevDependencies 추가: `npm i -D prettier tslint-plugin-prettier tslint-config-prettier`
+`npm install --save-dev prettier eslint-config-prettier`
 
-`.tslint.json` 설정에 추가
+<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser>
 
-```json
-{
-  "extends": [
-    "tslint-plugin-prettier",
-    "tslint-config-prettier"
-  ],
-  "rules": {
-    "prettier": true
-  }
-}
-```
+<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin>
 
-## 방법2: prettier-eslint | prettier-tslint
+- 실행: `npx eslint --ext .ts src`
+- 비활성화: `// eslint-disable-next-line @typescript-eslint/no-for-in-array`
 
-`prettier-eslint-cli` 또는 `prettier-tslint`의 CLI를 이용하거나 VSCode의 확장기능을 이용할 수 있다
+## 방법2: prettier-eslint
 
-VSCode 확장 기능 사용: Marketplace에서
+`npm i -D prettier prettier-eslint prettier-eslint-cli`
 
-- ESLint | TSLint 설치
+`prettier-eslint 'src/**/*.js'`
 
-- Prettier – Code Formatter 설치
-  - Prettier 확장은 prettier, prettier-eslint | prettier-tslint 포함
-  - Prettier 확장은 configuration을 npm global에서 가져올 수 없고 local에서만 가져옴
+## VSCode
 
-VSCode 설정에서 다음을 추가
+우선 내장 formatter를 비활성화 한다
 
 ```json
 {
   "javascript.format.enable": false,
   "typescript.format.enable": false,
+}
+```
 
-  "prettier.eslintIntegration": true,
-  "prettier.tslintIntegration": true,
+```json
+{
+  "eslint.validate": [
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
+}
+```
+
+VSCode 확장 기능 사용: Marketplace에서
+
+- ESLint 설치
+
+- Prettier – Code Formatter 설치
+  - Prettier 확장은 prettier, prettier-eslint | prettier-tslint 포함
+  - Prettier 확장은 configuration을 npm global에서 가져올 수 없고 local에서만 가져옴
+
+```json
+{
+  "prettier.eslintIntegration": true
 }
 ```
 
@@ -75,47 +90,57 @@ VSCode 설정에서 다음을 추가
 
 ### `.eslintrc.json`
 
-```json
-{
-  "extends": ["airbnb-base"],
-  "parser": "babel-eslint",
-  "plugins": ["import"],
-  "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "module"
+```js
+module.exports = {
+  extends: ['airbnb-base'],
+  parser: 'babel-eslint',
+  plugins: ['import'],
+  parserOptions: {
+    ecmaVersion: 2017,
+    sourceType: 'module',
   },
-  "env": {
-    "node": true
-  }
-}
+  env: {
+    node: true,
+  },
+};
 ```
 
-### `tslint.json`
+### `.eslintrc.json` @typescript
 
-```json
-{
-  "defaultSeverity": "error",
-  "extends": ["tslint-config-airbnb"],
-  "jsRules": {},
-  "rules": {},
-  "rulesDirectory": []
-}
-```
-
-### `tslint.json` w/ `prettier-tslint`
-
-```json
-{
-  "defaultSeverity": "error",
-  "extends": ["tslint-config-airbnb"],
-  "jsRules": {},
-  "rules": {
-    "align": false,
-    "max-line-length": [true, { "limit": 100, "ignore-pattern": "^import |^export {(.*?)}" }],
-    "ter-arrow-parens": [true, "as-needed"]
+```js
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
   },
-  "rulesDirectory": []
-}
+  env: {
+    node: true,
+  },
+  extends: [
+    'airbnb-base',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'prettier/@typescript-eslint',
+  ],
+  rules: {
+    'import/prefer-default-export': false,
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+  },
+  overrides: [
+    {
+      files: ['test/**/*.ts', 'test/**/*.tsx'],
+      env: {
+        jest: true,
+      },
+      plugins: ['jest'],
+      rules: {
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/no-object-literal-type-assertion': 'off',
+      },
+    },
+  ],
+};
 ```
 
 ### `.prettierrc`
