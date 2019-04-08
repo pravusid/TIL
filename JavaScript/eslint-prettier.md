@@ -77,7 +77,7 @@ plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하
 
 DevDependencies 추가: `npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
 
-`.eslintrc.json` 설정에 추가 (enable all the recommended rules at once)
+`.eslintrc.json` 설정에 추가 (plugin + enable all the recommended rules at once)
 
 ```json
 {
