@@ -25,22 +25,23 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js", "jsx", "json", "ts", "tsx"
-    ],
-    "testRegex": "^.+\\.spec\\.(js|jsx|ts|tsx)$",
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "coverageDirectory": "coverage",
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "node"
   }
 }
+```
+
+`jest.config.js`
+
+```js
+module.exports = {
+  moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
+  testRegex: '^.+\\.spec\\.(js|jsx|ts|tsx)$',
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  },
+  coverageDirectory: 'coverage',
+  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+  testEnvironment: 'node',
+};
 ```
 
 ## 실행
