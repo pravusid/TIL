@@ -125,4 +125,4 @@ USER <UID>[:<GID>]
 
 - 이름:태그 지정: `--tag`(`-t`):
   - `docker build -t shykes/myapp .`
-  - `docker build -t -t shykes/myapp:latest shykes/myapp:1.0.2 .`
+  - `docker build -t shykes/myapp:latest -t shykes/myapp:1.0.2 .`
