@@ -120,13 +120,17 @@ DevDependencies 추가: `npm i --save-dev eslint-plugin-prettier eslint-config-p
   ],
   "rules": {
     "class-methods-use-this": "off",
+    "lines-between-class-members": "off",
     "no-useless-constructor": "off",
-    "import/prefer-default-export": false,
-    "import/no-unresolved": false,
+    "import/no-unresolved": "off",
+    "import/prefer-default-export": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "no-public",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-parameter-properties": "allow"
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-parameter-properties": "allow",
+    "@typescript-eslint/no-object-literal-type-assertion": "off",
+    "@typescript-eslint/prefer-interface": "off"
   },
   "overrides": [
     {
@@ -136,8 +140,7 @@ DevDependencies 추가: `npm i --save-dev eslint-plugin-prettier eslint-config-p
       },
       "plugins": ["jest"],
       "rules": {
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-object-literal-type-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off"
       }
     }
   ]
