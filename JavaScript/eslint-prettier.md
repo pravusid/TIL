@@ -29,74 +29,36 @@
   - `prettier` 커맨드 별도 실행필요: Yes
   - 다른 것 사용필요: No
 
-## ESLint
+## @javascript/ESLint
 
-`npm i --save-dev eslint eslint-config-airbnb-base eslint-plugin-import babel-eslint`
+`npm i --save-dev eslint eslint-config-airbnb-base eslint-plugin-import`
+
+`npm i --save-dev babel-eslint`
 
 `.eslintrc.json`
 
 ```json
 {
-  "extends": ["airbnb-base"],
   "parser": "babel-eslint",
   "env": {
     "node": true
-  }
+  },
+  "extends": ["airbnb-base"]
 }
 ```
 
-## Prettier
+## @typescript/ESLint
 
-`npm install --save-dev prettier`
-
-`.prettierrc`
-
-```json
-{
-  "printWidth": 100,
-  "tabWidth": 2,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "bracketSpacing": true,
-  "semi": true,
-  "useTabs": false,
-  "arrowParens": "avoid",
-  "endOfLine": "lf"
-}
-```
-
-## ESLint Prettier Integration
-
-### 방법1: prettier + eslint
-
-#### @javascript/ESLint
-
-<https://prettier.io/docs/en/eslint.html>
-
-plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하므로, eslint-config-prettier를 함께 사용한다
-
-DevDependencies 추가: `npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
-
-`.eslintrc.json` 설정에 추가 (plugin + enable all the recommended rules at once)
-
-```json
-{
-  "extends": ["plugin:prettier/recommended"]
-}
-```
-
-#### @typescript/ESLint
+`npm i --save-dev eslint eslint-config-airbnb-base eslint-plugin-import`
 
 `npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin`
 
-`npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
+`npm i --save-dev eslint-plugin-jest`
 
 - @typescript-eslint/parser: ESLint가 TypeScript 코드를 처리할 수 있게 함
 - @typescript-eslint/eslint-plugin: TypeScript에 맞춘 ESLint rule의 모음
 
-<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser>
-
-<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin>
+<https://github.com/typescript-eslint/typescript-eslint>
 
 - 실행: `npx eslint --ext .ts src`
 - 비활성화: `// eslint-disable-next-line {rule}`
@@ -112,12 +74,7 @@ DevDependencies 추가: `npm i --save-dev eslint-plugin-prettier eslint-config-p
   "env": {
     "node": true
   },
-  "extends": [
-    "airbnb-base",
-    "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
-  ],
+  "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
   "rules": {
     "class-methods-use-this": "off",
     "lines-between-class-members": "off",
@@ -147,9 +104,67 @@ DevDependencies 추가: `npm i --save-dev eslint-plugin-prettier eslint-config-p
 }
 ```
 
+## Prettier
+
+`npm i --save-dev prettier`
+
+`.prettierrc`
+
+```json
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "semi": true,
+  "useTabs": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf"
+}
+```
+
+## ESLint Prettier Integration
+
+### 방법1: prettier + eslint
+
+#### prettier in @javascript/ESLint
+
+<https://prettier.io/docs/en/eslint.html>
+
+plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하므로, eslint-config-prettier를 함께 사용한다
+
+`npm i --save-dev prettier`
+
+`npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
+
+`.eslintrc.json` 설정에 추가 (plugin + enable all the recommended rules at once)
+
+```json
+{
+  "extends": ["plugin:prettier/recommended"]
+}
+```
+
+#### prettier in @typescript/ESLint
+
+`npm i --save-dev prettier`
+
+`npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
+
+<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin>
+
+`.eslintrc.json`
+
+```json
+{
+  "extends": ["prettier/@typescript-eslint", "plugin:prettier/recommended"]
+}
+```
+
 ### 방법2: prettier-eslint
 
-eslint 설정이 끝난 상태에서(prettier-config | plugin 설정을 하지 않았음)
+eslint 설정이 끝난 상태에서(prettier-config & plugin 설정을 하지 않았음)
 
 `npm i --save-dev prettier prettier-eslint prettier-eslint-cli`
 
