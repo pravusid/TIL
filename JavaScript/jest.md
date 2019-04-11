@@ -44,6 +44,35 @@ module.exports = {
 };
 ```
 
+### tsconfig 별도 적용
+
+`jest.config.js`
+
+```js
+module.exports = {
+  // ...
+  globals: {
+    'ts-jest': {
+      tsConfig: 'tsconfig.spec.json',
+    },
+  },
+  // ...
+}
+```
+
+`tsconfig.spec.json`
+
+```json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "node"],
+    "strict": false
+  },
+  "include": ["**/*.spec.ts", "**/*.d.ts"]
+}
+```
+
 ## 실행
 
 유닛 테스트를 위한 파일명이 `___.spec.js/ts`로 끝나게 한다
