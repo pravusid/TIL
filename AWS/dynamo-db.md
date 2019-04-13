@@ -60,3 +60,58 @@ JS error object 예시
   "retryDelay": 13.794078870110315
 }
 ```
+
+## 로컬 실행
+
+docker 기준
+
+`docker run -d -p 8000:8000 --name dynamo amazon/dynamodb-local -jar DynamoDBLocal.jar -sharedDb`
+
+`-sharedDb` 옵션을 사용해야 connection마다 데이터를 분리하지 않음
+
+shell 접속: <http://localhost:8000/shell>
+
+shell 접속 후 option에서 Access Key Id 설정
+
+shell에서 테이블 생성
+
+```js
+dynamoLocal.createTable({
+  TableName: "scrap-test",
+  KeySchema: [
+    { AttributeName: "uuid", KeyType: "HASH" },
+    { AttributeName: "created", KeyType: "RANGE" }
+  ],
+  AttributeDefinitions: [
+    { AttributeName: "uuid", AttributeType: "S" },
+    { AttributeName: "created", AttributeType: "N" }
+  ],
+  BillingMode: "PAY_PER_REQUEST"
+});
+```
+
+Node에서 DynamoDB endpoint 설정
+
+```js
+const AWS = require("aws-sdk");
+
+AWS.config.update({
+  credentials,
+  region: "ap-northeast-2"
+});
+
+const dynamoClient = new AWS.DynamoDB({ endpoint: "http://localhost:8000" });
+const dynamoDocClient = new AWS.DynamoDB.DocumentClient({ endpoint: "http://localhost:8000" });
+```
+
+또는 AWS config에서 설정할 수도 있다
+
+```js
+AWS.config.update({
+  credentials,
+  region: "ap-northeast-2",
+  dynamodb: {
+    endpoint: "http://localhost:8000"
+  }
+});
+```
