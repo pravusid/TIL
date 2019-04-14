@@ -115,3 +115,76 @@ AWS.config.update({
   }
 });
 ```
+
+## AWS SDK for DynamoDB
+
+<https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/CurrentAPI.html>
+
+```js
+export const awsDynamo = new AWS.DynamoDB.DocumentClient({
+  convertEmptyValues: true
+});
+```
+
+### Put
+
+```js
+const result = {
+  /* content */
+};
+const response = dynamoDB
+  .put({
+    TableName: "cba-test",
+    Item: result,
+    ConditionExpression: "attribute_not_exists(#uid)",
+    ExpressionAttributeNames: {
+      "#uid": "uid"
+    }
+  })
+  .promise();
+```
+
+### Update
+
+```js
+const response = dynamoDB
+  .update({
+    TableName: "cba-test",
+    Key: {
+      uid: result.uid,
+      createdAt: result.createdAt
+    },
+    UpdateExpression: "SET #comment = :comment, #updatedAt = :updatedAt",
+    ExpressionAttributeNames: {
+      "#comment": "comment",
+      "#updatedAt": "updatedAt"
+    },
+    ExpressionAttributeValues: {
+      ":comment": result.comment,
+      ":updatedAt": new Date().getTime()
+    }
+  })
+  .promise();
+```
+
+### Query
+
+```js
+const response = dynamoDB
+  .query({
+    TableName: "cba-test",
+    KeyConditionExpression: "#uid = :uid",
+    FilterExpression: "#createdAt >= :createdAt",
+    ExpressionAttributeNames: {
+      "#uid": "uid",
+      "#createdAt": "createdAt"
+    },
+    ExpressionAttributeValues: {
+      ":uid": query.uid,
+      ":createdAt": query.time
+    },
+    ScanIndexForward: false, // ASC || DESC
+    Limit: query.limit
+  })
+  .promise();
+```
