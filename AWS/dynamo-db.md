@@ -67,7 +67,10 @@ docker 기준
 
 `docker run -d -p 8000:8000 --name dynamo amazon/dynamodb-local -jar DynamoDBLocal.jar -sharedDb`
 
-`-sharedDb` 옵션을 사용해야 connection마다 데이터를 분리하지 않음
+- `-sharedDb` 옵션을 사용하면 DynamoDB에서 이름이 shared-local-instance.db인 단일 데이터베이스 파일이 생성함
+- `-sharedDb`를 누락하면 데이터베이스 파일의 이름은 myaccesskeyid_region.db로 설정되고, AWS 액세스 키 ID 및 리전은 애플리케이션 구성에 표시된 대로 지정됨
+- `-inMemory` 옵션을 사용하면 DynamoDB는 데이터베이스 파일을 기록하지 않고 메모리를 사용하며 종료시 데이터는 사라짐
+- `-port <port>` 옵션으로 실행시 포트를 변경할 수 있음
 
 shell 접속: <http://localhost:8000/shell>
 
@@ -77,16 +80,19 @@ shell에서 테이블 생성
 
 ```js
 dynamoLocal.createTable({
-  TableName: "scrap-test",
+  TableName: "cba-test",
   KeySchema: [
-    { AttributeName: "uuid", KeyType: "HASH" },
-    { AttributeName: "created", KeyType: "RANGE" }
+    { AttributeName: "uid", KeyType: "HASH" },
+    { AttributeName: "createdAt", KeyType: "RANGE" }
   ],
   AttributeDefinitions: [
-    { AttributeName: "uuid", AttributeType: "S" },
-    { AttributeName: "created", AttributeType: "N" }
+    { AttributeName: "uid", AttributeType: "S" },
+    { AttributeName: "createdAt", AttributeType: "N" }
   ],
-  BillingMode: "PAY_PER_REQUEST"
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 5,
+    WriteCapacityUnits: 5
+  }
 });
 ```
 
