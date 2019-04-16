@@ -1,5 +1,27 @@
 # GIT for Teams
 
+## 커밋 메시지
+
+```text
+add: 게시물 조회기능
+───  ─────────────
+│     │
+│     └─> 작업내용 요약
+│
+└───────> 커밋 메시지 타입
+```
+
+- `add`: 코드에 새로운 부분(기능적으로)이 추가됨
+- `update`: 새로 추가된 부분이 아니면서 issue(`fix || resolve`) 없이 변경된 코드
+- `fix`: 오류나 이상작동을 수정함
+- `resolve`: issue상의 요구 사항이 반영됨
+- `refactor`: 코드 리팩토링
+- `format`: 코드 포맷 수정
+- `test`: 테스트 관련 코드 추가/수정
+- `docs`: 문서관련 작업
+- `chore`: production code에 영향을 미치지 않는 작업 (빌드 설정, 의존성 관리...)
+- `bump`: version to x.y.z
+
 ## 브랜치 전략
 
 모든 Git 저장소에는 커밋 pool이 있다. 이 커밋들은 자신의 메타데이터를 통해 서로 연결돼있다.
@@ -83,35 +105,3 @@ release 브랜치에 커밋된 버그수정은 다시 develop 브랜치에 백�
 각각의 커밋은 새로운 부모를 갖게 되면서 완전히 새로운 확인자를 할당받게 된다.
 특히 새로운 부모를 할당받는 커밋이 이전에 원격 저장소를 통해 공유된 적이 있다면 혼란을 초래한다.
 새로운 확인자 뿐만아니라 커밋을 재생할 때마다 충돌 해결에 시간이 소요된다.
-
-### 리베이스를 통한 원격 작업 예시
-
-작업시작을 위한 명령
-
-```sh
-git checkout develop
-git pull --rebase=preserve origin develop
-git checkout -b feature-foobar
-$ 작업을 한다
-git add --all
-git commit
-```
-
-작업완료후 공유를 위한 명령, rebase 이후 로컬 develop 와 feature-foobar 내용이 동일해짐
-
-```sh
-git checkout develop
-git pull --rebase=preserve
-git checkout feature-foobar
-git rebase develop
-git push origin feature-foobar
-```
-
-내가 작업한 브랜치에 rebase로 통합브랜치의 내용을 반영한 것을, 원격통합브랜치에 업데이트
-
-```sh
-git checkout feature-foobar
-git merge --no-ff feature-foobar master
-git branch --delete feature-foobar
-git push --delete origin feature-foobar
-```

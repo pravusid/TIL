@@ -138,6 +138,51 @@ rebase는 HEAD에 의해서 참조된 브랜치의 새로운 base를 대상 브�
 
 `git rebase --onto <newparent> <oldparent> <until>`
 
+### rebase를 통한 원격 작업 예시
+
+작업시작을 위한 명령
+
+```sh
+git checkout develop
+git pull --rebase=preserve origin develop
+git checkout -b feature-foobar
+# 작업을 한다
+git add --all
+git commit
+```
+
+원격 저장소에 업데이트 된 내용이 있을 수 있으므로 우선 동기화하고 rebase 실행 
+
+> push 이후에는 rebase 하지 않는다
+
+```sh
+git checkout develop
+git pull --rebase=preserve
+git checkout feature-foobar
+git rebase develop
+```
+
+rebase 이후에는 PR 생성
+
+```sh
+git push origin feature-foobar
+# PR & 코드 리뷰 ...
+```
+
+또는 직접 merge 실행
+
+```sh
+git merge --no-ff feature-foobar master
+```
+
+과정이 끝나면 branch는 닫는다
+
+```sh
+git branch --delete feature-foobar
+# PR시 branch 삭제하거나 직접 삭제
+git push --delete origin feature-foobar
+```
+
 ## Branch / Checkout
 
 - 로컬 브랜치 목록: `git branch -a`
