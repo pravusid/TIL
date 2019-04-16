@@ -65,6 +65,16 @@ xpack.monitoring.collection.enabled: true
 searchguard.enterprise_modules_enabled: false
 ```
 
+`jvm.options`
+
+```conf
+# Xms represents the initial size of total heap space - 최소 시스템 메모리 1/2
+# Xmx represents the maximum size of total heap space - 최대 32gb
+
+-Xms4g
+-Xmx4g
+```
+
 ### APIs (kibana Dev Tools Console)
 
 #### Index
