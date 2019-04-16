@@ -79,21 +79,28 @@ shell 접속 후 option에서 Access Key Id 설정
 shell에서 테이블 생성
 
 ```js
-dynamoLocal.createTable({
-  TableName: "cba-test",
-  KeySchema: [
-    { AttributeName: "uid", KeyType: "HASH" },
-    { AttributeName: "createdAt", KeyType: "RANGE" }
-  ],
-  AttributeDefinitions: [
-    { AttributeName: "uid", AttributeType: "S" },
-    { AttributeName: "createdAt", AttributeType: "N" }
-  ],
-  ProvisionedThroughput: {
-    ReadCapacityUnits: 5,
-    WriteCapacityUnits: 5
+dynamodb.createTable(
+  {
+    TableName: "cba-test",
+    KeySchema: [
+      { AttributeName: "uid", KeyType: "HASH" },
+      { AttributeName: "createdAt", KeyType: "RANGE" }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "uid", AttributeType: "S" },
+      { AttributeName: "createdAt", AttributeType: "N" }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
+  },
+  (err, data) => {
+    if (err) ppJson(err);
+    // an error occurred
+    else ppJson(data); // successful response
   }
-});
+);
 ```
 
 Node에서 DynamoDB endpoint 설정
@@ -138,7 +145,7 @@ export const awsDynamo = new AWS.DynamoDB.DocumentClient({
 const result = {
   /* content */
 };
-const response = dynamoDB
+const response = dynamodb
   .put({
     TableName: "cba-test",
     Item: result,
@@ -153,7 +160,7 @@ const response = dynamoDB
 ### Update
 
 ```js
-const response = dynamoDB
+const response = dynamodb
   .update({
     TableName: "cba-test",
     Key: {
@@ -176,7 +183,7 @@ const response = dynamoDB
 ### Query
 
 ```js
-const response = dynamoDB
+const response = dynamodb
   .query({
     TableName: "cba-test",
     KeyConditionExpression: "#uid = :uid",
