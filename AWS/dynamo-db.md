@@ -26,6 +26,10 @@ DynamoDB 테이블의 데이터 수정 이벤트가 발생한 순서대로 거�
 
 AWS Lambda와 연결하여 거의 실시간으로 관심있는 정보를 처리할 수 있다
 
+### 예약어
+
+<https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/ReservedWords.html>
+
 ## 쿼리
 
 <https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/WorkingWithItems.html>
