@@ -96,3 +96,39 @@
 > `tar cvf <filename>.tar <target>`
 
 ### 파일 위치 검색
+
+`find <경로> <옵션>`
+
+- name: 파일이름/확장자
+- user: 사용자
+- perm: 퍼미션
+- size: `-size +10k -size -100k`: 10kb~100kb
+- exec: `-exec <명령어> {} \;`찾은파일에 명령실행
+
+`which <실행명령>`: PATH에 정의된 경로만 검색하여 위치를 절대경로로 반환함
+
+`whereis <실행명령>`: 실행팡리, 소스, man 페이지를 대상으로 검색
+
+`locate <파일이름>`: `updatedb` 명령으로 갱신된 파일 목록 데이터베이스에서 검색함
+
+## CRON
+
+반복작업을 자동으로 실행할 수 있도록 예약하는 것을 `cron`이라 하고 `crond` 서비스가 이를 수행한다
+
+`/etc/crontab`: `분 시 일 월 요일 <사용자> <명령>`
+
+- 분: 0 ~ 59
+- 시: 0 ~ 23
+- 일: 1 ~ 31
+- 월: 1 ~ 12
+- 요일: 0 ~ 6
+- every: *
+
+crontab은 주기에 따라 하위 디렉토리 내용을 호출한다
+
+- cron.hourly
+- cron.daily
+- cron.weekly
+- cron.monthly
+
+## Network
