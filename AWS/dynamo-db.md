@@ -13,6 +13,14 @@
 - 파티션 키(단순 기본키)
 - 파티션 키 및 정렬 키(복합 기본키)
 
+단기적인 워크로드 불균형 문제를 완화하기 위해 적응형 용량이 5~30분 내에 활성화됨.
+하지만 각 파티션에는 1,000개의 쓰기 용량 유닛 및 3,000개의 읽기 용량 유닛 제한이 계속 적용되므로 테이블 또는 파티션 설계에서 발생하는 더 큰 용량 문제는 적응형 용량으로 해결할 수 없음.
+
+AWS SDK에서는 스로틀된 요청은 기본적으로 10번 재시도 함
+
+- <https://github.com/aws/aws-sdk-js/blob/master/lib/services/dynamodb.js>
+- <https://github.com/aws/aws-sdk-js/blob/master/test/services/dynamodb.spec.js>
+
 ### 보조 인덱스
 
 테이블에서 종류별 최대 5개의 보조 인덱스를 생성할 수 있다
