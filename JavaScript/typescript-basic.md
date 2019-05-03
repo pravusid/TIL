@@ -1874,7 +1874,7 @@ function area(s: Shape) {
 
 #### Exhaustiveness checking
 
-모든 discriminated union을 변형을 커버하지 않으려 할 때 이를 컴파일러에게 알려주고 싶을 때가 있다.
+모든 discriminated union 변형을 커버하지 않으려는 것을 컴파일러에게 알려주고 싶을 때가 있다.
 
 ```ts
 type Shape = Square | Rectangle | Circle | Triangle;
@@ -1890,3 +1890,110 @@ function area(s: Shape) {
   // should error here - we didn't handle case "triangle"
 }
 ```
+
+이를 위한 방법은 두 가지가 있다
+
+- 컴파일러의 `--strictNullChecks` 옵션을 켜고 반환타입을 정의 (`number | undefined`)
+- `never` 타입 사용
+
+### Polymorphic this types
+
+`this` 타입의 다형성은 포함하고 있는 클래스나 인터페이스의 서브타입을 나타낸다.
+
+이는 F-bounded 다형성이라고 하며, 계층적 인터페이스를 쉽게 표현할 수 있게 한다.
+
+```ts
+class BasicCalculator {
+  public constructor(protected value: number = 0) {}
+  public currentValue(): number {
+    return this.value;
+  }
+  public add(operand: number): this {
+    this.value += operand;
+    return this;
+  }
+  public multiply(operand: number): this {
+    this.value *= operand;
+    return this;
+  }
+  // ... other operations go here ...
+}
+
+let v = new BasicCalculator(2)
+  .multiply(5)
+  .add(1)
+  .currentValue();
+```
+
+`this` 타입을 사용하기 때문에 변경점 없이 이전 메소드를 사용하는 새 클래스를 만들 수 있다.
+
+```ts
+class ScientificCalculator extends BasicCalculator {
+  public constructor(value = 0) {
+    super(value);
+  }
+  public sin() {
+    this.value = Math.sin(this.value);
+    return this;
+  }
+  // ... other operations go here ...
+}
+
+let v = new ScientificCalculator(2)
+  .multiply(5)
+  .sin()
+  .add(1)
+  .currentValue();
+```
+
+`this` 타입을 사용하지 않았다면 `ScientificCalculator`에서 `sin`메소드가 없는 `BasicCalculator` 타입이 반환되었을 것이다.
+
+### Index types
+
+인덱스 타입을 사용하면 컴파일러가 동적 프로퍼티를 검사하도록 할 수 있다.
+
+```ts
+function pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+  return names.map(n => o[n]);
+}
+
+interface Person {
+  name: string;
+  age: number;
+}
+let person: Person = {
+  name: "Jarid",
+  age: 35
+};
+let strings: string[] = pluck(person, ["name"]); // ok, string[]
+```
+
+컴파일러는 `name`이 실제로 `Person`의 프로퍼티인지 확인한다.
+
+**인덱스 타입 쿼리 연산자**인 `keyof T`는 public인 프로퍼티 이름의 union type이다.
+
+즉 `let personProps: keyof Person; // 'name' | 'age'`
+
+`keyof Person`은 `'name' | 'age'`와 완벽하게 호환된다.
+
+**indexed access operator** `T[K]`는 `person['name']`이 `Person['name']` 타입을 가진다는 것을 의미한다.
+
+인덱스 타입 쿼리와 마찬가지로 `T[K]`를 제네릭 컨텍스트에서 사용할 수 있다.
+이를 위해 `K extends keyof T`임을 확인해야 한다.
+
+```ts
+function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
+  return o[name]; // o[name] is of type T[K]
+}
+```
+
+`getProperty`에서 `o[name]: T[K]`의 관계가 된다.
+`T[K]`의 결과를 반환하면 컴파일러는 키의 실제 타입을 인스턴스화 하므로 `getProperty`의 반환타입은 요청한 프로퍼티에 따라 다양해진다.
+
+```ts
+let name: string = getProperty(person, 'name');
+let age: number = getProperty(person, 'age');
+let unknown = getProperty(person, 'unknown'); // error, 'unknown' is not in 'name' | 'age'
+```
+
+#### Index types and string index signatures
