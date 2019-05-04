@@ -88,6 +88,10 @@ searchguard.enterprise_modules_enabled: false
 - 전체조회: GET /_template
 - 삭제: DELETE /_template/{name}
 
+#### Search
+
+<https://www.elastic.co/guide/en/elasticsearch/reference/current/search.html>
+
 ### Data Types
 
 #### Core datatypes
