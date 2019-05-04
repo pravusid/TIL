@@ -132,3 +132,36 @@ crontab은 주기에 따라 하위 디렉토리 내용을 호출한다
 - cron.monthly
 
 ## Network
+
+### 명령어
+
+- `nmtui`: network manager text user interface (여러가지 네트워크 설정을 할 수 있다)
+- `systemctl <start|stop|restart|status> network`: 네트워크 설정 적용
+- `ifup <device>`: 해당 네트워크 장치 작동
+- `ifdown <device>`: 해당 네트워크 장치 종료
+- `nslookup`: dns 서버와 통신확인
+- `ping <ip|URL>`: icmp 프로토콜로 해당 위치와 통신확인
+
+### 설정파일
+
+- `/etc/sysconfig/network`: 네트워크 기본 설정 정보
+- `/etc/sysconfig/network-scripts/ifcfg-ens32`: 해당 장치의 네트워크 설정정보
+- `/etc/resolv.conf`: DNS 서버 정보와 호스트 이름이 들어있음
+- `/etc/hosts`: FQDN(fully qualified domain name) 정보가 들어있음
+
+## 파이프, 리다이렉션
+
+- 파이프(`|`): 파이프 앞의 출력을 파이프 뒤로 전달함
+- 리다이렉션: 표준 입출력의 방향을 지정함
+  - 하나는 입/출력, 두개는 추가(append)
+    - 출력(`>`|`>>`)
+    - 입력(`<`|`<<`)
+- 에러 포함(`&`)
+- 디스크립터
+  - 표준 입력 0
+  - 표준 출력 1
+  - 표준 에러 2
+
+## GRUB
+
+설정파일: `/boot/grub2/grub.cfg`
