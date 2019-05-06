@@ -1997,3 +1997,410 @@ let unknown = getProperty(person, 'unknown'); // error, 'unknown' is not in 'nam
 ```
 
 #### Index types and string index signatures
+
+`keyof`와 `T[K]`는 문자열 인덱스 시그니처와 상호작용한다.
+만약 문자열 인덱스 시그니처가 있다면 `keyof T`는 문자열이 될 것이고 `T[string]`은 인덱스 시그니처 타입이 될 것이다.
+
+```ts
+interface Dictionary<T> {
+  [key: string]: T;
+}
+let keys: keyof Dictionary<number>; // string
+let value: Dictionary<number>['foo']; // number
+```
+
+### Mapped types
+
+TypeScript는 이전의 타입을 기반으로 새로운 타입을 만드는 방법인 mapped types를 제공한다.
+
+```ts
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+}
+type Readonly<T> = {
+  readonly [P in keyof T]: T[P];
+}
+```
+
+다음과 같이 사용한다
+
+```ts
+type PersonPartial = Partial<Person>;
+type ReadonlyPerson = Readonly<Person>;
+```
+
+만약 멤버를 추가하고 싶다면, intersection type을 사용해야 한다
+
+```ts
+// Use this:
+type PartialWithNewMember<T> = {
+  [P in keyof T]?: T[P];
+} & { newMember: boolean }
+
+// **Do not** use the following!
+// This is an error!
+type PartialWithNewMember<T> = {
+  [P in keyof T]?: T[P];
+  newMember: boolean;
+}
+```
+
+간단한 mapped types 예제를 보자
+
+```ts
+type Keys = 'option1' | 'option2';
+type Flags = { [K in Keys]: boolean };
+```
+
+1. 타입변수 `K`는 각 프로퍼티에 순서대로 바인딩 됨
+2. 문자열 리터럴 union인 `Keys`는 반복할 속성의 이름을 포함한다
+
+이 예제에서 Keys는 하드코딩된 프로퍼티 이름의 목록이고 프로퍼티 타입은 항상 boolean이다.
+따라서 이러한 mapped types는 다음과 같을 것이다.
+
+```ts
+type Flags = {
+  option1: boolean;
+  option2: boolean;
+}
+```
+
+실제 적용은 위의 `Readonly` 혹은 `Partial`과 같은 형태이다.
+기존의 타입이 있고, mapped types는 기존 타입의 프로퍼티를 변형할 것이다.
+그곳에 `keyof` 인덱스 접근 타입이 위치한다.
+
+```ts
+type Nullable<T> = { [P in keyof T]: T[P] | null }
+type Partial<T> = { [P in keyof T]?: T[P] }
+```
+
+이러한 예제에서 프로퍼티 목록은 `keyof T`이고 결과값의 타입은 `T[P]`의 변형이다.
+이러한 종류의 변형은 homomorphic이므로 mapping은 `T`타입의 프로퍼티에만 적용된다.
+
+컴파일러는 새로운 프로퍼티를 추가하기 전에 기존의 프로퍼티 수정자를 가져와 적용한다.
+예를 들어, `Person.name`이 readonly 였다면, `Partial<Pserson>.name`은 readonly 이며 optional이다.
+
+다음은 `T[P]` 타입이 `Proxy<T>` 클래스로 wrapped 되는 예제이다
+
+```ts
+type Proxy<T> = {
+  get(): T;
+  set(value: T): void;
+}
+type Proxify<T> = {
+  [P in keyof T]: Proxy<T[P]>;
+}
+function proxify<T>(o: T): Proxify<T> {
+  // ... wrap proxies ...
+}
+let proxyProps = proxify(props);
+```
+
+`Readonly<T>`와 `Partial<T>`는 유용하기 때문에 `Pick` 및 `Record`와 함께 타입스크립트 표준 라이브러리에 포함되어 있다.
+
+```ts
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[P];
+}
+type Record<K extends keyof any, T> = {
+  [P in K]: T;
+}
+```
+
+`Readonly`, `Partial`, `Pick`은 homomorphic이지만 `Record`는 그렇지 않다.
+
+`Record`가 homomorphic하지 않다는 것은 속성을 복사할 때 입력받은 타입을 사용하지 않는 점에서 알 수 있다.
+
+```ts
+type ThreeStringProps = Record<'prop1' | 'prop2' | 'prop3', string>
+```
+
+non-homomorphic 타입은 본질적으로 새로운 속성을 생성하기 때문에 프로퍼티 수정자를 복사할 수 없다.
+
+#### Inference from mapped types
+
+반대로 타입의 프로퍼티를 unwrap하는 방법을 알아볼 차례이다
+
+```ts
+function unproxify<T>(t: Proxify<T>): T {
+  let result = {} as T;
+  for (const k in t) {
+    result[k] = t[k].get();
+  }
+  return result;
+}
+
+let originalProps = unproxify(proxyProps);
+```
+
+unwrapping 추론은 homomorphic mapped types에서만 작동한다.
+non-homomorphic mapped types인 경우 unwapping 함수에 명시적 타입 파라미터를 전달해야 한다.
+
+### Conditional Types
+
+타입스크립트 2.8에서 통일되지않은 타입 매핑을 표현하기 위한 기능인 조건부 타입이 추가되었다.
+조건부 타입은 조건 표현식에 따라 두 유형 중 하나를 선택하게 된다.
+
+아래의 의미는 `T`가 `U`에 할당가능할 때 타입이 `X`이고 아니면 `Y`이다.
+
+```ts
+T extends U ? X : Y
+```
+
+위의 타입은 `X` 또는 `Y`로 평가되거나, 평가가 지연되는데
+이는 타입시스템에서 `T`가 항상 `U`에 할당가능하다고 결론을 내리기에 충분한 정보가 있는지 여부에 따라 결정된다.
+
+다음은 타입이 즉시 평가되는 예제이다
+
+```ts
+declare function f<T extends boolean>(x: T): T extends true ? string : number;
+
+// Type is 'string | number
+let x = f(Math.random() < 0.5)
+```
+
+다른 예제는 중첩 조건부 타입을 사용하는 예제이다
+
+```ts
+type TypeName<T> =
+  T extends string ? "string" :
+  T extends number ? "number" :
+  T extends boolean ? "boolean" :
+  T extends undefined ? "undefined" :
+  T extends Function ? "function" :
+  "object";
+
+type T0 = TypeName<string>;  // "string"
+type T1 = TypeName<"a">;  // "string"
+type T2 = TypeName<true>;  // "boolean"
+type T3 = TypeName<() => void>;  // "function"
+type T4 = TypeName<string[]>;  // "object"
+```
+
+조건부 타입 평가가 지연되는 예
+
+```ts
+interface Foo {
+  propA: boolean;
+  propB: boolean;
+}
+
+declare function f<T>(x: T): T extends Foo ? string : number;
+
+function foo<U>(x: U) {
+  // Has type 'U extends Foo ? string : number'
+  let a = f(x);
+
+  // This assignment is allowed though!
+  let b: string | number = a;
+}
+```
+
+위의 변수 `a`는 아직 분기가 선택되지 않은 조건부 타입이다.
+다른 코드가 `foo`를 호출하면 `U`에서 다른 타입으로 대체되고, 조건부 타입은 다시 평가되어 분기 선택여부를 결정하게 된다.
+
+#### Distributive conditional types
+
+checked type이 naked type 파라미터인 조건부 타입을 distributive conditional types(DCT)라 한다.
+
+DCT는 인스턴스화 할 때 자동으로 union types에 분배된다.
+
+예를 들어 `T`의 타입 인자가 `A | B | C`인 `T extends U ? X : Y`의 인스턴스화는
+`(A extends U ? X : Y) | (B extends U ? X : Y) | (C extends U ? X : Y)`의 형태로 이루어진다.
+
+```ts
+type T10 = TypeName<string | (() => void)>;  // "string" | "function"
+type T12 = TypeName<string | string[] | undefined>;  // "string" | "object" | "undefined"
+type T11 = TypeName<string[] | number[]>;  // "object"
+```
+
+DCT `T extends U ? X : Y`의 인스턴스화는, 조건부 타입들이 union type의 개별 구성요소로 해석되는 `T`를 참조한다.
+(i.e `T`는 조건부 타입이 union 타입에 분산된 후 개별 구성요소를 참조한다)
+
+또한, `X`내의 `T`에 대한 참조는 추가적인 타입 파라미터 제약 `U`를 갖는다.
+(i.e `T`는 `X`내에서 `U`에 할당 가능하다고 간주된다)
+
+```ts
+type BoxedValue<T> = { value: T };
+type BoxedArray<T> = { array: T[] };
+type Boxed<T> = T extends any[] ? BoxedArray<T[number]> : BoxedValue<T>;
+
+type T20 = Boxed<string>;  // BoxedValue<string>;
+type T21 = Boxed<number[]>;  // BoxedArray<number>;
+type T22 = Boxed<string | number[]>;  // BoxedValue<string> | BoxedArray<number>;
+```
+
+`T`는 `Boxed<T>` 분기 내에서 추가적인 제약 `any[]`를 가질 수 있으므로, 배열의 요소 타입을 `T[number]`로 참조할 수 있다.
+
+조건부 타입의 분산된 프로퍼티는 union 타입을 필터링 하는데 유용하게 사용된다.
+
+```ts
+type Diff<T, U> = T extends U ? never : T;  // Remove types from T that are assignable to U
+type Filter<T, U> = T extends U ? T : never;  // Remove types from T that are not assignable to U
+
+type T30 = Diff<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "b" | "d"
+type T31 = Filter<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "a" | "c"
+type T32 = Diff<string | number | (() => void), Function>;  // string | number
+type T33 = Filter<string | number | (() => void), Function>;  // () => void
+
+type NonNullable<T> = Diff<T, null | undefined>;  // Remove null and undefined from T
+
+type T34 = NonNullable<string | number | undefined>;  // string | number
+type T35 = NonNullable<string | string[] | null | undefined>;  // string | string[]
+
+function f1<T>(x: T, y: NonNullable<T>) {
+  x = y;  // Ok
+  y = x;  // Error
+}
+
+function f2<T extends string | undefined>(x: T, y: NonNullable<T>) {
+  x = y;  // Ok
+  y = x;  // Error
+  let s1: string = x;  // Error
+  let s2: string = y;  // Ok
+}
+```
+
+조건부 타입은 mapped types와 결합할 때 특히 유용하다
+
+```ts
+type FunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T];
+type FunctionProperties<T> = Pick<T, FunctionPropertyNames<T>>;
+
+type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
+
+interface Part {
+  id: number;
+  name: string;
+  subparts: Part[];
+  updatePart(newName: string): void;
+}
+
+type T40 = FunctionPropertyNames<Part>;  // "updatePart"
+type T41 = NonFunctionPropertyNames<Part>;  // "id" | "name" | "subparts"
+type T42 = FunctionProperties<Part>;  // { updatePart(newName: string): void }
+type T43 = NonFunctionProperties<Part>;  // { id: number, name: string, subparts: Part[] }
+```
+
+union 및 intersection 타입과 비슷하게 조건부 타입은 재귀적으로 스스로를 참조할 수 없다.
+
+```ts
+type ElementType<T> = T extends any[] ? ElementType<T[number]> : T;  // Error
+```
+
+#### Type inference in conditional types
+
+조건부 타입의 `extends`절 내에서, `infer` 선언으로 타입 변수가 추론될 수 있음을 알릴 수 있다.
+이러한 추론된 타입 변수는 조건부 타입에서 true 분기에서 참조된다.
+
+같은 타입 변수에서 여러개의 `infer` 선언을 가질 수 있다.
+
+```ts
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+```
+
+조건부 타입은 순서대로 평가되는 연속적인 패턴 매칭을 형성하기 위해 중첩될 수 있다
+
+```ts
+type Unpacked<T> =
+  T extends (infer U)[] ? U :
+  T extends (...args: any[]) => infer U ? U :
+  T extends Promise<infer U> ? U :
+  T;
+
+type T0 = Unpacked<string>;  // string
+type T1 = Unpacked<string[]>;  // string
+type T2 = Unpacked<() => string>;  // string
+type T3 = Unpacked<Promise<string>>;  // string
+type T4 = Unpacked<Promise<string>[]>;  // Promise<string>
+type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
+```
+
+다음 예제는 얼마나 많은 동일 타입 변수의 후보가 공변(co-variant)의 위치에서 추론될 수 있는 union 타입을 형성하는지를 보여준다.
+
+```ts
+type Foo<T> = T extends { a: infer U, b: infer U } ? U : never;
+type T10 = Foo<{ a: string, b: string }>;  // string
+type T11 = Foo<{ a: string, b: number }>;  // string | number
+```
+
+마찬가지로, 동일 타입 변수들의 후보가 반공변(contra-variant)의 위치에서 추론될 수 있는 intersection 타입을 형성하는지 보여준다.
+
+```ts
+type Bar<T> = T extends { a: (x: infer U) => void, b: (x: infer U) => void } ? U : never;
+type T20 = Bar<{ a: (x: string) => void, b: (x: string) => void }>;  // string
+type T21 = Bar<{ a: (x: string) => void, b: (x: number) => void }>;  // string & number
+```
+
+다수의 호출 시그니처를 가진 타입(오버로드된 함수와 같은...)으로 부터 추론은 마지막 시그니처로 부터 이루어진다.
+
+```ts
+declare function foo(x: string): number;
+declare function foo(x: number): string;
+declare function foo(x: string | number): string | number;
+type T30 = ReturnType<typeof foo>;  // string | number
+```
+
+일반적인 타입 파라미터의 제약조건절에서 `infer` 선언을 할 수 없다
+
+```ts
+type ReturnType<T extends (...args: any[]) => infer R> = R;  // Error, not supported
+```
+
+그러나 제약조건에서 타입변수를 지우고 대신 조건부 타입을 지정하면 동일한 효과를 얻을 수 있다
+
+```ts
+type AnyFunction = (...args: any[]) => any;
+type ReturnType<T extends AnyFunction> = T extends (...args: any[]) => infer R ? R : any;
+```
+
+#### Predefined conditional types
+
+타입스크립트 2.8에서 `lib.d.ts`에 사전 정의된 조건부 타입들이 있다
+
+- `Exclude<T, U>` -- Exclude from T those types that are assignable to U.
+- `Extract<T, U>` -- Extract from T those types that are assignable to U.
+- `NonNullable<T>` -- Exclude null and undefined from T.
+- `ReturnType<T>` -- Obtain the return type of a function type.
+- `InstanceType<T>` -- Obtain the instance type of a constructor function type.
+
+```ts
+type T00 = Exclude<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "b" | "d"
+type T01 = Extract<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "a" | "c"
+
+type T02 = Exclude<string | number | (() => void), Function>;  // string | number
+type T03 = Extract<string | number | (() => void), Function>;  // () => void
+
+type T04 = NonNullable<string | number | undefined>;  // string | number
+type T05 = NonNullable<(() => string) | string[] | null | undefined>;  // (() => string) | string[]
+
+function f1(s: string) {
+  return { a: 1, b: s };
+}
+
+class C {
+  x = 0;
+  y = 0;
+}
+
+type T10 = ReturnType<() => string>;  // string
+type T11 = ReturnType<(s: string) => void>;  // void
+type T12 = ReturnType<(<T>() => T)>;  // {}
+type T13 = ReturnType<(<T extends U, U extends number[]>() => T)>;  // number[]
+type T14 = ReturnType<typeof f1>;  // { a: number, b: string }
+type T15 = ReturnType<any>;  // any
+type T16 = ReturnType<never>;  // never
+type T17 = ReturnType<string>;  // Error
+type T18 = ReturnType<Function>;  // Error
+
+type T20 = InstanceType<typeof C>;  // C
+type T21 = InstanceType<any>;  // any
+type T22 = InstanceType<never>;  // never
+type T23 = InstanceType<string>;  // Error
+type T24 = InstanceType<Function>;  // Error
+```
+
+> `Exclude` 타입은 `Diff` 타입의 정확한 구현이다. `Diff`가 정의되어 있는 코드와 충돌을 회피하기 위해서 `Exclude`로 명명하였다. 또한 의미론적으로 더 나은 느낌을 전달한다. `Omit<T, K>` 타입은 포함되지 않았는데 `Pick<T, Exclude<keyof T, K>>`타입으로 사용할 수 있기 때문이다.
+
+## Symbols
