@@ -187,8 +187,13 @@ OPTIONS 요청과 함께, 다음 두 개의 요청이 전송되었다.
 
 credentialed(인증된) 요청은 HTTP 쿠키와 HTTP Authentication 정보를 확인하게 한다.
 
-기본적으로, cross-site XHR에서 자격 증명을 위한 정보를 전송하지 않는다.
-만약 자격증명과 함께 요청이 호출되도록 하려면 xhr객체에서 `withCredentials=true`값을 사용해야 한다
+기본적으로, cross-site XHR에서는 자격 증명을 위한 정보를 전송하지 않는다.
+만약 자격증명과 함께 요청이 호출되도록 하려면 xhr객체에서 `withCredentials=true`값을 사용해야 한다.
+
+서버에서는 인증된 요청에 응답하는 경우 `Access-Control-Allow-Credentials: true` 헤더와 함께 응답해야 한다.
+또한 서버는 도메인을 특정해야만 하며, 와일드 카드를 사용할 수 없다. (`Access-Control-Allow-Origin: 도메인`)
+
+따라서, origin이 정확히 설정된 서버에 `withCredentials: true` 옵션으로 요청을 보낸다면, 브라우저는 응답에 포함된 쿠키를 저장하게된다.
 
 클라이언트와 서버 간의 전체적인 송수신은 다음과 같을 것이다
 
@@ -225,10 +230,6 @@ Content-Type: text/plain
 
 [text/plain payload]
 ```
-
-서버에서는 인증된 요청에 응답하는 경우 `Access-Control-Allow-Credentials: true` 헤더와 함께 응답해야 한다.
-
-또한 서버는 도메인을 특정해야만 하며, 와일드 카드를 사용할 수 없다. (`Access-Control-Allow-Origin: 도메인`)
 
 ## HTTP 응답헤더
 
