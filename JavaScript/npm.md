@@ -51,3 +51,36 @@ yarn global bin will output the location where Yarn will install symlinks to you
 - `--optional`(-O) : optionalDependencies에
 - `--exact`(-E) : 명시한 버전과 정확한 경우에만 설치
 - `--tilde`(-T) : 명시한 버전과 같은 minor 버전의 최신버전 설치 (버전 세 번째 자리)
+
+## package publishing
+
+TS 기준
+
+`package.json`
+
+```json
+{
+  "script": {
+    // npm install 되고 난 후 실행됨
+    "prepare" : "npm run build",
+    // npm publish 직전 실행됨
+    "prepublishOnly": "npm run lint"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  // publishing후 module에 포함할 파일 경로
+  "files": ["lib/**/*"],
+  // cli를 포함하고 있다면
+  "bin": {
+    "my-package": "./cli.js"
+  },
+  "homepage": "https://pravusid.kr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pravusid/my-package.git"
+  },
+    "bugs": {
+    "url": "https://github.com/pravusid/my-package/issues"
+  },
+}
+```
