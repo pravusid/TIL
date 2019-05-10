@@ -37,3 +37,10 @@ nohup java -jar foo.jar &
 - -9 (-KILL) - let the kernel kick the process out
 - -11 (-SEGV) - have the program crash brutally
 - -15 (-TERM) - the default, ask the program kindly to terminate.
+
+## 프로세스 목록 출력 (csv 포맷)
+
+```sh
+ps -e -o %p, -o %t -o ,%C, -o %mem -o ,%c
+ps -e -o %p, -o lstart -o ,%C, -o %mem -o ,%a
+```
