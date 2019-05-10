@@ -101,6 +101,8 @@ scp <옵션> <원본 경로 및 파일명> <대상 경로 및 파일명>
 
 remote는 server에서 도달할 수 있는 `<hostname | ip address>`를 사용하여야 한다
 
+예시: `ssh -i ~/.ssh/id_rsa -N -L 8080:localhost:3000 pravusid@pravusid.kr`
+
 ### Remote Forwarding
 
 `ssh -R [허용IP:]8080:localhost:80 public.example.com`
