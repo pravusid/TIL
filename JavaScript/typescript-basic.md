@@ -2404,3 +2404,107 @@ type T24 = InstanceType<Function>;  // Error
 > `Exclude` 타입은 `Diff` 타입의 정확한 구현이다. `Diff`가 정의되어 있는 코드와 충돌을 회피하기 위해서 `Exclude`로 명명하였다. 또한 의미론적으로 더 나은 느낌을 전달한다. `Omit<T, K>` 타입은 포함되지 않았는데 `Pick<T, Exclude<keyof T, K>>`타입으로 사용할 수 있기 때문이다.
 
 ## Symbols
+
+### Introduction
+
+ES6부터 `Symbol`은 JavaScript의 primitive 타입이다.
+
+symbol 값은 `Symbol` 생성잘르 호출해서 만들 수 있다.
+
+```ts
+let sym1 = Symbol();
+let sym2 = Symbol("key"); // optional string key
+```
+
+Symbol은 불변이며 유일한 값을 갖는다
+
+```ts
+let sym2 = Symbol("key");
+let sym3 = Symbol("key");
+sym2 === sym3; // false, symbols are unique
+```
+
+문자열과 마찬가지로 symbols는 오브젝트 프로퍼티의 키로 사용될 수 있다
+
+```ts
+const sym = Symbol();
+let obj = {
+  [sym]: "value";
+};
+console.log(obj[sym]); // "value"
+```
+
+Symbol은 계산된 프로퍼티 선언과 결합하여 오브젝트 프로퍼티와 클래스 멤버를 선언할 수 있다
+
+```ts
+const getClassNameSymbol = Symbol();
+
+class C {
+  [getClassNameSymbol]() {
+    return "C";
+  }
+}
+
+let c = new C();
+let className = c[getClassNameSymbol](); // "C"
+```
+
+### Well-known Symbols
+
+사용자 정의 심볼외에도 잘 알려진 내장 심볼들이 있다. 내장 심볼들은 언어 내부 동작을 나타내는데 사용된다.
+
+다음은 잘 알려진 심볼의 목록이다
+
+#### `Symbol.hasInstance`
+
+생성자로 생성된 객체가 어떤 생성자의 인스턴스 중 하나인지 결정한다.
+`instanceof` 연산자에 의해 호출된다. (`instanceof`를 확장해서 사용한다)
+
+#### `Symbol.isConcatSpreadable`
+
+`Array.prototype.concat`에 의해 객체가 배열 요소로 flatten 될수 있는지 여부를 나타내는 boolean 값이다
+
+#### `Symbol.iterator`
+
+객체의 기본 반복자를 반환하는 메소드이다.
+`for-of`문에 의해서 호출된다.
+
+#### `Symbol.match`
+
+문자열을 정규표현식과 비교하는 졍규표현식 메소드이다.
+`String.prototype.match` 메소드에 의해 호출된다.
+
+#### `Symbol.replace`
+
+일치하는 문자열의 하위 문자열을 대체하는 정규표현식 메소드이다.
+`String.prototype.replace` 메소드에 의해 호출된다.
+
+#### `Symbol.search`
+
+정규표현식과 일치하는 문자열의 index를 반환하는 정규표현식 메소드이다.
+`String.prototype.search` 메소드에 의해 호출된다.
+
+#### `Symbol.species`
+
+파생 객체를 만드는 생성자 함수의 함수값 프로퍼티이다
+
+#### `Symbol.split`
+
+정규표현식과 일치하는 indices에서 문자열을 분리하는 정규표현식 메소드이다.
+`String.prototype.split` 메소드에 의해 호출된다.
+
+#### `Symbol.toPrimitive`
+
+객체를 대응하는 primitive value로 변환하는 메소드이다.
+`ToPrimitive` abstract operation에서 호출된다.
+
+#### `Symbol.toStringTag`
+
+객체의 기본 문자열 description을 생성하는데 사용되는 문자열 값이다.
+내장메소드인 `Object.prototype.toString`에메소드에 의해 호출된다.
+
+#### `Symbol.unscopables`
+
+특정 메소드들이 동적 스코핑에 관여되는 것을 방지함
+
+## Iterators and Generators
