@@ -40,6 +40,24 @@ bash shell로 container 실행
 
 `docker exec -it <CONTAINER_NAME> mysql -uroot -p`
 
+run 예시
+
+```sh
+#!/bin/bash
+
+docker stop test
+docker rm test
+
+docker run -d --name test -p 5000:3306 -v $(pwd)/data:/var/lib/mysql my-image
+
+docker stop test
+
+rm -rf data/
+cp -r backup data
+
+docker start test
+```
+
 ## Dockerfile
 
 ```dockerfile
