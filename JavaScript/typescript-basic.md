@@ -1194,7 +1194,12 @@ const enum Directions {
   Left,
   Right
 }
-let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+let directions = [
+  Directions.Up,
+  Directions.Down,
+  Directions.Left,
+  Directions.Right
+];
 
 // 컴파일 되면 다음과 같아질 것이다
 var directions = [0 /* Up */, 1 /* Down */, 2 /* Left */, 3 /* Right */];
@@ -1312,7 +1317,9 @@ listenEvent(EventType.Mouse, (e: MouseEvent) => console.log(e.x + "," + e.y));
 listenEvent(EventType.Mouse, (e: Event) =>
   console.log((<MouseEvent>e).x + "," + (<MouseEvent>e).y)
 );
-listenEvent(EventType.Mouse, <(e: Event) => void>((e: MouseEvent) => console.log(e.x + "," + e.y)));
+listenEvent(EventType.Mouse, <(e: Event) => void>(
+  ((e: MouseEvent) => console.log(e.x + "," + e.y))
+));
 
 // 명백한 오류: 완전히 호환되지 않는 타입이 강제됨
 listenEvent(EventType.Mouse, (e: number) => console.log(e));
@@ -1589,7 +1596,9 @@ class StringPadder implements Padder {
 }
 
 function getRandomPadder() {
-  return Math.random() < 0.5 ? new SpaceRepeatingPadder(4) : new StringPadder("  ");
+  return Math.random() < 0.5
+    ? new SpaceRepeatingPadder(4)
+    : new StringPadder("  ");
 }
 
 // Type is 'SpaceRepeatingPadder | StringPadder'
@@ -1991,9 +2000,9 @@ function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
 `T[K]`의 결과를 반환하면 컴파일러는 키의 실제 타입을 인스턴스화 하므로 `getProperty`의 반환타입은 요청한 프로퍼티에 따라 다양해진다.
 
 ```ts
-let name: string = getProperty(person, 'name');
-let age: number = getProperty(person, 'age');
-let unknown = getProperty(person, 'unknown'); // error, 'unknown' is not in 'name' | 'age'
+let name: string = getProperty(person, "name");
+let age: number = getProperty(person, "age");
+let unknown = getProperty(person, "unknown"); // error, 'unknown' is not in 'name' | 'age'
 ```
 
 #### Index types and string index signatures
@@ -2006,7 +2015,7 @@ interface Dictionary<T> {
   [key: string]: T;
 }
 let keys: keyof Dictionary<number>; // string
-let value: Dictionary<number>['foo']; // number
+let value: Dictionary<number>["foo"]; // number
 ```
 
 ### Mapped types
@@ -2014,12 +2023,8 @@ let value: Dictionary<number>['foo']; // number
 TypeScript는 이전의 타입을 기반으로 새로운 타입을 만드는 방법인 mapped types를 제공한다.
 
 ```ts
-type Partial<T> = {
-  [P in keyof T]?: T[P];
-}
-type Readonly<T> = {
-  readonly [P in keyof T]: T[P];
-}
+type Partial<T> = { [P in keyof T]?: T[P] };
+type Readonly<T> = { readonly [P in keyof T]: T[P] };
 ```
 
 다음과 같이 사용한다
@@ -2048,7 +2053,7 @@ type PartialWithNewMember<T> = {
 간단한 mapped types 예제를 보자
 
 ```ts
-type Keys = 'option1' | 'option2';
+type Keys = "option1" | "option2";
 type Flags = { [K in Keys]: boolean };
 ```
 
@@ -2062,7 +2067,7 @@ type Flags = { [K in Keys]: boolean };
 type Flags = {
   option1: boolean;
   option2: boolean;
-}
+};
 ```
 
 실제 적용은 위의 `Readonly` 혹은 `Partial`과 같은 형태이다.
@@ -2070,8 +2075,8 @@ type Flags = {
 그곳에 `keyof` 인덱스 접근 타입이 위치한다.
 
 ```ts
-type Nullable<T> = { [P in keyof T]: T[P] | null }
-type Partial<T> = { [P in keyof T]?: T[P] }
+type Nullable<T> = { [P in keyof T]: T[P] | null };
+type Partial<T> = { [P in keyof T]?: T[P] };
 ```
 
 이러한 예제에서 프로퍼티 목록은 `keyof T`이고 결과값의 타입은 `T[P]`의 변형이다.
@@ -2086,10 +2091,8 @@ type Partial<T> = { [P in keyof T]?: T[P] }
 type Proxy<T> = {
   get(): T;
   set(value: T): void;
-}
-type Proxify<T> = {
-  [P in keyof T]: Proxy<T[P]>;
-}
+};
+type Proxify<T> = { [P in keyof T]: Proxy<T[P]> };
 function proxify<T>(o: T): Proxify<T> {
   // ... wrap proxies ...
 }
@@ -2099,12 +2102,8 @@ let proxyProps = proxify(props);
 `Readonly<T>`와 `Partial<T>`는 유용하기 때문에 `Pick` 및 `Record`와 함께 타입스크립트 표준 라이브러리에 포함되어 있다.
 
 ```ts
-type Pick<T, K extends keyof T> = {
-  [P in K]: T[P];
-}
-type Record<K extends keyof any, T> = {
-  [P in K]: T;
-}
+type Pick<T, K extends keyof T> = { [P in K]: T[P] };
+type Record<K extends keyof any, T> = { [P in K]: T };
 ```
 
 `Readonly`, `Partial`, `Pick`은 homomorphic이지만 `Record`는 그렇지 않다.
@@ -2112,7 +2111,7 @@ type Record<K extends keyof any, T> = {
 `Record`가 homomorphic하지 않다는 것은 속성을 복사할 때 입력받은 타입을 사용하지 않는 점에서 알 수 있다.
 
 ```ts
-type ThreeStringProps = Record<'prop1' | 'prop2' | 'prop3', string>
+type ThreeStringProps = Record<"prop1" | "prop2" | "prop3", string>;
 ```
 
 non-homomorphic 타입은 본질적으로 새로운 속성을 생성하기 때문에 프로퍼티 수정자를 복사할 수 없다.
@@ -2156,25 +2155,29 @@ T extends U ? X : Y
 declare function f<T extends boolean>(x: T): T extends true ? string : number;
 
 // Type is 'string | number
-let x = f(Math.random() < 0.5)
+let x = f(Math.random() < 0.5);
 ```
 
 다른 예제는 중첩 조건부 타입을 사용하는 예제이다
 
 ```ts
-type TypeName<T> =
-  T extends string ? "string" :
-  T extends number ? "number" :
-  T extends boolean ? "boolean" :
-  T extends undefined ? "undefined" :
-  T extends Function ? "function" :
-  "object";
+type TypeName<T> = T extends string
+  ? "string"
+  : T extends number
+  ? "number"
+  : T extends boolean
+  ? "boolean"
+  : T extends undefined
+  ? "undefined"
+  : T extends Function
+  ? "function"
+  : "object";
 
-type T0 = TypeName<string>;  // "string"
-type T1 = TypeName<"a">;  // "string"
-type T2 = TypeName<true>;  // "boolean"
-type T3 = TypeName<() => void>;  // "function"
-type T4 = TypeName<string[]>;  // "object"
+type T0 = TypeName<string>; // "string"
+type T1 = TypeName<"a">; // "string"
+type T2 = TypeName<true>; // "boolean"
+type T3 = TypeName<() => void>; // "function"
+type T4 = TypeName<string[]>; // "object"
 ```
 
 조건부 타입 평가가 지연되는 예
@@ -2209,9 +2212,9 @@ DCT는 인스턴스화 할 때 자동으로 union types에 분배된다.
 `(A extends U ? X : Y) | (B extends U ? X : Y) | (C extends U ? X : Y)`의 형태로 이루어진다.
 
 ```ts
-type T10 = TypeName<string | (() => void)>;  // "string" | "function"
-type T12 = TypeName<string | string[] | undefined>;  // "string" | "object" | "undefined"
-type T11 = TypeName<string[] | number[]>;  // "object"
+type T10 = TypeName<string | (() => void)>; // "string" | "function"
+type T12 = TypeName<string | string[] | undefined>; // "string" | "object" | "undefined"
+type T11 = TypeName<string[] | number[]>; // "object"
 ```
 
 DCT `T extends U ? X : Y`의 인스턴스화는, 조건부 타입들이 union type의 개별 구성요소로 해석되는 `T`를 참조한다.
@@ -2225,9 +2228,9 @@ type BoxedValue<T> = { value: T };
 type BoxedArray<T> = { array: T[] };
 type Boxed<T> = T extends any[] ? BoxedArray<T[number]> : BoxedValue<T>;
 
-type T20 = Boxed<string>;  // BoxedValue<string>;
-type T21 = Boxed<number[]>;  // BoxedArray<number>;
-type T22 = Boxed<string | number[]>;  // BoxedValue<string> | BoxedArray<number>;
+type T20 = Boxed<string>; // BoxedValue<string>;
+type T21 = Boxed<number[]>; // BoxedArray<number>;
+type T22 = Boxed<string | number[]>; // BoxedValue<string> | BoxedArray<number>;
 ```
 
 `T`는 `Boxed<T>` 분기 내에서 추가적인 제약 `any[]`를 가질 수 있으므로, 배열의 요소 타입을 `T[number]`로 참조할 수 있다.
@@ -2235,39 +2238,43 @@ type T22 = Boxed<string | number[]>;  // BoxedValue<string> | BoxedArray<number>
 조건부 타입의 분산된 프로퍼티는 union 타입을 필터링 하는데 유용하게 사용된다.
 
 ```ts
-type Diff<T, U> = T extends U ? never : T;  // Remove types from T that are assignable to U
-type Filter<T, U> = T extends U ? T : never;  // Remove types from T that are not assignable to U
+type Diff<T, U> = T extends U ? never : T; // Remove types from T that are assignable to U
+type Filter<T, U> = T extends U ? T : never; // Remove types from T that are not assignable to U
 
-type T30 = Diff<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "b" | "d"
-type T31 = Filter<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "a" | "c"
-type T32 = Diff<string | number | (() => void), Function>;  // string | number
-type T33 = Filter<string | number | (() => void), Function>;  // () => void
+type T30 = Diff<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "b" | "d"
+type T31 = Filter<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "a" | "c"
+type T32 = Diff<string | number | (() => void), Function>; // string | number
+type T33 = Filter<string | number | (() => void), Function>; // () => void
 
-type NonNullable<T> = Diff<T, null | undefined>;  // Remove null and undefined from T
+type NonNullable<T> = Diff<T, null | undefined>; // Remove null and undefined from T
 
-type T34 = NonNullable<string | number | undefined>;  // string | number
-type T35 = NonNullable<string | string[] | null | undefined>;  // string | string[]
+type T34 = NonNullable<string | number | undefined>; // string | number
+type T35 = NonNullable<string | string[] | null | undefined>; // string | string[]
 
 function f1<T>(x: T, y: NonNullable<T>) {
-  x = y;  // Ok
-  y = x;  // Error
+  x = y; // Ok
+  y = x; // Error
 }
 
 function f2<T extends string | undefined>(x: T, y: NonNullable<T>) {
-  x = y;  // Ok
-  y = x;  // Error
-  let s1: string = x;  // Error
-  let s2: string = y;  // Ok
+  x = y; // Ok
+  y = x; // Error
+  let s1: string = x; // Error
+  let s2: string = y; // Ok
 }
 ```
 
 조건부 타입은 mapped types와 결합할 때 특히 유용하다
 
 ```ts
-type FunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T];
+type FunctionPropertyNames<T> = {
+  [K in keyof T]: T[K] extends Function ? K : never
+}[keyof T];
 type FunctionProperties<T> = Pick<T, FunctionPropertyNames<T>>;
 
-type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type NonFunctionPropertyNames<T> = {
+  [K in keyof T]: T[K] extends Function ? never : K
+}[keyof T];
 type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 
 interface Part {
@@ -2277,16 +2284,16 @@ interface Part {
   updatePart(newName: string): void;
 }
 
-type T40 = FunctionPropertyNames<Part>;  // "updatePart"
-type T41 = NonFunctionPropertyNames<Part>;  // "id" | "name" | "subparts"
-type T42 = FunctionProperties<Part>;  // { updatePart(newName: string): void }
-type T43 = NonFunctionProperties<Part>;  // { id: number, name: string, subparts: Part[] }
+type T40 = FunctionPropertyNames<Part>; // "updatePart"
+type T41 = NonFunctionPropertyNames<Part>; // "id" | "name" | "subparts"
+type T42 = FunctionProperties<Part>; // { updatePart(newName: string): void }
+type T43 = NonFunctionProperties<Part>; // { id: number, name: string, subparts: Part[] }
 ```
 
 union 및 intersection 타입과 비슷하게 조건부 타입은 재귀적으로 스스로를 참조할 수 없다.
 
 ```ts
-type ElementType<T> = T extends any[] ? ElementType<T[number]> : T;  // Error
+type ElementType<T> = T extends any[] ? ElementType<T[number]> : T; // Error
 ```
 
 #### Type inference in conditional types
@@ -2303,34 +2310,38 @@ type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 조건부 타입은 순서대로 평가되는 연속적인 패턴 매칭을 형성하기 위해 중첩될 수 있다
 
 ```ts
-type Unpacked<T> =
-  T extends (infer U)[] ? U :
-  T extends (...args: any[]) => infer U ? U :
-  T extends Promise<infer U> ? U :
-  T;
+type Unpacked<T> = T extends (infer U)[]
+  ? U
+  : T extends (...args: any[]) => infer U
+  ? U
+  : T extends Promise<infer U>
+  ? U
+  : T;
 
-type T0 = Unpacked<string>;  // string
-type T1 = Unpacked<string[]>;  // string
-type T2 = Unpacked<() => string>;  // string
-type T3 = Unpacked<Promise<string>>;  // string
-type T4 = Unpacked<Promise<string>[]>;  // Promise<string>
-type T5 = Unpacked<Unpacked<Promise<string>[]>>;  // string
+type T0 = Unpacked<string>; // string
+type T1 = Unpacked<string[]>; // string
+type T2 = Unpacked<() => string>; // string
+type T3 = Unpacked<Promise<string>>; // string
+type T4 = Unpacked<Promise<string>[]>; // Promise<string>
+type T5 = Unpacked<Unpacked<Promise<string>[]>>; // string
 ```
 
 다음 예제는 얼마나 많은 동일 타입 변수의 후보가 공변(co-variant)의 위치에서 추론될 수 있는 union 타입을 형성하는지를 보여준다.
 
 ```ts
-type Foo<T> = T extends { a: infer U, b: infer U } ? U : never;
-type T10 = Foo<{ a: string, b: string }>;  // string
-type T11 = Foo<{ a: string, b: number }>;  // string | number
+type Foo<T> = T extends { a: infer U; b: infer U } ? U : never;
+type T10 = Foo<{ a: string; b: string }>; // string
+type T11 = Foo<{ a: string; b: number }>; // string | number
 ```
 
 마찬가지로, 동일 타입 변수들의 후보가 반공변(contra-variant)의 위치에서 추론될 수 있는 intersection 타입을 형성하는지 보여준다.
 
 ```ts
-type Bar<T> = T extends { a: (x: infer U) => void, b: (x: infer U) => void } ? U : never;
-type T20 = Bar<{ a: (x: string) => void, b: (x: string) => void }>;  // string
-type T21 = Bar<{ a: (x: string) => void, b: (x: number) => void }>;  // string & number
+type Bar<T> = T extends { a: (x: infer U) => void; b: (x: infer U) => void }
+  ? U
+  : never;
+type T20 = Bar<{ a: (x: string) => void; b: (x: string) => void }>; // string
+type T21 = Bar<{ a: (x: string) => void; b: (x: number) => void }>; // string & number
 ```
 
 다수의 호출 시그니처를 가진 타입(오버로드된 함수와 같은...)으로 부터 추론은 마지막 시그니처로 부터 이루어진다.
@@ -2339,20 +2350,22 @@ type T21 = Bar<{ a: (x: string) => void, b: (x: number) => void }>;  // string &
 declare function foo(x: string): number;
 declare function foo(x: number): string;
 declare function foo(x: string | number): string | number;
-type T30 = ReturnType<typeof foo>;  // string | number
+type T30 = ReturnType<typeof foo>; // string | number
 ```
 
 일반적인 타입 파라미터의 제약조건절에서 `infer` 선언을 할 수 없다
 
 ```ts
-type ReturnType<T extends (...args: any[]) => infer R> = R;  // Error, not supported
+type ReturnType<T extends (...args: any[]) => infer R> = R; // Error, not supported
 ```
 
 그러나 제약조건에서 타입변수를 지우고 대신 조건부 타입을 지정하면 동일한 효과를 얻을 수 있다
 
 ```ts
 type AnyFunction = (...args: any[]) => any;
-type ReturnType<T extends AnyFunction> = T extends (...args: any[]) => infer R ? R : any;
+type ReturnType<T extends AnyFunction> = T extends (...args: any[]) => infer R
+  ? R
+  : any;
 ```
 
 #### Predefined conditional types
@@ -2366,14 +2379,14 @@ type ReturnType<T extends AnyFunction> = T extends (...args: any[]) => infer R ?
 - `InstanceType<T>` -- Obtain the instance type of a constructor function type.
 
 ```ts
-type T00 = Exclude<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "b" | "d"
-type T01 = Extract<"a" | "b" | "c" | "d", "a" | "c" | "f">;  // "a" | "c"
+type T00 = Exclude<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "b" | "d"
+type T01 = Extract<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "a" | "c"
 
-type T02 = Exclude<string | number | (() => void), Function>;  // string | number
-type T03 = Extract<string | number | (() => void), Function>;  // () => void
+type T02 = Exclude<string | number | (() => void), Function>; // string | number
+type T03 = Extract<string | number | (() => void), Function>; // () => void
 
-type T04 = NonNullable<string | number | undefined>;  // string | number
-type T05 = NonNullable<(() => string) | string[] | null | undefined>;  // (() => string) | string[]
+type T04 = NonNullable<string | number | undefined>; // string | number
+type T05 = NonNullable<(() => string) | string[] | null | undefined>; // (() => string) | string[]
 
 function f1(s: string) {
   return { a: 1, b: s };
@@ -2384,21 +2397,21 @@ class C {
   y = 0;
 }
 
-type T10 = ReturnType<() => string>;  // string
-type T11 = ReturnType<(s: string) => void>;  // void
-type T12 = ReturnType<(<T>() => T)>;  // {}
-type T13 = ReturnType<(<T extends U, U extends number[]>() => T)>;  // number[]
-type T14 = ReturnType<typeof f1>;  // { a: number, b: string }
-type T15 = ReturnType<any>;  // any
-type T16 = ReturnType<never>;  // never
-type T17 = ReturnType<string>;  // Error
-type T18 = ReturnType<Function>;  // Error
+type T10 = ReturnType<() => string>; // string
+type T11 = ReturnType<(s: string) => void>; // void
+type T12 = ReturnType<<T>() => T>; // {}
+type T13 = ReturnType<<T extends U, U extends number[]>() => T>; // number[]
+type T14 = ReturnType<typeof f1>; // { a: number, b: string }
+type T15 = ReturnType<any>; // any
+type T16 = ReturnType<never>; // never
+type T17 = ReturnType<string>; // Error
+type T18 = ReturnType<Function>; // Error
 
-type T20 = InstanceType<typeof C>;  // C
-type T21 = InstanceType<any>;  // any
-type T22 = InstanceType<never>;  // never
-type T23 = InstanceType<string>;  // Error
-type T24 = InstanceType<Function>;  // Error
+type T20 = InstanceType<typeof C>; // C
+type T21 = InstanceType<any>; // any
+type T22 = InstanceType<never>; // never
+type T23 = InstanceType<string>; // Error
+type T24 = InstanceType<Function>; // Error
 ```
 
 > `Exclude` 타입은 `Diff` 타입의 정확한 구현이다. `Diff`가 정의되어 있는 코드와 충돌을 회피하기 위해서 `Exclude`로 명명하였다. 또한 의미론적으로 더 나은 느낌을 전달한다. `Omit<T, K>` 타입은 포함되지 않았는데 `Pick<T, Exclude<keyof T, K>>`타입으로 사용할 수 있기 때문이다.
@@ -2508,3 +2521,73 @@ let className = c[getClassNameSymbol](); // "C"
 특정 메소드들이 동적 스코핑에 관여되는 것을 방지함
 
 ## Iterators and Generators
+
+객체에 `Symbol.iterator` 프로퍼티 구현이 있으면 iterable로 간주된다.
+`Array`, `Map`, `Set`, `String`, `Int32Array`, `Uint32Array` 같은 built-in 타입들이 iterable이다.
+
+객체의 `Symbol.iterator` 함수는 반복 할 값 목록을 반환한다.
+
+### `for..of` statements
+
+`for..of` 루프는 `Symbol.iterator` 프로퍼티를 호출하여 객체를 순회한다.
+
+```ts
+let someArray = [1, "string", false];
+for (let entry of someArray) {
+  console.log(entry); // 1, "string", false
+}
+```
+
+### `for..of` vs `for..in` statements
+
+`for..of`, `for..in`문 모두 list를 순회한다.
+다만, `for..of`는 property 값을 반환하고 `for..in`은 객체의 key를 반환한다.
+
+```ts
+let list = [4, 5, 6];
+for (let i in list) {
+  console.log(i); // "0", "1", "2",
+}
+for (let i of list) {
+  console.log(i); // "4", "5", "6"
+}
+```
+
+또 다른점은 `for.in`은 모든 객체에서 작동한다는 것이다. 반면 `for..of`는 iterable만 반복한다.
+
+```ts
+let pets = new Set(["Cat", "Dog", "Hamster"]);
+pets["species"] = "mammals";
+
+for (let pet in pets) {
+  console.log(pet); // "species"
+}
+for (let pet of pets) {
+  console.log(pet); // "Cat", "Dog", "Hamster"
+}
+```
+
+### 코드생성
+
+#### ES5 / ES3
+
+이 경우 iterator는 `Array` 타입에만 허용된다.
+
+```ts
+let numbers = [1, 2, 3];
+for (let num of numbers) {
+  console.log(num);
+}
+```
+
+위 코드는 다음처럼 생성될 것이다
+
+```ts
+var numbers = [1, 2, 3];
+for (var _i = 0; _i < numbers.length; _i++) {
+  var num = numbers[_i];
+  console.log(num);
+}
+```
+
+## Modules
