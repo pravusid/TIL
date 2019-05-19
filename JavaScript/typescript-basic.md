@@ -2591,3 +2591,201 @@ for (var _i = 0; _i < numbers.length; _i++) {
 ```
 
 ## Modules
+
+ECMAScript 2015부터 JavaScript에는 모듈 개념이 있고, TypeScript도 개념을 공유한다.
+
+모듈은 전역 스코프가 아닌 자체 스코프에서 실행된다.
+이는 모듈에서 선언된 변수, 함수, 클래스 등을 `export` 양식을 사용하여 명시적으로 내보내지 않으면 외부에서 볼 수 없음을 의미한다.
+
+반대로 다른 모듈에서 내보낸 변수, 함수, 클래스, 인터페이스 등을 사용하려면 `import` 양식을 사용하여야 한다.
+
+모듈은 선언적이므로 모듈간의 관계는 파일 수준의 `import`, `export`로 지정된다.
+
+모듈은 모듈 로더를 사용하여 서로를 불러온다.
+런타임에서 모듈 로더는 모듈을 실행하기 전 모듈의 모든 종속성을 찾아 실행한다.
+
+잘 알려진 모듈 로더는 Node.js의 CommonJS 모듈 로더와 웹 어플리케이션의 require.js이다.
+
+TypeScript에서는 ES6와 마찬가지로 top-level import 또는 export가 포함된 파일을 모듈로 간주한다.
+반대로, top-level import 또는 export가 없는 파일은 전역 스코프에서 사용할 수 있는 스크립트로 취급된다.
+
+### Export
+
+#### Exporting a declaration
+
+`export` 키워드를 추가하여 모든 선언(변수, 함수, 클래스, 타입 별칭, 인터페이스 ...)을 내보낼 수 있다.
+
+```ts
+// Validation.ts
+export interface StringValidator {
+  isAcceptable(s: string): boolean;
+}
+
+// ZipCodeValidator.ts
+export const numberRegexp = /^[0-9]+$/;
+export class ZipCodeValidator implements StringValidator {
+  isAcceptable(s: string) {
+    return s.length === 5 && numberRegexp.test(s);
+  }
+}
+```
+
+#### Export statements
+
+export문을 사용할 때 편리하게 다른이름을 지정할 수 있다
+
+```ts
+class ZipCodeValidator implements StringValidator {
+  isAcceptable(s: string) {
+    return s.length === 5 && numberRegexp.test(s);
+  }
+}
+export { ZipCodeValidator };
+export { ZipCodeValidator as mainValidator };
+```
+
+#### Re-exports
+
+종종 모듈은 다른 모듈을 확장하고 부분적으로 일부기능을 노출한다.
+Re-exports는 대상 모듈을 로컬에 불러오거나 변수로 선언하지 않고 내보내기를 한다.
+
+```ts
+// ParseIntBasedZipCodeValidator.ts
+export class ParseIntBasedZipCodeValidator {
+  isAcceptable(s: string) {
+    return s.length === 5 && parseInt(s).toString() === s;
+  }
+}
+// Export original validator but rename it
+export {ZipCodeValidator as RegExpBasedZipCodeValidator} from "./ZipCodeValidator";
+```
+
+선택적으로 모듈은 하나 이상의 모듈을 감싸고 결합한 뒤 `export * from "module"` 문법을 통해 내보낼수 있다.
+
+```ts
+export * from "./StringValidator"; // exports interface 'StringValidator'
+export * from "./LettersOnlyValidator"; // exports class 'LettersOnlyValidator'
+export * from "./ZipCodeValidator";  // exports class 'ZipCodeValidator'
+```
+
+### Import
+
+내보내기 선언을 불러오려면 아래의 `import` 중 하나를 사용한다
+
+#### Import a single export from a module
+
+```ts
+import { ZipCodeValidator } from "./ZipCodeValidator";
+let myValidator = new ZipCodeValidator();
+```
+
+import를 하면서 이름을 다시 지정할 수 있다
+
+```ts
+import { ZipCodeValidator as ZCV } from "./ZipCodeValidator";
+let myValidator = new ZCV();
+```
+
+#### Import the entire module into a single variable, and use it to access the module exports
+
+```ts
+import * as validator from "./ZipCodeValidator";
+let myValidator = new validator.ZipCodeValidator();
+```
+
+#### Import a module for side-effects only
+
+권장 사항은 아니지만 일부 모듈은 다른 모듈에서 사용할 수 있는 일부 전역 상태를 설정한다.
+이런 모듈에는 내보내기가 없거나 모듈 사용처에서 모듈의 내보내기를 사용하지 않는 경우이다.
+
+이런 경우 다음과 같이 불러오기를 사용한다.
+
+```ts
+import "./my-module.js";
+```
+
+### Default exports
+
+각 모듈은 선택적으로 `default` 키워드를 통해 기본 내보내기를 할 수 있다.
+모듈당 하나의 기본 내보내기만 할 수 있다.
+
+```ts
+// JQuery.d.ts
+declare let $: JQuery;
+export default $;
+
+// App.ts
+import $ from "JQuery";
+$("button.continue").html( "Next Step..." );
+```
+
+클래스나 함수 선언은 기본 내보내기로 직접 작성될 수 있다. 이름 선언은 선택사항이다.
+
+```ts
+// ZipCodeValidator.ts
+export default class ZipCodeValidator {
+  static numberRegexp = /^[0-9]+$/;
+  isAcceptable(s: string) {
+    return s.length === 5 && ZipCodeValidator.numberRegexp.test(s);
+  }
+}
+
+// Test.ts
+import validator from "./ZipCodeValidator";
+let myValidator = new validator();
+```
+
+또는
+
+```ts
+// StaticZipCodeValidator.ts
+const numberRegexp = /^[0-9]+$/;
+export default function (s: string) {
+  return s.length === 5 && numberRegexp.test(s);
+}
+
+// Test.ts
+import validate from "./StaticZipCodeValidator";
+let myValidator = new validator();
+```
+
+기본 내보내기는 단순히 값일 수도 있다
+
+```ts
+// OneTwoThree.ts
+export default "123";
+
+// Log.ts
+import num from "./OneTwoThree";
+console.log(num); // "123"
+```
+
+### export = and import = require()
+
+CommonJS와 AMD 모두 일반적으로 모듈의 모든 내보내기를 포함하는 내보내기 객체 개념이 있다.
+
+또한 내보내기 객체를 사용자 지정 단일 객체로 바꾸는 기능도 지원한다.
+기본 내보내기는 이 동작을 대신하는 역할을 한다. 그러나 앞의 두 동작은 호환되지 않는다.
+
+TypeScript는 일반적인 CommonJS 및 AMD 워크플로우를 모델링하기 위해 `export =`을 지원한다.
+
+`export =` 문법은 모듈에서 내보낼 단일 객체를 지정한다. 객체는 클래스, 인터페이스, 네임 스페이스, 함수, Enum이 될 수 있다.
+
+`export =`을 사용해 내보낸 모듈을 가져올 때 TypeScript 고유의 `import module = require("module")`을 사용해야 한다.
+
+```ts
+// ZipCodeValidator.ts
+let numberRegexp = /^[0-9]+$/;
+class ZipCodeValidator {
+  isAcceptable(s: string) {
+    return s.length === 5 && numberRegexp.test(s);
+  }
+}
+export = ZipCodeValidator;
+
+// Test.ts
+import zip = require("./ZipCodeValidator");
+let validator = new zip();
+```
+
+### Code Generation for Modules
