@@ -17,7 +17,7 @@ Vue는 모든 프로퍼티를 `Object.defineProperty`를 사용하여 `getter / 
 모든 컴포넌트 인스턴스에는 컴포넌트가 종속적으로 렌더링되는 동안 “수정”된 모든 프로퍼티를 기록하는 watcher 인스턴스가 대응된다.
 나중에 종속적인 `setter`가 트리거 되면 watcher에 알리고 컴포넌트가 다시 렌더링 된다.
 
-![사이클](img/reactivity.png)
+![사이클](https://raw.githubusercontent.com/pravusid/TIL/master/Vue.js/img/reactivity.png)
 
 ## 변경 감지 경고
 

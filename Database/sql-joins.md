@@ -1,6 +1,6 @@
 # SQL Joins
 
-![SQL Joins](img/sql-joins.jpg)
+![SQL Joins](https://raw.githubusercontent.com/pravusid/TIL/master/Database/img/sql-joins.jpg)
 
 ## Join
 
