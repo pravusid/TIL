@@ -1,4 +1,4 @@
-# Let's Encrypt
+# Let's Encrypt & CertBot
 
 <https://letsencrypt.org/docs/>
 
@@ -30,7 +30,7 @@ sudo apt-get install python-certbot-nginx
 
 ```sh
 sudo certbot certonly --authenticator standalone \
-    -d example.com -d *.example.com \
+    -d example.com -d www.example.com \
     --pre-hook "systemctl stop apache2" --post-hook "systemctl start apache2"
     --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
 ```
@@ -40,7 +40,7 @@ sudo certbot certonly --authenticator standalone \
 DNS의 TXT record로 인증 후 발급
 
 ```sh
-certbot certonly --manual --preferred-challenges dns -d pravusid.kr -d *.pravusid.kr
+certbot certonly --manual --preferred-challenges dns -d pravusid.kr -d www.pravusid.kr
 
 # Are you OK with your IP being logged?:
 # -> Yes
@@ -54,7 +54,7 @@ certbot certonly --manual --preferred-challenges dns -d pravusid.kr -d *.pravusi
 
 Challenge Seed를 외부에서 접근 가능한 경로에(`/.well-known`)에 위치시켜 인증받는다
 
-`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d *.example.com`
+`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d www.example.com`
 
 인증서 생성 도중 대상 도메인에 대한 소유권 확인 과정을 거친다
 
@@ -123,7 +123,7 @@ Alias /.well-known/acme-challenge/ "/var/www/certbot/.well-known/acme-challenge/
 
 인증서 생성
 
-`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d *.example.com`
+`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d www.example.com`
 
 리버스 프록시 사용시 다음 추가
 
@@ -185,7 +185,14 @@ sudo nginx -t
 sudo service nginx restart
 ```
 
-인증서 발급: `sudo certbot --nginx -d example.com -d *.example.com`
+인증서 발급: `sudo certbot --nginx -d example.com -d www.example.com`
+
+## WildCard 사용
+
+도메인에 WildCard 사용을 위해서는 TXT record를 통해서만 가능한데,
+이를 자동으로 수행하기 위해 DNS 플러그인을 사용할 수 있다.
+
+<https://certbot.eff.org/docs/using.html#dns-plugins>
 
 ## 도메인 변경
 
