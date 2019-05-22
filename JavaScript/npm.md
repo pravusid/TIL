@@ -21,6 +21,10 @@ peer dependencies 확인: `npm info "패키지명@버전" peerDependencies`
 
 `npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs npm -g rm`
 
+삭제에 관리자 권한이 필요하면
+
+`npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs sudo npm -g rm`
+
 ## yarn
 
 ### 설치
@@ -62,7 +66,7 @@ TS 기준
 {
   "script": {
     // npm install 되고 난 후 실행됨
-    "prepare" : "npm run build",
+    "prepare": "npm run build",
     // npm publish 직전 실행됨
     "prepublishOnly": "npm run lint"
   },
@@ -79,8 +83,8 @@ TS 기준
     "type": "git",
     "url": "https://github.com/pravusid/my-package.git"
   },
-    "bugs": {
+  "bugs": {
     "url": "https://github.com/pravusid/my-package/issues"
-  },
+  }
 }
 ```
