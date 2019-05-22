@@ -26,7 +26,16 @@ sudo apt-get install python-certbot-nginx
 
 ## 발급
 
-### 발급: manual
+## 발급: StandAlone
+
+```sh
+sudo certbot certonly --authenticator standalone \
+    -d example.com -d *.example.com \
+    --pre-hook "systemctl stop apache2" --post-hook "systemctl start apache2"
+    --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
+```
+
+### 발급: Manual
 
 DNS의 TXT record로 인증 후 발급
 
@@ -62,7 +71,7 @@ chmod 700 /var/www/certbot
 `/etc/nginx/conf.d/letsencrypt.conf` 파일에서 well-known 디렉토리와 WebRoot를 연결한다
 
 ```conf
-location /.well-known {
+location /.well-known/acme-challenge/ {
     root /var/www/certbot/;
 }
 
@@ -97,6 +106,28 @@ server {
     ssl_trusted_certificate /etc/letsencrypt/live/www.mysite.com/chain.pem;
 }
 ```
+
+### 발급 Apache + certbot webroot
+
+아파치 설정파일
+
+```conf
+Alias /.well-known/acme-challenge/ "/var/www/certbot/.well-known/acme-challenge/"
+<Directory "/var/www/certbot/">
+    Options None
+    AllowOverride None
+    ForceType text/plain
+    RedirectMatch 404 "^(?!/\.well-known/acme-challenge/[\w-]{43}$)"
+</Directory>
+```
+
+인증서 생성
+
+`sudo certbot certonly --cert-name <인증서이름> --webroot -w /var/www/certbot -d example.com -d *.example.com`
+
+리버스 프록시 사용시 다음 추가
+
+`ProxyPass /.wellknown !`
 
 ### 발급: NGINX + certbot auto
 
@@ -154,7 +185,7 @@ sudo nginx -t
 sudo service nginx restart
 ```
 
-인증서 발급: `sudo certbot --nginx -d example.com`
+인증서 발급: `sudo certbot --nginx -d example.com -d *.example.com`
 
 ## 도메인 변경
 
@@ -164,19 +195,25 @@ sudo service nginx restart
 
 갱신 가능여부 확인: `sudo certbot renew --dry-run`
 
-Ubuntu의 경우 `/etc/cron.d/`에 certbot이 생성되어있음
+certbot-auto의 경우: `--no-self-upgrade`를 추가하여 certbot의 업그레이드를 막음
+
+Ubuntu의 경우 `/etc/cron.d/`에 certbot이 생성되어있음: <https://certbot.eff.org/docs/using.html#automated-renewals>
+
+> Many Linux distributions provide automated renewal when you use the packages installed through their system package manager.
 
 cron job을 등록한다
 
 ```shell
 crontab -e
-0 19 * * * certbot renew --post-hook "service nginx reload"
+0 19 * * * certbot renew --quiet --post-hook "service nginx reload"
 ```
 
 등록된 job을 확인한다: `crontab -l`
 
 ## 제거
 
-인증제거: `sudo certbot delete --cert-name example.com`
+인증제거: `sudo certbot delete --cert-name <인증서이름>`
+
+인증제거(대화형): `sudo certbot delete`
 
 인증서 revoke: <https://certbot.eff.org/docs/using.html#revoking-certificates>
