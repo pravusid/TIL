@@ -2789,3 +2789,143 @@ let validator = new zip();
 ```
 
 ### Code Generation for Modules
+
+컴파일하는 동안 지정된 모듈 타겟에 따라 컴파일러는 Node.js(CommonJS), require.js(AMD), UMD, SystemJS 또는
+ES6 모듈로드 시스템에 적합한 코드를 생성한다.
+
+```js
+// SimpleModule.ts
+import m = require("mod");
+export let t = m.something + 1;
+
+// AMD / RequireJS SimpleModule.js
+define(["require", "exports", "./mod"], function (require, exports, mod_1) {
+  exports.t = mod_1.something + 1;
+});
+
+// CommonJS / Node SimpleModule.js
+var mod_1 = require("./mod");
+exports.t = mod_1.something + 1;
+
+// UMD SimpleModule.js
+(function (factory) {
+  if (typeof module === "object" && typeof module.exports === "object") {
+    var v = factory(require, exports); if (v !== undefined) module.exports = v;
+  }
+  else if (typeof define === "function" && define.amd) {
+    define(["require", "exports", "./mod"], factory);
+  }
+})(function (require, exports) {
+  var mod_1 = require("./mod");
+  exports.t = mod_1.something + 1;
+});
+
+// System SimpleModule.js
+System.register(["./mod"], function(exports_1) {
+  var mod_1;
+  var t;
+  return {
+    setters:[
+      function (mod_1_1) {
+        mod_1 = mod_1_1;
+      }],
+    execute: function() {
+      exports_1("t", t = mod_1.something + 1);
+    }
+  }
+});
+
+// Native ECMAScript 2015 modules SimpleModule.js
+import { something } from "./mod";
+export var t = something + 1;
+```
+
+### Working with Other JavaScript Libraries
+
+타입스크립트로 작성되지 않은 라이브러리의 형태를 기술하려면, 라이브러리가 노출하는 API를 선언해야 한다.
+
+#### Ambient Modules
+
+최상위 수준의 내보내기 선언을 사용하여 각 모듈을 자체 `d.ts` 파일로 정의할 수 있지만, 더 큰 `d.ts` 파일로 작성하는 것이 편리하다.
+
+```ts
+node.d.ts (simplified excerpt)
+
+declare module "url" {
+  export interface Url {
+    protocol?: string;
+    hostname?: string;
+    pathname?: string;
+  }
+  export function parse(urlStr: string, parseQueryString?, slashesDenoteHost?): Url;
+}
+
+declare module "path" {
+  export function normalize(p: string): string;
+  export function join(...paths: any[]): string;
+  export var sep: string;
+}
+```
+
+`/// <reference> node.d.ts`를 사용하고 `import url = require("url")`을 사용하여 모듈을 로드할 수 있다.
+
+```ts
+/// <reference path="node.d.ts"/>
+import * as URL from "url";
+let myUrl = URL.parse("http://www.typescriptlang.org");
+```
+
+#### Shorthand ambient modules
+
+새 모듈을 사용하기 전에 선언을 작성하는데 시간을 허비하지 않으려면 shorthand 선언을 사용할 수 있다.
+
+```ts
+declare module "hot-new-module";
+```
+
+shorthand 모듈을 불러오면 `any` 타입이된다.
+
+```ts
+import x, {y} from "hot-new-module";
+x(y);
+```
+
+#### Wildcard module declarations
+
+SystemJS 및 AMD와 같은 일부 모듈로더는 JavaScript가 아닌 콘텐츠를 가져올 수 있다.
+이때, 특수 로딩의 의미를 나타내기 위해 접두/접미사를 사용한다.
+
+이러한 경우를 다루기 위해 와일드카드 모듈 선언을 사용할 수 있다.
+
+```ts
+declare module "*!text" {
+  const content: string;
+  export default content;
+}
+// Some do it the other way around.
+declare module "json!*" {
+  const value: any;
+  export default value;
+}
+```
+
+이제 `*!text` 또는 `json!*`과 일치하는 항목을 가져올 수 있다.
+
+```ts
+import fileContent from "./xyz.txt!text";
+import data from "json!http://example.com/data.json";
+console.log(data, fileContent);
+```
+
+#### UMD modules
+
+일부 라이브러리는 많은 모듈 로더 또는 모듈 로딩 없이 사용하도록 설계되었다.(전역변수)
+이를 UMD 모듈이라고 하며, 이러한 라이브러리는 가져오기 또는 전역 변수를 통해 액세스 할 수 있다.
+
+```ts
+import { isPrime } from "math-lib";
+isPrime(2);
+mathLib.isPrime(2); // ERROR: can't use the global definition from inside a module
+```
+
+### Guidance for structuring modules
