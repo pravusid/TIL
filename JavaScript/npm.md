@@ -76,6 +76,8 @@ yarn global bin will output the location where Yarn will install symlinks to you
 
 TS 기준
 
+<https://docs.npmjs.com/files/package.json>
+
 `package.json`
 
 ```json
