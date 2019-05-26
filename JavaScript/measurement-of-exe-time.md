@@ -12,7 +12,7 @@ The process.hrtime() method returns the current high-resolution real time in a *
 
 ## 예제
 
-```js
+```ts
 const start = new Date();
 const hrstart = process.hrtime();
 
@@ -21,7 +21,8 @@ setTimeout(() => {
   const end = new Date() - start;
   const hrend = process.hrtime(hrstart);
 
-  console.info("Execution time: %dms", end);
-  console.info("Execution time (hr): %ds %dms", hrend[0], hrend[1] / 1000000);
+  const [sec, nano] = hrend;
+  const result = (sec * 1e9 + nano) / 1e9;
+  // or const result = sec + (nano / 1000000);
 }, 1000);
 ```
