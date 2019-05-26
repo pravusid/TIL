@@ -49,3 +49,14 @@ set foreign_key_checks = 0;
 
 set foreign_key_checks = 1;
 ```
+
+## Update Join
+
+### My sql
+
+```sql
+UPDATE
+  emp e INNER JOIN dept d
+  ON d.deptno = e.deptno
+SET e.dname = d.dname;
+```
