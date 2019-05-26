@@ -11,7 +11,7 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 - mocking : Sinon
 - coverage : Istanbul
 
-### jest설정 (ts기준)
+## jest설정 (ts기준)
 
 <https://jest-bot.github.io/jest/docs/configuration.html>
 
@@ -33,14 +33,14 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 
 ```js
 module.exports = {
-  moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
-  testRegex: '^.+\\.spec\\.(js|jsx|ts|tsx)$',
+  moduleFileExtensions: ["js", "jsx", "json", "ts", "tsx"],
+  testRegex: "^.+\\.spec\\.(js|jsx|ts|tsx)$",
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  coverageDirectory: 'coverage',
-  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
-  testEnvironment: 'node',
+  coverageDirectory: "coverage",
+  collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}"],
+  testEnvironment: "node"
 };
 ```
 
@@ -52,12 +52,12 @@ module.exports = {
 module.exports = {
   // ...
   globals: {
-    'ts-jest': {
-      tsConfig: 'tsconfig.spec.json',
-    },
-  },
+    "ts-jest": {
+      tsConfig: "tsconfig.spec.json"
+    }
+  }
   // ...
-}
+};
 ```
 
 `tsconfig.spec.json`
@@ -77,7 +77,10 @@ module.exports = {
 
 유닛 테스트를 위한 파일명이 `___.spec.js/ts`로 끝나게 한다
 
-`npx jest`으로 전체 실행하거나 `npx jest -t '{테스트 description}'`으로 개별 실행한다
+- 전체 실행: `jest`
+- 코드 변경시 테스트 실행: `jest --watch`
+- 부분 실행 `--testNamePattern(-t) '<regexp>'`
+- 부분 실행: `--watch '<regexp>'`
 
 ## 기본 문법
 
@@ -289,3 +292,65 @@ const mock = jest.fn();
 
 - `mockFn.mockRejectedValue(value)`: Promise.reject로 wrapping된 값을 반환한다
 - `mockFn.mockRejectedValueOnce(value)`: 위의 행동을 한번만 수행한다
+
+## Mocking & Testing 예제
+
+```ts
+import * as typeorm from "typeorm";
+import TokenData from "../interfaces/tokenData.interface";
+import UserDto from "../user/user.dto";
+import AuthenticationService from "./authentication.service";
+
+(typeorm as any).getRepository = jest.fn();
+
+describe("AuthenticationService", () => {
+  describe("when creating a cookie", () => {
+    it("should return a string", () => {
+      const tokenData: TokenData = { token: "", expiresIn: 1 };
+      (typeorm as any).getRepository.mockReturnValue({});
+      const authenticationService = new AuthenticationService();
+      expect(typeof authenticationService.createCookie(tokenData)).toEqual(
+        "string"
+      );
+    });
+  });
+
+  describe("when registering a user", () => {
+    describe("if the email is already taken", () => {
+      it("should throw an error", async () => {
+        const userData: UserDto = {
+          name: "Hong Gildong",
+          email: "gdhong@chosun.com",
+          password: "somepassword"
+        };
+        (typeorm as any).getRepository.mockReturnValue({
+          findOne: () => Promise.resolve(userData)
+        });
+        const authenticationService = new AuthenticationService();
+        await expect(
+          authenticationService.register(userData)
+        ).rejects.toMatchObject(new Error(userData.email));
+      });
+    });
+
+    describe("if the email is not taken", () => {
+      it("should not throw an error", async () => {
+        const userData: UserDto = {
+          name: "Hong Gildong",
+          email: "gdhong@chosun.com",
+          password: "somepassword"
+        };
+        (typeorm as any).getRepository.mockReturnValue({
+          findOne: () => Promise.resolve(undefined),
+          create: () => ({ ...userData, id: 0 }),
+          save: () => Promise.resolve()
+        });
+        const authenticationService = new AuthenticationService();
+        await expect(
+          authenticationService.register(userData)
+        ).resolves.toBeDefined();
+      });
+    });
+  });
+});
+```
