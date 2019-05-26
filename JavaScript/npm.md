@@ -2,6 +2,22 @@
 
 ## npm 기초명령어
 
+### npm install
+
+`npm install --only=production` (or `--only=prod`): devDependencies 설치하지 않음
+
+> The npm install command installs package files based on dependencies and devDependencies in package.json.
+
+### npm ci
+
+npm 5.7.0 이상 사용가능한 커맨드
+
+> package-lock.json takes precedence over package.json for npm ci.
+
+`npm ci`는 `package-lock.json` 파일을 우선으로 하여 패키지를 설치함
+
+> When you run ci command, all of the node_modules folder installed by npm is deleted by default, and package is reinstalled based on package-lock.json.
+
 ### global modules 확인
 
 `npm ls -g --depth=0`
