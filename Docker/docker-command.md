@@ -1,6 +1,10 @@
 # Docker 명령어
 
-`docker version` : 버전확인
+`docker version`: 버전 확인
+
+`docker system info`: 실행 환경 확인
+
+`docker system df`: 디스크 상태 확인
 
 ## docker run
 
