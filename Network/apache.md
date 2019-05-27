@@ -56,5 +56,9 @@ sudo a2enmod rewrite
     <Location "/.well-known/acme-challenge/">
         Allow from All
     </Location>
+
+    <Location "/bitbucket-hook/">
+        Allow from All
+    </Location>
 </VirtualHost>
 ```
