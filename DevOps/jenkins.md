@@ -17,3 +17,11 @@ chown -R idpravus:idpravus /var/log/jenkins
 # Jenkins 재시작
 sudo /etc/init.d/jenkins restart
 ```
+
+## Jenkins Execute Shell에서 백그라운드 실행
+
+```sh
+if pgrep -f idpravus-app; then kill -15 $(pgrep -f idpravus-app); fi
+npm ci
+BUILD_ID=dontKillMe nohup npm run serve &
+```
