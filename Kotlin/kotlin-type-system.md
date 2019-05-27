@@ -318,9 +318,9 @@ class NullableStringPrinter : StringProcessor {
 ### 원시타입 Int, Boolean 등
 
 자바는 primary type과 reference type을 구분한다.
-원시타입의 변수에는 값이 직접 들어가지만 (call by value), 참조타입의 변수에는 메모리상 객체 위치가 들어간다 (call by reference).
+원시타입의 변수에는 값이 직접 들어가지만, 참조타입의 변수에는 메모리상 객체 위치가 들어간다.
 
-자바는 원시타입에 대한 참조가 필요한 경우 래퍼 타입으로 감싸서 사용한다.
+자바는 원시타입에 대한 참조가 필요한 경우 wrapper type으로 감싸서 사용한다.
 코틀린은 원시 타입과 래퍼타입을 구분하지 않으므로 항상 같은 타입을 사용한다.
 
 코틀린에서 원시타입과 참조타입을 같게 표현하지만 항상 객체로 표현하는 것은 아니다.

@@ -65,9 +65,8 @@ classpath : java.exe가 기본적으로 참조하는 경로
 
 ### Call by Reference, Call by Value
 
-- Call by Value - 변수에 할당된 메모리에 기본 자료형 값이 들어가 있음, 이 변수를 호출하면 값 자체를 직접 사용하게 됨
-
-- Call by Reference - 변수에 할당된 메모리에 인스턴스의 주소값을 저장(객체를 참조한다), 호출시 원본 주소를 참조하므로 원본을 간접 조작하게 된다
+Java는 Call by Value만을 지원한다.
+객체가 할당된 변수의 경우 해당 객체의 주소값을 가지고 있고, 이 변수가 전달될 때는 주소값이 복사되어 전달된다.
 
 ### (자료)형변환
 
@@ -329,9 +328,9 @@ java.util 패키지에서 지원한다.
 ### 예외처리 방식
 
 1. 직접처리 : try-catch-finally
-1. 간접처리 : throws
-1. 임의발생 : throw exception
-1. 사용자정의 : extends exception
+2. 간접처리 : throws
+3. 임의발생 : throw exception
+4. 사용자정의 : extends exception
 
 ### try-with-resources 예제
 
