@@ -38,6 +38,12 @@ LIMIT ? OFFSET ? -- 가져올 row 숫자, 시작위치
 
 ## 검색
 
+### `IN` Clause with NULL
+
+`IN`문은 `col = val1 or col = val2 or col = val3`의 형태로 해석되기 때문에 `val = NULL`의 형태가 되는 `NULL`을 사용할 수 없다.
+
+`NOT IN`의 경우도 동일하다.
+
 ## 데이터 입력
 
 ### 예제 자료 입력시 FK 제약조건 검사피하기
