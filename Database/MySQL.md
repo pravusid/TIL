@@ -115,3 +115,25 @@ CREATE TABLE test(
 <https://dev.mysql.com/doc/refman/5.7/en/mysqlimport.html>
 
 - 특정 database로 복구: `mysql [-h host] -u user -p db < dump.sql`
+
+## sql_mode
+
+작동방식 옵션을 설정한다.
+
+조회: `mysql> SELECT @@sql_mode;`
+
+### ONLY_FULL_GROUP_BY
+
+`GROUP BY`를 사용하는 경우 `GROUP BY`의 조건이 되는 컬럼과 집계 함수(Aggregation Function)만 `SELECT` 할 수 있다.
+
+MySQL의 `GROUP BY`는 표준과 다르게 작동해서 조건이 아닌 컬럼도 `SELECT` 할 수 있다.
+이를 방지하기 위해서 `sql_mode`에 `ONLY_FULL_GROUP_BY` 옵션을 추가할 수 있다. (버전이 올라가며 기본옵션일 수도 있다)
+
+`mysql> SET sql_mode = 'ONLY_FULL_GROUP_BY';`
+
+반대로 `ONLY_FULL_GROUP_BY`이 활성화 되어 있다면 해제할 수도 있다.
+
+- `mysql> SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')`
+- 직접 설정파일(`/etc/mysql/my.cnf`)의 `sql_mode`를 수정하여도 된다.
+
+설정을 변경하였다면 `mysqld`를 재시작한다
