@@ -1,4 +1,4 @@
-# Using MariaDB via docker
+# Using MySQL or MariaDB via docker
 
 ## 설치
 
@@ -69,6 +69,7 @@ ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 ENV MYSQL_DATABASE=${MYSQL_DATABASE}
 
 CMD ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+# CMD ["mysqld", "--sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"]
 
 ADD script.sql /docker-entrypoint-initdb.d/
 RUN chown -R mysql:mysql /docker-entrypoint-initdb.d/
