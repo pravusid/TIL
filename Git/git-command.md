@@ -185,13 +185,15 @@ git push --delete origin feature-foobar
 
 ## Branch / Checkout
 
-- 로컬 브랜치 목록: `git branch -a`
+- 로컬 브랜치 목록: `git branch`
 - 원격 브랜치 목록: `git branch -r`
+- 전체 브랜치 목록: `git branch -a`
 - 브랜치 생성: `git checkout -b <branch>`
-- 브랜치 삭제: `git branch --delete <branch>`
-- 브랜치 삭제(강제): `git branch -D <branch>`
+- 브랜치 삭제: `git branch --delete(-d) <branch>`
+- 브랜치 (강제)삭제: `git branch -D <branch>`
 - 브랜치 이름 변경: `git branch -m <before> <after>`
 - 체크아웃(Not staged 파일 변경점 되돌리기): `git checkout -- <filename>`
+- 병합된 로컬 브랜치 모두 삭제: `git branch --merged | egrep -v "(^\*|master|development|제외할브랜치)" | xargs git branch -d`
 
 ## Remote
 
@@ -207,7 +209,12 @@ git push --delete origin feature-foobar
 
 ### Fetch
 
-remote에서 데이터 가져오기(합치지는 않음): `git fetch`
+remote에서 데이터 가져오기(local에 반영하지는 않음): `git fetch`
+
+remote에서 삭제한 branch 로컬 반영(로컬에서도 브랜치 삭제): `git fetch --all(-a) --prune(-p)`
+
+- update all remote references (`--all`)
+- drop deleted ones (`--prune`)
 
 ### Pull
 
@@ -216,6 +223,10 @@ remote에서 데이터 가져오기(합치지는 않음): `git fetch`
 `git pull --rebase`
 
 ### Push
+
+`git push`
+
+원격 브랜치 삭제: `git push --delete origin feature-foobar`
 
 ## `.gitignore`
 
