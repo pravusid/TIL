@@ -85,8 +85,8 @@
     "@typescript-eslint/explicit-member-accessibility": "no-public",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/no-parameter-properties": "allow",
     "@typescript-eslint/no-object-literal-type-assertion": "off",
+    "@typescript-eslint/no-parameter-properties": "allow",
     "@typescript-eslint/prefer-interface": "off"
   },
   "overrides": [
@@ -97,7 +97,10 @@
       },
       "plugins": ["jest"],
       "rules": {
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "dot-notation": "off",
+        "global-require": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-var-requires": "off"
       }
     }
   ]
