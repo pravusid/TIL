@@ -34,3 +34,61 @@ alias la='ls -lAh'
 ```sh
 alias _='sudo'
 ```
+
+## git
+
+- `ga`: `git add`
+- `gaa`: `git add --all`
+
+- `gcmsg`: `git commit -m`
+
+- `gb`: `git branch`
+- `gba`: `git branch -a`
+- `gbr`: `git branch --remote`
+- `gbd`: `git branch -d`
+- `gbD`: `git branch -D`
+- `gbnm`: `git branch --no-merged`
+- `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
+
+- `gco`: `git checkout`
+- `gcd`: `git checkout develop`
+- `gcm`: `git checkout master`
+- `gcb`: `git checkout -b`
+
+- `gd`: `git diff`
+- `gdv`: `git diff -w $@ | view -`
+
+- `grv`: `git remote -v`
+
+- `gp`: `git push`
+- `gpv`: `git push -v`
+- `gpd`: `git push --dry-run`
+- `gpf`: `git push --force-with-lease`
+- `gpf!`: `git push --force`
+- `gpsup`: `git push --set-upstream origin $(git_current_branch)`
+
+- `gf`: `git fetch`
+- `gfa`: `git fetch --all --prune`
+
+- `gl`: `git pull`
+
+- `gm`: `git merge`
+- `gmtvim`: `git mergetool --no-prompt --tool=vimdiff`
+
+- `grb`: `git rebase`
+- `grbi`: `git rebase -i`
+- `grbd`: `git rebase develop`
+- `grbm`: `git rebase master`
+
+- `grh`: `git reset`
+- `grhh`: `git reset --hard`
+
+- `grm`: `git rm`
+- `grmc`: `git rm --cached`
+- `gclean`: `git clean -id`
+
+- `gst`: `git status`
+- `gsb`: `git status -sb`
+
+- `glols`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --stat`
+- `glola`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all`
