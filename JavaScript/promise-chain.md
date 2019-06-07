@@ -33,7 +33,7 @@ export const chainPromisesAccumulator = <R, U>(
       accumulator.push(await promiseFn(conditions[i], ...args));
       return accumulator;
     })(await promise);
-  }, Promise.resolve(<R[]>[]));
+  }, Promise.resolve([] as R[]));
 };
 ```
 
