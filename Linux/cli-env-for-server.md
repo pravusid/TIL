@@ -53,15 +53,6 @@ alias cntf="\ls -1A | wc -l"
 alias ssa="\ss -natp"
 alias ssl="\ss -nltp"
 alias tf="\tail -f"
-
-alias prod="NODE_ENV=production"
-alias npl="npm ls -g --depth=0"
-alias npr="npm run"
-alias jt="npx jest -t"
-alias jw="npx jest --watch -t"
-
-alias python="python3"
-alias pip="pip3"
 ```
 
 `.bashrc`
