@@ -2929,3 +2929,76 @@ mathLib.isPrime(2); // ERROR: can't use the global definition from inside a modu
 ```
 
 ### Guidance for structuring modules
+
+#### 최대한 최상위 수준으로 내보내기
+
+모듈을 사용하는 곳에서 가능한 마찰이 적어야 한다.
+너무 많은 중첩 수준을 추가하는 것은 성가시므로 대상을 구조화 하는 방법에 신중해야 한다.
+
+모듈에서 네임스페이스를 내보내는 것은 중첩 레이어를 많이 만드는 것이다.네
+네임스페이스는 모듈이 사용될 때 추가적인 간접 참조를 추가하므로 일반적으로 귀찮고 불필요하다.
+
+내보내기를 한 정적 메소드에도 비슷한 문제가 있다.
+클래스가 중첩 레이어를 추가하므로, 단순히 helper 함수를 내보내는 것을 고려해야 한다.
+
+#### 하나의 클래스나 함수만 내보내는 경우 `export default`를 사용
+
+```ts
+// MyClass.ts
+export default class SomeType {
+  constructor() { ... }
+}
+
+// MyFunc.ts
+export default function getThing() { return "thing"; }
+
+// Consumer.ts
+import t from "./MyClass";
+import f from "./MyFunc";
+let x = new t();
+console.log(f());
+```
+
+기본 내보내기를 사용하면 모듈을 사용하는 곳에서는 원하는 대로 유형을 지정할 수 있으며 개체의 이름을 위한 추가 문자열이 절약된다.
+
+#### 여러 개체를 내보내는 경우 최상위 수준에 모두 배치하여야 함
+
+```ts
+// MyThings.ts
+export class SomeType { /* ... */ }
+export function someFunc() { /* ... */ }
+```
+
+반대로 불러올 때는 명시적으로 이름을 나열한다
+
+```ts
+// Consumer.ts
+import { SomeType, someFunc } from "./MyThings";
+let x = new SomeType();
+let y = someFunc();
+```
+
+#### 많은 수의 항목을 가져오는 경우 네임스페이스 가져오기 패턴을 사용
+
+```ts
+// MyLargeModule.ts
+export class Dog { ... }
+export class Cat { ... }
+export class Tree { ... }
+export class Flower { ... }
+
+// Consumer.ts
+import * as myLargeModule from "./MyLargeModule.ts";
+let x = new myLargeModule.Dog();
+```
+
+#### 모듈에서 네임스페이스를 사용하지 않음
+
+모듈 기반의 구성으로 변경하는 경우 내보내기에 네임스페이스로 레이어를 추가하는 경향이 있다.
+모듈은 자체 범위를 가지며 내보낸 선언만 모듈 외부에서 볼 수 있다.
+
+네임스페이스는 논리적으로 관련된 개체와 유형을 그룹화 할 때 편리하다.
+
+네임스페이스는 전역 범위에서 이름이 충돌하지 않도록 하는 것이 중요하다.
+이름이 같지만 네임스페이스가 다른 경우는 가능하다.
+하지만, 이는 모듈의 문제가 아니다. 모듈 내에서 동일한 이름을 가진 두개의 객체를 가져서는 안된다.
