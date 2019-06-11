@@ -17,7 +17,7 @@
 `.bashrc`
 
 ```sh
-export BASH_IT_THEME='candy'
+export BASH_IT_THEME="candy"
 ```
 
 ## `.vimrc`
@@ -47,7 +47,11 @@ map <F12> mzgg=G`z
 `.bashrc.alias`
 
 ```sh
-alias lsg="\ls -al | grep "
+alias l="ls"
+alias la="ls -A"
+alias ll="ls -AFlh"
+
+alias lg="\ls -al | grep"
 alias pg="\pgrep -fl"
 alias cntf="\ls -1A | wc -l"
 alias ssa="\ss -natp"

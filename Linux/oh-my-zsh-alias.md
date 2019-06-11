@@ -22,11 +22,6 @@ alias 9='cd -9'
 alias md='mkdir -p'
 alias rd='rmdir'
 alias d='dirs -v | head -10'
-
-# List directory contents
-alias l='ls -lah'
-alias ll='ls -lh'
-alias la='ls -lAh'
 ```
 
 ## sudo
@@ -37,58 +32,73 @@ alias _='sudo'
 
 ## git
 
-- `ga`: `git add`
-- `gaa`: `git add --all`
+- add
+  - `ga`: `git add`
+  - `gaa`: `git add --all`
 
-- `gcmsg`: `git commit -m`
+- commit
+  - `gcmsg`: `git commit -m`
 
-- `gb`: `git branch`
-- `gba`: `git branch -a`
-- `gbr`: `git branch --remote`
-- `gbd`: `git branch -d`
-- `gbD`: `git branch -D`
-- `gbnm`: `git branch --no-merged`
-- `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
+- branch
+  - `gb`: `git branch`
+  - `gba`: `git branch -a`
+  - `gbr`: `git branch --remote`
+  - `gbd`: `git branch -d`
+  - `gbD`: `git branch -D`
+  - `gbnm`: `git branch --no-merged`
+  - `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
 
-- `gco`: `git checkout`
-- `gcd`: `git checkout develop`
-- `gcm`: `git checkout master`
-- `gcb`: `git checkout -b`
+- checkout
+  - `gco`: `git checkout`
+  - `gcd`: `git checkout develop`
+  - `gcm`: `git checkout master`
+  - `gcb`: `git checkout -b`
 
-- `gd`: `git diff`
-- `gdv`: `git diff -w $@ | view -`
+- diff
+  - `gd`: `git diff`
+  - `gdv`: `git diff -w $@ | view -`
 
-- `grv`: `git remote -v`
+- remote
+  - `grv`: `git remote -v`
 
-- `gp`: `git push`
-- `gpv`: `git push -v`
-- `gpd`: `git push --dry-run`
-- `gpf`: `git push --force-with-lease`
-- `gpf!`: `git push --force`
-- `gpsup`: `git push --set-upstream origin $(git_current_branch)`
+- push
+  - `gp`: `git push`
+  - `gpv`: `git push -v`
+  - `gpd`: `git push --dry-run`
+  - `gpf`: `git push --force-with-lease`
+  - `gpf!`: `git push --force`
+  - `gpsup`: `git push --set-upstream origin $(git_current_branch)`
 
-- `gf`: `git fetch`
-- `gfa`: `git fetch --all --prune`
+- fetch
+  - `gf`: `git fetch`
+  - `gfa`: `git fetch --all --prune`
 
-- `gl`: `git pull`
+- pull
+  - `gl`: `git pull`
 
-- `gm`: `git merge`
-- `gmtvim`: `git mergetool --no-prompt --tool=vimdiff`
+- merge
+  - `gm`: `git merge`
+  - `gmtvim`: `git mergetool --no-prompt --tool=vimdiff`
 
-- `grb`: `git rebase`
-- `grbi`: `git rebase -i`
-- `grbd`: `git rebase develop`
-- `grbm`: `git rebase master`
+- rebase
+  - `grb`: `git rebase`
+  - `grbi`: `git rebase -i`
+  - `grbd`: `git rebase develop`
+  - `grbm`: `git rebase master`
 
-- `grh`: `git reset`
-- `grhh`: `git reset --hard`
+- reset
+  - `grh`: `git reset`
+  - `grhh`: `git reset --hard`
 
-- `grm`: `git rm`
-- `grmc`: `git rm --cached`
-- `gclean`: `git clean -id`
+- rm / clean
+  - `grm`: `git rm`
+  - `grmc`: `git rm --cached`
+  - `gclean`: `git clean -id`
 
-- `gst`: `git status`
-- `gsb`: `git status -sb`
+- status
+  - `gst`: `git status`
+  - `gsb`: `git status -sb`
 
-- `glols`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --stat`
-- `glola`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all`
+- log
+  - `glols`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --stat`
+  - `glola`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all`
