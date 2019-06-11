@@ -3,31 +3,31 @@
 ## 디렉토리
 
 ```sh
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
-alias -g ......='../../../../..'
+alias -g ...="../.."
+alias -g ....="../../.."
+alias -g .....="../../../.."
+alias -g ......="../../../../.."
 
-alias -- -='cd -'
-alias 1='cd -'
-alias 2='cd -2'
-alias 3='cd -3'
-alias 4='cd -4'
-alias 5='cd -5'
-alias 6='cd -6'
-alias 7='cd -7'
-alias 8='cd -8'
-alias 9='cd -9'
+alias -- -="cd -"
+alias 1="cd -"
+alias 2="cd -2"
+alias 3="cd -3"
+alias 4="cd -4"
+alias 5="cd -5"
+alias 6="cd -6"
+alias 7="cd -7"
+alias 8="cd -8"
+alias 9="cd -9"
 
-alias md='mkdir -p'
-alias rd='rmdir'
-alias d='dirs -v | head -10'
+alias md="mkdir -p"
+alias rd="rmdir"
+alias d="dirs -v | head -10"
 ```
 
 ## sudo
 
 ```sh
-alias _='sudo'
+alias _="sudo"
 ```
 
 ## git
@@ -100,5 +100,5 @@ alias _='sudo'
   - `gsb`: `git status -sb`
 
 - log
-  - `glols`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --stat`
-  - `glola`: `git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all`
+  - `glols`: `git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --stat`
+  - `glola`: `git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --all`
