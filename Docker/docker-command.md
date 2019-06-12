@@ -25,13 +25,15 @@
 
 `docker run --rm -it ubuntu:16.04 /bin/bash`
 
-### -v 옵션으로 데이터 볼륨 지정
+### --volume (-v) 옵션으로 데이터 볼륨 지정
 
 ```sh
 docker run -d -p 3306:3306 \
   -e MYSQL_ALLOW_EMPTY_PASSWORD=true \
   --name mysql \
-  -v /my/own/datadir:/var/lib/mysql \ # <- volume mount
+  -v /my/own/dir:/var/lib/mysql \
+  -v $(pwd)/data:/var/lib/mysql \
+  -v <some-volume-name>:/var/lib/mysql \
   mysql:5.7
 ```
 
