@@ -2657,7 +2657,9 @@ export class ParseIntBasedZipCodeValidator {
   }
 }
 // Export original validator but rename it
-export {ZipCodeValidator as RegExpBasedZipCodeValidator} from "./ZipCodeValidator";
+export {
+  ZipCodeValidator as RegExpBasedZipCodeValidator
+} from "./ZipCodeValidator";
 ```
 
 선택적으로 모듈은 하나 이상의 모듈을 감싸고 결합한 뒤 `export * from "module"` 문법을 통해 내보낼수 있다.
@@ -2665,7 +2667,7 @@ export {ZipCodeValidator as RegExpBasedZipCodeValidator} from "./ZipCodeValidato
 ```ts
 export * from "./StringValidator"; // exports interface 'StringValidator'
 export * from "./LettersOnlyValidator"; // exports class 'LettersOnlyValidator'
-export * from "./ZipCodeValidator";  // exports class 'ZipCodeValidator'
+export * from "./ZipCodeValidator"; // exports class 'ZipCodeValidator'
 ```
 
 ### Import
@@ -2716,7 +2718,7 @@ export default $;
 
 // App.ts
 import $ from "JQuery";
-$("button.continue").html( "Next Step..." );
+$("button.continue").html("Next Step...");
 ```
 
 클래스나 함수 선언은 기본 내보내기로 직접 작성될 수 있다. 이름 선언은 선택사항이다.
@@ -2740,7 +2742,7 @@ let myValidator = new validator();
 ```ts
 // StaticZipCodeValidator.ts
 const numberRegexp = /^[0-9]+$/;
-export default function (s: string) {
+export default function(s: string) {
   return s.length === 5 && numberRegexp.test(s);
 }
 
@@ -2886,7 +2888,7 @@ declare module "hot-new-module";
 shorthand 모듈을 불러오면 `any` 타입이된다.
 
 ```ts
-import x, {y} from "hot-new-module";
+import x, { y } from "hot-new-module";
 x(y);
 ```
 
@@ -2965,8 +2967,12 @@ console.log(f());
 
 ```ts
 // MyThings.ts
-export class SomeType { /* ... */ }
-export function someFunc() { /* ... */ }
+export class SomeType {
+  /* ... */
+}
+export function someFunc() {
+  /* ... */
+}
 ```
 
 반대로 불러올 때는 명시적으로 이름을 나열한다
@@ -3002,3 +3008,57 @@ let x = new myLargeModule.Dog();
 네임스페이스는 전역 범위에서 이름이 충돌하지 않도록 하는 것이 중요하다.
 이름이 같지만 네임스페이스가 다른 경우는 가능하다.
 하지만, 이는 모듈의 문제가 아니다. 모듈 내에서 동일한 이름을 가진 두개의 객체를 가져서는 안된다.
+
+## Namespaces
+
+### 네임스페이스 소개
+
+내부모듈은 네임스페이스로 명명된다(TypeScript 1.5이후)
+내부모듈을 선언할 때 `module` 키워드가 사용된 곳이면 어디나 `namespace` 키워드를 사용할 수 있지만,
+`module` 키워드 대신 사용해야 비슷한 이름으로 overloading 함으로써 사용자를 혼란스럽게 하는 상황을 방지할 수 있다.
+
+### Namespacing
+
+```ts
+namespace Validation {
+  export interface StringValidator {
+    isAcceptable(s: string): boolean;
+  }
+
+  const lettersRegexp = /^[A-Za-z]+$/;
+  const numberRegexp = /^[0-9]+$/;
+
+  export class LettersOnlyValidator implements StringValidator {
+    isAcceptable(s: string) {
+      return lettersRegexp.test(s);
+    }
+  }
+
+  export class ZipCodeValidator implements StringValidator {
+    isAcceptable(s: string) {
+      return s.length === 5 && numberRegexp.test(s);
+    }
+  }
+}
+
+// Some samples to try
+let strings = ["Hello", "98052", "101"];
+
+// Validators to use
+let validators: { [s: string]: Validation.StringValidator; } = {};
+validators["ZIP code"] = new Validation.ZipCodeValidator();
+validators["Letters only"] = new Validation.LettersOnlyValidator();
+
+// Show whether each string passed each validator
+for (let s of strings) {
+  for (let name in validators) {
+    console.log(`"${ s }" - ${ validators[name].isAcceptable(s) ? "matches" : "does not match" } ${ name }`);
+  }
+}
+```
+
+### Splitting Across Files
+
+애플리케이션이 커짐에 따라 코드를 여러 파일로 분할하여 유지보수성을 높이려고 한다.
+
+#### Multi-file namespaces
