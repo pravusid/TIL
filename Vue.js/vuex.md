@@ -41,6 +41,40 @@ this.$store.commit('increment'); // root instance에서 주입된 store 호출 �
 
 ## 구조
 
+### State
+
+#### 컴포넌트 내부에서 mapState 사용
+
+컴포넌트가 여러 저장소 상태 속성이나 getter를 사용할 경우 반복선언을 줄여 쓰기 위해 사용
+
+```js
+import { mapState } from 'vuex';
+
+export default {
+  computed: mapState({
+    count: state => state.count,
+    countAlias: 'count', // state => state.count 와 같은 효과
+    countPlusLocalstate (state) {
+      return state.count + this.localCount;
+    },
+  })
+}
+```
+
+this.count를 store.state.count에 매핑,
+spread연산자를 사용하면 로컬의 computed 속성과 함께 사용가능
+
+```js
+// ...
+  computed: {
+    localComputed () { /* ... */ },
+    ...mapState([
+      'count'
+    ])
+  }
+// ...
+```
+
 ### Getters
 
 저장소 state를 가져와 변환하는 작업을 여러곳에서 동일하게 해야한다면,
@@ -291,40 +325,6 @@ actions: {
     commit('gotOtherData', await getOtherData());
   }
 }
-```
-
-### State
-
-#### 컴포넌트 내부에서 mapState 사용
-
-컴포넌트가 여러 저장소 상태 속성이나 getter를 사용할 경우 반복선언을 줄여 쓰기 위해 사용
-
-```js
-import { mapState } from 'vuex';
-
-export default {
-  computed: mapState({
-    count: state => state.count,
-    countAlias: 'count', // state => state.count 와 같은 효과
-    countPlusLocalstate (state) {
-      return state.count + this.localCount;
-    },
-  })
-}
-```
-
-this.count를 store.state.count에 매핑,
-spread연산자를 사용하면 로컬의 computed 속성과 함께 사용가능
-
-```js
-// ...
-  computed: {
-    localComputed () { /* ... */ },
-    ...mapState([
-      'count'
-    ])
-  }
-// ...
 ```
 
 ## 모듈화
