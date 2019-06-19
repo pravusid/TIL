@@ -2368,54 +2368,6 @@ type ReturnType<T extends AnyFunction> = T extends (...args: any[]) => infer R
   : any;
 ```
 
-#### Predefined conditional types
-
-타입스크립트 2.8에서 `lib.d.ts`에 사전 정의된 조건부 타입들이 있다
-
-- `Exclude<T, U>` -- Exclude from T those types that are assignable to U.
-- `Extract<T, U>` -- Extract from T those types that are assignable to U.
-- `NonNullable<T>` -- Exclude null and undefined from T.
-- `ReturnType<T>` -- Obtain the return type of a function type.
-- `InstanceType<T>` -- Obtain the instance type of a constructor function type.
-
-```ts
-type T00 = Exclude<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "b" | "d"
-type T01 = Extract<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "a" | "c"
-
-type T02 = Exclude<string | number | (() => void), Function>; // string | number
-type T03 = Extract<string | number | (() => void), Function>; // () => void
-
-type T04 = NonNullable<string | number | undefined>; // string | number
-type T05 = NonNullable<(() => string) | string[] | null | undefined>; // (() => string) | string[]
-
-function f1(s: string) {
-  return { a: 1, b: s };
-}
-
-class C {
-  x = 0;
-  y = 0;
-}
-
-type T10 = ReturnType<() => string>; // string
-type T11 = ReturnType<(s: string) => void>; // void
-type T12 = ReturnType<<T>() => T>; // {}
-type T13 = ReturnType<<T extends U, U extends number[]>() => T>; // number[]
-type T14 = ReturnType<typeof f1>; // { a: number, b: string }
-type T15 = ReturnType<any>; // any
-type T16 = ReturnType<never>; // never
-type T17 = ReturnType<string>; // Error
-type T18 = ReturnType<Function>; // Error
-
-type T20 = InstanceType<typeof C>; // C
-type T21 = InstanceType<any>; // any
-type T22 = InstanceType<never>; // never
-type T23 = InstanceType<string>; // Error
-type T24 = InstanceType<Function>; // Error
-```
-
-> `Exclude` 타입은 `Diff` 타입의 정확한 구현이다. `Diff`가 정의되어 있는 코드와 충돌을 회피하기 위해서 `Exclude`로 명명하였다. 또한 의미론적으로 더 나은 느낌을 전달한다. `Omit<T, K>` 타입은 포함되지 않았는데 `Pick<T, Exclude<keyof T, K>>`타입으로 사용할 수 있기 때문이다.
-
 ## Symbols
 
 ### Introduction
