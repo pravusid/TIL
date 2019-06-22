@@ -259,3 +259,14 @@ location ^~ /admin/ {
     deny all; # Deny everyone else
 }
 ```
+
+### Load Balancer (ELB...)등으로 인해 nginx에 ip가 전달되지 않는 경우
+
+```conf
+http {
+    # ...
+    real_ip_header X-Forwarded-For;
+    set_real_ip_from 10.0.0.0/8; # <- subnet IPs or Elastic Load Balance IP
+    # ...
+}
+```
