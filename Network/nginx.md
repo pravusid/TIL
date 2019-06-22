@@ -226,6 +226,26 @@ server {
 - hash: 유저정의 변수 조합을 해싱하여 기준으로 사용
 - least_time: 평균 레이턴시와 연결을 기준으로
 
+### 정규표현식 매칭
+
+URI를 정규표현식 매칭으로 분류했으면, 리버스 프록시에서도 capturing 그룹을 넘겨줄 수 있다.
+
+`location ~ ^/api/(admin|setting)/(.*)`
+
+위와 같은 정규표현식 매칭이 있다면 리버스프록시 호출에서 캡쳐 그룹을 `$순서`로 사용할 수 있다.
+또한, `$is_args`, `$args`로 query-string을 받을 수 있다.
+
+`proxy_pass http://localhost:8080/$1/$2$is_args$args;`
+
+위와 같은 방법 대신 `rewrite`를 사용할 수도 있다. 이 경우 query-string은 nginx가 처리한다.
+
+```conf
+location /api/ {
+    rewrite ^/api/(admin|setting)/(.*) /$1/$2 break;
+    proxy_pass http://localhost:8080;
+}
+```
+
 ## IP 제한
 
 위 -> 아래 순서대로 작동함
