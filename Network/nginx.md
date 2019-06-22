@@ -135,6 +135,8 @@ server {
 }
 ```
 
+### location modifier
+
 - `none`: prefix match
   - `/site` 경로에 대해 `/site/page1/index.html` 혹은 `/site/index.html` 등이 대응될 수 있다
 
@@ -223,3 +225,17 @@ server {
 - ip_hash: 클라이언트 IP주소를 기준으로 요청 분배
 - hash: 유저정의 변수 조합을 해싱하여 기준으로 사용
 - least_time: 평균 레이턴시와 연결을 기준으로
+
+## IP 제한
+
+위 -> 아래 순서대로 작동함
+
+```conf
+location ^~ /admin/ {
+    deny 1.1.1.1; # Deny a single IP
+    deny 2.2.2.0/24; #Deny a IP range
+    allow 3.3.3.3;
+    allow 1.1.1.0/24;
+    deny all; # Deny everyone else
+}
+```
