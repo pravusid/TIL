@@ -2567,13 +2567,17 @@ TypeScript에서는 ES6와 마찬가지로 top-level import 또는 export가 포
 
 `export` 키워드를 추가하여 모든 선언(변수, 함수, 클래스, 타입 별칭, 인터페이스 ...)을 내보낼 수 있다.
 
+`Validation.ts`
+
 ```ts
-// Validation.ts
 export interface StringValidator {
   isAcceptable(s: string): boolean;
 }
+```
 
-// ZipCodeValidator.ts
+`ZipCodeValidator.ts`
+
+```ts
 export const numberRegexp = /^[0-9]+$/;
 export class ZipCodeValidator implements StringValidator {
   isAcceptable(s: string) {
@@ -2601,8 +2605,9 @@ export { ZipCodeValidator as mainValidator };
 종종 모듈은 다른 모듈을 확장하고 부분적으로 일부기능을 노출한다.
 Re-exports는 대상 모듈을 로컬에 불러오거나 변수로 선언하지 않고 내보내기를 한다.
 
+`ParseIntBasedZipCodeValidator.ts`
+
 ```ts
-// ParseIntBasedZipCodeValidator.ts
 export class ParseIntBasedZipCodeValidator {
   isAcceptable(s: string) {
     return s.length === 5 && parseInt(s).toString() === s;
@@ -2663,53 +2668,69 @@ import "./my-module.js";
 각 모듈은 선택적으로 `default` 키워드를 통해 기본 내보내기를 할 수 있다.
 모듈당 하나의 기본 내보내기만 할 수 있다.
 
+`JQuery.d.ts`
+
 ```ts
-// JQuery.d.ts
 declare let $: JQuery;
 export default $;
+```
 
-// App.ts
+`App.ts`
+
+```ts
 import $ from "JQuery";
 $("button.continue").html("Next Step...");
 ```
 
 클래스나 함수 선언은 기본 내보내기로 직접 작성될 수 있다. 이름 선언은 선택사항이다.
 
+`ZipCodeValidator.ts`
+
 ```ts
-// ZipCodeValidator.ts
 export default class ZipCodeValidator {
   static numberRegexp = /^[0-9]+$/;
   isAcceptable(s: string) {
     return s.length === 5 && ZipCodeValidator.numberRegexp.test(s);
   }
 }
+```
 
-// Test.ts
+`Test.ts`
+
+```ts
 import validator from "./ZipCodeValidator";
 let myValidator = new validator();
 ```
 
 또는
 
+`StaticZipCodeValidator.ts`
+
 ```ts
-// StaticZipCodeValidator.ts
 const numberRegexp = /^[0-9]+$/;
 export default function(s: string) {
   return s.length === 5 && numberRegexp.test(s);
 }
+```
 
-// Test.ts
+`Test.ts`
+
+```ts
 import validate from "./StaticZipCodeValidator";
 let myValidator = new validator();
 ```
 
 기본 내보내기는 단순히 값일 수도 있다
 
-```ts
-// OneTwoThree.ts
-export default "123";
+`OneTwoThree.ts`
 
-// Log.ts
+```ts
+export default "123";
+```
+
+`Log.ts`
+
+```ts
 import num from "./OneTwoThree";
 console.log(num); // "123"
 ```
@@ -2727,8 +2748,9 @@ TypeScript는 일반적인 CommonJS 및 AMD 워크플로우를 모델링하기 �
 
 `export =`을 사용해 내보낸 모듈을 가져올 때 TypeScript 고유의 `import module = require("module")`을 사용해야 한다.
 
+`ZipCodeValidator.ts`
+
 ```ts
-// ZipCodeValidator.ts
 let numberRegexp = /^[0-9]+$/;
 class ZipCodeValidator {
   isAcceptable(s: string) {
@@ -2736,8 +2758,11 @@ class ZipCodeValidator {
   }
 }
 export = ZipCodeValidator;
+```
 
-// Test.ts
+`Test.ts`
+
+```ts
 import zip = require("./ZipCodeValidator");
 let validator = new zip();
 ```
@@ -2747,21 +2772,31 @@ let validator = new zip();
 컴파일하는 동안 지정된 모듈 타겟에 따라 컴파일러는 Node.js(CommonJS), require.js(AMD), UMD, SystemJS 또는
 ES6 모듈로드 시스템에 적합한 코드를 생성한다.
 
-```js
-// SimpleModule.ts
+`SimpleModule.ts`
+
+```ts
 import m = require("mod");
 export let t = m.something + 1;
+```
 
-// AMD / RequireJS SimpleModule.js
+`AMD / RequireJS SimpleModule.js`
+
+```js
 define(["require", "exports", "./mod"], function (require, exports, mod_1) {
   exports.t = mod_1.something + 1;
 });
+```
 
-// CommonJS / Node SimpleModule.js
+`CommonJS / Node SimpleModule.js`
+
+```js
 var mod_1 = require("./mod");
 exports.t = mod_1.something + 1;
+```
 
-// UMD SimpleModule.js
+`UMD SimpleModule.js`
+
+```js
 (function (factory) {
   if (typeof module === "object" && typeof module.exports === "object") {
     var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -2773,8 +2808,11 @@ exports.t = mod_1.something + 1;
   var mod_1 = require("./mod");
   exports.t = mod_1.something + 1;
 });
+```
 
-// System SimpleModule.js
+`System SimpleModule.js`
+
+```js
 System.register(["./mod"], function(exports_1) {
   var mod_1;
   var t;
@@ -2788,8 +2826,11 @@ System.register(["./mod"], function(exports_1) {
     }
   }
 });
+```
 
-// Native ECMAScript 2015 modules SimpleModule.js
+`Native ECMAScript 2015 modules SimpleModule.js`
+
+```js
 import { something } from "./mod";
 export var t = something + 1;
 ```
@@ -2802,9 +2843,9 @@ export var t = something + 1;
 
 최상위 수준의 내보내기 선언을 사용하여 각 모듈을 자체 `d.ts` 파일로 정의할 수 있지만, 더 큰 `d.ts` 파일로 작성하는 것이 편리하다.
 
-```ts
-node.d.ts (simplified excerpt)
+`node.d.ts (simplified excerpt)`
 
+```ts
 declare module "url" {
   export interface Url {
     protocol?: string;
@@ -2897,16 +2938,23 @@ mathLib.isPrime(2); // ERROR: can't use the global definition from inside a modu
 
 #### 하나의 클래스나 함수만 내보내는 경우 `export default`를 사용
 
+`MyClass.ts`
+
 ```ts
-// MyClass.ts
 export default class SomeType {
   constructor() { ... }
 }
+```
 
-// MyFunc.ts
+`MyFunc.ts`
+
+```ts
 export default function getThing() { return "thing"; }
+```
 
-// Consumer.ts
+`Consumer.ts`
+
+```ts
 import t from "./MyClass";
 import f from "./MyFunc";
 let x = new t();
@@ -2917,8 +2965,9 @@ console.log(f());
 
 #### 여러 개체를 내보내는 경우 최상위 수준에 모두 배치하여야 함
 
+`MyThings.ts`
+
 ```ts
-// MyThings.ts
 export class SomeType {
   /* ... */
 }
@@ -2929,8 +2978,9 @@ export function someFunc() {
 
 반대로 불러올 때는 명시적으로 이름을 나열한다
 
+`Consumer.ts`
+
 ```ts
-// Consumer.ts
 import { SomeType, someFunc } from "./MyThings";
 let x = new SomeType();
 let y = someFunc();
@@ -2938,14 +2988,18 @@ let y = someFunc();
 
 #### 많은 수의 항목을 가져오는 경우 네임스페이스 가져오기 패턴을 사용
 
+`MyLargeModule.ts`
+
 ```ts
-// MyLargeModule.ts
 export class Dog { ... }
 export class Cat { ... }
 export class Tree { ... }
 export class Flower { ... }
+```
 
-// Consumer.ts
+`Consumer.ts`
+
+```ts
 import * as myLargeModule from "./MyLargeModule.ts";
 let x = new myLargeModule.Dog();
 ```
@@ -2997,20 +3051,90 @@ namespace Validation {
 let strings = ["Hello", "98052", "101"];
 
 // Validators to use
-let validators: { [s: string]: Validation.StringValidator; } = {};
+let validators: { [s: string]: Validation.StringValidator } = {};
 validators["ZIP code"] = new Validation.ZipCodeValidator();
 validators["Letters only"] = new Validation.LettersOnlyValidator();
 
 // Show whether each string passed each validator
 for (let s of strings) {
   for (let name in validators) {
-    console.log(`"${ s }" - ${ validators[name].isAcceptable(s) ? "matches" : "does not match" } ${ name }`);
+    console.log(
+      `"${s}" - ${
+        validators[name].isAcceptable(s) ? "matches" : "does not match"
+      } ${name}`
+    );
   }
 }
 ```
 
-### Splitting Across Files
+### Splitting Across Files (Multi-file namespaces)
 
 애플리케이션이 커짐에 따라 코드를 여러 파일로 분할하여 유지보수성을 높이려고 한다.
 
-#### Multi-file namespaces
+`Validation` 네임스페이스를 여러 파일로 분리하여도 모든 파일이 한 곳에서 정의된 것처럼 사용할 수 있다.
+
+파일 간에는 종속성이 있으므로 컴파일러에서 파일 사이 관계를 알 수 있도록 참조 태그를 추가한다.
+
+`Validation.ts`
+
+```ts
+namespace Validation {
+  export interface StringValidator {
+    isAcceptable(s: string): boolean;
+  }
+}
+```
+
+`LettersOnlyValidator.ts`
+
+```ts
+/// <reference path="Validation.ts" />
+namespace Validation {
+  const lettersRegexp = /^[A-Za-z]+$/;
+  export class LettersOnlyValidator implements StringValidator {
+    isAcceptable(s: string) {
+      return lettersRegexp.test(s);
+    }
+  }
+}
+```
+
+`ZipCodeValidator.ts`
+
+```ts
+/// <reference path="Validation.ts" />
+namespace Validation {
+  const numberRegexp = /^[0-9]+$/;
+  export class ZipCodeValidator implements StringValidator {
+    isAcceptable(s: string) {
+      return s.length === 5 && numberRegexp.test(s);
+    }
+  }
+}
+```
+
+### Aliases
+
+네임스페이스를 간단하게 사용하기 위한 다른 방법은 `import q = x.y.z`를 사용하여 짧은 이름을 만드는 것이다.
+
+이는 모듈을 불러오는 `import x = require('name')` 구문과 혼동되기 쉽다.
+
+```ts
+namespace Shapes {
+  export namespace Polygons {
+    export class Triangle { }
+    export class Square { }
+  }
+}
+
+import polygons = Shapes.Polygons;
+let sq = new polygons.Square(); // Same as 'new Shapes.Polygons.Square()'
+```
+
+### 네임스페이스와 JavaScript Libraries
+
+TypeScript로 작성되지 않은 라이브러리는 외부 노출을 위한 API 선언이 필요하다.
+
+대부분의 JavaScript 라이브러리는 몇 개의 최상위 수준 객체만 노출하므로 네임스페이스를 사용하는 것이 좋은 방식이다.
+
+## Namespaces and Modules
