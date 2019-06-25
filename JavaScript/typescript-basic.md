@@ -3138,3 +3138,87 @@ TypeScript로 작성되지 않은 라이브러리는 외부 노출을 위한 API
 대부분의 JavaScript 라이브러리는 몇 개의 최상위 수준 객체만 노출하므로 네임스페이스를 사용하는 것이 좋은 방식이다.
 
 ## Namespaces and Modules
+
+### Using Namespaces
+
+네임스페이스는 글로벌 네임스페이스에서 JavaScript 객체로 명명된다.
+
+### Using Modules
+
+네임스페이스와 마찬가지로 모듈에는 코드와 선언이 모두 포함될 수 있다. 가장 큰 차이점은 모듈이 의존선을 선언한다는 것이다.
+
+또한 모듈은 모듈로더(CommonJs Require.js ...)에 종속된다.
+이는 대규모 응용프로그램의 경우 장기적인 유지 관리의 이점이 있다.
+
+### 네임스페이스와 모듈의 함정
+
+#### `/// <reference>`-ing a module
+
+일반적인 실수는 `import`문을 사용하는 대신 `/// <reference ... />` 구문을 사용하여 모듈 파일을 참조하려고 하는 것이다.
+
+컴파일러는 적절한 경로로 `.ts`, `.tsx`, `.d.ts`를 찾으려고 한다.
+특정 파일을 찾을 수 없으면 컴파일러는 주변 모듈 선언을 찾는다. 이는 `.d.ts` 파일에서 선언할 필요가 있다.
+
+`myModules.d.ts`
+
+```ts
+// In a .d.ts file or .ts file that is not a module:
+declare module "SomeModule" {
+  export function fn(): string;
+}
+```
+
+`myOtherModule.ts`
+
+```ts
+/// <reference path="myModules.d.ts" />
+import * as m from "SomeModule";
+```
+
+여기에서 참조 태그는 주변 모듈에 대한 선언을 포함하는 선언 파일(`.d.ts`)을 찾을 수 있게 해준다.
+
+#### Needless Namespacing
+
+프로그램을 네임스페이스에서 모듈로 변환하는 경우 다음과 같이 할 수 있다.
+
+`shapes.ts`
+
+```ts
+export namespace Shapes {
+  export class Triangle { /* ... */ }
+  export class Square { /* ... */ }
+}
+```
+
+최상위 모듈 `Shapes`는 특별한 이유없이 `Triangle`과 `Square`를 감싸고 있다. 이는 사용시 혼란과 짜증을 불러온다.
+
+`shapeConsumer.ts`
+
+```ts
+import * as shapes from "./shapes";
+let t = new shapes.Shapes.Triangle(); // shapes.Shapes?
+```
+
+TypeScript 모듈의 핵심기능은 두 개의 다른 모듈이 동일한 범위에 이름을 제공하지 않는다는 것이다.
+모듈 소비자는 할당 할 이름을 결정하기 때문에 네임스페이스에서 내보낸 심볼을 사전에 감쌀필요가 없다.
+
+네임스페이스의 일반적인 개념은 논리적 그룹핑 구조를 제공하고 이름 충돌을 방지하는 것이다.
+모듈 파일 자체는 이미 논리적 그룹이며 최상위 이름은 가져오는 코드에서 정의되므로 내보낸 객체에 추가적인 모듈 레이어를 사용할 필요가 없다.
+
+따라서 위의 코드를 다시 써보면
+
+`shapes.ts`
+
+```ts
+export class Triangle { /* ... */ }
+export class Square { /* ... */ }
+```
+
+`shapeConsumer.ts`
+
+```ts
+import * as shapes from "./shapes";
+let t = new shapes.Triangle();
+```
+
+## Module Resolution
