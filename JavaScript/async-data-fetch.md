@@ -4,9 +4,11 @@
 
 ## XMLHttp (XHR)
 
-`XMLHttp onreadystatechange = function()`
+<https://developer.mozilla.org/ko/docs/Web/Guide/AJAX/Getting_Started>
 
 ## FetchAPI
+
+<https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>
 
 FetchAPI는 XHR 보다 강력하고 유연한 조작이 가능함
 
