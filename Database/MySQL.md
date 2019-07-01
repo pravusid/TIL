@@ -126,6 +126,12 @@ CREATE TABLE test(
 
 `GROUP BY`를 사용하는 경우 `GROUP BY`의 조건이 되는 컬럼과 집계 함수(Aggregation Function)만 `SELECT` 할 수 있다.
 
+```sql
+SELECT job, COUNT(empno) as "인원수", AVG(sal) as "평균급여액"
+FROM emp
+GROUP BY job;
+```
+
 MySQL의 `GROUP BY`는 표준과 다르게 작동해서 조건이 아닌 컬럼도 `SELECT` 할 수 있다.
 이를 방지하기 위해서 `sql_mode`에 `ONLY_FULL_GROUP_BY` 옵션을 추가할 수 있다. (버전이 올라가며 기본옵션일 수도 있다)
 
