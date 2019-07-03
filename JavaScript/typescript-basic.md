@@ -3222,3 +3222,108 @@ let t = new shapes.Triangle();
 ```
 
 ## Module Resolution
+
+Module Resolution은 import가 무엇을 의미하는지 파악하기 위해 컴파일러가 사용하는 프로세스이다.
+
+`import { a } from 'moduleA'` 구문에서 `a`가 무엇을 나타내는지 알아내기 위해서 `moduleA`를 검사할 필요가 있다.
+
+이때 `moduleA`는 `.ts` / `.tsx` 파일 중 하나 또는 `.d.ts`파일에 정의될 수 있다.
+
+컴파일러는 불러온 모듈을 지정한 파일을 찾은 뒤 Classic 또는 Node라는 위치를 찾기위한 두 가지 전략 중 하나를 따른다.
+두 방법이 작동하지 않고 모듈 이름이 상대적이지 않은 경우 컴파일러는 ambient module 선언을 찾으려고 시도한다.
+
+마지막으로 컴파일러가 모듈을 찾을 수 없으면 오류가 출력된다.
+
+> `error TS2307: Cannot find module 'moduleA'.`
+
+### Relative vs. Non-relative module imports
+
+모듈 가져오기는 모듈 참조가 상대적인지에 따라 다르게 처리된다.
+
+상대경로 가져오기는 `/`, `./` 또는 `../`으로 시작한다.
+
+```ts
+import Entry from "./components/Entry";
+import { DefaultHeaders } from "../constants/http";
+import "/mod";
+```
+
+가져오기가 상대경로가 아닌 경우는 다음과 같다
+
+```ts
+import * as $ from "jquery";
+import { Component } from "@angular/core";
+```
+
+상대경로 가져오기는 런타임시 상대위치를 유지하도록 보장되는 모듈에 대해서 사용해야 한다.
+
+상대경로가 아닌 가져오기는 `baseUrl`을 기준으로 하거나 경로 매핑을 통해 사용할 수 있다.
+
+### Module Resolution Strategies
+
+모듈 분석 전략에는 Node와 Classic 두 가지가 있다.
+값이 지정되지 않는다면 기본적으로 `--module AMD | System | ES2015`에 대해서는 **Classic**이며, 이외의 경우 **Node**이다.
+
+#### Classic
+
+타입스크립트의 기본 모듈 분석전략이었다. 최근에는 이전 버전과의 호환성을 위해 제공된다.
+
+상대경로 가져오기는 가져오는 파일과 관련하여 처리된다.
+
+소스파일 `/root/src/folder/A.ts`에서 `import { b } from "./moduleB"`를 사용한다면 다음 순서의 조회가 발생한다.
+
+1. `/root/src/folder/moduleB.ts`
+2. `/root/src/folder/moduleB.d.ts`
+
+그러나 **상대경로가 아닌 가져오기**의 경우 컴파일러는 가져오기를 사용한 소스의 위치부터 시작하여 일치하는 정의 파일을 찾기위해 디렉토리 트리를 찾는다.
+
+소스파일 `/root/src/folder/A.ts`에서 `import { b } from "./moduleB"`를 사용한다면 다음 순서의 조회가 발생한다.
+
+1. `/root/src/folder/moduleB.ts`
+2. `/root/src/folder/moduleB.d.ts`
+3. `/root/src/moduleB.ts`
+4. `/root/src/moduleB.d.ts`
+5. `/root/moduleB.ts`
+6. `/root/moduleB.d.ts`
+7. `/moduleB.ts`
+8. `/moduleB.d.ts`
+
+#### Node
+
+Node 분석 전략은 Node.js 모듈 분석 메커니즘을 모방한다. <https://nodejs.org/api/modules.html#modules_all_together>
+
+일반적으로 Node.js의 가져오기는 `require`라는 함수를 호출하여 수행된다.
+Node.js의 동작은 `require`에 상대 경로 또는 비 상대경로가 있는지에 따라 달라진다.
+
+상대경로 가져오기는 소스파일 `/root/src/folder/A.ts`에서 `var x = require("./moduleB")`를 사용한다면 다음 순서의 조회가 발생한다.
+
+1. `/root/src/moduleB.js` 파일이 존재하면 요청한다.
+2. `/root/src/moduleB` 폴더가 `"main"` 모듈을 가리키는 `package.json` 파일을 포함하고 있는지 확인한다. 만약 `{ "main": "lib/mainModule.js" }` 코드를 포함하는 `package.json` 파일을 찾는다면 Node.js는 `/root/src/moduleB/lib/mainModule.js` 파일을 참조한다.
+3. `/root/src/moduleB` 폴더가 `index.js` 파일을 포함하는지 확인한다. 이 파일은 암시적으로 폴더의 main 모듈로 간주된다.
+
+그러나 **상대경로가 아닌 가져오기**의 경우 다르게 수행된다.
+
+node는 `node_modules`라는 특수 디렉토리에서 모듈을 검색한다.
+`node_modules` 디렉토리는 현재 파일과 동일 레벨이거나 디렉토리 체인에서 상위 레벨일 수 있다.
+
+node는 불려오려고 시도한 모듈을 찾을 때 까지 각 `node_modules`를 조사하기위해 디렉토리 체인을 따라간다.
+
+소스파일 `/root/src/moduleA.js`가 비상대경로를 사용하고 `import var x = require ( "moduleB")`가 있는 경우 다음 순서의 조회가 발생한다.
+
+1. `/root/src/node_modules/moduleB.js`
+2. `/root/src/node_modules/moduleB/package.json (if it specifies a "main" property)`
+3. `/root/src/node_modules/moduleB/index.js`
+
+4. `/root/node_modules/moduleB.js`
+5. `/root/node_modules/moduleB/package.json (if it specifies a "main" property)`
+6. `/root/node_modules/moduleB/index.js`
+
+7. `/node_modules/moduleB.js`
+8. `/node_modules/moduleB/package.json (if it specifies a "main" property)`
+9. `/node_modules/moduleB/index.js`
+
+4단계와 7단계에서 디렉토리를 건너뛰었다.
+
+`node_modules`에서 모듈을 로딩하는 과정은 다음을 참조: <https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders>
+
+#### How TypeScript resolves modules
