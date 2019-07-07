@@ -8,5 +8,14 @@ module.exports = {
   },
   markdown: {
     lineNumbers: true
-  }
+  },
+  plugins: [
+    [
+      "@vuepress/google-analytics",
+      {
+        ga: "UA-105311426-1"
+      }
+    ],
+    "@vuepress/nprogress"
+  ]
 };

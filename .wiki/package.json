@@ -12,6 +12,8 @@
     "vuepress": "^1.0.1"
   },
   "devDependencies": {
+    "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
+    "@vuepress/plugin-nprogress": "^1.0.0-rc.1",
     "directory-tree": "^2.2.1"
   }
 }
