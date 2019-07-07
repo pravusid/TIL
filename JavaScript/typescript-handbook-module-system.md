@@ -831,3 +831,215 @@ TypeScript는 컴파일 타임에 모듈 정의 파일을 찾기 위해 Node.js 
 24. `/node_modules/moduleB/index.d.ts`
 
 9단계와 17단계에서 디렉토리 건너뛰기가 발생한다.
+
+### Additional module resolution flags
+
+프로젝트 소스 레이아웃이 출력의 레이아웃과 일치하지 않는 경우가 있다.
+`.ts` 파일을 `.js` 파일로 컴파일하고 여러 종속성을 단일 출력위치로 복사하는 작업이 포함된다.
+
+즉, 최종 결과는 런타임에 모듈 정의파일과 다른 이름을 가지거나 최종 출력의 모듈 경로가 소스파일 경로와 일치하지 않을 수 있다.
+
+TypeScript 컴파일러에는 최종 출력을 생성하기 위해 예상되는 변환을 컴파일러에 알리는 추가 플래그가 있다.
+컴파일러는 이러한 변환을 직접 수행하지 않고, 모듈 가져오기를 definition 파일로 해석하는 프로세스를 안내한다.
+
+#### Base URL
+
+`baseUrl`을 사용하는 것은 모듈이 런타임에 단일 디렉토리에 배포되는 AMD 모듈 로더를 사용하는 응용 프로그램에서 일반적으로 사용된다.
+
+`baseUrl`을 설정하면 모듈을 찾을 위치를 컴파일러에게 알린다.
+비상대경로의 모든 모듈을 가져올 때 `baseUrl`에 상대적이라고 가정한다.
+
+`baseUrl` 값은 다음 중 하나로 결정된다
+
+- `baseUrl` 커맨드 라인 인자 값 (주어진 경로가 상대경로라면 현재 디렉토리를 기반으로 계산됨)
+- `tsconfig.json`의 `baseUrl` 속성 값 (주어진 경로가 상대경로인 경우 `tsconfig.json` 위치를 기반으로 계산됨)
+
+상대경로 모듈 가져오기는 `baseUrl` 설정에 영향을 받지 않으며 항상 불러오는 파일에 대해 상대적으로 처리된다.
+
+#### Path mapping
+
+때때로 모듈은 `baseUrl` 아래에 직접 위치하지 않는다.
+예를 들어 `jquery`에 대한 가져오기는 런타임에 `node_modules/jquery/dist/jquery.slim.min.js`로 변환된다.
+
+로더는 mapping 구성을 사용하여 런타임시 모듈 이름을 파일에 매핑한다.
+
+TypeScript컴파일러는 `tsconfig.json` 파일의 `path` 속성을 사용하여 매핑을 선언한다.
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".", // This must be specified if "paths" is.
+    "paths": {
+      "jquery": ["node_modules/jquery/dist/jquery"] // This mapping is relative to "baseUrl"
+    }
+  }
+}
+```
+
+경로는 `baseUrl`을 기준으로 처리된다. `baseUrl`을 `"."` 이외의 다른 값으로 설정하는 경우 그에 따라 매핑을 변경해야 한다.
+
+예를 들어 `"baseUrl": "./src"`인 경우 `jquery`는 `"../node_modules/jquery/dist/jquery"`에 매핑되어야 한다.
+
+`path`를 사용하면 다중 fallback 경로를 포함하여 보다 정교한 매핑을 할 수 있다.
+
+한 위치에서 일부 모듈만 사용하고 나머지 모듈은 다른 위치에 있는 프로젝트 구성을 생각해보자.
+
+```txt
+projectRoot
+├── folder1
+│   ├── file1.ts (imports 'folder1/file2' and 'folder2/file3')
+│   └── file2.ts
+├── generated
+│   ├── folder1
+│   └── folder2
+│       └── file3.ts
+└── tsconfig.json
+```
+
+이에 대응하는 `tsconfig.json`은 다음과 같다
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "*",
+        "generated/*"
+      ]
+    }
+  }
+}
+```
+
+- `"*"`: 변경없이 같은이름 적용, 따라서 `<moduleName> => <baseUrl>/<moduleName>`으로 매핑됨
+- `"generated/*"`: 모듈이름에 "generated"라는 prefix를 추가하여 매핑, 따라서 `<moduleName> => <baseUrl>/generated/<moduleName>`
+
+이 논리에 따라 컴파일러는 두 가지 가져오기를 다음과 같이 처리한다
+
+`import 'folder1/file2'`
+
+- `"*"` 패턴 순서에서 와일드카드는 전체 모듈이름을 캡처한다
+- 목록에서 첫 대체가 수행된다: `'*' -> folder1/file2`
+- 대체의 결과물은 비상대 경로이므로 baseUrl과 결합한다: `projectRoot/folder1/file2.ts`
+- 파일이 존재하고 끝난다
+
+`import 'folder2/file3'`
+
+- `"*"` 패턴 순서에서 와일드카드는 전체 모듈이름을 캡처한다
+- 목록에서 첫 대체가 수행된다: `'*' -> folder2/file3`
+- 대체의 결과물은 비상대 경로이므로 baseUrl과 결합한다: `projectRoot/folder2/file3.ts`
+- 파일이 존재하지 않으면 두 번째의 대체를 수행한다
+- 두 번째 대체가 수행된다: `'generated/*' -> generated/folder2/file3`
+- 대체의 결과물은 비상대 경로이므로 baseUrl과 결합한다: `projectRoot/generated/folder2/file3.ts`
+- 파일이 존재하고 끝난다
+
+#### Virtual Directories with rootDirs
+
+때로는 컴파일 타임에 여러 디렉토리의 프로젝트 소스가 모두 결합되어 하나의 출력 디렉토리가 생성된다.
+이것은 일련의 소스 디렉토리가 가상(virtual) 디렉토리를 만드는 것으로 볼 수 있다.
+
+`rootDirs`를 사용하면 가상 디레곹리를 구성하는 루트를 컴파일러에 알릴 수 있다.
+따라서 컴파일러는 가상 디렉토리 내의 상대경로 모듈 가져오기를 하나의 티렉토리에 병합된 것처럼 해석할 수 있다.
+
+다음과 같은 프로젝트 구조로 예를 들어 보면
+
+```txt
+src
+└── views
+    └── view1.ts (imports './template1')
+    └── view2.ts
+
+generated
+└── templates
+        └── views
+            └── template1.ts (imports './view2')
+```
+
+빌드 단계에서 `/src/views`와 `/generated/templates/views` 파일 출력을 동일한 디렉토리에 하려고 한다.
+런타임에 뷰는 템플릿이 동일 경로에 존재하는 것을 기대하므로 `"./template"`와 같이 상대경로를 사용하여 뷰를 불러온다.
+
+이러한 관계를 컴파일러에게 알려주기 위해서 `rootDirs`를 사용한다.
+`rootDirs`는 내용이 런타임에 병합될 것으로 예상되는 루트 목록을 지정한다.
+
+이 경우 `tsconfig.json` 파일은 다음과 같다
+
+```json
+{
+  "compilerOptions": {
+    "rootDirs": [
+      "src/views",
+      "generated/templates/views"
+    ]
+  }
+}
+```
+
+컴파일러는 `rootDirs` 중 하나의 하위폴더에서 상대경로 모듈 가져오기를 볼 때마다 `rootDirs`의 각 항목에서 가져오기를 찾는다.
+
+`rootDirs`의 유연성은 논리적으로 병합된 실제 소스 디렉토리의 목록을 지정하는데에 국한되지 않는다.
+디렉토리 목록에는 존재 여부와 관계없이 임의 숫자의 디렉토리 이름이 포함될 수 있다.
+이를 통해 컴파일러는 조건부 포함 및 프로젝트 특정 로더 플러그인과 같은 정교한 번들 및 런타임 기능을 type safe 방식으로 캡쳐할 수 있다.
+
+`./#{locale}/messages`의 상대 모듈 경로의 일부로 `#{locale}`와 같은 특수 경로 토큰을 삽입하여
+빌드 도구가 locale별 번들을 자동으로 생성하는 국제화 시나리오를 생각해 보자.
+이 경우 지원되는 locale을 열거하고 추상화된 경로를 `./ko/messages`, `./de/messages`등으로 매핑한다.
+
+`rootDirs`를 활용하면 컴파일러에게 이 매핑을 알릴 수 있으므로 디렉토리가 존재하지 않더라도 `./#{locale}/messages`를 안전하게 해결할 수 있다.
+
+```json
+{
+  "compilerOptions": {
+    "rootDirs": [
+      "src/ko",
+      "src/de",
+      "src/#{locale}"
+    ]
+  }
+}
+```
+
+이제 컴파일러는 `import messages from './#{locale}/messages`를 `import messages from './ko/messages`로 해석하여
+디자인 시점에서 지원하기로 협의되지 않은 것을 지원할 수 있도록 한다.
+
+#### Tracing module resolution
+
+앞에서 논의된 것 처럼 컴파일러는 모듈을 확인할 때 현재 디렉토리 외부의 파일을 확인할 수 있다.
+이는 모듈이 처리되지 않거나 잘못된 정의로 해석될 때 분석을 어렵게한다.
+`--traceResolution` 옵션을 사용하여 컴파일러 모듈 분석 추적을 활성화 하면 모듈 확인 프로세스 중 발생한 문제를 파악할 수 있다.
+
+#### Using `--noResolve`
+
+일반적으로 컴파일러는 컴파일 프로세스를 시작하기 전에 모든 모듈 가져오기를 처리하려고 시도한다.
+파일에서 가져오기를 성공할 때마다 컴파일러에서 나중에 처리할 파일 집합에 파일이 추가된다.
+
+`--noResolve` 컴파일러 옵션은 컴파일러가 명령줄에서 전달되지 않은 파일을 컴파일에 추가하지 않도록 처리한다.
+
+`app.ts`
+
+```ts
+import * as A from "moduleA" // OK, 'moduleA' passed on the command-line
+import * as B from "moduleB" // Error TS2307: Cannot find module 'moduleB'.
+```
+
+```sh
+tsc app.ts moduleA.ts --noResolve
+```
+
+`--noResolve` 옵션을 사용하여 `app.ts`를 컴파일 하려고 하면
+
+- 명령줄에서 전달된 `moduleA`는 올바르게 찾는다
+- 명령줄에서 전달되지 않은 `modulesB`는 찾지 못한다
+
+#### Common Questions
+
+> Exclude 목록에 있는 모듈이 컴파일러에 의해 선택되는 경우는?
+
+`tsconfig.json` 설정은 디렉토리를 **프로젝트**로 만든다.
+*"excludes"*나 *"files"* 항목을 지정하지 않으면 `tsconfig.json` 경로의 모든 파일과 모든 하위 디렉토리가 컴파일에 포함된다.
+
+일부 파일을 제외시키려면 *"excludes"*를, 컴파일러에게 특정한 파일만을 지정하여 처리하도록 하려면 *"files"*를 사용한다.
+
+컴파일러에서 파일을 가져오기 대상으로 식별한 경우 이전단계에서 제외되었는지 관계없이 컴파일에 포함된다.
+
+## Declaration Merging
