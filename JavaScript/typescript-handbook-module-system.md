@@ -240,7 +240,7 @@ export let t = m.something + 1;
 `AMD / RequireJS SimpleModule.js`
 
 ```js
-define(["require", "exports", "./mod"], function (require, exports, mod_1) {
+define(["require", "exports", "./mod"], function(require, exports, mod_1) {
   exports.t = mod_1.something + 1;
 });
 ```
@@ -255,14 +255,14 @@ exports.t = mod_1.something + 1;
 `UMD SimpleModule.js`
 
 ```js
-(function (factory) {
+(function(factory) {
   if (typeof module === "object" && typeof module.exports === "object") {
-    var v = factory(require, exports); if (v !== undefined) module.exports = v;
-  }
-  else if (typeof define === "function" && define.amd) {
+    var v = factory(require, exports);
+    if (v !== undefined) module.exports = v;
+  } else if (typeof define === "function" && define.amd) {
     define(["require", "exports", "./mod"], factory);
   }
-})(function (require, exports) {
+})(function(require, exports) {
   var mod_1 = require("./mod");
   exports.t = mod_1.something + 1;
 });
@@ -275,14 +275,15 @@ System.register(["./mod"], function(exports_1) {
   var mod_1;
   var t;
   return {
-    setters:[
-      function (mod_1_1) {
+    setters: [
+      function(mod_1_1) {
         mod_1 = mod_1_1;
-      }],
+      }
+    ],
     execute: function() {
-      exports_1("t", t = mod_1.something + 1);
+      exports_1("t", (t = mod_1.something + 1));
     }
-  }
+  };
 });
 ```
 
@@ -310,7 +311,11 @@ declare module "url" {
     hostname?: string;
     pathname?: string;
   }
-  export function parse(urlStr: string, parseQueryString?, slashesDenoteHost?): Url;
+  export function parse(
+    urlStr: string,
+    parseQueryString?,
+    slashesDenoteHost?
+  ): Url;
 }
 
 declare module "path" {
@@ -407,7 +412,9 @@ export default class SomeType {
 `MyFunc.ts`
 
 ```ts
-export default function getThing() { return "thing"; }
+export default function getThing() {
+  return "thing";
+}
 ```
 
 `Consumer.ts`
@@ -580,8 +587,8 @@ namespace Validation {
 ```ts
 namespace Shapes {
   export namespace Polygons {
-    export class Triangle { }
-    export class Square { }
+    export class Triangle {}
+    export class Square {}
   }
 }
 
@@ -643,8 +650,12 @@ import * as m from "SomeModule";
 
 ```ts
 export namespace Shapes {
-  export class Triangle { /* ... */ }
-  export class Square { /* ... */ }
+  export class Triangle {
+    /* ... */
+  }
+  export class Square {
+    /* ... */
+  }
 }
 ```
 
@@ -668,8 +679,12 @@ TypeScript 모듈의 핵심기능은 두 개의 다른 모듈이 동일한 범�
 `shapes.ts`
 
 ```ts
-export class Triangle { /* ... */ }
-export class Square { /* ... */ }
+export class Triangle {
+  /* ... */
+}
+export class Square {
+  /* ... */
+}
 ```
 
 `shapeConsumer.ts`
@@ -903,10 +918,7 @@ projectRoot
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "*",
-        "generated/*"
-      ]
+      "*": ["*", "generated/*"]
     }
   }
 }
@@ -967,10 +979,7 @@ generated
 ```json
 {
   "compilerOptions": {
-    "rootDirs": [
-      "src/views",
-      "generated/templates/views"
-    ]
+    "rootDirs": ["src/views", "generated/templates/views"]
   }
 }
 ```
@@ -990,11 +999,7 @@ generated
 ```json
 {
   "compilerOptions": {
-    "rootDirs": [
-      "src/ko",
-      "src/de",
-      "src/#{locale}"
-    ]
+    "rootDirs": ["src/ko", "src/de", "src/#{locale}"]
   }
 }
 ```
@@ -1018,8 +1023,8 @@ generated
 `app.ts`
 
 ```ts
-import * as A from "moduleA" // OK, 'moduleA' passed on the command-line
-import * as B from "moduleB" // Error TS2307: Cannot find module 'moduleB'.
+import * as A from "moduleA"; // OK, 'moduleA' passed on the command-line
+import * as B from "moduleB"; // Error TS2307: Cannot find module 'moduleB'.
 ```
 
 ```sh
@@ -1036,10 +1041,117 @@ tsc app.ts moduleA.ts --noResolve
 > Exclude 목록에 있는 모듈이 컴파일러에 의해 선택되는 경우는?
 
 `tsconfig.json` 설정은 디렉토리를 **프로젝트**로 만든다.
-*"excludes"*나 *"files"* 항목을 지정하지 않으면 `tsconfig.json` 경로의 모든 파일과 모든 하위 디렉토리가 컴파일에 포함된다.
+*"excludes"*나 _"files"_ 항목을 지정하지 않으면 `tsconfig.json` 경로의 모든 파일과 모든 하위 디렉토리가 컴파일에 포함된다.
 
 일부 파일을 제외시키려면 *"excludes"*를, 컴파일러에게 특정한 파일만을 지정하여 처리하도록 하려면 *"files"*를 사용한다.
 
 컴파일러에서 파일을 가져오기 대상으로 식별한 경우 이전단계에서 제외되었는지 관계없이 컴파일에 포함된다.
 
-## Declaration Merging
+## Declaration Merging (선언 결합)
+
+### Introduction of Declaration Merging
+
+TypeScript의 고유한 개념 중 일부는 타입 수준에서 JavaScript 객체의 형태를 설명하는 것이다. 그 중 하나가 "선언 결합"이다.
+
+"선언 결합"은 컴파일러가 동일한 이름의 두 선언을 하나의 정의로 결합하는 것이다.
+결합한 정의에는 원래의 두 선언이 가진 기능이 있으며 둘 이상의 선언을 결합할 수도 있다.
+
+### Basic Concepts
+
+타입스크립트에서는 선언은 `namespace`, `type`, `value`의 세 그룹중 적어도 하나를 만든다.
+
+네임스페이스를 만드는 선언은 네임스페이스를 만들고 네임스페이스에는 dotted notation을 사용하여 접근할 수 있는 이름이 포함된다.
+타입을 만드는 선언은 선언된 형태로 표시되고 주어진 이름에 연결된 타입을 생성한다.
+마지막으로 값을 만드는 선언은 JavaScript 출력에서 보이는 값들을 만들어낸다.
+
+| Declaration Type | Namespace | Type | Value |
+| ---------------- | --------- | ---- | ----- |
+| Namespace        | X         |      | X     |
+| Class            |           | X    | X     |
+| Enum             |           | X    | X     |
+| Interface        |           | X    |       |
+| Type Alias       |           | X    |       |
+| Function         |           |      | X     |
+| Variable         |           |      | X     |
+
+### Merging Interfaces
+
+가장 단순하고 가장 일반적으로 사용되는 형태의 선언 결합은 인터페이스 결합이다.
+가장 기초적인 수준에서 결합은, 기계적으로 두 선언의 멤버를 동일한 이름의 단일 인터페이스로 합친다.
+
+```ts
+interface Box {
+  height: number;
+  width: number;
+}
+
+interface Box {
+  scale: number;
+}
+
+let box: Box = { height: 5, width: 6, scale: 10 };
+```
+
+함수가 아닌 인터페이스의 멤버는 고유해야 한다. 만약 고유하지 않으면 동일한 타입이어야 한다.
+
+함수 멤버의 경우 같은 이름의 멤버는 다른 함수의 overload를 설명하는 것으로 처리된다.
+인터페이스 `A`가 추가적인 인터페이스 `A`와 결합하는 경우 두 번째 인터페이스의 우선순위가 더 높다.
+
+```ts
+interface Cloner {
+  clone(animal: Animal): Animal;
+}
+
+interface Cloner {
+  clone(animal: Sheep): Sheep;
+}
+
+interface Cloner {
+  clone(animal: Dog): Dog;
+  clone(animal: Cat): Cat;
+}
+```
+
+세 인터페이스는 결합하여 다음의 단일 선언을 생성한다
+
+```ts
+interface Cloner {
+    clone(animal: Dog): Dog;
+    clone(animal: Cat): Cat;
+    clone(animal: Sheep): Sheep;
+    clone(animal: Animal): Animal;
+}
+```
+
+각 그룹의 요소는 동일한 순서를 유지하지만 overload 집합의 순서가 우선한다.
+
+이 규칙의 하나의 예외는 specialized signatures이다.
+시그니처가 단일 문자열 리터럴 타입(문자열 리터럴 union이 아닌)의 파라미터가 있는 경우 결합된 overload 목록의 맨 위로 버블링한다.
+
+```ts
+interface Document {
+  createElement(tagName: any): Element;
+}
+interface Document {
+  createElement(tagName: "div"): HTMLDivElement;
+  createElement(tagName: "span"): HTMLSpanElement;
+}
+interface Document {
+  createElement(tagName: string): HTMLElement;
+  createElement(tagName: "canvas"): HTMLCanvasElement;
+}
+```
+
+결합 결과 `Document` 선언은 다음과 같다
+
+```ts
+interface Document {
+  createElement(tagName: "canvas"): HTMLCanvasElement;
+  createElement(tagName: "div"): HTMLDivElement;
+  createElement(tagName: "span"): HTMLSpanElement;
+  createElement(tagName: string): HTMLElement;
+  createElement(tagName: any): Element;
+}
+```
+
+### Merging Namespaces
