@@ -1,6 +1,6 @@
 # MySQL / MariaDB
 
-<https://dev.mysql.com/doc/refman/5.7/en/sql-syntax-data-definition.html>
+<https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-data-definition.html>
 
 ## 조회
 
@@ -46,42 +46,42 @@ FLUSH PRIVILEGES;
 
 #### 권한 종류
 
-<https://dev.mysql.com/doc/refman/5.7/en/privileges-provided.html>
+<https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html>
 
-| Privilege               | Grant Table Column             | Context                               |
-| ----------------------- | ------------------------------ | ------------------------------------- |
-| ALL [PRIVILEGES]        | Synonym for “all privileges”   | Server administration                 |
-| ALTER                   | Alter_priv                     | Tables                                |
-| ALTER ROUTINE           | Alter_routine_priv             | Stored routines                       |
-| CREATE                  | Create_priv                    | Databases, tables, or indexes         |
-| CREATE ROUTINE          | Create_routine_priv            | Stored routines                       |
-| CREATE TABLESPACE       | Create_tablespace_priv         | Server administration                 |
-| CREATE TEMPORARY TABLES | Create_tmp_table_priv          | Tables                                |
-| CREATE USER             | Create_user_priv               | Server administration                 |
-| CREATE VIEW             | Create_view_priv               | Views                                 |
-| DELETE                  | Delete_priv                    | Tables                                |
-| DROP                    | Drop_priv                      | Databases, tables, or views           |
-| EVENT                   | Event_priv                     | Databases                             |
-| EXECUTE                 | Execute_priv                   | Stored routines                       |
-| FILE                    | File_priv                      | File access on server host            |
-| GRANT OPTION            | Grant_priv                     | Databases, tables, or stored routines |
-| INDEX                   | Index_priv                     | Tables                                |
-| INSERT                  | Insert_priv                    | Tables or columns                     |
-| LOCK TABLES             | Lock_tables_priv               | Databases                             |
-| PROCESS                 | Process_priv                   | Server administration                 |
-| PROXY                   | See proxies_priv table         | Server administration                 |
-| REFERENCES              | References_priv                | Databases or tables                   |
-| RELOAD                  | Reload_priv                    | Server administration                 |
-| REPLICATION CLIENT      | Repl_client_priv               | Server administration                 |
-| REPLICATION SLAVE       | Repl_slave_priv                | Server administration                 |
-| SELECT                  | Select_priv                    | Tables or columns                     |
-| SHOW DATABASES          | Show_db_priv                   | Server administration                 |
-| SHOW VIEW               | Show_view_priv                 | Views                                 |
-| SHUTDOWN                | Shutdown_priv                  | Server administration                 |
-| SUPER                   | Super_priv                     | Server administration                 |
-| TRIGGER                 | Trigger_priv                   | Tables                                |
-| UPDATE                  | Update_priv                    | Tables or columns                     |
-| USAGE                   | Synonym for “no privileges”    | Server administration                 |
+| Privilege               | Grant Table Column           | Context                               |
+| ----------------------- | ---------------------------- | ------------------------------------- |
+| ALL [PRIVILEGES]        | Synonym for “all privileges” | Server administration                 |
+| ALTER                   | Alter_priv                   | Tables                                |
+| ALTER ROUTINE           | Alter_routine_priv           | Stored routines                       |
+| CREATE                  | Create_priv                  | Databases, tables, or indexes         |
+| CREATE ROUTINE          | Create_routine_priv          | Stored routines                       |
+| CREATE TABLESPACE       | Create_tablespace_priv       | Server administration                 |
+| CREATE TEMPORARY TABLES | Create_tmp_table_priv        | Tables                                |
+| CREATE USER             | Create_user_priv             | Server administration                 |
+| CREATE VIEW             | Create_view_priv             | Views                                 |
+| DELETE                  | Delete_priv                  | Tables                                |
+| DROP                    | Drop_priv                    | Databases, tables, or views           |
+| EVENT                   | Event_priv                   | Databases                             |
+| EXECUTE                 | Execute_priv                 | Stored routines                       |
+| FILE                    | File_priv                    | File access on server host            |
+| GRANT OPTION            | Grant_priv                   | Databases, tables, or stored routines |
+| INDEX                   | Index_priv                   | Tables                                |
+| INSERT                  | Insert_priv                  | Tables or columns                     |
+| LOCK TABLES             | Lock_tables_priv             | Databases                             |
+| PROCESS                 | Process_priv                 | Server administration                 |
+| PROXY                   | See proxies_priv table       | Server administration                 |
+| REFERENCES              | References_priv              | Databases or tables                   |
+| RELOAD                  | Reload_priv                  | Server administration                 |
+| REPLICATION CLIENT      | Repl_client_priv             | Server administration                 |
+| REPLICATION SLAVE       | Repl_slave_priv              | Server administration                 |
+| SELECT                  | Select_priv                  | Tables or columns                     |
+| SHOW DATABASES          | Show_db_priv                 | Server administration                 |
+| SHOW VIEW               | Show_view_priv               | Views                                 |
+| SHUTDOWN                | Shutdown_priv                | Server administration                 |
+| SUPER                   | Super_priv                   | Server administration                 |
+| TRIGGER                 | Trigger_priv                 | Tables                                |
+| UPDATE                  | Update_priv                  | Tables or columns                     |
+| USAGE                   | Synonym for “no privileges”  | Server administration                 |
 
 ### 테이블 인코딩 설정 생성
 
@@ -91,15 +91,51 @@ CREATE TABLE test(
 ) default charset utf8;
 ```
 
-## 날짜 처리
+## TIMEZONE
 
-<https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_date-format>
+<https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html>
+
+`default-time-zone='timezone'` 서버 타임존을 지정할 수 있다.
+
+세션 타임존은 기본적으로 서버 타임존을 가져오지만 다음의 명령으로 세션 시간대를 설정할 수 있다: `SET time_zone = timezone;`
+
+전역 시간대와 세션 시간대는 다음으로 검색할 수 있다: `SELECT @@GLOBAL.time_zone, @@SESSION.time_zone;`
+
+### 시각/날짜 처리
+
+MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 UTC값을 현재 시간대로 변환하여 출력한다.(DATETIME, DATE, TIME은 입력받은 정보 그대로 입력한다)
+
+기본적으로 각 연결의 시간대는 서버의 설정값이지만, 시간대는 연결별로 설정할 수 있다.
+
+- DATETIME: 8 bytes(< 5.6.4) -> 5 bytes + fractional seconds storage
+- TIMESTAMP: 4 bytes(< 5.6.4) -> 4 bytes + fractional seconds storage
+
+<https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_date-format>
+
+#### 경우의 수
+
+- 고정 TimeZone
+  - local datetime을 (10:00+09:00을 10:00으로 표기) DATETIME으로 저장하고 +09 timezone으로 연결
+  - UTC datetime을 (01:00Z) DATETIME으로 저장하고 +00 timezone으로 연결
+
+- 변동 TimeZone
+  - 데이터 출력시 CONVERT_TZ 사용하고 timezone은 필요한 대로
+  - UTC datetime을 (01:00Z) TIMESTAMP로 저장하고 timezone은 필요한 대로
+
+## 집계함수
+
+<https://dev.mysql.com/doc/refman/8.0/en/group-by-functions.html>
+
+숫자 인수의 경우 분산 및 표준편차 함수의 경우 DOUBLE 타입 값을 반환한다.
+
+SUM(), AVG() 함수는 정확한 값의 인수(정수 또는 DECIMAL)에 대해서는 DECIMAL 타입 값을,
+근사값 인수(FLOAT, DOUBLE)에 대해서는 DOUBLE 타입 값을 리턴한다.
 
 ## DB Dump / Import
 
 ### Dump
 
-<https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html>
+<https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html>
 
 - 전체: `mysqldump [-h host] -u user -p -A > dump.sql`
 - Table: `mysqldump [-h host] -u user -p db table1 [table2 ...] > dump.sql`
@@ -112,7 +148,7 @@ CREATE TABLE test(
 
 ### Import
 
-<https://dev.mysql.com/doc/refman/5.7/en/mysqlimport.html>
+<https://dev.mysql.com/doc/refman/8.0/en/mysqlimport.html>
 
 - 특정 database로 복구: `mysql [-h host] -u user -p db < dump.sql`
 
