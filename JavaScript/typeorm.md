@@ -8,7 +8,13 @@
 npm install typeorm --save
 npm install reflect-metadata --save
 npm install @types/node --save
+```
+
+드라이버를 설치한다 (택1)
+
+```sh
 npm install mysql --save
+npm install mysql2 --save
 ```
 
 앱 실행 시작점에서 reflect-metadata를 불러온다
