@@ -1047,14 +1047,14 @@ tsc app.ts moduleA.ts --noResolve
 
 컴파일러에서 파일을 가져오기 대상으로 식별한 경우 이전단계에서 제외되었는지 관계없이 컴파일에 포함된다.
 
-## Declaration Merging (선언 결합)
+## Declaration Merging (선언 병합)
 
 ### Introduction of Declaration Merging
 
-TypeScript의 고유한 개념 중 일부는 타입 수준에서 JavaScript 객체의 형태를 설명하는 것이다. 그 중 하나가 "선언 결합"이다.
+TypeScript의 고유한 개념 중 일부는 타입 수준에서 JavaScript 객체의 형태를 설명하는 것이다. 그 중 하나가 "선언 병합"이다.
 
-"선언 결합"은 컴파일러가 동일한 이름의 두 선언을 하나의 정의로 결합하는 것이다.
-결합한 정의에는 원래의 두 선언이 가진 기능이 있으며 둘 이상의 선언을 결합할 수도 있다.
+"선언 병합"은 컴파일러가 동일한 이름의 두 선언을 하나의 정의로 병합하는 것이다.
+병합한 정의에는 원래의 두 선언이 가진 기능이 있으며 둘 이상의 선언을 병합할 수도 있다.
 
 ### Basic Concepts
 
@@ -1076,8 +1076,8 @@ TypeScript의 고유한 개념 중 일부는 타입 수준에서 JavaScript 객�
 
 ### Merging Interfaces
 
-가장 단순하고 가장 일반적으로 사용되는 형태의 선언 결합은 인터페이스 결합이다.
-가장 기초적인 수준에서 결합은, 기계적으로 두 선언의 멤버를 동일한 이름의 단일 인터페이스로 합친다.
+가장 단순하고 가장 일반적으로 사용되는 형태의 선언 병합은 인터페이스 병합이다.
+가장 기초적인 수준에서 병합은, 기계적으로 두 선언의 멤버를 동일한 이름의 단일 인터페이스로 합친다.
 
 ```ts
 interface Box {
@@ -1095,7 +1095,7 @@ let box: Box = { height: 5, width: 6, scale: 10 };
 함수가 아닌 인터페이스의 멤버는 고유해야 한다. 만약 고유하지 않으면 동일한 타입이어야 한다.
 
 함수 멤버의 경우 같은 이름의 멤버는 다른 함수의 overload를 설명하는 것으로 처리된다.
-인터페이스 `A`가 추가적인 인터페이스 `A`와 결합하는 경우 두 번째 인터페이스의 우선순위가 더 높다.
+인터페이스 `A`가 추가적인 인터페이스 `A`와 병합하는 경우 두 번째 인터페이스의 우선순위가 더 높다.
 
 ```ts
 interface Cloner {
@@ -1112,7 +1112,7 @@ interface Cloner {
 }
 ```
 
-세 인터페이스는 결합하여 다음의 단일 선언을 생성한다
+세 인터페이스는 병합하여 다음의 단일 선언을 생성한다
 
 ```ts
 interface Cloner {
@@ -1126,7 +1126,7 @@ interface Cloner {
 각 그룹의 요소는 동일한 순서를 유지하지만 overload 집합의 순서가 우선한다.
 
 이 규칙의 하나의 예외는 specialized signatures이다.
-시그니처가 단일 문자열 리터럴 타입(문자열 리터럴 union이 아닌)의 파라미터가 있는 경우 결합된 overload 목록의 맨 위로 버블링한다.
+시그니처가 단일 문자열 리터럴 타입(문자열 리터럴 union이 아닌)의 파라미터가 있는 경우 병합된 overload 목록의 맨 위로 버블링한다.
 
 ```ts
 interface Document {
@@ -1142,7 +1142,7 @@ interface Document {
 }
 ```
 
-결합 결과 `Document` 선언은 다음과 같다
+병합 결과 `Document` 선언은 다음과 같다
 
 ```ts
 interface Document {
@@ -1155,3 +1155,190 @@ interface Document {
 ```
 
 ### Merging Namespaces
+
+인터페이스와 비슷하게 같은 이름의 네임스페이스도 멤버를 병합한다.
+네임스페이스는 네임스페이스와 값을 모두 생성하기 때문에 병합 방식을 이해해야 한다.
+
+```ts
+namespace Animals {
+  export class Zebra { }
+}
+
+namespace Animals {
+  export interface Legged { numberOfLegs: number; }
+  export class Dog { }
+}
+```
+
+위의 코드는 다음 코드와 동일하다
+
+```ts
+namespace Animals {
+  export interface Legged { numberOfLegs: number; }
+
+  export class Zebra { }
+  export class Dog { }
+}
+```
+
+내보내기를 선언하지 않은 멤버는 원본(병합 이전) 네임스페이스에서만 볼 수 있다.
+
+```ts
+namespace Animal {
+  let haveMuscles = true;
+
+  export function animalsHaveMuscles() {
+    return haveMuscles;
+  }
+}
+
+namespace Animal {
+  export function doAnimalsHaveMuscles() {
+    return haveMuscles;  // Error, because haveMuscles is not accessible here
+  }
+}
+```
+
+### Merging Namespaces with Classes, Functions, and Enums
+
+네임스페이스는 다른 유형의 선언과 유연하게 병합한다.
+이렇게 하려면 네임스페이스 선언이 병합할 선언을 따라야 한다.
+
+#### Merging Namespaces with Classes
+
+다음은 내부 클래스를 표현한 것이다
+
+```ts
+class Album {
+  label: Album.AlbumLabel;
+}
+namespace Album {
+  export class AlbumLabel { }
+}
+```
+
+병합한 멤버의 가시성 규칙은 병합 네임스페이스 섹션에서 확인했던것 처럼 내보내기를 해야 보인다.
+
+내부 클래스 패턴이외에도 함수를 작성한 다음 함수에 특성을 추가해 함수를 확장하는 JS 패턴을 병합 선언을 통해 사용할 수 있다.
+
+```ts
+function buildLabel(name: string): string {
+  return buildLabel.prefix + name + buildLabel.suffix;
+}
+
+namespace buildLabel {
+  export let suffix = "";
+  export let prefix = "Hello, ";
+}
+
+console.log(buildLabel("Sam Smith"));
+```
+
+비슷하게 네임스페이스는 enum과 static member를 확장하는데 사용할 수도 있다
+
+```ts
+enum Color {
+  red = 1,
+  green = 2,
+  blue = 4
+}
+
+namespace Color {
+  export function mixColor(colorName: string) {
+    if (colorName == "yellow") {
+      return Color.red + Color.green;
+    }
+    else if (colorName == "white") {
+      return Color.red + Color.green + Color.blue;
+    }
+    else if (colorName == "magenta") {
+      return Color.red + Color.blue;
+    }
+    else if (colorName == "cyan") {
+      return Color.green + Color.blue;
+    }
+  }
+}
+```
+
+### Disallowed Merges
+
+TypeScript에서 모든 병합이 허용되는 것은 아니다.
+현재 클래스는 다른 클래스 또는 변수와 병합할 수 없다.
+
+> 클래스 병합을 모방하는 방식은 Mixins 섹션을 참고
+
+### Module Augmentation
+
+JavaScript 모듈은 병합을 지원하지 않지만 기존 객체를 가져와서 업데이트 할 수 있다
+
+```ts
+// observable.ts
+export class Observable<T> {
+  // ... implementation left as an exercise for the reader ...
+}
+
+// map.ts
+import { Observable } from "./observable";
+Observable.prototype.map = function (f) {
+  // ... another exercise for the reader
+}
+```
+
+위의 코드는 잘 작동하지만 컴파일러는 `Observable.prototype.map`에 대해 잘 알지 못한다.
+module augmentation을 사용하여 컴파일러에게 알릴 수 있다.
+
+```ts
+// observable.ts
+export class Observable<T> {
+  // ... implementation left as an exercise for the reader ...
+}
+
+// map.ts
+import { Observable } from "./observable";
+declare module "./observable" {
+  interface Observable<T> {
+    map<U>(f: (x: T) => U): Observable<U>;
+  }
+}
+Observable.prototype.map = function (f) {
+  // ... another exercise for the reader
+}
+
+// consumer.ts
+import { Observable } from "./observable";
+import "./map";
+let o: Observable<number>;
+o.map(x => x.toFixed());
+```
+
+모듈 이름은 가져오기/내보내기의 module specifier와 동일한 방법으로 처리된다.
+그리고 나서, 원래의 파일과 동일한 파일에서 선언된 것 처럼 module augmentation 선언이 합쳐진다.
+
+그러나 두 가지 제한사항이 있다
+
+- 최상위 수준의 선언에 확장 할 수 없다. 단지 기존선언에 대한 수정이다.
+- default exports 역시 확장할 수 없으며 명명된 내보내기에만 사용 가능하다.
+
+#### Global augmentation
+
+전역범위에 모듈 내부의 선언을 추가할 수 있다
+
+```ts
+// observable.ts
+export class Observable<T> {
+  // ... still no implementation ...
+}
+
+declare global {
+  interface Array<T> {
+    toObservable(): Observable<T>;
+  }
+}
+
+Array.prototype.toObservable = function () {
+  // ...
+}
+```
+
+전역 augmentation은 module augmentation과 동일한 작동 및 제약사항이 있다
