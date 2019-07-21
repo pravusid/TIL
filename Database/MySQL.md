@@ -1,8 +1,8 @@
-# MySQL / MariaDB
+# MySQL || MariaDB
 
-<https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-data-definition.html>
+## SYSTEM
 
-## 조회
+<https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-server-administration.html>
 
 ### db 조회
 
@@ -15,8 +15,6 @@ show databases;
 ```sql
 SELECT host, user from mysql.user;
 ```
-
-## 생성
 
 ### db, user 생성
 
@@ -83,14 +81,6 @@ FLUSH PRIVILEGES;
 | UPDATE                  | Update_priv                  | Tables or columns                     |
 | USAGE                   | Synonym for “no privileges”  | Server administration                 |
 
-### 테이블 인코딩 설정 생성
-
-```sql
-CREATE TABLE test(
-  title varchar(20)
-) default charset utf8;
-```
-
 ## TIMEZONE
 
 <https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html>
@@ -103,7 +93,8 @@ CREATE TABLE test(
 
 ### 시각/날짜 처리
 
-MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 UTC값을 현재 시간대로 변환하여 출력한다.(DATETIME: `YYYY-MM-DD hh:mm:ss[.fraction]`, DATE, TIME은 변환과정이 없다)
+MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 UTC값을 현재 시간대로 변환하여 출력한다.
+(DATETIME: `YYYY-MM-DD hh:mm:ss[.fraction]`, DATE, TIME은 변환과정이 없다)
 
 기본적으로 각 연결의 시간대는 서버의 설정값이지만, 시간대는 연결별로 설정할 수 있다.
 
@@ -121,6 +112,40 @@ MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 
 - 변동 TimeZone
   - local datetime값을 가지고 있는 DATETIME을 `CONVERT_TZ` 사용하여 변환하고 timezone은 필요한 대로
   - UTC datetime을 (01:00Z) TIMESTAMP로 저장하고 timezone은 필요한 대로
+
+## DDL
+
+<https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-data-definition.html>
+
+### CREATE 테이블 인코딩 설정 생성
+
+```sql
+CREATE TABLE test(
+  title varchar(20)
+) default charset utf8;
+```
+
+## ALTER TABLE
+
+```sql
+ALTER TABLE <TABLE> ADD <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'];
+ALTER TABLE <TABLE> MODIFY COLUMN <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'];
+ALTER TABLE <TABLE> RENAME COLUMN <COLUMN_NAME> TO <NEW_COLUMN_NAME>;
+ALTER TABLE <TABLE> DROP COLUMN <COLUMN_NAME>;
+```
+
+COLUMN 순서 변경
+
+```sql
+-- 다른COLUMN 다음으로 이동
+ALTER TABLE 테이블명 MODIFY COLUMN 컬럼명 자료형 AFTER 다른COLUMN이름;
+-- 첫번째 위치로 이동
+ALTER TABLE 테이블명 MODIFY COLUMN 컬럼명 자료형 FIRST;
+```
+
+## DML
+
+<https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-data-manipulation.html>
 
 ## 집계함수
 
