@@ -138,9 +138,9 @@ COLUMN 순서 변경
 
 ```sql
 -- 다른COLUMN 다음으로 이동
-ALTER TABLE 테이블명 MODIFY COLUMN 컬럼명 자료형 AFTER 다른COLUMN이름;
+ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [COMMENT '설명'] AFTER <다른컬럼이름>;
 -- 첫번째 위치로 이동
-ALTER TABLE 테이블명 MODIFY COLUMN 컬럼명 자료형 FIRST;
+ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [COMMENT '설명'] FIRST;
 ```
 
 ## DML
