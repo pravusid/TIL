@@ -48,12 +48,14 @@ pm2 resurrect
 # all apps logs
 pm2 logs
 # only app logs
-pm2 logs app
+pm2 logs [app_name | app_id]
+# only out or err
+pm2 logs [app_name | app_id] [--err | --out]
 # empty all application logs
 pm2 flush
 ```
 
-## Echosystem File
+## Ecosystem File
 
 <https://pm2.io/doc/en/runtime/guide/ecosystem-file/>
 
