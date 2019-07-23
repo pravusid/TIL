@@ -45,7 +45,7 @@ Database 입력 값에 UTC를 적용하려면 다음 두 방식을 사용할 수
 
 <https://github.com/sidorares/node-mysql2/tree/master/documentation#known-incompatibilities-with-node-mysql>
 
-### `zeroFill`
+### zeroFill
 
 `zeroFill` flag is ignored in type conversion.
 You need to check corresponding field's zeroFill flag and convert to string manually if this is of importance to you.
