@@ -38,7 +38,7 @@ const config = {
 
 Database 입력 값에 UTC를 적용하려면 다음 두 방식을 사용할 수 있다 (검증 필요)
 
-- set timezone option to `'+0'` or `'Z'`
+- set timezone option to `'+0'` or `'+00:00'` or `'Z'`
 - run the node process with the timezone environment variable `TZ=UTC`
 
 ## mysqljs vs node-mysql2
@@ -60,13 +60,4 @@ mysql의 집계함수 결과값은 DECIMAL/DOUBLE로 출력되는데, 두 드라
 {
   decimalNumbers: true;
 }
-```
-
-`sequelize`의 경우 다음처럼 적용한다
-
-```js
-const sequelize = new Sequelize("database", "username", "password", {
-  dialect: "mysql",
-  dialectOptions: { decimalNumbers: true }
-});
 ```
