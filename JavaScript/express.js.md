@@ -53,3 +53,30 @@ app.use(errorHandler);
 // foo.controller.ts
 this.routes.get('/hello', asyncHandler((req, resp) => this.foobar(req, resp)));
 ```
+
+## merging interfaces
+
+- <https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-serve-static-core/index.d.ts>
+- <https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express/index.d.ts>
+
+`types/express.d.ts`
+
+```ts
+import { User } from '../src/domain/user';
+
+declare global {
+  namespace Express {
+    export interface Request {
+      user: User;
+    }
+  }
+}
+```
+
+`tsconfig.json`
+
+```json
+{
+  "files": ["types/express.d.ts"]
+}
+```
