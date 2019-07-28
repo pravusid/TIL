@@ -36,6 +36,8 @@ Math.floor(Date.now() / 1000);
 
 ## 변환(formatting)
 
+다음 문자열 변환은 UTC+0(`Z`) 기준으로 출력된다.
+
 - ISO-8601 포맷: `toISOString()`, `toJSON()`
 - RFC-1123 포맷: `toGMTString()`, `toUTCString()`
 
