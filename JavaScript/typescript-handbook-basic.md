@@ -462,6 +462,39 @@ class Image implements SelectableControl {
 
 ## 클래스
 
+### Optional class properties
+
+인터페이스와 마찬가지로 클래스에서 선택적 프로퍼티와 메소드를 선언할 수 있다. (>= TS 2.0)
+
+```ts
+class Bar {
+  a: number;
+  b?: number;
+  f() {
+    return 1;
+  }
+  g?(): number; // Body of optional method can be omitted
+  h?() {
+    return 2;
+  }
+}
+```
+
+`--strictNullChecks` 모드에서 컴파일될 때 선택적 프로퍼티와 메소드는 자동적으로 해당 타입에 `undefined`를 포함한 것으로 처리된다.
+타입가드를 사용하여 해당 타입의 `undefined`를 제거할 수 있다.
+
+```ts
+function test(x: Bar) {
+  x.a;  // number
+  x.b;  // number | undefined
+  x.f;  // () => number
+  x.g;  // (() => number) | undefined
+  let f1 = x.f();            // number
+  let g1 = x.g && x.g();     // number | undefined
+  let g2 = x.g ? x.g() : 0;  // number
+}
+```
+
 ### 상속
 
 `extends` 키워드를 사용하여 클래스를 확장할 수 있다.
