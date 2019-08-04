@@ -377,3 +377,379 @@ var d = require("myLib/bar/baz");
 ```
 
 ## 예시 (By Example)
+
+### Global Variables
+
+전역 변수 `foo`는 존재하는 위젯 수를 포함한다
+
+```ts
+console.log("Half the number of widgets is " + (foo / 2));
+```
+
+> `declare var`를 사용하여 변수를 선언한다. 변수가 읽기 전용이면 `declare const`를 사용할 수 있다. 변수가 블록 범위인 경우 `declare let`을 사용할 수도 있다.
+
+```ts
+/** The number of widgets present */
+declare var foo: number;
+```
+
+### Global Functions
+
+`greet` 함수를 호출하여 사용자에게 인사를 한다
+
+```ts
+greet("hello, world");
+```
+
+> `declare funtion`을 사용하여 함수를 선언한다
+
+```ts
+declare function greet(greeting: string): void;
+```
+
+### Objects with Properties
+
+전역 변수 `myLib`에는 인사 생성을 위한 `makeGreeting` 함수와 지금 까지 작성된 인사말 수를 나타내는 `numberOfGreetings` 프로퍼티가 있다.
+
+```ts
+let result = myLib.makeGreeting("hello, world");
+console.log("The computed greeting is:" + result);
+
+let count = myLib.numberOfGreetings;
+```
+
+> `declare namespace`를 사용하여 dotted notation으로 접근하는 타입이나 값을 표기한다.
+
+```ts
+declare namespace myLib {
+  function makeGreeting(s: string): string;
+  let numberOfGreetings: number;
+}
+```
+
+### Overloaded Functions
+
+`getWidget` 함수는 숫자를 받아서 위젯을, 문자열을 받아서 위젯 배열을 반환한다.
+
+```ts
+let x: Widget = getWidget(43);
+let arr: Widget[] = getWidget("all of them");
+```
+
+> 다음과 같이 선언한다
+
+```ts
+declare function getWidget(n: number): Widget;
+declare function getWidget(s: string): Widget[];
+```
+
+### Reusable Types (Interfaces)
+
+인사말을 지정할 때 `GreetingSettings` 객체를 전달해야 한다.
+이 객체에는 다음과 같은 프로퍼티들이 있다.
+
+1. greeting: Mandatory string
+2. duration: Optional length of time (in milliseconds)
+3. color: Optional string, e.g. ‘#ff00ff’
+
+```ts
+greet({
+  greeting: "hello world",
+  duration: 4000
+});
+```
+
+> 프로퍼티가 있는 타입을 정의하기 위해서 `interface`를 사용한다
+
+```ts
+interface GreetingSettings {
+  greeting: string;
+  duration?: number;
+  color?: string;
+}
+
+declare function greet(setting: GreetingSettings): void;
+```
+
+### Reusable Types (Type Aliases)
+
+인사말을 받는 곳에서 `문자열`, `문자열`을 반환하는 함수 또는 `Greeter` 인스턴스를 사용할 수 있다.
+
+```ts
+function getGreeting() {
+  return "howdy";
+}
+class MyGreeter extends Greeter {}
+
+greet("hello");
+greet(getGreeting);
+greet(new MyGreeter());
+```
+
+> 타입 별칭을 사용하여 타입에 대한 shorthand를 만들 수 있다
+
+```ts
+type GreetingLike = string | (() => string) | MyGreeter;
+
+declare function greet(g: GreetingLike): void;
+```
+
+### Organizing Types
+
+`greeter` 객체는 파일에 기록하거나 경고를 표시할 수 있다.
+`.log(...)`에 LogOptions을 사용하고 `.alert(...)`에 AlertOptions를 사용할 수 있다.
+
+```ts
+const g = new Greeter("Hello");
+g.log({ verbose: true });
+g.alert({ modal: false, title: "Current Greeting" });
+```
+
+> organize types를 위해 namespace를 사용한다
+
+```ts
+declare namespace GreetingLib {
+  interface LogOptions {
+    verbose?: boolean;
+  }
+  interface AlertOptions {
+    modal: boolean;
+    title?: string;
+    color?: string;
+  }
+}
+```
+
+> 하나의 선언에 중첩 namespace를 만들 수도 있다
+
+```ts
+declare namespace GreetingLib.Options {
+  // Refer to via GreetingLib.Options.Log
+  interface Log {
+    verbose?: boolean;
+  }
+  interface Alert {
+    modal: boolean;
+    title?: string;
+    color?: string;
+  }
+}
+```
+
+### Classes
+
+`Greeter` 객체를 인스턴스화 하여 greeter를 생성하거나, 상속하여 사용자 정의 greeter를 만들 수 있다
+
+```ts
+const myGreeter = new Greeter("hello, world");
+myGreeter.greeting = "howdy";
+myGreeter.showGreeting();
+
+class SpecialGreeter extends Greeter {
+  constructor() {
+    super("Very special greetings");
+  }
+}
+```
+
+> `declare class`를 사용하여 클래스 또는 클래스와 유사한 객체를 나타낸다. 클래스는 생성자 뿐만 아니라 프로퍼티 및 메소드를 가질 수 있다.
+
+```ts
+declare class Greeter {
+  constructor(greeting: string);
+
+  greeting: string;
+  showGreeting(): void;
+}
+```
+
+## 해야 할 것과 하지 말아야 할 것
+
+### 일반 타입
+
+`Number`, `String`, `Boolean`, `Symbol` and `Object`
+
+위와 같은 타입을 사용하지 말아야 한다.
+이러한 타입은 JavaScript 코드에서 거의 사용되지 않는 non-primitive boxed object를 나타낸다.
+
+대신 `number`, `string`, `boolean`, `symbol`을 사용한다.
+`Object` 대신 non-primitive `object` 타입을 사용한다. (TS 2.2에서 추가됨)
+
+```ts
+/* WRONG */
+function reverse(s: String): String;
+
+/* OK */
+function reverse(s: string): string;
+```
+
+#### Generics
+
+타입 파라미터를 사용하지 않는다면 제네릭을 사용하지 않아야 한다.
+
+<https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-type-inference-work-on-this-interface-interface-foot--->
+
+### 콜백 타입
+
+#### 콜백의 반환타입
+
+값이 무시 될 콜백에 대해 반환 타입 `any`를 사용하지 않아야 한다.
+대신 값이 무시될 콜백에는 반환 타입 `void`를 사용한다.
+
+```ts
+/* WRONG */
+function fn(x: () => any) {
+  x();
+}
+
+/* OK */
+function fn(x: () => void) {
+  x();
+}
+```
+
+> `void`를 사용하면 실수로 `x`의 반환 값을 확인 되지 않은 방식으로 사용하는 것을 방지할 수 있으므로 더 안전하다.
+
+```ts
+function fn(x: () => void) {
+  var k = x(); // oops! meant to do something else
+  k.doSomething(); // error, but would be OK if the return type had been 'any'
+}
+```
+
+#### 콜백에서의 선택적 파라미터
+
+실제로 사용하지 않는다면 콜백에서 선택적 파라미터를 사용하지 말아야 한다
+
+이는 매우 구체적인 의미가 있다.
+완료 콜백은 1개 혹은 2개의 인수로 호출될 수 있다.
+원래 의도는 콜백이 `elapsedTime` 매개변수를 신경쓰지 않을 수도 있다는 것이었지만 이를 위해 선택적 파라미터를 사용할 필요는 없다.
+
+더 적은 인수를 허용하는 콜백을 제공하는 것이 보다 합리적이다.
+
+```ts
+/* WRONG */
+interface Fetcher {
+  getObject(done: (data: any, elapsedTime?: number) => void): void;
+}
+
+/* OK */
+interface Fetcher {
+  getObject(done: (data: any, elapsedTime: number) => void): void;
+}
+```
+
+#### 오버로드와 콜백
+
+콜백만 다른 별도의 overload를 작성하지 않아야 한다.
+
+> 콜백은 항상 매개변수를 무시할 수 있으므로 더 짧은 overload는 필요하지 않다. 짧은 콜백이 먼저 선언되면 잘못된 타입의 함수가 첫번 째 오버로드와 일치하게 되어 우선 전달된다.
+
+```ts
+/* WRONG */
+declare function beforeAll(action: () => void, timeout?: number): void;
+declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void
+
+/* OK */
+declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void;
+```
+
+### 함수 오버로드
+
+#### Ordering
+
+보다 구체적인 오버로드 이전에 일반적인 오버로드를 선언하지 않아야 한다.
+좀 더 특수한 시그니처 뒤에 일반적인 시그니처를 둔다.
+
+> TypeScript는 함수 호출을 처리할 때 처음으로 일치하는 오버로드를 선택한다. 이전 오버로드가 나중의 오버로드보다 "더 일반적" 일 때, 이후 오버로드는 호출될 수 없다
+
+```ts
+/* WRONG */
+declare function fn(x: any): any;
+declare function fn(x: HTMLElement): number;
+declare function fn(x: HTMLDivElement): string;
+var myElem: HTMLDivElement;
+var x = fn(myElem); // x: any, wat?
+
+/* OK */
+declare function fn(x: HTMLDivElement): string;
+declare function fn(x: HTMLElement): number;
+declare function fn(x: any): any;
+var myElem: HTMLDivElement;
+var x = fn(myElem); // x: string, :)
+```
+
+#### 선택적 파라미터 사용
+
+후행 매개변수만 다른 여러개의 오버로드를 작성하면 안된다
+
+```ts
+/* WRONG */
+interface Example {
+  diff(one: string): number;
+  diff(one: string, two: string): number;
+  diff(one: string, two: string, three: boolean): number;
+}
+
+/* OK */
+interface Example {
+  diff(one: string, two?: string, three?: boolean): number;
+}
+```
+
+이러한 방식은 모든 오버로드가 동일한 반환 타입을 가질때만 가능하다
+
+> TypeScript는 소스의 인수들로 대상의 시그니처가 호출될 수 있는지를 확인하여 시그니처 호환성을 해결한다.
+
+아래의 코드는 선택적 매개변수를 사용하여 시그니처가 올바르게 작성된 경우에만 버그를 노출한다.
+
+```ts
+function fn(x: (a: string, b: number, c: number) => void) {}
+var x: Example;
+// When written with overloads, OK -- used first overload
+// When written with optionals, correctly an error
+fn(x.diff);
+```
+
+> 함수를 사용하는 곳에서 "strict null checking"을 사용하는 경우 지정되지 않는 매개 변수는 JavaScript의 `undefined`로 나타나므로 선택적 인수가 있는 함수에 명시적으로 `undefined` 값을 전달하는 것이 좋다.
+
+아래의 코드는 엄격한 null 확인에서 허용되어야 한다
+
+```ts
+var x: Example;
+// When written with overloads, incorrectly an error because of passing 'undefined' to 'string'
+// When written with optionals, correctly OK
+x.diff("something", true ? undefined : "hour");
+```
+
+#### Union 타입 사용
+
+하나의 인수 위치에서 타입만 다른 오버로드를 사용하면 안된다.
+가능하다면 union 타입을 사용한다.
+
+```ts
+/* WRONG */
+interface Moment {
+  utcOffset(): number;
+  utcOffset(b: number): Moment;
+  utcOffset(b: string): Moment;
+}
+
+/* OK */
+interface Moment {
+  utcOffset(): number;
+  utcOffset(b: number|string): Moment;
+}
+```
+
+> 이는 값을 함수에 전달하려는 사람에게 중요하다
+
+```ts
+function fn(x: string): void;
+function fn(x: number): void;
+function fn(x: number|string) {
+  // 별도의 오버로드로 작성되었다면, 부정확함 -> 오류
+  // union 타입으로 작성되었다면, 정혹함 -> 허용됨
+  return moment().utcOffset(x);
+}
+```
