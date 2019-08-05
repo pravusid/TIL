@@ -40,6 +40,24 @@ M  lib/simplegit.rb     # 내용을 변경하고 Staged에 추가함
 - Staging Area의 데이터를 마지막 커밋에 추가: `git commit --amend`
 - Tracking 파일 전체를 Staging 생략하고 커밋: `git commit -a`
 
+## Tag
+
+- 목록
+  - 태그 목록: `git tag`
+  - 태그 검색: `git tag -l '검색어'` i.e. `git tag -l 'v1.4.2.*'`
+
+- 생성
+  - Lightweight 태그 붙이기: `git tag <tag>`
+  - 이전 커밋에 태그 붙이기: `git tag <tag> <commit_checksum>`
+  - Annotated 태그 붙이기: `git tag -a <tag> -m '<message>'`
+  - 서명한 태그 붙이기: `git tag -s <tag> -m '<message>'`
+
+- 검증
+  - 서명한 태그 검증: `git tag -v [태그 이름]` (서명자의 공개키가 Keyring에 있어야 함)
+
+- 삭제
+  - 태그 삭제: `git tag -d <tag>`
+
 ## Log / Reflog
 
 - reflog 출력: `git reflog`
@@ -205,8 +223,6 @@ git push --delete origin feature-foobar
   - `git branch --set-upstream-to <remote>/<branch>`
   - alias `git branch -u <remote>/<branch>`
 
-- 삭제한 로컬 브랜치 원격 저장소 반영: `git push origin :<branch>`
-
 ### Fetch
 
 remote에서 데이터 가져오기(local에 반영하지는 않음): `git fetch`
@@ -224,9 +240,28 @@ remote에서 삭제한 branch 로컬 반영(로컬에서도 브랜치 삭제): `
 
 ### Push
 
-`git push`
+#### Remote Branch
 
-원격 브랜치 삭제: `git push --delete origin feature-foobar`
+branch push
+
+`git push <remote> <branch>`
+
+branch 삭제
+
+`git push --delete origin feature-foobar`
+
+`git push origin :<branch>`
+
+> alias `[empty-localbranch]:[remotebranch]` === 비어있는 localbranch(empty reference)를 원격의 remotebranch로 push
+
+#### Remote Tag
+
+- Remote에 태그 Push: `git push <origin> <태그이름>`
+- Remote에 없는 태그 모두 Push: `git push origin --tags`
+
+- Remote 태그 삭제
+  - `git push --delete origin tagname`
+  - `git push origin :tagname`
 
 ## `.gitignore`
 
