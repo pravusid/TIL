@@ -79,4 +79,12 @@ declare global {
 {
   "files": ["types/express.d.ts"]
 }
+
+// OR
+
+{
+  "include": ["src/**/*", "types/*"]
+}
 ```
+
+OR `src` 경로 아래에 `express.d.ts`를 넣는다
