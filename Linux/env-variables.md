@@ -29,7 +29,7 @@
 대부분의 리눅스에서는 기본 login shell은 `bash`이고 이는 `/etc/passwd`에서 확인할 수 있다.
 
 login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 존재하면 읽는다.
-반면, `zsh`는 `~/.zprofile` 파일만 읽는다. (이는 zsh 문법이 기본 bourn shell 계통과 완전한 호환성을 보장하지 않기 때문이다)
+반면, `zsh`는 `~/.zprofile` 파일만 읽는다. (이는 zsh 문법이 기본 bourne shell 계통과 완전한 호환성을 보장하지 않기 때문이다)
 
 `/bin/sh`을 login shell로 하고 `~/.profile`에 `export SHELL=/bin/zsh` 코드를 포함한다면,
 터미널을 열었을 때 터미널은 `zsh`를 실행할 것이다. (일부 터미널은 `$SHELL`을 따르지 않는다)
@@ -48,7 +48,7 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 일반적으로 `~/.profile` 파일은 환경변수 정의를 담고있으므로, 로그인 시 혹은 전체 세션동안 한번만 실행하려는 프로그램일 것이다.
 
-`~/.zshrc` 파일은 모든 shell instance에서 실행되어야 하는 것을 포함해야 한다.
+`~/.zshrc` 파일은 모든 대화형 shell instance에서 실행되어야 하는 것을 포함해야 한다.
 예를 들면, alias, 함수 정의, shell 옵선 설정, 자동완성 설정, 프롬프트 설정 키 바인딩 등의 설정이다.
 
 ### zsh
