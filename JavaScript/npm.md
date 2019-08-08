@@ -33,14 +33,6 @@ peer dependencies 확인: `npm info "패키지명@버전" peerDependencies`
 1. `npm install`: ./node_modules 패키지 설치
 2. `npm install --save / --save-dev(-D)` ./node_modules에 패키지 설치 + ./package.json 업데이트
 
-### npm삭제, npm global modules 모두 삭제
-
-`npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs npm -g rm`
-
-삭제에 관리자 권한이 필요하면
-
-`npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs sudo npm -g rm`
-
 ## yarn
 
 ### 설치
