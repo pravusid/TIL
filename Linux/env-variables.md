@@ -21,6 +21,8 @@
   - `~/.zshrc`: 사용자에게만 적용되고, zsh쉘 세션이 생성될 때 마다 로드된다
   - 세션 환경변수는 현재 쉘에서 지정된 값으로 `set/unset 변수=값`을 활용해서 지정/해제한다
 
+> rc는 'run commands'의 약자이다
+
 ## 참고사항
 
 ### login shell / non login shell
