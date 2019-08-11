@@ -6,9 +6,17 @@ Free Tier는 최초 12개월간 허가된 인스턴스 사용시간 총량을 �
 
 사용량은 시간단위로 계산됨 (1분을 켜도 1시간)
 
-Free Tier 관련 내용은 <https://aws.amazon.com/ko/free/> 참고
+## 제공 서비스
 
-## Free Tier 주의사항
+### Systems Manager Parameter Store
+
+<https://docs.aws.amazon.com/ko_kr/systems-manager/latest/userguide/systems-manager-parameter-store.html>
+
+환경변수 같은 데이터를 AWS에서 관리하기 위해 사용하는 서비스
+
+## Free Tier
+
+Free Tier 관련 내용은 <https://aws.amazon.com/ko/free/> 참고
 
 ### EC2
 
