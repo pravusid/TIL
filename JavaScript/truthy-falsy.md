@@ -1,21 +1,19 @@
 # 값의 진위여부 for JavaScript
 
-참고: <https://github.com/denysdovhan/wtfjs>
+References
 
-```js
-if (value) {
-  // ...
-}
-```
+- <https://github.com/denysdovhan/wtfjs>
+- <https://developer.mozilla.org/ko/docs/Glossary/Truthy>
+- <https://developer.mozilla.org/ko/docs/Glossary/Falsy>
 
 다음 값은 `false`로 평가됨
 
-- null
-- undefined
-- NaN
-- empty string ("")
-- 0
-- false
+- `false`
+- `null`
+- `undefined`
+- `NaN`
+- empty string (`''`)
+- `0`
 
 그러나 할당은 되어 있고 값만 비어있다면 `true`로 평가됨
 
