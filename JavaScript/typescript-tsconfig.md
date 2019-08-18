@@ -1,0 +1,149 @@
+# `tsconfig.json`
+
+디렉토리에 `tsconfig.json` 파일이 있으면 TypeScript 프로젝트의 루트로 인식된다.
+
+프로젝트는 다음 중 하나의 방식으로 컴파일 된다
+
+- 입력 파일없이 tsc를 호출하면 컴파일러는 현재 디렉토리에서 시작하여 상위 디렉토리 방향의 체인으로 `tsconfig.json` 파일을 검색한다
+- 입력 파일없이 tsc를 호출하고 `--project` 커맨드 라인 옵션과 함께 `tsconfig.json` 파일을 포함하는 디렉토리나 유효한 `.json` 파일 경로를 사용한다.
+
+커맨드라인에 파일 입력이 지정되면 `tsconfig.json` 파일이 무시된다
+
+## 참조
+
+<https://www.typescriptlang.org/docs/handbook/compiler-options.html>
+
+<https://www.typescriptlang.org/docs/handbook/project-references.html>
+
+## 예시
+
+```jsonc
+{
+  "compilerOptions": {
+    // ...
+  },
+  "files": ["foo.ts", "bar.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
+```
+
+## 옵션 자세히 보기
+
+컴파일러에는 출력 가능한 파일이 포함되어 있지 않다.
+예를 들어, 입력에 `index.ts`가 포함되어 있으면 `index.d.ts`와 `index.js`는 제외된다.
+따라서 확장자만 다른 파일은 같이 두지 않는 것이 좋다.
+
+`"compilerOptions"` 속성을 생략할 수 있으며 이 경우 컴파일러 기본값이 사용된다.
+마찬가지로 `tsconfig.json` 파일을 완전히 비워두면 모든 설정값이 기본값으로 적용된다.
+
+명령행에 지정된 컴파일러 옵션이 `tsconfig.json` 파일에서 지정된 설정을 대체한다.
+
+### `"files"`, `"include"`, `"exclude"`
+
+`"files"` 속성은 상대경로 또는 절대경로 파일 목록을 가져온다.
+
+`"include"`, `"exclude"` 속성은 glob-like 파일패턴 목록을 사용한다. 지원되는 glob 와일드 카드는 다음과 같다
+
+- `*`: 0개 혹은 이상의 문자(디렉토리 구분자 제외)
+- `?`: 임의의 1개 문자(디렉토리 구분자 제외)
+- `**/`: 재귀적으로 하위 디렉토리 매칭
+
+glob패턴 세그먼트에 `*` 또는 `.*`만 포함된 경우 지원하는 확장자를 가진 파일만 포함한다.
+
+> e.g. `.ts`, `.tsx`, `.d.ts`, 만약 `allowJs` 옵션을 사용한다면 `.js`, `.jsx` 포함
+
+`"files"`와 `"include"` 모두 지정되지 않은 경우 컴파일러는 기본적으로 `"exclude"` 속성에 정의된 파일은 제외고
+포함된 디렉토리와 서브디렉토리의 모든 TypeScript 파일을 포함한다.
+
+`"files"` 또는 `"include"` 속성이 지정되면 컴파일러는 두 속성에 포함된 파일의 합집합을 포함한다.
+
+`"files"` 또는 `"include"` 속성을 통해 포함된 파일이 참조하는 모든 파일도 포함된다.
+마찬가지로 파일 `A.ts`에서 다른파일 `B.ts`를 참조하는 경우 파일 `A.ts`가 `"exclude"` 목록에 지정되어 있지 않으면 `B.ts`를 제외할 수 없다.
+
+`"exclude"` 특성이 지정되지 않은 경우 `"outDir"` 컴파일러 옵션을 사용하여 지정한 디렉토리의 파일 및
+`node_modules`, `bower_components`, `jspm_packages`를 기본적으로 제외한다.
+
+`"include"`를 사용하여 포함한 파일은 `"exclude"` 속성을 사용하여 필터링 할 수 있다.
+
+그러나 `"files"` 속성을 사용하여 명시적으로 포함한 파일은 `"exclude"` 속성에 관계없이 항상 포함된다.
+
+### `@types`, `typeRoots`, `types`
+
+기본적으로 모든 가시적인 `@types` 패키지가 컴파일에 포함된다.
+enclosing `node_modules/@types` 디렉토리는 가시적인 것으로 간주된다.
+
+> enclosing 디렉토리를 풀어보면 `./node_modules/@types/`, `../node_modules/@types/`, `../../node_modules/@types/` 같은 규칙으로 순차 적용된다
+
+`typeRoots` 속성이 지정되면 `typeRoots` 아래의 패키지만 포함된다
+
+```json
+{
+  "compilerOptions": {
+    "typeRoots": ["./typings"]
+  }
+}
+```
+
+이 설정에서는 `./typings` 아래의 모든 패키지가 포함되고, `./node_modules/@types` 아래의 패키지는 포함되지 않는다.
+
+`types` 속성이 지정되면 나열된 패키지만 포함된다
+
+```json
+{
+  "compilerOptions": {
+    "types": ["node", "lodash", "express"]
+  }
+}
+```
+
+이 설정에서는 `./node_modules/@types/node`, `./node_modules/@types/lodash`, `./node_modules/@types/express`만 포함된다.
+`./node_modules/@types/*` 경로의 다른 패키지는 포함되지 않는다.
+
+types 패키지는 `index.d.ts` 파일이 있는 폴더 혹은 `package.json` 에서 `types` 필드에 명시된 폴더이다.
+
+자동 포함은 모듈로 선언된 파일이 아니라 global 선언 파일을 사용할 때만 중요하다.
+예를 들어, `import "foo"`를 사용하면 TypeScript는 여전히 `node_modules` 및 `node_modules/@types` 폴더에서 `foo` 패키지를 찾는다.
+
+### `extends` 사용으로 설정 상속
+
+`tsconfig.json` 파일은 `extends` 속성으로 다른 파일에서 설정을 상속할 수 있다.
+
+`extends`는 `tsoncig.json` 파일의 최상위 속성(`compilerOptions`, `files`...)이다.
+
+base file의 설정이 우선 로드된 다음 상속되는 파일의 설정으로 대체된다.
+
+상속되는 파일에서 `files`, `include`, `exclude` 옵션은 base file 설정을 덮어쓴다.
+
+설정파일의 모든 상대경로는 해당 설정파일의 위치에 따라 처리된다
+
+`configs/base.json`
+
+```json
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  }
+}
+```
+
+`tsconfig.json`
+
+```json
+{
+  "extends": "./configs/base",
+  "files": ["main.ts", "supplemental.ts"]
+}
+```
+
+`tsconfig.nostrictnull.json`
+
+```json
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "strictNullChecks": false
+  }
+}
+```
