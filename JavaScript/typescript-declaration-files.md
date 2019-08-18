@@ -987,3 +987,24 @@ Type definitions이 다른 패키지에 의존하는 경우 현재 작성하는 
 [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)에 풀리퀘스트를 요청하면 `@types` 스코프 패키지에 자동으로 게시된다.
 
 ## Consumption
+
+### 다운로드
+
+npm 패키지에 선언 파일이 없다면 `@types` 패키지를 다운로드 하면된다
+
+```sh
+npm install --save @types/lodash
+```
+
+### 사용
+
+설치한 이후 불러와서 사용하기만 하면 된다
+
+```ts
+import * as _ from "lodash";
+_.padStart("Hello TypeScript!", 20, " ");
+```
+
+### 검색
+
+대부분의 경우 타입 선언패키지는 npm 패키지 이름과 같으며 접두사가 `@types/`이지만 필요한 경우 <https://aka.ms/types>에서 직접 찾을 수 있다.
