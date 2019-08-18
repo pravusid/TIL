@@ -1,5 +1,7 @@
 # TypeScript Declaration Files (`d.ts`)
 
+템플릿: <https://www.typescriptlang.org/docs/handbook/declaration-files/templates.html>
+
 ## 라이브러리 구조
 
 선언파일 구조는 라이브러리가 어떻게 사용되는지에 달려있다.
@@ -749,7 +751,196 @@ function fn(x: string): void;
 function fn(x: number): void;
 function fn(x: number|string) {
   // 별도의 오버로드로 작성되었다면, 부정확함 -> 오류
-  // union 타입으로 작성되었다면, 정혹함 -> 허용됨
+  // union 타입으로 작성되었다면, 정확함 -> 허용됨
   return moment().utcOffset(x);
 }
 ```
+
+## Deep Dive
+
+모듈 혹은 UMD에 중점을 둔 내용임
+
+### Key Concepts
+
+TypeScript 작동방식에 대한 몇 가지 주요개념을 이해하면 모든 형태의 정의를 만드는 방법을 이해할 수 있다
+
+#### 타입
+
+- 타입 별칭 선언 (`type sn = number | string;`)
+- 인터페이스 선언 (`interface I { x: number[]; }`)
+- 클래스 선언 (`class C {}`)
+- Enum 선언 (`enum E { A, B, C }`)
+- 타입을 가리키는 가져오기 선언
+
+각 타입 선언은 새로운 타입 이름을 생성한다
+
+#### 값
+
+값은 표현식에서 참조할 수 있는 런타임 이름이다. 예를 들면 `let x = 5;`는 `x`라는 값을 생성한다.
+
+- `let`, `const`, `var` 선언
+- 네임스페이스 또는 모듈의 값을 포함한 선언
+- Enum 선언
+- 클래스 선언
+- 값을 가리키는 가져오기 선언
+- 함수 선언
+
+#### 네임스페이스
+
+네임스페이스에 타입이 존재할 수 있다. 예를 들어 `let x: A.B.C` 선언이 있는 경우 타입 `C`는 `A.B` 네임스페이스에서 온 것이다.
+
+이 구별은 중요하다. `A.B`는 타입 또는 값일 필요가 없다.
+
+### 단순 조합: One name, multiple meanings
+
+이름 `A`가 주어지면 `A`에 대한 세 가지 다른 의미인 타입, 값, 네임스페이스를 찾을 수 있다.
+
+이름이 해석되는 방법은 컨텍스트에 따라 다르다.
+예를 들어, 선언 `m: A.A = A;`에서 `A`는 네임스페이스로 사용된 다음 타입이름으로 사용되고 값으로도 사용된다.
+
+혼란스러울 수 있겟지만 지나친 오버로딩이 아니라면 편리하게 사용할 수 있다.
+
+#### Built-in Combinations
+
+예를 들어, 클래스는 타입 및 값 모두 될 수 있다.
+`class C {}` 선언은 클래스 인스턴스를 나타내는 타입 `C`와 클래스 생성자 함수를 나타내는 값 `C`를 만든다.
+
+Enum 선언도 비슷하게 동작한다.
+
+#### User Combinations
+
+`foo.d.ts` 모듈 파일을 작성했다고 가정하자
+
+```ts
+export var SomeVar: { a: SomeType };
+export interface SomeType {
+  count: number;
+}
+```
+
+이를 사용한다
+
+```ts
+import * as foo from './foo';
+let x: foo.SomeType = foo.SomeVar.a;
+console.log(x.count);
+```
+
+위 코드는 잘 작동하지만 `SomeType`과 `SomeVar`는 같은 이름이므로 밀접한 연관관계가 있다고 생각할 수 있다.
+동일한 이름 `Bar`를 사용하여 두 가지 다른 객체(값과 타입)를 결합할 수 있다.
+
+```ts
+export var Bar: { a: Bar };
+export interface Bar {
+  count: number;
+}
+```
+
+코드를 사용할 때 구조분해를 사용하기 좋다
+
+```ts
+import { Bar } from './foo';
+let x: Bar = Bar.a;
+console.log(x.count);
+```
+
+여기에서도 `Bar`를 타입이면서 값으로 사용했다. `Bar` 값을 `Bar` 타입으로 선언하지 않아도 독립적으로 작동한다.
+
+### Advanced Combinations
+
+일부 선언은 여러 선언에 걸쳐 결합할 수 있다.
+예를 들어, `class C {}`와 `interface C {}`는 공존할 수 있으며 둘다 `C` 타입에 프로퍼티를 제공한다.
+
+충돌을 일으키지 않으면 허용된다.
+일반적인 규칙은 `namespace s`로 선언되지 않는 한 동일한 이름의 값 끼리는 항상 충돌하며,
+타입은 타입 별칭 선언 `type s = string`으로 선언되면 충돌하지만, 네입스페이스는 절대 충돌하지 않는다.
+
+#### `interface`를 사용하여 추가
+
+다른 `interface` 선언으로 `interface`에 멤버를 추가할 수 있다
+
+```ts
+interface Foo {
+  x: number;
+}
+// ... elsewhere ...
+interface Foo {
+  y: number;
+}
+let a: Foo = ...;
+console.log(a.x + a.y); // OK
+```
+
+이는 클래스에서도 적용된다
+
+```ts
+class Foo {
+  x: number;
+}
+// ... elsewhere ...
+interface Foo {
+  y: number;
+}
+let a: Foo = ...;
+console.log(a.x + a.y); // OK
+```
+
+인터페이스를 사용하여 타입 별칭 `type s = string;`에 추가할 수 없다
+
+#### `namespace`를 사용하여 추가
+
+네임스페이스 선언을 사용하면 충돌을 일으키지 않는 방식으로 새로운 타입, 값, 네임스페이스를 추가할 수 있다
+
+예를 들어, 클래스에 static 멤버를 추가할 수 있다
+
+```ts
+class C {
+}
+// ... elsewhere ...
+namespace C {
+  export let x: number;
+}
+let y = C.x; // OK
+```
+
+이 예제에서 네임스페이스 선언을 작성할 때 까지 네임스페이스 `C`는 없었다.
+이후 선언된 네임스페이스 `C`는 클래스에 의해 생성된 `C`의 값이나 타입과 충돌하지 않는다.
+
+마지막으로 네임스페이스 선언을 사용하여 다양한 병합을 수행할 수 있다.
+
+```ts
+namespace X {
+  export interface Y { }
+  export class Z { }
+}
+
+// ... elsewhere ...
+namespace X {
+  export var Y: number;
+  export namespace Z {
+    export class C { }
+  }
+}
+type X = string;
+```
+
+이 예제에서 첫 블록은 다음 이름을 생성한다
+
+- 값 `X` (네임스페이스 선언에 값 `Z`가 포함되어 있으므로)
+- 네임스페이스 `X` (네임스페이스 선언에 타입 `Y`가 포함되어 있으므로)
+- 네임스페이스 `X`의 타입 `Y`
+- 네임스페이스 `X`의 타입 `Z` (클래스 인스턴스 형태)
+- 값 `X`의 프로퍼티 값 `Z` (클래스 생성자 함수)
+
+두 번째 블록은 다음 이름을 생성한다
+
+- 값 `X`의 프로퍼티인 값 `Y`(`number` 타입)
+- 네임스페이스 `Z`
+- 값 `X`의 프로퍼티인 값 `Z`
+- 네임스페이스 `X.Z`의 타입 `C`
+- 값 `X.Z`의 값 `C`
+- 타입 `X`
+
+### Using with `export =` or `import`
+
+`export`와 `import` 선언은 내보내기나 가져오기 대상 전체(*all meanings*)를 가져온다
