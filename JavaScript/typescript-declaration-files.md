@@ -944,3 +944,46 @@ type X = string;
 ### Using with `export =` or `import`
 
 `export`와 `import` 선언은 내보내기나 가져오기 대상 전체(*all meanings*)를 가져온다
+
+## Publishing
+
+선언 파일을 npm에 게시할 수 있는 주요 방법은 다음과 같다
+
+- npm 패키지에 번들링 하거나
+- npm의 [@types](https://www.npmjs.com/~types)에 게시
+
+패키지가 TypeScript로 작성된 경우라면 컴파일러 옵션에서 `--declaration` 플래그를 사용하여 첫 번째 방법을 사용하면 된다.
+
+### npm 패키지에 선언 포함
+
+패키지에 main `.js` 파일이 있는경우 `package.json` 파일에도 기본 선언파일을 표시해야 한다.
+동봉된 선언파일을 카리키는 `types` 속성을 설정한다.
+
+```json
+{
+  "name": "awesome",
+  "main": "./lib/main.js",
+  "types": "./lib/main.d.ts"
+}
+```
+
+`"typings"` 필드는 `"types"` 필드와 같으며 대신 사용할 수 있다.
+
+또한 기본 선언파일의 이름이 `index.d.ts`이고 패키지 루트 (`index.js` 옆)에 있는 경우 `"types"` 속성을 표기할 필요는 없지만 되도록 표기하는 것이 좋다.
+
+#### Dependencies
+
+모든 의존성은 npm에 의해서 관리된다. 의존하는 패키지가 `package.json`에 제대로 표시되어 있는지 확인하여야 한다.
+
+#### Red flags
+
+선언파일에 `/// <reference path="..." />`를 사용하면 안된다. 대신 `/// <reference types="..." />`을 사용하여야 한다.
+
+Type definitions이 다른 패키지에 의존하는 경우 현재 작성하는 패키지에 결합하지 않고 별개의 파일로 유지해야 한다
+
+### `@types`에 게시
+
+[types-publisher tool](https://github.com/Microsoft/types-publisher)을 사용하여
+[DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)에 풀리퀘스트를 요청하면 `@types` 스코프 패키지에 자동으로 게시된다.
+
+## Consumption
