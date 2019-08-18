@@ -37,6 +37,7 @@
 - [vue-filepond](https://github.com/pqina/vue-filepond)
 - [vue-image-inputer](https://github.com/waynecz/vue-img-inputer)
 - [vue-draggable](https://github.com/SortableJS/Vue.Draggable)
+- [simple-vue-validator](https://github.com/semisleep/simple-vue-validator)
 
 ## Layout
 
