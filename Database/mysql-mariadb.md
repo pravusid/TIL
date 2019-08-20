@@ -147,6 +147,15 @@ ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [
 
 <https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-data-manipulation.html>
 
+### INSERT SELECT
+
+```sql
+INSERT INTO tbl_temp2 (fld_id)
+  SELECT tbl_temp1.fld_order_id
+  FROM tbl_temp1
+  WHERE tbl_temp1.fld_order_id > 100;
+```
+
 ## 집계함수
 
 <https://dev.mysql.com/doc/refman/8.0/en/group-by-functions.html>
