@@ -18,3 +18,7 @@ const sequelize = new Sequelize("database", "username", "password", {
   dialectOptions: { decimalNumbers: true }
 });
 ```
+
+## Composite foreign keys
+
+<https://github.com/sequelize/sequelize/issues/311>
