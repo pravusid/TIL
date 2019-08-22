@@ -1,5 +1,7 @@
 # Visual Studio Code
 
+<https://code.visualstudio.com/docs>
+
 ## Debugging
 
 <https://code.visualstudio.com/docs/editor/debugging>
@@ -43,9 +45,7 @@
       "name": "vscode-jest-tests",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      "args": [
-        "--runInBand"
-      ],
+      "args": ["--runInBand"],
       "cwd": "${workspaceFolder}",
       "runtimeVersion": "<NODE_VESION_IN_NVM>",
       "console": "internalConsole",
@@ -55,3 +55,29 @@
   ]
 }
 ```
+
+### TypeScript
+
+<https://code.visualstudio.com/docs/typescript/typescript-debugging>
+
+`.vscode/launch.json`
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug TypeScript in Node.js",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "program": "${workspaceFolder}/src/main.ts",
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    }
+  ]
+}
+```
+
+> `main.ts` 경로와 `dist/` 경로는 설정에 따라변경
