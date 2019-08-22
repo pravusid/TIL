@@ -151,3 +151,191 @@ POST, PUT, PATCH 차이점을 구분하기 어려울 수 있다
 POST, PATCH 요청은 여러번 제출하여도 반드시 결과가 같을 필요는 없다.
 
 ### HTTP 의미 체계 준수
+
+#### 미디어 유형
+
+HTTP 프로토콜에서 형식은 MIME 유형이라고도 하는 미디어 유형을 사용하여 지정된다.
+binary가 아닌 데이터의 경우 대부분 JSON, XML을 지원한다.
+
+요청 또는 응답의 Content-Type 헤더는 표현 형식을 지정한다.
+다음은 JSON 데이터를 포함하는 POST 요청 예제이다.
+
+```http
+POST https://adventure-works.com/orders HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Content-Length: 57
+
+{"Id":1,"Name":"Gizmo","Category":"Widgets","Price":1.99}
+```
+
+서버에서 미디어 유형을 지원하지 않으면 HTTP 상태코드 415(Unsupported Media Type)를 반환해야 한다.
+
+클라이언트 요청에는 클라이언트가 응답 메시지에서 서버로부터 받을 미디어 유형 목록을 포함하는 Accept 헤더가 포함될 수 있다.
+
+서버가 나열된 미디어 유형 중 어떤 것도 일치시킬 수 없는 경우 HTTP 상태코드 406(Not Acceptable)을 반환해야 한다.
+
+#### GET 메소드
+
+성공적인 GET 메소드는 일반적으로 HTTP 상태코드 200(OK)을 반환한다.
+리소스를 찾을 수 없는 경우 상태코드 404(Not Found)를 반환해야 한다.
+
+#### POST 메소드
+
+POST 메소드는 새 리소스를 만드는 경우 HTTP 상태코드 201(Created)을 반환한다.
+새 리소스의 URI는 응답의 Location 헤더에 포함된다. 응답 본문은 리소스의 표현을 포함한다.
+
+일부 처리를 수행하지만 새 리소스를 만들지 않는 경우 메소드는 HTTP 상태코드 200(OK)을 반환하고 작업 결과를 응답 본문에 포함할 수 있다.
+혹은 반환할 결과가 없다면 메소드는 응답 본문 없이 상태코드 204(No Content)를 반환할 수 있다.
+
+클라이언트가 잘못된 데이터를 요청에 포함하면 서버에서 HTTP 상태코드 400(Bad Request)을 반환한다.
+응답 본문에는 오류에 대한 정보 또는 정보를 제공하는 URI 링크가 포함될 수 있다.
+
+#### PUT 메소드
+
+PUT 메소드는 POST 메소드와 마찬가지로 새 리소스를 만드는 경우 HTTP 상태코드 201(Created)를 반환한다.
+기존 리소스를 업데이트하는 경우 200(OK) 또는 204(No Content)를 반환한다.
+
+경우에 따라 기존 리소스를 업데이트 할 수 없는 경우도 있는데 이 경우 HTTP 상태코드 409(Conflict)를 반환할 수도 있다.
+
+#### PATCH 메소드
+
+클라이언트는 PATCH 요청시 리소스 전체가 아니라 적용할 변경내용만 포함하여 보낸다.
+PATCH 메소드의 사양에는 패치 문서의 형식을 특정하지 않았으므로 요청의 미디어 형식에서 추론해야 한다.
+
+Web API에 대한 일반적인 데이터 형식은 JSON이고 두 가지 주요 JSON 기반 패치 형식으로 JSON 패치 및 JSON 병합 배치가 있다.
+
+[JSON 병합패치](https://tools.ietf.org/html/rfc7396)는 원래 리소스와 동일한 구조를 가진 JSON의 변경/추가할 필드의 하위 집합만 포함한다.
+또한 필드값에 `null`을 지정하여 필드를 삭제할 수 있다. (리소스가 명시적 null 값을 가질 수 있으면 병합 패치가 적합하지 않음)
+
+JSON 병합 패치의 미디어 유형은 `application/merge-patch+json`이다.
+
+[JSON 패치](https://tools.ietf.org/html/rfc6902)는 보다 유연하다.
+작업의 결과로 적용할 변경 내용을 지정하는대, 작업에는 추가, 제거, 바꾸기, 복사 및 테스트(값의 유효성 검사)가 포함된다.
+
+JSON 패치의 미디어 유형은 `application/json-patch+json`이다.
+
+다음은 PATCH 요청을 처리할 때 발생할 수 있는 몇 가지 일반적 오류 조건이다
+
+- 지원되지 않는 패치 문서 형식: 415(Unsupported Media Type)
+- 패치 문서의 형식이 오류: 400(Bad Request)
+- 패치 문서가 유효하지만 현재 상태에서는 변경 내용을 리소스에 적용할 수 없음: 409(Conflict)
+
+#### DELETE 메소드
+
+삭제 작업이 성공하면 웹 서버는 성공적 처리를 응답 본문에 추가 정보가 포함되지 않는 HTTP 상태코드 204(No Content)로 응답해야 한다.
+
+리소스가 없는 경우 웹서버는 상태코드 404(Not Found)를 반환할 수 있다.
+
+#### 비동기 작업
+
+경우에 따라 POST, PUT, PATCH, DELETE 작업을 완료 하는데 시간이 소요되어
+작업이 완료될 때 까지 기다렸다가 클라이언트에 응답을 보내는 경우 허용되지 않는 수준의 대기시간이 발생할 수 있다.
+
+이 경우 비동기 작업을 수행하는 방안을 고려해보아야 한다.
+요청 처리가 수락되었지만 아직 완료되지 않았음을 나타내는 HTTP 상태코드 202(Accepted)를 반환한다.
+
+클라이언트가 상태 엔드포인트를 폴링하여 상태를 모니터링할 수 있도록 비동기 요청 상태를 반환하는 엔드포인트를 표시해야 한다.
+202 응답의 Location 헤더에 상태 엔드포인트 URI를 포함한다.
+
+```http
+HTTP/1.1 202 Accepted
+Location: /api/status/12345
+```
+
+클라이언트가 GET 요청을 보내는 경우 응답에 요청의 현재 상태가 포함되어야 한다.
+필요에 따라 예상 완료시간 또는 작업 취소 링크를 포함할 수 있다.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "status":"In progress",
+  "link": { "rel":"cancel", "method":"delete", "href":"/api/status/12345" }
+}
+```
+
+비동기 작업에서 새 리소스를 생성하는 경우 작업 완료 후 상태 엔드포인트에서 상태코드 303(See Other)를 반환해야 한다.
+303 응답에 새 리소스의 URI를 제공하는 Location 헤더를 포함한다.
+
+```http
+HTTP/1.1 303 See Other
+Location: /api/orders/12345
+```
+
+### 데이터 필터링 및 페이지 매기기
+
+단일 URI를 통해 리소스 컬렉션을 표시하면 정보의 하위 집합만 필요할 때 이에 맞춰 대량의 데이터를 가져올 수 있다.
+예를 들어, `/orders?min_cost=n` 처럼 API가 URI의 query-string에서 조건을 전달할 수 있다.
+
+컬렉션 리소스에 대한 GET 요청은 단일 요청에서 반환되는 데이터 양이 제한되도록 Web API를 디자인해야 한다.
+
+```http
+/orders?limit=25&offset=50
+```
+
+클라이언트 애플리케이션을 돕기위해, 페이지가 매겨진 데이터를 반환하는 GET 요청은 컬렉션의 총 리소스 수를 나타내는 메타데이터를 포함해야 한다.
+
+`/orders?sort=product_id` 같이 정렬 매개 변수를 제공하여 데이터를 가져올 때 정렬하는 전략을 사용할 수 있다.
+그러나 쿼리 문자열 매개변수는 여러 캐시 구현에서 캐시된 데이터의 키로 사용되는 리소스 식별자의 일부를 구성하므로 캐싱에 나쁜 영향을 미칠 수 있다.
+
+각 항목에 대량의 데이터가 포함된 경우 각 항목에 대해 반환되는 필드를 제한하도록 할 수 있다.
+예를 들어, 쉽표로 구분된 필드목록을 받는 `/orders?fields=product_id,quantity` 같은 쿼리 문자열 매개변수를 사용할 수 있다.
+
+쿼리 문자열의 모든 선택적 매개변수에 의미 있는 기본 값을 제공한다.
+예를 들어, 페이지를 구현하는 경우 `limit` 매개변수를 10으로, `offset` 매개변수를 0으로 설정하고,
+주문을 구현하는 경우 정렬 매개변수를 리소스의 키로 설정하고,
+프로젝션을 지원하는 경우 `fields` 매개 변수를 리소스의 모든 필드로 설정한다.
+
+### 대용량 이진 리소스에 대한 부분 응답 지원
+
+리소스에 파일 또는 이미 같은 대용량 이진 필드가 포함될 수 있다.
+신뢰할 수 없는 간헐적 연결에 의한 문제를 해결하고 응답시간을 개선하려면 이러한 리소스를 chunk로 검색할 수 있는 방안을 고려해야 한다.
+
+이렇게 하려면 Web API가 대용량 리소스의 GET 요청에 대해 Accept-Ranges 헤더를 지원해야 한다.
+이 헤더는 GET 작업이 부분 요청을 지원한다는 것을 나타낸다.
+
+또한 이런 리소스에 대해 HTTP HEAD 요청을 구현하는 방안을 고려해야 한다.
+HEAD 요청은 리소스에 대해 설명하는 HTTP 헤더만 반환하고 메시지 본문이 비어있다는 점만 빼면 GET 요청과 비슷하다.
+
+클라이언트 애플리케이션은 부분적인 GET 요청을 사용하여 리소스를 가져올지 여부를 결정하는 HEAD 요청을 사용할 수 있다.
+
+```http
+HEAD https://adventure-works.com/products/10?fields=productImage HTTP/1.1
+```
+
+다음은 응답메시지 예제이다
+
+```http
+HTTP/1.1 200 OK
+
+Accept-Ranges: bytes
+Content-Type: image/jpeg
+Content-Length: 4580
+```
+
+Content-Length 헤더는 총 리소스 크기를 제공하고, Accept-Ranges 헤더는 해당 GET 작업이 일부결과를 지원함을 나타낸다.
+클라이언트 애플리케이션은 이 정보를 사용하여 더 작은 chunk에서 이미지를 검색할 수 있다.
+
+첫 번째 요청은 범위 헤더를 사용하여 처음 2500 바이트를 가져온다.
+
+```http
+GET https://adventure-works.com/products/10?fields=productImage HTTP/1.1
+Range: bytes=0-2499
+```
+
+응답 메시지는 HTTP 상태코드 206(Partial Content)을 반환하여 이 응답이 부분 응답임을 나타낸다.
+Content-Length 헤더는 메시지 본문에 반환된 실제 바이트 수를 지정하며, Content-Range 헤더는 해당 바이트가 리소스의 어느 부분 인지를 나타낸다.
+
+```http
+HTTP/1.1 206 Partial Content
+
+Accept-Ranges: bytes
+Content-Type: image/jpeg
+Content-Length: 2500
+Content-Range: bytes 0-2499/4580
+
+...
+```
+
+### HATEOAS를 사용한 관련 리소스 탐색
