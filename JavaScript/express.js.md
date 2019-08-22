@@ -79,12 +79,30 @@ declare global {
 {
   "files": ["types/express.d.ts"]
 }
-
 // OR
-
 {
   "include": ["src/**/*", "types/*"]
 }
 ```
 
-OR `src` 경로 아래에 `express.d.ts`를 넣는다
+> ts-node에서 타입인식이 되지 않는 경우: <https://github.com/TypeStrong/ts-node#help-my-types-are-missing>
+
+`tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "typeRoots" : ["./node_modules/@types", "./types"]
+  }
+}
+```
+
+경로는 다음과 같음
+
+```txt
+<project_root>/
+-- tsconfig.json
+-- typings/
+  -- <module_name>/
+    -- index.d.ts
+```
