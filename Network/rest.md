@@ -339,3 +339,126 @@ Content-Range: bytes 0-2499/4580
 ```
 
 ### HATEOAS를 사용한 관련 리소스 탐색
+
+REST를 실행하는 기본 동기 중 하나는 URI 체계를 미리 알고 있지 않아도 전체 리소스 집합을 탐색할 수 있다는 것이다.
+각 HTTP GET 요청은 응답에 포함된 하이퍼링크를 통해 요청된 개체와 직접 관련된 리소스를 찾는데 필요한 정보를 반환하고,
+각 리소스에 대해 사용할 수 있는 작업을 설명하는 정보도 제공되어야 한다.
+
+이 원칙을 HATEOAS(Hypertext as the Engine of Application State)라고 한다.
+
+> HATEOAS 원칙을 모델링 하는 표준 사양은 없다
+
+예를 들어, 주문과 고객 간의 관계를 처리하기 위해 주문 고객에게 사용가능한 작업을 식별하는 링크를 포함할 수 있다.
+
+```json
+{
+  "orderID":3,
+  "productID":2,
+  "quantity":4,
+  "orderValue":16.60,
+  "links":[
+    {
+      "rel":"customer",
+      "href":"https://adventure-works.com/customers/3",
+      "action":"GET",
+      "types":["text/xml","application/json"]
+    },
+    {
+      "rel":"customer",
+      "href":"https://adventure-works.com/customers/3",
+      "action":"PUT",
+      "types":["application/x-www-form-urlencoded"]
+    },
+    {
+      "rel":"customer",
+      "href":"https://adventure-works.com/customers/3",
+      "action":"DELETE",
+      "types":[]
+    },
+    {
+      "rel":"self",
+      "href":"https://adventure-works.com/orders/3",
+      "action":"GET",
+      "types":["text/xml","application/json"]
+    },
+    {
+      "rel":"self",
+      "href":"https://adventure-works.com/orders/3",
+      "action":"PUT",
+      "types":["application/x-www-form-urlencoded"]
+    },
+    {
+      "rel":"self",
+      "href":"https://adventure-works.com/orders/3",
+      "action":"DELETE",
+      "types":[]
+    }
+  ]
+}
+```
+
+`links` 배열에는 링크 집합이 있다. 각 링크는 관련 entity에 대한 작업을 나타낸다.
+각 링크의 데이터에는 관계, URI, HTTP 메소드 및 지원되는 MIME 형식이 포함된다.
+
+또한 `links` 배열은 검색된 리소스 자체에 대한 자체 참조 정보를 포함한다. 이러한 관계는 self 관계이다.
+
+리소스의 상태에 따라 반환되는 링크 집합이 달라질 수 있다. 이는 애플리케이션 상태 엔진이 의미하는 바이다.
+
+### RESTful 웹 API 버전 관리
+
+Web API가 정적 상태를 유지할 가능성은 매우 낮다.
+비즈니스 요구 사항이 변경됨에 따라 자원의 새 컬렉션이 추가될 수 있으므로, 리소스 간의 관계와 리소스 구조가 수정될 수 있다.
+
+Web API를 업데이트하는 동안 해당 변경이 API를 사용하는 클라이언트 애플리케이션에 미치는 영향을 고려해야 한다.
+
+버전 관리를 사용하면 Web API는 자신이 표시하는 기능과 리소스를 나타낼 수 있으며,
+클라이언트 애플리케이션은 리소스나 기능의 특정 버전으로 요청을 제출할 수 있다.
+
+#### 버전 관리 없음
+
+가장 간단한 방법이다. 중요한 변경 내용을 새 리소스 또는 새 연결으로 나타낼 수 있다.
+
+#### URI 버전 관리
+
+API를 수정하거나 리소스 체계를 변경할 때마다 각 리소스의 URI에 버전 번호를 추가한다.
+
+`https://adventure-works.com/v2/customers/3`
+
+이 버전 관리 메커니즘은 간단하지만 API 확장됨에 따라 복잡도가 증가한다.
+
+서버가 다양한 버전을 지원해야 하며, URI가 버전에 따라 달라져서는 안된다.
+또한 이 체계는 모든 링크가 자신의 URI에 버전 번호를 포함하므로 HATEOAS 구현을 복잡하게 만든다.
+
+#### 쿼리 문자열 버전 관리
+
+여러 URI를 제공하는 대신 HTTP 요청의 쿼리 문자열에 `https://adventure-works.com/customers/3?version=2` 같은 매개변수로 리소스의 버전을 지정할 수 있다.
+
+이 접근 방식은 같은 리소스가 언제나 같은 URI에서 검색된다는 의미 체계 장점이 있지만, 쿼리 문자열 구문을 분석하고 처리하여야 한다.
+또한 HATEOAS 구현이 URI 버전 관리 메커니즘으로 구현할 때와 마찬가지로 복잡하다.
+
+> 일부 구형 웹 브라우저와 웹 프록시는 URI에 쿼리 문자열을 포함하는 응답을 캐싱하지 않는다
+
+#### 헤더 버전 관리
+
+버전 번호를 쿼리 문자열에 추가하지 않고 리소스 버전을 나타내는 사용자 지정 헤더를 사용할 수 있다.
+이 접근 방식을 사용하려면 클라이언트 애플리케이션이 적절한 헤더를 요청에 추가해야 한다. (생략시 버전1)
+
+```http
+GET https://adventure-works.com/customers/3 HTTP/1.1
+Custom-Header: api-version=1
+```
+
+이전의 접근법과 마찬가지로 HATEOAS를 구현하려면 모든 링크에 사용자 정의 헤더를 포함해야 한다.
+
+### Open API Initiative
+
+[Open API Initiative](https://www.openapis.org/)는 REST API 설명을 표준화하기 위해 만들어졌다.
+Swagger 2.0 사양의 명칭이 OAS(Open API Specification)로 바뀐 후 Open API Initiative에 추가되었다.
+
+- Open API 사양에 REST API 디자인에 관한 독자적 지침이 있다
+- Open API에서는 인터페이스를 먼저 디자인 한 후 구현을 작성한다
+- Swagger 같은 도구는 인터페이스 문서를 생성할 수 있다
+
+## 참고
+
+MS REST API 지침: <https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md>
