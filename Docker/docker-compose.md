@@ -77,9 +77,7 @@ Commands:
   version       Show the Docker-Compose version information
 ```
 
-## Compose File (v3)
-
-### examples
+## Compose File (v3) example
 
 ```yml
 version: "3.7"
@@ -175,3 +173,14 @@ networks:
 volumes:
   db-data:
 ```
+
+## Configuration reference
+
+compose 파일은 service, networks, volumes를 정의하는 yaml 파일이다.
+compose 파일의 기본 경로는 `./docker-compose.yml`이다.
+
+서비스 정의는 각 컨테이너가 시작할 때 서비스에 적용되는 설정이며, 이는 `docker container create` 명령 매개변수에 전달하는 것과 유사하다.
+마찬가지로 네트워크, 볼륨 정의는 `docker network create` 및 `docker volumn create`에 매개변수를 전달하는 것과 유사하다.
+
+`docker container create`와 마찬가지로 `CMD`, `EXPOSE`, `VOLUME`, `ENV`와 같은 Dockerfile에 지정된 옵션은
+기본적으로 인정되므로 `docker-compose.yml`에서 다시 지정할 필요가 없다.
