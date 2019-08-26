@@ -10,6 +10,8 @@
 
 [Nodemon과 debugger attaching](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_attaching-to-nodejs)
 
+npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/register\" src/main.ts",`
+
 `.vscode/launch.json`
 
 ```json
