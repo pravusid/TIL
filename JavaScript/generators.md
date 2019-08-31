@@ -1,6 +1,8 @@
 # Generators
 
-<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of>
+- <https://javascript.info/generators>
+- <https://javascript.info/async-iterators-generators>
 
 ## 개요
 
@@ -66,3 +68,121 @@ const iterableObj = {
 ```
 
 ## 제너레이터 합성
+
+제너레이터 합성은 제너레이터를 상호포함하는 특수 기능이다.
+
+예를 들어, 다음과 같은 일련의 숫자를 생성하는 함수가 있다고 하자.
+
+```js
+function* generateSequence(start, end) {
+  for (let i = start; i <= end; i++) yield i;
+}
+```
+
+한 제너레이터를 다른 제너레이터에 포함(embed)하기 위한 `yield*` 구문이 존재한다.
+
+```js
+function* generatePasswordCodes() {
+  // 0..9
+  yield* generateSequence(48, 57);
+
+  // A..Z
+  yield* generateSequence(65, 90);
+
+  // a..z
+  yield* generateSequence(97, 122);
+}
+
+let str = '';
+
+for(let code of generatePasswordCodes()) {
+  str += String.fromCharCode(code);
+}
+
+console.log(str); // 0..9A..Za..z
+```
+
+`yield*` 지시문은 실행을 다른 제너레이터로 위임한다.
+
+결과는 중첩된 저너레이터에서 코드를 인라인으로 사용하는 것과 같다.
+
+```js
+function* generateAlphaNum() {
+  // yield* generateSequence(48, 57);
+  for (let i = 48; i <= 57; i++) yield i;
+
+  // yield* generateSequence(65, 90);
+  for (let i = 65; i <= 90; i++) yield i;
+
+  // yield* generateSequence(97, 122);
+  for (let i = 97; i <= 122; i++) yield i;
+}
+```
+
+## 양방향 데이터 처리
+
+제너레이터는 결과를 외부로 반환할 뿐만 아니라 제너레이터 내부로 값을 전달할 수도 있다.
+
+내부로 값을 전달하기 위해서 `generator.next(arg)` 구문을 사용한다.
+전달한 인자의 값은 `yield`의 결과값이 된다.
+
+```js
+function* gen() {
+  let ask1 = yield "2 + 2 = ?";
+  console.log(ask1); // 4
+
+  let ask2 = yield "3 * 3 = ?"
+  console.log(ask2); // 9
+}
+
+let generator = gen();
+console.log(generator.next().value); // "2 + 2 = ?"
+console.log(generator.next(4).value); // "3 * 3 = ?"
+console.log(generator.next(9).done); // true
+```
+
+- 첫 번째 `next()`는 첫 `yield`까지 실행된다
+- 결과 `'2 + 2 = ?'` 문자열을 외부로 반환한다
+- 두 번째 `next(4)`는 인자 `4`를 첫 번째 `yield`로 전달하고 실행을 재개한다
+- 두 번째 `yield`에 도착하면 외부로 값을 반환한다
+- 세 번째 `next(9)`는 인자 `9`를 두 번째 `yield`로 전달하고 실행을 재개한다
+- 함수의 마지막 까지 실행되고 `done: true`가 된다
+
+> 각각의 `next(value)`(첫 번째 호출을 제외하고) 호출은 인자 값을 제너레이터로 전달해서 현재 `yield`의 결과가 되고 다음 `yield`의 결과를 반환받는다.
+
+## `generator.throw`
+
+`yield`에 오류를 전달하려면 `generator.throw(error)`를 호출하면 된다.
+이 경우 `error`는 `yield`가 위치한 라인에서 `throw`된다.
+
+```js
+function* gen() {
+  try {
+    let result = yield "2 + 2 = ?"; // Error in this line
+    console.log("이 곳은 실행되지 않음");
+  } catch(e) {
+    console.log(e); // Error: Some error message
+  }
+}
+
+let generator = gen();
+let question = generator.next().value;
+generator.throw(new Error("Some error message"));
+```
+
+제너레이터 내부에서 에러가 처리되지 않으면 에러는 코드를 실행한 위치로 던져진다.
+
+```js
+function* generate() {
+  let result = yield "2 + 2 = ?"; // Error in this line
+}
+
+let generator = generate();
+let question = generator.next().value;
+
+try {
+  generator.throw(new Error("Some error message"));
+} catch(e) {
+  alert(e); // Error: Some error message
+}
+```
