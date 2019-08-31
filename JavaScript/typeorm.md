@@ -121,16 +121,20 @@ const connection = await createConnection(connectionOptions);
 db 연결 설정 파일을 변경할 수 있다
 
 ```ts
-const env = process.env.NODE_ENV;
-const configName = env === 'production' ? 'ormconfig' : `ormconfig.${env}`;
-const connectionOptions = new ConnectionOptionsReader({ configName }).all();
-const [connectionOption] = await connectionOptions;
+import { createConnection, ConnectionOptionsReader } from 'typeorm';
+import { CustomNamingStrategy } from './custom.naming.strategy';
 
-return createConnection(
-  Object.assign(connectionOption, {
-    namingStrategy: new CustomNamingStrategy(),
-  }),
-);
+export const connectToDatabase = async (env?: string) => {
+  const configName = env ? `ormconfig.${env}` : 'ormconfig';
+  const connectionOptions = new ConnectionOptionsReader({ configName }).all();
+  const [connectionOption] = await connectionOptions;
+
+  return createConnection(
+    Object.assign(connectionOption, {
+      namingStrategy: new CustomNamingStrategy(),
+    }),
+  );
+};
 ```
 
 ### Custom Naming Stragegy
