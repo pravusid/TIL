@@ -4,7 +4,7 @@
 - <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol>
 - <http://hacks.mozilla.or.kr/2015/09/es6-in-depth-symbols/>
 
-`Symbol`은 ES6에서 추가된 Primative type이다.
+`Symbol`은 ES6에서 추가된 primitive type이다.
 
 **심볼** 원시 데이터 타입(primitive data type)은,
 클래스나 객체 형식(objet type)의 내부에서만 접근할 수 있도록 전용(private) 객체 속성의 키(key)로 사용된다.
