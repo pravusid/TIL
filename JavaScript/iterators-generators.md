@@ -1,29 +1,16 @@
-# Generators
+# Iterators & Generators
 
-- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols>
+- <https://javascript.info/iterable>
 - <https://javascript.info/generators>
 - <https://javascript.info/async-iterators-generators>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of>
 
 ## 개요
 
-제너레이터는 필요에 따라 순차적으로 여러 값을 반환(`yield`)할 수 있다.
+iterable 객체는 배열을 일반화 한 것이다. `for..of` 반복문에서 모든 유형의 iterable 객체를 순회할 수 있다.
 
-## 제너레이터 함수
-
-제너레이터를 생성하기위해서 `function*` 문법을 사용한다.
-
-> `function* f(…)`, `function *f(…)`: 두 문법 모두 작동하지만 전자의 형태로 사용한다
-
-제너레이터 함수가 호출되면 일반함수처럼 실행되지 않고 제너레이터 객체를 반환한다.
-
-제너레이터는 `next()` 메소드를 포함한다.
-`next()` 메소드가 호출되면 가장 가까운 `yield <value>`문 까지 실행한다. (value는 생략가능하고 생략되면 `undefined` 이다)
-`yield`까지 실행이 끝나면 실행이 멈추고 value를 반환한다.
-
-`next()` 메소드 실행결과는 다음 프로퍼티를 포함한 객체이다
-
-- `value`: yielded value
-- `done`: 함수 코드가 모두 실행되었다면 `true`, 이외의 경우 `false`
+generator는 필요에 따라 **순차적으로** 여러 값을 반환(`yield`)할 수 있다.
 
 ## `iterable`
 
@@ -48,6 +35,25 @@ const iterableObj = {
   }
 };
 ```
+
+## Generator functions
+
+제너레이터를 생성하기위해서 `function*` 문법을 사용한다.
+
+> `function* f(…)`, `function *f(…)`: 두 문법 모두 작동하지만 전자의 형태로 사용한다
+
+제너레이터 함수가 호출되면 일반함수처럼 실행되지 않고 제너레이터 객체를 반환한다.
+
+제너레이터는 `next()` 메소드를 포함한다.
+`next()` 메소드가 호출되면 가장 가까운 `yield <value>`문 까지 실행한다. (value는 생략가능하고 생략되면 `undefined` 이다)
+`yield`까지 실행이 끝나면 실행이 멈추고 value를 반환한다.
+
+`next()` 메소드 실행결과는 다음 프로퍼티를 포함한 객체이다
+
+- `value`: yielded value
+- `done`: 함수 코드가 모두 실행되었다면 `true`, 이외의 경우 `false`
+
+## Generators == iterable
 
 제너레이터는 `iterable`이다.
 따라서 `for..of` 반복문에서 사용하거나 spread operator 등을 사용할 수 있다.
@@ -185,4 +191,95 @@ try {
 } catch(e) {
   alert(e); // Error: Some error message
 }
+```
+
+## Async iterators
+
+Async iterator는 일반 iterator와 약간의 구문차이가 있다.
+
+객체를 비동기 iterable로 만드려면
+
+- `Symbol.iterator` 대신 `Symbol.asyncIterator`를 사용한다
+- `next()` 메소드는 `Promise`를 반환해야 한다
+- 비동기 iterable을 iterate 하려면 `for await (let item of iterable)` 반복문을 사용한다
+
+```js
+const asyncIterableObj = {
+  from: 1,
+  to: 5,
+  [Symbol.asyncIterator]() {
+    return {
+      current: this.from,
+      last: this.to,
+      async next() {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (this.current <= this.last) {
+          return { done: false, value: this.current++ };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+(async () => {
+  for await (let value of range) {
+    console.log(value); // 1,2,3,4,5
+  }
+})()
+```
+
+> async iterable은 spread 연산자를 사용할 수 없다
+
+## Async generators
+
+제너레이터 내부에서 비동기 코드실행을 기다려야 하는 경우가 있을 수 있다.
+이 경우 비동기 제너레이터에서 `await` 키워드를 사용하면 된다.
+
+```js
+async function* generateSequence(start, end) {
+  for (let i = start; i <= end; i++) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    yield i;
+  }
+}
+
+(async () => {
+  let generator = generateSequence(1, 5);
+  for await (let value of generator) {
+    console.log(value); // 1,2,3,4,5
+  }
+})();
+```
+
+비동기 제너레이터를 순회하려면 `for await..of` 반복문을 사용하면 된다.
+
+비동기 제너레이터의 `generator.next()` 메소드는 `Promise`를 반환한다.
+
+## Async iterables
+
+객체를 `iterable`로 만드려면 `Symbol.iterator`에서 `iterable` 객체를 반환하도록 한다.
+
+앞에서 `iterable` 객체로 제너레이터를 사용하였고, 이 때 `*[Symbol.iterator]()...` 구문을 사용하였다.
+마찬가지로 비동기 제너레이터를 사용하기 위해 `async *[Symbol.asyncIterator]()` 구문을 사용할 수 있다.
+
+```js
+const asyncIterableObj = {
+  from: 1,
+  to: 5,
+  async *[Symbol.asyncIterator]() {
+    for(let value = this.from; value <= this.to; value++) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      yield value;
+    }
+  }
+};
+
+(async () => {
+  for await (let value of range) {
+    console.log(value); // 1,2,3,4,5
+  }
+})();
 ```
