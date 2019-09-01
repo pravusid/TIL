@@ -1,5 +1,7 @@
 # Visual Studio Code
 
+<https://github.com/microsoft/vscode-recipes>
+
 <https://code.visualstudio.com/docs>
 
 ## Debugging
