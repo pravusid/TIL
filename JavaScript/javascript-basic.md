@@ -2,28 +2,48 @@
 
 ## 변수
 
-### 기본타입
+<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures>
 
-- Number: 모든 숫자를 64비트 부동 소수점 형태로 저장
-- String: character 자료형은 별도로 없음, 또한 여러 다른 언어처럼 문자열은 immutable임
-- Boolean
-- undefined(타입이자 값임)
-  - undefined -> 변수를 선언만 하고 값을 할당하지 않음. 즉, 자료형이 결정되지 않은 상태이다.
-  - (선언하지 않은 변수도 콘솔이나 기타 메세지에는 undefined라고 뜨지만, undefined라는 값을 가지는 것은 아니다.)
-- null(null 값)
-  - null -> 변수를 선언하고, 'null'이라는 빈 값을 할당한 경우이다.
-  - 이 '빈 값'의 경우 자료형에 따라 여러가지가 있지만, null은 객체형 데이터 (array, object-의 빈 값을 의미한다)
-  - 문자열(string)의 경우 '', 숫자(number)의 경우 0이 빈값이고, 이들 빈값 모두는 if문에서 false로 형 변환된다.
+### 기본타입(Primitive type)
+
+모든 원시 값은 불변이다. 원시값 자체와, 원시값을 할당한 변수를 혼동하지 않아야 한다.
+변수는 새로운 값을 다시 할당할 수 있지만, 이미 생성한 원시값은 객체, 배열, 함수와는 달리 변형할 수 없다.
+
+- `Number`: 모든 숫자를 64비트 부동 소수점 형태로 저장
+
+- `String`: character 자료형은 별도로 없음, 또한 여러 다른 언어처럼 문자열은 immutable임
+
+- `Boolean`: 참, 거짓 (`true` / `false`)
+
+- `undefined`: 변수를 선언만 하고 값을 할당하지 않음. 즉, 자료형이 결정되지 않은 상태이다
+  - `undefined`는 전역객체의 속성으로 존재한다(`window.undefined`, `global.undefined`)
+  - 전역 스코프에서 `undefined`의 초기 값은 `undefined` 원시 값이다
+  - 선언한 후 값을 할당하지 않은 변수 혹은 값이 주어지지 않은 인수에 자동으로 `undefined` 원시값이 할당된다
+  - 전역 스코프 `undefined` 변수는 쓰기불가이지만 가능한 경우라도 그렇게 하지 않아야 한다
+  - `undefined`는 예약어가 아니므로 전역변수 외에서 식별자로 사용할 수 있지만 그렇게 하지 않아야 한다
+
+- `null`: 변수를 선언하고, 비어있음을 명시적으로 나타내기 위해 'null'이라는 빈 값을 할당한 경우이다
+  - 'null' 값 만을 가질 수 있는 타입임
+  - `null` 리터럴로 'null' 값을 생성할 수 있다
+  - 하위호환을 위해 `typeof null` 연산의 결과값은 `object`이다 (초기 JavaScript의 유산으로 추정됨)
+  - 이 '빈 값'의 경우 자료형에 따라 여러가지가 있다
+    - null은 객체형 데이터의 빈 값 (array, object-의 빈 값을 의미한다)
+    - 문자열(`string`)의 경우 `''`, 숫자(`number`)의 경우 `0`이 빈 값이다
+    - 이들 빈 값 모두는 논리연산에서 `false`로 형 변환된다
+
+- `Symbol`: ES6에서 객체 식별을 위해 추가된 타입
 
 ### 참조타입
 
-자바스크립트에서는 5개의 기본타입을 제외한 모든 값은 객체이다
+자바스크립트에서는 5개의 기본타입을 제외한 모든 값은 객체이다(객체들은 `Object` 기본타입이다)
 
 - Object
 - Array
 - Function
 - Regulation Expression
 - ...
+
+내장 Object: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects>
 
 #### 객체 프로퍼티 읽기/쓰기/갱신/삭제
 
@@ -73,12 +93,12 @@ delete foo.name;
 
 - 산술연산자 : `+ - * / %(나머지) ++ --`
 - 비교연산자 : `==, <=, != ...`
-  - 비교(동등)연산자 == 는 자료형이 다르면 자동 형변환으로 자료형을 강제로 맞춰서 비교하는 비교연산자
+  - 비교(동등)연산자 `==` 는 자료형이 다르면 자동 형변환으로 자료형을 강제로 맞춰서 비교하는 비교연산자
 - 삼항연산자 : `(condition) ? true : false;`
 - Type연산자 : `===`(일치 연산자), `typeof`(타입 연산자)
-  - undefined와 null(object)은 을 비교연산자로 비교하면 true를 반환함
-  - 이 경우 === 연산자(자료형까지 비교)를 사용하면 원하는 결과를 얻을 수 있음
-- `!!`연산자 : 피연산자의 값을 boolean 값으로 반환함
+  - `undefined`와 `null`(object)은 을 비교연산자로 비교하면 `true`를 반환함
+  - 이 경우 `===` 연산자(자료형까지 비교)를 사용하면 원하는 결과를 얻을 수 있음
+- `!!`연산자 : 피연산자의 값을 `boolean` 값으로 반환함
 
 ## 제어문
 
