@@ -7,10 +7,9 @@ toJSON() {
 
   Object.entries(Object.getOwnPropertyDescriptors(proto))
     .filter(([key, descriptor]) => typeof descriptor.get === 'function')
-    .map(([key, descriptor]) => {
+    .forEach(([key, descriptor]) => {
       if (descriptor && key[0] !== '_') {
-        const val = (this as any)[key];
-        jsonObj[key] = val;
+        jsonObj[key] = (this as any)[key];
       }
     });
 
