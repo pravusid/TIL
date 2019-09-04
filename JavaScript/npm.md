@@ -18,6 +18,30 @@ npm 5.7.0 이상 사용가능한 커맨드
 
 > When you run ci command, all of the node_modules folder installed by npm is deleted by default, and package is reinstalled based on package-lock.json.
 
+### version in `package.json`
+
+<https://docs.npmjs.com/misc/semver>
+
+`[major, minor, patch]`
+
+- `version`: 정확히 일치하는 버전
+- `>version`: 특정 버전 초과
+- `>=version`: 특정 버전 이상
+- `<version`: 특정 버전 미만
+- `<=version`: 특정 버전 이하
+- `~version`: (tilde) minor 있으면 patch 변경가능, minor 없으면 minor 변경가능, m.m.p 인 경우 해당 버전 이상
+- `^version`: (caret) m.m.p 버전에서 0이 아닌 가장 왼쪽 버전은 변경 불가, m.m.p 인 경우 해당 버전 이상
+- `1.2.x`: 1.2.0, 1.2.1, etc ... 그러나 1.3.0 불가능
+- `http://...`: <https://docs.npmjs.com/files/package.json#urls-as-dependencies>
+- `*`: 아무 버전이나 가능
+- `""`: 비어있는 문자열 `*`와 같음
+- `version1 - version2`: between 버전1 and 버전2
+- `range1 || range2`: 두 버전 범위중 하나
+- `git...`: <https://docs.npmjs.com/files/package.json#git-urls-as-dependencies>
+- `user/repo`: <https://docs.npmjs.com/files/package.json#github-urls>
+- `tag`: <https://docs.npmjs.com/cli/dist-tag>
+- `path/path/path`: <https://docs.npmjs.com/files/package.json#local-paths>
+
 ### global modules 확인
 
 `npm ls -g --depth=0`
