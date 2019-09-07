@@ -61,3 +61,24 @@ mysql의 집계함수 결과값은 DECIMAL/DOUBLE로 출력되는데, 두 드라
   decimalNumbers: true;
 }
 ```
+
+## issues in node-mysql2 with Jest
+
+### `Encoding not recognized`
+
+<https://github.com/sidorares/node-mysql2/issues/489>
+
+> 다음 인코딩 불러오기 코드를 database connection 생성 코드 상단에 입력한다
+
+JavaScript
+
+```js
+require('iconv-lite').encodingExists('cesu8');
+```
+
+TypeScript
+
+```ts
+import * as iconv from 'iconv-lite';
+iconv.encodingExists('cesu8');
+```
