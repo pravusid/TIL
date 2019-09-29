@@ -576,4 +576,290 @@ return {
 이제 새로운 상태를 반영하도록 UI를 업데이트 할 수 있다.
 만약 `react-redux`와 같은 바인딩을 사용하는 경우 `component.setState(newState)`가 호출된다.
 
-### React Redux
+## React Redux
+
+<https://react-redux.js.org/introduction/quick-start>
+
+redux는 react와 직접적 관련이 없다.
+redux 앱은 Angular, Ember, vanilla JavaScript와 함께 만들 수 있다.
+
+### 기본 사용법
+
+#### Providing the Store
+
+처음 해야할 일은 app이 `store`를 사용할 수 있도록 하는 것이다. 앱을 react-redux가 제공하는 `<Provider />`로 감싼다.
+
+```js
+// index.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import TodoApp from './TodoApp'
+
+import { Provider } from 'react-redux'
+import store from './redux/store'
+
+const rootElement = document.getElementById('root')
+ReactDOM.render(
+  <Provider store={store}>
+    <TodoApp />
+  </Provider>,
+  rootElement
+)
+```
+
+#### Connecting the Components
+
+react-redux는 Redux store 값을 읽을 수 있도록 `connect` 함수를 제공한다(store 값이 변하면 다시 읽는다).
+
+`connect` 함수는 두 인자를 취한다(둘 다 optional 이다)
+
+- `mapStateToProps`
+  - store 상태가 변할 때 마다 호출된다
+  - 전체 store state를 받아서 컴포넌트가 필요로 하는 데이터를 반환해야 한다
+
+- `mapDispatchToProps`
+  - 파라미터는 함수 또는 객체가 될 수 있다
+  - 함수인 경우 컴포넌트 생성시 한 번 호출된다. `dispatch`를 인자로 받아서 `dispatch`를 사용하여 액션을 보내는 함수로 구성된 객체를 반환해야 한다.
+  - action creators로 구성된 객체인 경우, 각 action creator는 호출될 때 자동으로 action을 dispatch하는 prop 함수로 전환된다.
+
+일반적으로 `connect`는 다음과 같이 사용된다
+
+```js
+const mapStateToProps = (state, ownProps) => ({
+  // ... computed data from state and optionally ownProps
+})
+
+const mapDispatchToProps = {
+  // ... normally is an object full of action creators
+}
+
+// `connect`는 wrapping할 컴포넌트를 받아들일 새로운 함수를 반환한다
+const connectToStore = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+// connectToStore 함수는 연결된 wrapper 컴포넌트를 반환한다
+const ConnectedComponent = connectToStore(Component)
+
+// 일반적으로 다음 방법을 통해 두 작업을 한번에 처리할 수 있다
+connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component)
+```
+
+먼저 `<AddTodo />`를 다루어보자. 새로운 할 일을 추가하려면 `store`에 대한 변경사항을 트리거해야 한다.
+이를 위해서는 actions을 store에 `dispatch` 할 수 있어야 한다.
+
+`addTodo` action creator는 다음과 같다
+
+```js
+// redux/actions.js
+import { ADD_TODO } from './actionTypes'
+
+let nextTodoId = 0
+export const addTodo = content => ({
+  type: ADD_TODO,
+  payload: {
+    id: ++nextTodoId,
+    content
+  }
+})
+
+// ... other actions
+```
+
+action creator를 `connect`로 전달하면, 컴포넌트는 이를 prop으로 받고, 자동으로 호출되었을 때 action을 dispatch 한다.
+
+```js
+// components/AddTodo.js
+
+// ... other imports
+import { connect } from 'react-redux'
+import { addTodo } from '../redux/actions'
+
+class AddTodo extends React.Component {
+  // ... component implementation
+}
+
+export default connect(
+  null,
+  { addTodo }
+)(AddTodo)
+```
+
+`<AddTodo />` 컴포넌트는 부모 컴포넌트인 `<Connect(AddTodo) />`로 감싸진다.
+한편, `<AddTodo />`는 하나의 prop으로 `addTodo` action을 얻는다.
+
+`addTodo` 액션을 dispatch 하고 입력을 초기화 하기 위해서 `handleAddTodo` 함수를 구현할 필요가 있다.
+
+```js
+// components/AddTodo.js
+
+import React from 'react'
+import { connect } from 'react-redux'
+import { addTodo } from '../redux/actions'
+
+class AddTodo extends React.Component {
+  // ...
+
+  handleAddTodo = () => {
+    // dispatches actions to add todo
+    this.props.addTodo(this.state.input)
+
+    // sets state back to empty string
+    this.setState({ input: '' })
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          onChange={e => this.updateInput(e.target.value)}
+          value={this.state.input}
+        />
+        <button className="add-todo" onClick={this.handleAddTodo}>
+          Add Todo
+        </button>
+      </div>
+    )
+  }
+}
+
+export default connect(
+  null,
+  { addTodo }
+)(AddTodo)
+```
+
+이제 `<AddTodo />`는 store에 연결되었다. 할 일을 추가하면 변경을 store에 전달하는 action이 dispatch된다.
+
+`<TodoList />` 컴포넌트는 할 일 목록을 출력하는 책임을 갖고있다. 따라서 store로 부터 데이터를 읽어와야 한다.
+이를 위해 `connect`를 store의 어떤 부분을 가져와야 하는지를 설명하는 `mapStateToProps` 파라미터와 함께 사용한다.
+
+`<Todo />` 컴포넌트는 todo 아이템을 props로 갖는다.
+우리는 정보를 `todos`의 `byIds` 필드로부터 가져온다.
+그러나 `allIds` 필드에 있는 작업을 어떤 순서로 렌더링 해야 하는지 나타내는 정보도 필요하다.
+
+`mapStateToProps` 함수는 다음과 같다
+
+```js
+// components/TodoList.js
+
+// ...other imports
+import { connect } from "react-redux";
+
+const TodoList = // ... UI component implementation
+
+const mapStateToProps = state => {
+  const { byIds, allIds } = state.todos || {};
+  const todos =
+    allIds && allIds.length
+      ? allIds.map(id => (byIds ? { ...byIds[id], id } : null))
+      : null;
+  return { todos };
+};
+
+export default connect(mapStateToProps)(TodoList);
+```
+
+정확히 이 작업을 수행하는 selector를 불러와서 사용할 수 있다
+
+```js
+// redux/selectors.js
+
+export const getTodosState = store => store.todos
+
+export const getTodoList = store =>
+  getTodosState(store) ? getTodosState(store).allIds : []
+
+export const getTodoById = (store, id) =>
+  getTodosState(store) ? { ...getTodosState(store).byIds[id], id } : {}
+
+export const getTodos = store =>
+  getTodoList(store).map(id => getTodoById(store, id))
+
+
+// components/TodoList.js
+
+// ...other imports
+import { connect } from "react-redux";
+import { getTodos } from "../redux/selectors";
+
+const TodoList = // ... UI component implementation
+
+export default connect(state => ({ todos: getTodos(state) }))(TodoList);
+```
+
+selector 함수에서 복잡한 조회 또는 데이터 계산을 캡슐화 하는 것이 좋다.
+또한 [Reselect](https://github.com/reduxjs/reselect)를 사용하여 불필요한 작업을 생략할 수 있는 momoized selector를 작성할 수 있다.
+
+이제 `<TodoList />`가 store와 연결되었다.
+할 일 목록을 받아서 그 위에 매핑한 다음, 각 할 일을 `<Todo />` 구성요소에 전달해야 한다. `<Todo />`는 차례로 화면에 렌더링된다.
+
+#### Common ways of calling `connect`
+
+어떤 종류의 컴포넌트를 사용하는지에 따라 `connect`를 호출하는 다양한 방법이 있다.
+
+| | store 구독하지 않음 | store 구독함 |
+| --- | --- | --- |
+| Action Creators 주입하지 않음 | `connect()(Component)` | `connect(mapStateToProps)(Component)` |
+| Action Creators 주입 | `connect(null, mapDispatchToProps)(Component)` | `connect(mapStateToProps, mapDispatchToProps)(Component)` |
+
+##### store를 구독하지도 않고 action creators를 주입하지도 않는 경우
+
+`connect`를 아무런 인자없이 사용하는 경우 컴포넌트는
+
+- store가 변경되어도 재렌더링 하지 않음
+- 수동으로 action을 dispatch 하는데 사용할 수 있는 `props.dispatch`를 받는다
+
+```js
+// ... Component
+export default connect()(Component) // Component will receive `dispatch` (just like our <TodoList />!)
+```
+
+##### store를 구독하지만 action creators를 주입하지 않는 경우
+
+`connect`를 `mapStateToProps` 인자만 함께 사용하는 경우 컴포넌트는
+
+- `mapStateToProps`가 store에서 추출한 값을 구독하고, 해당 값이 변경되는 경우 리렌더링한다
+- 수동으로 action을 dispatch 하는데 사용할 수 있는 `props.dispatch`를 받는다
+
+```js
+// ... Component
+const mapStateToProps = state => state.partOfState
+export default connect(mapStateToProps)(Component)
+```
+
+##### store를 구독하지 않지만 action creators는 주입하는 경우
+
+`connect`를 `mapDispatchToProps` 인자만 함께 사용하는 경우 컴포넌트는
+
+- store가 변경되어도 재렌더링 하지 않음
+- `mapDispatchToProps`와 함께 주입한 각 action creators를 props로 받아, 호출되면 자동으로 action을 dispatch함
+
+```js
+import { addTodo } from './actionCreators'
+// ... Component
+export default connect(
+  null,
+  { addTodo }
+)(Component)
+```
+
+##### store를 구독하고 action creators도 주입하는 경우
+
+`connext`를 `mapStateToProps`와 `mapDispatchToProps` 함께 사용하는 경우 컴포넌트는
+
+- `mapStateToProps`가 store에서 추출한 값을 구독하고, 해당 값이 변경되는 경우 리렌더링한다
+- `mapDispatchToProps`와 함께 주입한 각 action creators를 props로 받아, 호출되면 자동으로 action을 dispatch함
+
+```js
+import * as actionCreators from './actionCreators'
+// ... Component
+const mapStateToProps = state => state.partOfState
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Component)
+```
