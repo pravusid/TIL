@@ -127,14 +127,16 @@ CREATE TABLE test(
 
 ## ALTER TABLE
 
+COLUMN 변경
+
 ```sql
-ALTER TABLE <TABLE> ADD <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'];
+ALTER TABLE <TABLE> ADD <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'] [FIRST | AFTER <COLUMN_NAME>];
 ALTER TABLE <TABLE> MODIFY COLUMN <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'];
 ALTER TABLE <TABLE> RENAME COLUMN <COLUMN_NAME> TO <NEW_COLUMN_NAME>;
 ALTER TABLE <TABLE> DROP COLUMN <COLUMN_NAME>;
 ```
 
-COLUMN 순서 변경
+COLUMN 순서만 변경
 
 ```sql
 -- 다른COLUMN 다음으로 이동
@@ -154,6 +156,61 @@ INSERT INTO tbl_temp2 (fld_id)
   SELECT tbl_temp1.fld_order_id
   FROM tbl_temp1
   WHERE tbl_temp1.fld_order_id > 100;
+```
+
+### transaction
+
+```sql
+START TRANSACTION [transaction_characteristic [, transaction_characteristic] ...]
+
+BEGIN [WORK]
+COMMIT [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
+ROLLBACK [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
+```
+
+transaction_characteristic
+
+- `WITH CONSISTENT SNAPSHOT`
+  - The WITH CONSISTENT SNAPSHOT modifier starts a consistent read for storage engines that are capable of it.
+  - This applies only to InnoDB. The effect is the same as issuing a START TRANSACTION followed by a SELECT from any InnoDB table.
+  - The WITH CONSISTENT SNAPSHOT modifier does not change the current transaction isolation level
+  - so it provides a consistent snapshot only if the current isolation level is one that permits a consistent read.
+  - The only isolation level that permits a consistent read is REPEATABLE READ.
+  - For all other isolation levels, the WITH CONSISTENT SNAPSHOT clause is ignored.
+  - A warning is generated when the WITH CONSISTENT SNAPSHOT clause is ignored.
+
+- access mode
+  - `READ WRITE`
+  - `READ ONLY`
+
+auto commit 조회/수정
+
+```sql
+select @@AUTOCOMMIT;
+SET AUTOCOMMIT=FALSE;
+```
+
+#### isolation level
+
+- READ UNCOMMITTED
+- READ COMMITTED
+- REPEATABLE READ (기본값)
+- SERIALIZABLE
+
+isolation level 조회
+
+```sql
+SHOW VARIABLES WHERE VARIABLE_NAME='tx_isolation';
+```
+
+### UPDATE FROM SELECT
+
+```sql
+UPDATE
+  tablename1 AS t1
+  JOIN tablename2 AS t2 ON join_condition
+SET assignment_list
+[WHERE where_condition];
 ```
 
 ## 집계함수
