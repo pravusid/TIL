@@ -834,3 +834,71 @@ MENTOR(Measure, Explain, Nominate, Test, Optimize, Rebuild)를 사용한다.
 - SQLite: VACUUM
 
 ## 모르는 것에 대한 두려움
+
+데이터베이스의 어떤 데이터에 값이 없는 것은 피할 수 없다. SQL은 특수한 값인 `NULL`을 지원한다.
+
+### 안티패턴: NULL을 일반 값처럼 사용
+
+대부분의 프로그래밍 언어와 달리, SQL에서는 NULL을 0이나 false 또는 빈문자열과 다른 특별한 값으로 취급한다.
+(Oracle, Sybase에서는 NULL을 문자열로 처리할 때 길이 0인 문자열과 동일하다)
+
+- 수식에서 NULL 사용
+  - NULL 값을 가지는 컬럼이나 수식에 대해 산술연산을 수행하면 NULL이 반환된다.
+  - NULL은 0과 같지 않다. 또한 NULL은 길이가 0인 문자열과도 같지 않다.
+  - NULL은 false와도 같지 않은데, NULL이 들어간 진위판별식은 AND, OR, NOT을 사용하더라도 항상 NULL이다.
+
+- NULL을 가질 수 있는 컬럼 검색
+  - 검색 조건을 지정했을 때 해당 컬럼이 NULL인 행은 반환하지 않는다
+  - NULL과는 어떤 비교를 해도 결과가 true/false가 아닌 NULL이기 때문이다
+
+- 쿼리 파라미터로 NULL 사용
+  - 파라미터를 받는 SQL에서는 NULL을 다른 일반 값처럼 사용하기 어렵다
+
+문제 회피를 위해서 많은 경우 데이터베이스에서 NULL을 허용하지 않도록 한다.
+대신, 알수 없거나 적용 불가의 뜻을 의미하는 다른 기본값을 정해둔다.
+
+그러나 NOT NULL을 선언하는 경우는, 해당 컬럼에 값이 없는 상태로 행이 존재할 때가 의미없는 경우여야 한다.
+해당 컬럼을 기준으로 검색을 하거나, 집계를 한다면 할당된 기본값이 사용될 수 있다.
+
+누락된 값은 NULL 이어야 한다.
+
+### 안티패턴 사용이 합당한 경우: NULL을 일반 값처럼 사용
+
+NULL을 사용하는 것은 안티패턴이 아니다.
+NULL을 일반 값처럼 사용하거나 일반 값을 NULL처럼 사용하는 것이 안티패턴이다.
+
+NULL을 일반 값 처럼 취급해야하는 경우 중 하나가 데이터를 import/export 하는 경우이다.
+
+### 해법: 유일한 값으로 NULL을 사용하라
+
+NULL과 관련된 대부분의 문제는 SQL의 세 가지 값 로직의 동작을 제대로 몰라서이다
+
+- 스칼라 수식에서의 NULL
+  - NULL과 다른 유형의 값의 연산 결과는 항상 NULL임
+  - 어떤 값을 모르는 값과 연산하면 결과 값은 모른다 이기 때문
+
+- BOOLEAN 수식에서의 NULL
+  - NULL은 true도 false도 아니다
+  - 그러나 연산결과가 항상 NULL이 나오는 것은 아니다
+    - `NULL AND TRUE` > `NULL`
+    - `NULL AND FALSE` > `FALSE`
+    - `NULL OR TRUE` > `TRUE`
+    - `NULL OR FALSE` > `NULL`
+    - `NOT (NULL)` > `NULL`
+
+- NULL 검색하기
+  - SQL 표준에는 `IS NULL` 연산자가 정의되어 있는데, 피연산자가 NULL 이면 true를 반환한다
+  - `IS NOT NULL`은 피연산자가 NULL이면 false를 반환한다
+  - SQL-99 표준에서는 `IS DISTINCT FROM`이라는 비교연산자가 정의되었다
+    - 이 연산자는 일반 비교연산자인 `<>`와 비슷하게 동작한다
+    - 피연산자가 NULL이더라도 true 또는 false를 반환한다
+    - `IS DISTINCT FROM` 지원은 DBMS마다 다르다 (MySQL의 경우 `<=>`)
+
+- 컬럼을 NOT NULL로 선언
+  - NULL 값이 의미 없는 경우 컬럼에 NOT NULL 제약조건을 선언하는 것이 권장사항이다
+  - 컬럼의 상황에 따라 NULL DEFAULT 값을 설정해야 한다(디폴트가 반드시 있어야 하는 것이 아니다)
+
+- 동적 DEFAULT
+  - `COALESCE()` 함수를 사용해 주어진 컬럼이나 수석, 특정 쿼리에서만 디폴트 값을 설정할 수 있다
+  - 이 함수는 가변인수를 받아 NULL이 아닌 첫 인수를 반환한다
+  - DBMS에 따라 `NVL()`, `IFNULL()` 등의 함수가 동일한 기능을 수행한다
