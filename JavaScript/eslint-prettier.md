@@ -3,7 +3,6 @@
 ## 차이
 
 - [`prettier-eslint`](https://github.com/prettier/prettier-eslint)
-
   - 구분: A JavaScript module exporting a single function
   - 역할: Runs the code (string) through `prettier` then `eslint --fix`. The output is also a string.
   - 사용법: Either calling the function in your code or via [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) if you prefer the command line.
@@ -12,7 +11,6 @@
   - 다른 것 사용필요: No
 
 - [`eslint-plugin-prettier`](https://github.com/prettier/eslint-plugin-prettier)
-
   - 구분: An ESLint plugin
   - 역할: Plugins usually contain implementations for additional rules that ESLint will check for. This plugin uses Prettier under the hood and will raise ESLint errors when your code differs from Prettier's expected output.
   - 사용법: Add it to your `.eslintrc`.
@@ -21,7 +19,6 @@
   - 다른 것 사용필요: You may want to turn off conflicting rules using `eslint-config-prettier`.
 
 - [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier)
-
   - 구분: An ESLint configuration
   - 역할: This config turns off formatting-related rules that might conflict with Prettier, allowing you to use Prettier with other ESLint configs like [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb).
   - 사용법: Add it to your `.eslintrc`.
@@ -92,6 +89,9 @@
   "overrides": [
     {
       "files": ["test/**/*.ts", "test/**/*.tsx"],
+      "parserOptions": {
+        "project": "./tsconfig.spec.json"
+      },
       "env": {
         "jest": true
       },
@@ -164,7 +164,7 @@ plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하
 
 ```json
 {
-  "extends": ["prettier/@typescript-eslint", "plugin:prettier/recommended"]
+  "extends": ["plugin:prettier/recommended", "prettier/@typescript-eslint"]
 }
 ```
 
@@ -211,10 +211,8 @@ prettier-eslint Integration
 ### VSCode 확장 기능
 
 - ESLint
-
   - eslint 포함하지 않으므로 global or local 설치 필요
 
 - Prettier – Code Formatter
-
   - Prettier 확장은 prettier, prettier-eslint, prettier-tslint 포함
   - Prettier 확장은 configuration을 npm global에서 가져올 수 없고 local에서만 가져옴
