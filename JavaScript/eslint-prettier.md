@@ -74,17 +74,14 @@
   "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
   "rules": {
     "class-methods-use-this": "off",
-    "lines-between-class-members": "off",
-    "no-useless-constructor": "off",
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/no-object-literal-type-assertion": "off",
-    "@typescript-eslint/no-parameter-properties": "off",
-    "@typescript-eslint/prefer-interface": "off"
+    "@typescript-eslint/no-parameter-properties": "off"
   },
   "overrides": [
     {
