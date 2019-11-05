@@ -24,8 +24,6 @@
 
 ### modules 다운로드
 
-`yarn` or `npm install`
-
 ## 개발환경 구축
 
 ### 크롬 확장기능 vue-devtools 사용
@@ -34,24 +32,68 @@
 
 ### VSCode Extensions
 
-- Vetur
 - ESLint
+- Prettier
+- Vetur
 
-VSCode Vue Formatting 관련 설정에 추가
+`.vscode/settings.json`
 
 ```json
 {
- "eslint.validate": [
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
     {
       "language": "vue",
       "autoFix": true
-    },
-    {
-      "language": "html",
-      "autoFix": true
-    },
+    }
   ],
-  "vetur.format.defaultFormatter.html": "prettyhtml",
+  "vetur.validation.template": false
+}
+```
+
+eslint 설치
+
+```sh
+npm i -D eslint babel-eslint eslint-plugin-vue
+npm i -D @vue/eslint-config-standard
+```
+
+`.eslintrc.js`
+
+```js
+module.exports = {
+  root: true,
+  env: {
+    node: true
+  },
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: 'babel-eslint'
+  },
+  extends: ['plugin:vue/recommended', '@vue/standard'],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'space-before-function-paren': 'off',
+    'vue/html-self-closing': 'off',
+    'vue/max-attributes-per-line': 'off',
+    'vue/singleline-html-element-content-newline': 'off'
+  }
+}
+```
+
+`.prettierrc`
+
+```json
+{
+  "printWidth": 120,
+  "semi": false,
+  "singleQuote": true,
+  "quoteProps": "consistent",
+  "jsxSingleQuote": true,
+  "endOfLine": "lf"
 }
 ```
 
