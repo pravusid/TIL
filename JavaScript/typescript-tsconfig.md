@@ -1,4 +1,4 @@
-# `tsconfig.json`
+# tsconfig.json
 
 디렉토리에 `tsconfig.json` 파일이 있으면 TypeScript 프로젝트의 루트로 인식된다.
 
