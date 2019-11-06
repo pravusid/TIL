@@ -41,14 +41,7 @@
 ```json
 {
   "editor.formatOnSave": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    {
-      "language": "vue",
-      "autoFix": true
-    }
-  ],
+  "vetur.format.defaultFormatter.html": "prettier",
   "vetur.validation.template": false
 }
 ```
@@ -56,8 +49,10 @@
 eslint 설치
 
 ```sh
-npm i -D eslint babel-eslint eslint-plugin-vue
+npm i -D babel-eslint eslint-plugin-vue eslint
 npm i -D @vue/eslint-config-standard
+npm i -D @vue/eslint-config-prettier
+npm i -D eslint-plugin-prettier prettier
 ```
 
 `.eslintrc.js`
@@ -72,12 +67,11 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  extends: ['plugin:vue/recommended', '@vue/standard'],
+  extends: ['plugin:vue/recommended', '@vue/standard', '@vue/prettier'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'space-before-function-paren': ['error', 'never'],
-    'vue/html-self-closing': ['warn', { html: { void: 'never', normal: 'never', component: 'never' } }],
+    'space-before-function-paren': ['error', { anonymous: 'never', named: 'never', asyncArrow: 'always' }],
     'vue/max-attributes-per-line': 'off',
     'vue/singleline-html-element-content-newline': 'off'
   }

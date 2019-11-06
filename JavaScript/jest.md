@@ -64,12 +64,12 @@ module.exports = {
 
 ```json
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "types": ["jest", "node"],
     "strict": false
   },
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
+  "include": ["src/**/*.spec.*", "*.js"]
 }
 ```
 

@@ -85,7 +85,7 @@
   },
   "overrides": [
     {
-      "files": ["test/**/*.ts", "test/**/*.tsx"],
+      "files": ["src/**/*.spec.*", "*.js"],
       "parserOptions": {
         "project": "./tsconfig.spec.json"
       },
