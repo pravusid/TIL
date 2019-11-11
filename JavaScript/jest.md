@@ -33,6 +33,7 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 
 ```js
 module.exports = {
+  setupFiles: ['dotenv/config'],
   moduleFileExtensions: ["js", "jsx", "json", "ts", "tsx"],
   testRegex: "^.+\\.spec\\.(js|jsx|ts|tsx)$",
   transform: {
