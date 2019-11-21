@@ -19,4 +19,5 @@
 
 [개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/master/.wiki)
 
-TIL 문서를 Remote Repository로 Push하면, pre-push hook(Git)으로 Wiki를 배포합니다
+TIL 문서를 Remote repository master 브랜치로 push하면,
+Github Actions를 사용하여 <https://github.com/pravusid/wiki> 저장소에 Github Pages를 publish 한다
