@@ -19,5 +19,7 @@
 
 [개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/master/.wiki)
 
-TIL 문서를 Remote repository master 브랜치로 push하면,
-Github Actions를 사용하여 <https://github.com/pravusid/wiki> 저장소에 Github Pages를 publish 한다
+- push to origin/master
+- trigger Github Actions
+- publish Github Pages to <https://github.com/pravusid/wiki>
+- complete! 😎️

@@ -22,6 +22,6 @@
 
 ### Github Actions
 
-Github Actions를 사용하여 <https://github.com/pravusid/wiki> 저장소에 Github Pages를 publish 한다
+Github Actions를 사용하여 원격 저장소에 Github Pages를 배포한다
 
 [Github Actions Script](../.github/workflows/wiki.yml)
