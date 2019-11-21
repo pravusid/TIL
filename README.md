@@ -1,5 +1,7 @@
 # Today I Learned
 
+![badge](https://github.com/pravusid/TIL/workflows/wiki/badge.svg)
+
 ## :rocket: 목적
 
 - 공부한 내용을 주제별로 정리하여 기록합니다
