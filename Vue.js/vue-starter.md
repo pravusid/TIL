@@ -49,10 +49,12 @@
 eslint 설치
 
 ```sh
-npm i -D babel-eslint eslint-plugin-vue eslint
-npm i -D @vue/eslint-config-standard
-npm i -D @vue/eslint-config-prettier
-npm i -D eslint-plugin-prettier prettier
+npm i -D eslint babel-eslint eslint-plugin-vue
+
+npm i -D eslint-config-standard eslint-plugin-standard \
+  eslint-plugin-promise eslint-plugin-import eslint-plugin-node
+
+npm i -D prettier @vue/eslint-config-prettier eslint-plugin-prettier
 ```
 
 `.eslintrc.js`
@@ -67,7 +69,7 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  extends: ['plugin:vue/recommended', '@vue/standard', '@vue/prettier'],
+  extends: ['standard', 'plugin:vue/recommended', '@vue/prettier'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
