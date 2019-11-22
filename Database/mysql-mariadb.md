@@ -27,18 +27,63 @@ CREATE USER 'userid'@'%' IDENTIFIED BY 'password';
 INSERT INTO mysql.user VALUES('%', 'userid', PASSWORD('password'));
 ```
 
-### 권한 부여
+### 권한
+
+권한확인
+
+```sql
+SHOW GRANTS FOR CURRENT_USER;
+```
+
+권한 부여
 
 ```sql
 -- 유저에게 특정 DB 권한 주기
 GRANT {권한} on {db|*}.{table|*} to 'user'@'localhost' identified by 'password';
 GRANT {권한} on {db|*}.{table|*} to 'user'@'%' identified by 'password';
-
 -- 권한변경 반영
-flush privileges;
+FLUSH PRIVILEGES;
+```
 
--- 외부접속 권한 삭제
+권한 제거
+
+```sql
+-- 특정권한 제거
+REVOKE {권한} on {db|*}.{table|*} FROM 'some_user'@'some_host';
+-- 전체권한 제거
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'some_user'@'some_host';
+FLUSH PRIVILEGES;
+```
+
+HOST 변경
+
+```sql
+UPDATE mysql.user SET Host='%' WHERE Host='localhost' AND User='username';
+FLUSH PRIVILEGES;
+```
+
+외부접속 권한 삭제
+
+```sql
 DELETE FROM mysql.user WHERE Host='%' AND User='user';
+FLUSH PRIVILEGES;
+```
+
+#### 운영용 계정 권한 제한
+
+최소 권한만 부여하는 것이 좋음
+
+```sql
+GRANT SELECT, INSERT, UPDATE, DELETE, LOCK TABLES, CREATE TEMPORARY TABLES ON *.* TO 'some_user'@'some_host';
+FLUSH PRIVILEGES;
+```
+
+#### 관리용 계정 권한 제한
+
+운영용 계정 + 추가권한
+
+```sql
+GRANT ALTER, CREATE, DROP, INDEX, REFERENCES ON *.* TO 'some_user'@'some_host';
 FLUSH PRIVILEGES;
 ```
 
