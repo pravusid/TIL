@@ -1,4 +1,4 @@
-# TypeScript - Predefined Types
+# TypeScript - Utility Types
 
 <https://www.typescriptlang.org/docs/handbook/utility-types.html>
 
@@ -30,7 +30,7 @@ const todo2 = updateTodo(todo1, {
 
 ## `Required<T>`
 
-`T` 타입의 프로퍼티를 required(~optional)로 설정한 타입을 반환한다.
+`T` 타입의 프로퍼티를 required(!optional)로 설정한 타입을 반환한다.
 
 ```ts
 interface Props {
@@ -127,7 +127,9 @@ type T1 = Exclude<"a" | "b" | "c", "a" | "b">; // "c"
 type T2 = Exclude<string | number | (() => void), Function>; // string | number
 ```
 
-> `Exclude` 타입은 정확히는 `Diff` 타입의 구현이다. `Diff`가 정의되어 있는 코드와 충돌을 회피하기 위해서 `Exclude`로 명명하였다. 또한 의미론적으로 더 나은 느낌을 전달한다.
+> `Exclude` 타입은 정확히는 `Diff` 타입의 구현이다.
+> `Diff`가 정의되어 있는 코드와 충돌을 회피하기 위해서 `Exclude`로 명명하였다.
+> 또한 의미론적으로 더 나은 느낌을 전달한다.
 
 ## `Extract<T,U>`
 
@@ -249,3 +251,31 @@ type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 위와 같이 별도로 `Omit` 타입을 정의할 필요 없이 `lib.d.ts`에 포함된 타입을 사용하면 된다.
 
 컴파일러는 `Omit` 타입을 통해 제네릭에서 object rest destructuring 선언을 통해 생성된 타입을 표현한다.
+
+## `Parameters<T>`
+
+함수 타입의 모든 파라미터 타입들을 추출한다.
+
+모든 파라미터 타입들을 튜플 타입 형태로 제공한다.
+대상이 함수가 아니면 `never` 타입을 반환한다.
+여러 파라미터가 단일 타입으로 구성된다면 해당타입의 배열로 출력된다.
+
+```ts
+type A = Parameters<() => void>; // []
+type B = Parameters<typeof Array.isArray>; // [any]
+type C = Parameters<typeof parseInt>; // [string, (number | undefined)?]
+type D = Parameters<typeof Math.max>; // number[]
+```
+
+## `ConstructorParameters<T>`
+
+생성자 함수 타입의 모든 파라미터 타입들을 추출한다.
+
+모든 파라미터 타입들을 튜플 타입 형태로 제공한다.
+대상이 (생성자)함수가 아니면 `never` 타입을 반환한다.
+
+```ts
+type A = ConstructorParameters<ErrorConstructor>; // [(string | undefined)?]
+type B = ConstructorParameters<FunctionConstructor>; // string[]
+type C = ConstructorParameters<RegExpConstructor>; // [string, (string | undefined)?]
+```
