@@ -1,5 +1,9 @@
 # Vue.js Frameworks / Library
 
+## SEO
+
+- [vue-meta](https://github.com/nuxt/vue-meta)
+
 ## CSS Framework
 
 - [bootstrap-vue](https://github.com/bootstrap-vue/bootstrap-vue)
