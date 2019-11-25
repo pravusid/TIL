@@ -38,11 +38,18 @@
 
 `.vscode/settings.json`
 
+- vscode 내장 js, ts 문법 검사 비활성화
+  - (babel-proposal 플러그인과 충돌)
+  - <https://code.visualstudio.com/docs/languages/javascript#_how-do-i-disable-syntax-validation-when-using-nones6-constructs>
+- vetur 내장 template, script 검사 비활성화 (prettier, eslint와 충돌)
+
 ```json
 {
   "editor.formatOnSave": true,
+  "javascript.validate.enable": false,
   "vetur.format.defaultFormatter.html": "prettier",
-  "vetur.validation.template": false
+  "vetur.validation.template": false,
+  "vetur.validation.script": false
 }
 ```
 
