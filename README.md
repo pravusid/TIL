@@ -11,15 +11,15 @@
 
 ## :bookmark_tabs: 별도 분류한 학습 기록
 
-- [자료구조](https://github.com/pravusid/learning-datastructure)
-- [알고리즘](https://github.com/pravusid/algorithm-practice)
-- [함수형 프로그래밍](https://github.com/pravusid/functional-programming-principles)
+- [자료구조](https://github.com/pravusid/learning-datastructure/)
+- [알고리즘](https://github.com/pravusid/algorithm-practice/)
+- [함수형 프로그래밍](https://github.com/pravusid/functional-programming-principles/)
 
-## :scroll: [Wiki](https://pravusid.kr/wiki)
+## :scroll: [Wiki](https://pravusid.kr/wiki/)
 
-[개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/master/.wiki)
+[개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/master/.wiki/)
 
 - push to origin/master
 - trigger Github Actions
-- publish Github Pages to <https://github.com/pravusid/wiki>
+- publish Github Pages to <https://github.com/pravusid/wiki/>
 - complete! 😎️
