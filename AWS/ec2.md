@@ -29,3 +29,21 @@ sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 `aws configure` 설정한 이후 사용
 
 `aws ec2 describe-instances --instance-ids <인스턴스id> --query 'Reservations[].Instances[].PublicDnsName'`
+
+## Windows 인스턴스 관리자 암호
+
+<https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/WindowsGuide/ResettingAdminPassword_EC2Config.html>
+
+윈도우 인스턴스내에서 암호를 변경 한 경우 `연결 > 암호 가져오기`가 작동하지 않는다
+
+암호변경: `net user Administrator "new_password"`
+
+이 경우 `C:\Program Files\Amazon\Ec2ConfigService\Settings\config.xml` 파일에서
+`Ec2SetPassword` 항목을 `Enabled`로 변경하고 인스턴스를 종료후 다시 켠다.
+
+부팅 후 4분 이상 대기한 뒤 `연결 > 암호 가져오기`를 다시 실행한다.
+
+직접 암호를 변경했을 때와 마찬가지로 암호가 변경으로 인해 `Ec2SetPassword` 항목이 `Disabled`로 변경되어 있다.
+
+만약 해당 인스턴스의 이미지를 생성한다면 암호를 재생성 할 수 있도록
+`Ec2SetPassword` 항목을 `Enabled`로 처리하는 방법도 좋을 듯 하다.
