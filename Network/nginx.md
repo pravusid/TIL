@@ -105,6 +105,20 @@ server {
 }
 ```
 
+### gzip compression
+
+<http://nginx.org/en/docs/http/ngx_http_gzip_module.html>
+
+```conf
+http {
+  gzip on;
+  gzip_min_length 1000;
+  gzip_proxied expired no-cache no-store private auth;
+  gzip_types text/plain application/json application/xml;
+  gzip_disable "msie6";
+}
+```
+
 ### HTTP 모듈
 
 HTTP 모듈 설정은 세 가지 계층 블럭을 제공한다
