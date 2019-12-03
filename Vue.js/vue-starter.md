@@ -47,6 +47,14 @@
 {
   "editor.formatOnSave": true,
   "javascript.validate.enable": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue"
+  ],
   "vetur.format.defaultFormatter.html": "prettier",
   "vetur.validation.template": false,
   "vetur.validation.script": false
