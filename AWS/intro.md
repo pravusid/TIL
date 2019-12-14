@@ -6,6 +6,12 @@ Free Tier는 최초 12개월간 허가된 인스턴스 사용시간 총량을 �
 
 사용량은 시간단위로 계산됨 (1분을 켜도 1시간)
 
+## CLI
+
+<https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-welcome.html>
+
+`pip3 install awscli --upgrade --user`
+
 ## 제공 서비스
 
 ### Systems Manager Parameter Store

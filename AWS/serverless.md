@@ -10,8 +10,10 @@ Serverless framework guide: <https://serverless.com/framework/docs/providers/aws
 서버리스는 다른 모든 것을 신경쓸 필요 없이 CPU와 메모리만을 할당받아 코드를 실행한다.
 이러한 접근법을 Fuction as a Service 라고 부르기도 한다.
 
-## AWS Lambda
+## AWS SAM
 
-## Serverless Framework for JavaScript
+### CLI
 
-### AWS 권한생성
+<https://docs.aws.amazon.com/ko_kr/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html>
+
+`pip install --user aws-sam-cli`
