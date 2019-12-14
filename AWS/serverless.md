@@ -12,8 +12,14 @@ Serverless framework guide: <https://serverless.com/framework/docs/providers/aws
 
 ## AWS SAM
 
+<https://docs.aws.amazon.com/ko_kr/serverless-application-model/latest/developerguide/what-is-sam.html>
+
 ### CLI
 
 <https://docs.aws.amazon.com/ko_kr/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html>
 
 `pip install --user aws-sam-cli`
+
+## Serverless Framework
+
+<https://serverless.com/framework/docs/>
