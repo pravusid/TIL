@@ -1,28 +1,67 @@
 # CLI env for Server
 
-## bash-it
+환경 초기화 스크립트
 
-### 설치
+- `bash-it`
+- `java`
+- `fnm`
+- `nodejs`
+- `pm2`
+- `.vimrc`
 
-`git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh`
+```bash
+#!/usr/bin/env bash
 
-### 플러그인 설정
+sudo yum update -y
 
-플러그인 확인: `bash-it show plugins`
+# timezone
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
-플러그인 활성화: `bash-it enable plugin dirs docker git z`
+# install git
+sudo yum install -y git
 
-### Theme
+# install java
+sudo yum install -y java-1.8.0-openjdk-devel.x86_64
 
-`.bashrc`
+# install bash-it
+git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh
+source .bashrc
 
-```sh
-export BASH_IT_THEME="candy"
-```
+sed -i "s/'bobby'/\"candy\"/" .bashrc
 
-## `.vimrc`
+bash-it enable plugin dirs docker git z
 
-```sh
+cat > .bashrc.alias <<- EOM
+alias l="ls"
+alias la="ls -A"
+alias ll="ls -AFlh"
+
+alias lg="\ls -al | grep"
+alias pg="\pgrep -fl"
+alias cntf="\ls -1A | wc -l"
+alias ssa="\ss -natp"
+alias ssl="\ss -nltp"
+alias tf="\tail -f"
+EOM
+
+echo "[ -f ~/.bashrc.alias ] && source ~/.bashrc.alias" >> .bashrc
+source .bashrc
+
+# install fnm
+curl -fsSL https://github.com/Schniz/fnm/raw/master/.ci/install.sh | bash
+
+export PATH=~/.fnm:$PATH
+eval "`fnm env --multi`"
+
+fnm use latest-erbium
+fnm default $(node -v | sed 's/v//')
+source .bashrc
+
+# install pm2
+npm i -g pm2
+
+# vimrc
+cat > .vimrc <<- EOM
 set number
 set cursorline
 set hlsearch
@@ -39,28 +78,6 @@ set listchars=tab:\|\ ,trail:·
 ca ㅈ w
 ca ㅈㅂ wq
 
-map <F12> mzgg=G`z
-```
-
-### `.bashrc`
-
-`.bashrc.alias`
-
-```sh
-alias l="ls"
-alias la="ls -A"
-alias ll="ls -AFlh"
-
-alias lg="\ls -al | grep"
-alias pg="\pgrep -fl"
-alias cntf="\ls -1A | wc -l"
-alias ssa="\ss -natp"
-alias ssl="\ss -nltp"
-alias tf="\tail -f"
-```
-
-`.bashrc`
-
-```sh
-[ -f ~/.bashrc.alias ] && source ~/.bashrc.alias
+map <F12> mzgg=G\`z
+EOM
 ```
