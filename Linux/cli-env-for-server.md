@@ -29,6 +29,8 @@ source .bashrc
 
 sed -i "s/'bobby'/\"candy\"/" .bashrc
 
+export BASH_IT="/home/$(whoami)/.bash_it"
+source "$BASH_IT"/bash_it.sh
 bash-it enable plugin dirs docker git z
 
 cat > .bashrc.alias <<- EOM
