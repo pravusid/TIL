@@ -11,6 +11,12 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 - mocking : Sinon
 - coverage : Istanbul
 
+## NODE_ENV
+
+jest 기본 `NODE_ENV`는 `test`임
+
+> <https://github.com/facebook/jest/blob/master/packages/jest-cli/bin/jest.js#L12-L14>
+
 ## jest설정 (ts기준)
 
 <https://jest-bot.github.io/jest/docs/configuration.html>
@@ -33,7 +39,7 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 
 ```js
 module.exports = {
-  setupFiles: ['dotenv/config'],
+  setupFiles: ["dotenv/config"],
   moduleFileExtensions: ["js", "jsx", "json", "ts", "tsx"],
   testRegex: "^.+\\.spec\\.(js|jsx|ts|tsx)$",
   transform: {
@@ -229,7 +235,10 @@ const mock = jest.fn();
 - `mockFn.mock.calls`: mock 함수가 호출될 때 마다 인자들이 배열로 누적됨
 
   ```js
-  [["arg1", "arg2"], ["arg3", "arg4"]];
+  [
+    ["arg1", "arg2"],
+    ["arg3", "arg4"]
+  ];
   ```
 
 - `mockFn.mock.results`: 호출의 결과 object들이 배열로 누적됨
