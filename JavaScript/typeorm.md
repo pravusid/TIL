@@ -20,7 +20,7 @@ npm install mysql2 --save
 앱 실행 시작점에서 reflect-metadata를 불러온다
 
 ```ts
-import 'reflect-metadata';
+import "reflect-metadata";
 ```
 
 `tsconfig.json`에 다음을 추가한다
@@ -61,17 +61,11 @@ json 뿐만 아니라 `js`, `yml`, `.env` 등의 다양한 방식으로 작성 �
     // simple-console(기본에서 색이 빠짐), file(ormlogs.log 파일로 출력)
     "logger": "advanced-console",
     // @Entity()로 선언된 파일을 불러올 위치
-    "entities": [
-      "src/entity/**/*.ts"
-    ],
+    "entities": ["src/entity/**/*.ts"],
     // DDL을 실행하는 MigrationInterface를 구현한 파일을 불러올 위치
-    "migrations": [
-      "src/migration/**/*.ts"
-    ],
+    "migrations": ["src/migration/**/*.ts"],
     // @After___, @Before___ 같은 entity listeners and subscribers를 불러올 위치
-    "subscribers": [
-      "src/subscriber/**/*.ts"
-    ]
+    "subscribers": ["src/subscriber/**/*.ts"]
   },
   {
     "name": "another",
@@ -80,7 +74,7 @@ json 뿐만 아니라 `js`, `yml`, `.env` 등의 다양한 방식으로 작성 �
     "port": 3306,
     "username": "test",
     "password": "test",
-    "database": "test",
+    "database": "test"
   }
 ]
 ```
@@ -99,7 +93,10 @@ When dealing with big numbers (BIGINT and DECIMAL columns) in the database, you 
 
 #### `bigNumberStrings`
 
-Enabling both supportBigNumbers and bigNumberStrings forces big numbers (BIGINT and DECIMAL columns) to be always returned as JavaScript String objects. Enabling supportBigNumbers but leaving bigNumberStrings disabled will return big numbers as String objects only when they cannot be accurately represented with JavaScript Number objects (which happens when they exceed the [-2^53, +2^53] range), otherwise they will be returned as Number objects. This option is ignored if supportBigNumbers is disabled.
+Enabling both supportBigNumbers and bigNumberStrings forces big numbers (BIGINT and DECIMAL columns) to be always returned as JavaScript String objects.
+Enabling supportBigNumbers but leaving bigNumberStrings disabled will return big numbers as String objects
+only when they cannot be accurately represented with JavaScript Number objects (which happens when they exceed the [-2^53, +2^53] range),
+otherwise they will be returned as Number objects. This option is ignored if supportBigNumbers is disabled.
 
 - mysqljs: `false`
 - node-mysql2: `false`
@@ -113,7 +110,7 @@ db 연결을 시도할 때 기본 옵션을 동적으로 override 할 수 있다
 const connectionOptions = await getConnectionOptions();
 Object.assign(connectionOptions, {
   namingStrategy: new CustomNamingStrategy(),
-  logger: new MyCustomLogger(),
+  logger: new MyCustomLogger()
 });
 const connection = await createConnection(connectionOptions);
 ```
@@ -121,31 +118,55 @@ const connection = await createConnection(connectionOptions);
 db 연결 설정 파일을 변경할 수 있다
 
 ```ts
-import { createConnection, ConnectionOptionsReader } from 'typeorm';
-import { CustomNamingStrategy } from './custom.naming.strategy';
+import { createConnection, ConnectionOptionsReader } from "typeorm";
+import { CustomNamingStrategy } from "./custom.naming.strategy";
 
 export const connectToDatabase = async (env?: string) => {
-  const configName = env ? `ormconfig.${env}` : 'ormconfig';
+  const configName = env ? `ormconfig.${env}` : "ormconfig";
   const connectionOptions = new ConnectionOptionsReader({ configName }).all();
   const [connectionOption] = await connectionOptions;
 
   return createConnection(
     Object.assign(connectionOption, {
-      namingStrategy: new CustomNamingStrategy(),
-    }),
+      namingStrategy: new CustomNamingStrategy()
+    })
   );
 };
+```
+
+직접 연결설정을 입력할 수도 있다
+
+```ts
+import { createConnection, Connection } from "typeorm";
+
+const connection: Connection = await createConnection({
+  type: "mysql",
+  host: "localhost",
+  port: 3306,
+  username: "test",
+  password: "test",
+  database: "test",
+  entities: [`${__dirname}/domain/**/*`],
+  namingStrategy: new CustomNamingStrategy()
+});
 ```
 
 ### Custom Naming Stragegy
 
 ```ts
-import { DefaultNamingStrategy } from 'typeorm';
-import { snakeCase } from 'typeorm/util/StringUtils';
+import { DefaultNamingStrategy } from "typeorm";
+import { snakeCase } from "typeorm/util/StringUtils";
 
 export class CustomNamingStrategy extends DefaultNamingStrategy {
-  columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string {
-    return snakeCase(embeddedPrefixes.join('_')) + (customName || snakeCase(propertyName));
+  columnName(
+    propertyName: string,
+    customName: string,
+    embeddedPrefixes: string[]
+  ): string {
+    return (
+      snakeCase(embeddedPrefixes.join("_")) +
+      (customName || snakeCase(propertyName))
+    );
   }
 
   relationName(propertyName: string): string {
@@ -156,7 +177,11 @@ export class CustomNamingStrategy extends DefaultNamingStrategy {
     return snakeCase(`${relationName}_${referencedColumnName}`);
   }
 
-  joinTableColumnName(tableName: string, propertyName: string, columnName?: string): string {
+  joinTableColumnName(
+    tableName: string,
+    propertyName: string,
+    columnName?: string
+  ): string {
     return snakeCase(`${tableName}_${columnName || propertyName}`);
   }
 }
@@ -188,37 +213,51 @@ export class MyCustomLogger implements Logger {
 
 ```ts
 export class PostController {
+  @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
+  async save(
+    post: Post,
+    category: Category,
+    @TransactionManager() entityManager: EntityManager
+  ) {
+    await entityManager.save(post);
+    await entityManager.save(category);
+  }
 
-    @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
-    async save(post: Post, category: Category, @TransactionManager() entityManager: EntityManager) {
-        await entityManager.save(post);
-        await entityManager.save(category);
-    }
+  // this save is not wrapped into the transaction
+  async nonSafeSave(
+    entityManager: EntityManager,
+    post: Post,
+    category: Category
+  ) {
+    await entityManager.save(post);
+    await entityManager.save(category);
+  }
 
-    // this save is not wrapped into the transaction
-    async nonSafeSave(entityManager: EntityManager, post: Post, category: Category) {
-        await entityManager.save(post);
-        await entityManager.save(category);
-    }
+  @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
+  async saveWithRepository(
+    post: Post,
+    category: Category,
+    @TransactionRepository(Post) postRepository: Repository<Post>,
+    @TransactionRepository() categoryRepository: CategoryRepository
+  ) {
+    await postRepository.save(post);
+    await categoryRepository.save(category);
 
-    @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
-    async saveWithRepository(
-        post: Post,
-        category: Category,
-        @TransactionRepository(Post) postRepository: Repository<Post>,
-        @TransactionRepository() categoryRepository: CategoryRepository,
-    ) {
-        await postRepository.save(post);
-        await categoryRepository.save(category);
+    return categoryRepository.findByName(category.name);
+  }
 
-        return categoryRepository.findByName(category.name);
-    }
-
-    @Transaction({ connectionName: "mysql", isolation: "SERIALIZABLE" }) // "mysql" is a connection name. you can not pass it if you are using default connection.
-    async saveWithNonDefaultIsolation(post: Post, category: Category, @TransactionManager() entityManager: EntityManager) {
-        await entityManager.save(post);
-        await entityManager.save(category);
-    }
-
+  @Transaction({ connectionName: "mysql", isolation: "SERIALIZABLE" }) // "mysql" is a connection name. you can not pass it if you are using default connection.
+  async saveWithNonDefaultIsolation(
+    post: Post,
+    category: Category,
+    @TransactionManager() entityManager: EntityManager
+  ) {
+    await entityManager.save(post);
+    await entityManager.save(category);
+  }
 }
 ```
+
+## 테스트
+
+> 테스트에서 사용할 때는 [Setup / Teardown] 단계에서 [연결 / 연결해제]
