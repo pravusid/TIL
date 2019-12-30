@@ -58,7 +58,8 @@ FLUSH PRIVILEGES;
 HOST 변경
 
 ```sql
-UPDATE mysql.user SET Host='%' WHERE Host='localhost' AND User='username';
+UPDATE mysql.user SET host = '172.31.%' WHERE host = 'localhost' AND user = 'username';
+UPDATE mysql.db SET host = '172.31.%' WHERE host = 'localhost' AND user = 'username';
 FLUSH PRIVILEGES;
 ```
 
