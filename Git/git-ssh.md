@@ -18,3 +18,9 @@
 ## 사용
 
 최초 사용시 콘솔에서 `push`, `pull` 작업을 해서 known_hosts에 github를 등록한다.
+
+## 권한오류
+
+`github sign_and_send_pubkey: signing failed: agent refused operation` 오류 발생시
+
+`.ssh` 경로의 private key 권한을 `400`으로 설정한다
