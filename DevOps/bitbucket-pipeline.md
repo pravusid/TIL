@@ -5,7 +5,13 @@
 - <https://confluence.atlassian.com/bitbucket/configuring-your-pipeline-872013574.html>
 - <https://confluence.atlassian.com/x/14UWN>
 
+## pipeline 무시
+
+커밋 메시지에 `[skip ci]` 또는 `[ci skip]` 포함
+
 ## Example
+
+### S3 배포 후 cloudfront invalidation
 
 ```yml
 image: node:10.15.3
@@ -47,4 +53,64 @@ pipelines:
               variables:
                 WEBHOOK_URL: $WEBHOOK_URL
                 MESSAGE: 'SLACK MESSAGE!'
+```
+
+### codedeploy to ec2
+
+<https://confluence.atlassian.com/bitbucket/deploy-to-aws-with-codedeploy-976773337.html>
+
+```yml
+image: atlassian/default-image:2
+
+pipelines:
+  branches:
+    master:
+      - step:
+          image: node:10.15.3
+          name: Build
+          script:
+            - npm ci --only=prod && npm run build
+          artifacts:
+            - "**/*"
+            - "**/.*"
+
+      - step:
+          name: Zip
+          script:
+            - zip -r dist.zip ./
+          artifacts:
+            - dist.zip
+
+      - step:
+          name: Upload to S3
+          services:
+            - docker
+          script:
+            - pipe: atlassian/aws-code-deploy:0.2.10
+              variables:
+                AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+                AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+                AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+                COMMAND: "upload"
+                APPLICATION_NAME: ${APPLICATION_NAME}
+                S3_BUCKET: "${AWS_DEPLOY_BUCKET}"
+                ZIP_FILE: "dist.zip"
+
+      - step:
+          name: Deploy with CodeDeploy
+          services:
+            - docker
+          script:
+            - pipe: atlassian/aws-code-deploy:0.2.10
+              variables:
+                AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+                AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+                AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+                COMMAND: "deploy"
+                APPLICATION_NAME: ${APPLICATION_NAME}
+                DEPLOYMENT_GROUP: ${DEPLOYMENT_GROUP}
+                S3_BUCKET: "${AWS_DEPLOY_BUCKET}"
+                IGNORE_APPLICATION_STOP_FAILURES: "true"
+                # FILE_EXISTS_BEHAVIOR: "OVERWRITE"
+                WAIT: "true"
 ```
