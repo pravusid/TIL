@@ -20,8 +20,6 @@ Docker는 리눅스 컨테이너 기술을 기반으로 두기 때문에 Windows
 
 설치: `curl -s https://get.docker.com/ | sudo sh`
 
-우분투 기본 저장소: `sudo apt install docker.io`
-
 도커 daemon은 root 소유의 유닉스 소켓을 사용하므로 사용자를 docker 그룹에 추가함
 
 ```sh
@@ -30,11 +28,16 @@ sudo groupadd docker
 
 # 사용자를 그룹에 추가
 sudo usermod -aG docker $USER # 현재 접속중인 사용자에게 권한주기
-sudo usermod -aG docker your-user # your-user 사용자에게 권한주기
 
 # 권한이 주어지지 않았다면 다음을 실행
 sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
 sudo chmod g+rwx "$HOME/.docker" -R
+```
+
+도커 서비스 시작
+
+```sh
+sudo systemctl start docker
 ```
 
 ### Windows, MacOS
