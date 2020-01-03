@@ -8,7 +8,7 @@
 
 <https://code.visualstudio.com/docs/editor/debugging>
 
-### Node.js
+### Nodemon + TypeScript
 
 [Nodemon과 debugger attaching](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_attaching-to-nodejs)
 
@@ -29,32 +29,6 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
       "protocol": "inspector",
       "processId": "${command:PickProcess}",
       "restart": true
-    }
-  ]
-}
-```
-
-[`nvm` 사용시 `PATH`에서 node runtime을 찾지 못하는 문제](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_multi-version-support)
-
-> 옵션에 `"runtimeVersion": "<NODE_VESION_IN_NVM>"` 추가
-
-`.vscode/launch.json`
-
-```json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "node",
-      "name": "vscode-jest-tests",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      "args": ["--runInBand"],
-      "cwd": "${workspaceFolder}",
-      "runtimeVersion": "<NODE_VESION_IN_NVM>",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "disableOptimisticBPs": true
     }
   ]
 }
@@ -84,4 +58,38 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
 }
 ```
 
+`preLaunchTask`
+
+- VSCode `Tasks: Run Task`에서 선택할 수 있는 작업 입력
+- TypeScript 프로젝트(root 경로에 `tsconfig.json` 존재)는 tsc build/watch 작업이 기본 출력됨
+- Node 프로젝트(root 경로에 `package.json` 존재)는 npm script 작업이 기본 출력됨
+
 > `main.ts` 경로와 `dist/` 경로는 설정에 따라변경
+
+### Jest extension + NVM
+
+[`nvm` 사용시 `PATH`에서 node runtime을 찾지 못하는 문제](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_multi-version-support)
+
+> 옵션에 `"runtimeVersion": "<NODE_VESION_IN_NVM>"` 추가
+
+`.vscode/launch.json`
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "name": "vscode-jest-tests",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": ["--runInBand"],
+      "cwd": "${workspaceFolder}",
+      "runtimeVersion": "<NODE_VESION_IN_NVM>",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "disableOptimisticBPs": true
+    }
+  ]
+}
+```
