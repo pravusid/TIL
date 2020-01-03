@@ -66,8 +66,10 @@ pipelines:
   branches:
     master:
       - step:
-          image: node:10.15.3
+          image: node:12.14.0
           name: Build
+          caches:
+            - node
           script:
             - npm ci --only=prod && npm run build
           artifacts:
