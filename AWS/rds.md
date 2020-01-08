@@ -2,9 +2,15 @@
 
 관계형 데이터베이스 서비스
 
-새 보안 그룹을 생성하면서 EC2와 통신을 위해 EC2인스턴스에 적용한 보안 그룹 ID를 가져와 인바운드 소스로 적용한다
+## 설정 (for MySQL)
 
-문자 인코딩 관련
+- <https://aws.amazon.com/blogs/database/best-practices-for-configuring-parameters-for-amazon-rds-for-mysql-part-1-parameters-related-to-performance/>
+- <https://aws.amazon.com/blogs/database/best-practices-for-configuring-parameters-for-amazon-rds-for-mysql-part-2-parameters-related-to-replication/>
+- <https://aws.amazon.com/blogs/database/best-practices-for-configuring-parameters-for-amazon-rds-for-mysql-part-3-parameters-related-to-security-operational-manageability-and-connectivity-timeout/>
+
+## Troubleshooting
+
+### 문자 인코딩 관련
 
 - 최초 인코딩셋이 latin1이므로 RDS 대시보드 파라미터 그룹으로 들어감
 
