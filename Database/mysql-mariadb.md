@@ -1,5 +1,59 @@
 # MySQL || MariaDB
 
+## 시스템 설정
+
+서버 시스템 변수 확인
+
+- `HOW [GLOBAL | SESSION] VARIABLES`
+- <https://dev.mysql.com/doc/refman/8.0/en/show-variables.html>
+
+서버 시스템 변수 정보
+
+<https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html>
+
+설정파일
+
+<https://dev.mysql.com/doc/refman/8.0/en/option-files.html>
+
+### 변수 설정
+
+<https://dev.mysql.com/doc/refman/8.0/en/program-variables.html>
+
+명령행
+
+```sh
+mysql --max_allowed_packet=16777216
+mysql --max_allowed_packet=16M
+```
+
+설정파일
+
+```conf
+[mysql]
+max_allowed_packet=16777216
+max_allowed_packet=16M
+```
+
+런타임 설정
+
+```sql
+mysql> SET GLOBAL max_allowed_packet=16M; -- 오류발생
+mysql> SET GLOBAL max_allowed_packet=16*1024*1024;
+```
+
+### Packet Too Large
+
+- <https://dev.mysql.com/doc/refman/8.0/en/packet-too-large.html>
+- <https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet>
+
+최대 1GB (MySQL 8.0 server)
+
+`max_allowed_packet` 기본 크기
+
+- (>= 8.0.3) 64MB
+- (<= 8.0.2) 4MB
+- (< 5.6) 1MB
+
 ## SYSTEM
 
 <https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-server-administration.html>
