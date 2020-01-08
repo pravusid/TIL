@@ -54,6 +54,12 @@ mysql> SET GLOBAL max_allowed_packet=16*1024*1024;
 - (<= 8.0.2) 4MB
 - (< 5.6) 1MB
 
+### Slow query
+
+- By default, the slow query log is disabled.
+- `--slow_query_log[={0|1}]`
+- `--slow_query_log_file=/path/to/file.log`
+
 ## SYSTEM
 
 <https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-server-administration.html>
