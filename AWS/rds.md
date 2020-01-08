@@ -8,6 +8,16 @@
 - <https://aws.amazon.com/blogs/database/best-practices-for-configuring-parameters-for-amazon-rds-for-mysql-part-2-parameters-related-to-replication/>
 - <https://aws.amazon.com/blogs/database/best-practices-for-configuring-parameters-for-amazon-rds-for-mysql-part-3-parameters-related-to-security-operational-manageability-and-connectivity-timeout/>
 
+## dump
+
+To export db from RDS
+
+`mysqldump -h rds.host.name -u remote_user_name -p remote_db > remote_db.sql`
+
+To import db on RDS
+
+`mysql -h rds.host.name -u remote_user_name -p remote_db < remote_db.sql`
+
 ## Troubleshooting
 
 ### 문자 인코딩 관련
