@@ -57,3 +57,15 @@ curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compos
 chmod +x /usr/local/bin/docker-compose
 docker-compose version
 ```
+
+### `iptables: No chain/target/match by that name`
+
+```sh
+iptables -t nat -N DOCKER
+iptables -t nat -A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
+iptables -t nat -A PREROUTING -m addrtype --dst-type LOCAL ! --dst 127.0.0.0/8 -j DOCKER
+
+service iptables save
+service iptables restart
+service docker restart
+```
