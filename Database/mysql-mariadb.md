@@ -64,6 +64,26 @@ mysql> SET GLOBAL max_allowed_packet=16*1024*1024;
 
 <https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-server-administration.html>
 
+### character set 확인
+
+```sql
+-- 시스템변수에서 인코딩 설정 확인
+show variables like 'char%';
+
+-- 데이터베이스 인코딩 설정 확인
+SELECT S.SCHEMA_NAME, default_character_set_name
+FROM information_schema.SCHEMATA S;
+
+-- 테이블 인코딩 설정 확인
+SELECT
+  T.TABLE_NAME, CCSA.character_set_name, T.TABLE_COLLATION
+FROM
+  information_schema.`TABLES` T,
+  information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` CCSA
+WHERE
+  CCSA.collation_name = T.table_collation and T.TABLE_SCHEMA = '<데이터베이스이름>';
+```
+
 ### db 조회
 
 ```sql
@@ -80,7 +100,7 @@ SELECT host, user from mysql.user;
 
 ```sql
 -- UTF8로 DB생성
-CREATE DATABASE `dbname` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE `dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 유저 생성
 CREATE USER 'userid'@'%' IDENTIFIED BY 'password';
@@ -228,7 +248,7 @@ MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 
 ```sql
 CREATE TABLE test(
   title varchar(20)
-) default charset utf8;
+) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
 ## ALTER TABLE
