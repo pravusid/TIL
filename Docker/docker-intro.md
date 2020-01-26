@@ -46,7 +46,7 @@ sudo systemctl start docker
 
 ## Docker Composer
 
- 설정 관리를 위해 YAML방식의 설정파일 이용
+설정 관리를 위해 YAML방식의 설정파일 이용
 
 ### 설치
 
@@ -59,6 +59,8 @@ docker-compose version
 ```
 
 ### `iptables: No chain/target/match by that name`
+
+> 이전 버전의 리눅스 사용시 iptables에서 Docker Chain이 매번 초기화 될 수 있음
 
 ```sh
 iptables -t nat -N DOCKER
