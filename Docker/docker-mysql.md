@@ -29,7 +29,7 @@ docker \
   mariadb:latest \
   # 인코딩 설정 (args)
   --character-set-server=utf8mb4 \
-  --collation-server=utf8mb4_unicode_ci;
+  --collation-server=utf8mb4_unicode_ci
 ```
 
 bash shell로 container 실행
@@ -45,17 +45,25 @@ run 예시
 ```sh
 #!/bin/bash
 
-docker stop test
-docker rm test
+docker stop idpravus
+docker rm idpravus
 
-docker run -d --name test -p 5000:3306 -v $(pwd)/data:/var/lib/mysql my-image
+docker \
+  run \
+  -d \
+  --name idpravus \
+  -p 5000:3306 \
+  -v $(pwd)/scripts/:/docker-entrypoint-initdb.d/ \
+  -e MYSQL_ALLOW_EMPTY_PASSWORD=true \
+  -e MYSQL_USER=idpravus \
+  -e MYSQL_PASSWORD=idpravus@test \
+  -e LANG=C.UTF-8 \
+  mysql:5.7 \
+  --character-set-server=utf8mb4 \
+  --collation-server=utf8mb4_unicode_ci \
+  --max_allowed_packet=16M
 
-docker stop test
-
-rm -rf data/
-cp -r backup data
-
-docker start test
+docker logs -f idpravus
 ```
 
 ## Dockerfile
@@ -63,6 +71,7 @@ docker start test
 ```dockerfile
 FROM mariadb:latest
 
+ENV LANG=C.UTF-8
 ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 ENV MYSQL_USER=${MYSQL_USER}
 ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -79,3 +88,36 @@ EXPOSE 3306
 
 - prefix MYSQL_ 환경변수는 하나씩만 입력가능(배열... 불가)
 - `entrypoint-initdb.d`에 넣은 초기화 스크립트는 도커 인스턴스 최초 실행시 파일이름 오름차순으로 구동됨
+
+## Troubleshooting
+
+### UTF8 Encoded SQL Scripts in initdb
+
+<https://github.com/docker-library/mysql/issues/131>
+
+`docker-entrypoint`를 사용해 UTF8 인코딩으로 되어있는 sql 스크립트 실행시켜 DB 초기화를 하려는 경우
+
+shell에서 스크립트를 실행시키는데 docker상의 리눅스 기본 locale은 UTF가 아니다
+
+해결책1: `locale` 변경
+
+```Dockerfile
+RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* $ \
+  && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+ENV LANG=C.UTF-8
+```
+
+해결책2: `/etc/mysql/conf.d/utf8.cnf` 변경
+
+client -> `default-character-set = utf8` 설정으로 해결 가능
+
+```conf
+[mysqld]
+init_connect=‘SET collation_connection = utf8_unicode_ci’
+character-set-server = utf8
+collation-server = utf8_unicode_ci
+
+[client]
+default-character-set = utf8
+```
