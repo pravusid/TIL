@@ -2,6 +2,10 @@
 
 Dockerfile을 이용해서 배포용 이미지 파일을 생성한다
 
+<https://docs.docker.com/engine/reference/builder/>
+
+<https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>
+
 ## 공통사항
 
 exec form(`["foo", "bar"]`)은 JSON 배열로 인식되므로, 반드시 double quotes를 사용해야 한다
@@ -17,8 +21,6 @@ shell form은 다음 명령의 subcommand로 작동한다
 - windows: `cmd /S /C`
 
 ## Dockerfile 기본 명령어
-
-<https://docs.docker.com/engine/reference/builder/>
 
 ### FROM
 
@@ -132,6 +134,10 @@ COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
 
 파일이나 디렉토리를 이미지로 복사. 일반적으로 소스를 복사함. `target`디렉토리가 없으면 자동생성
 
+> Although ADD and COPY are functionally similar, generally speaking, COPY is preferred.
+> That’s because it’s more transparent than ADD.
+> <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy>
+
 ### ENTRYPOINT
 
 ```dockerfile
@@ -193,6 +199,18 @@ WORKDIR /path/to/workdir
 ```
 
 각 명령어의 현재 디렉토리는 매 라인마다 초기화되기 때문에 같은 디렉토리에서 계속 작업하기 위해서 `WORKDIR`을 사용함
+
+### ARG
+
+```dockerfile
+ARG <name>[=<default value>]
+```
+
+ARG 명령어는 `--build-arg <varname> = <value>` 플래그를 사용하여 `docker build` 명령을 사용할 때 전달할 변수를 정의한다.
+
+Dockerfile에 정의되지 않은 빌드 인수를 지정하면 경고가 출력되며, 명령행 인수로 받지 않고 기본값을 지정할 수도 있다.
+
+> 빌드 시간 변수 값은 docker history 명령으로 이미지의 모든 사용자에게 표시되므로, secret을 사용하지 않는 것이 좋다
 
 ## 이미지 생성 및 사용
 
