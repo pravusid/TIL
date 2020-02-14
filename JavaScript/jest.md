@@ -221,6 +221,12 @@ describe("Scoped / Nested block", () => {
 // 1 - afterAll
 ```
 
+## Test Environment
+
+<https://jestjs.io/docs/en/configuration#testenvironment-string>
+
+`testEnvironment: "./testEnvironment"` for the file testEnvironment.js
+
 ## Mocking
 
 ### 생성
@@ -305,62 +311,131 @@ const mock = jest.fn();
 
 ## Mocking & Testing 예제
 
+### mocking function
+
 ```ts
-import * as typeorm from "typeorm";
-import TokenData from "../interfaces/tokenData.interface";
+import { getRepository } from "typeorm";
 import UserDto from "../user/user.dto";
 import AuthenticationService from "./authentication.service";
 
-(typeorm as any).getRepository = jest.fn();
+(getRepository as any) = jest.fn();
 
-describe("AuthenticationService", () => {
-  describe("when creating a cookie", () => {
-    it("should return a string", () => {
-      const tokenData: TokenData = { token: "", expiresIn: 1 };
-      (typeorm as any).getRepository.mockReturnValue({});
-      const authenticationService = new AuthenticationService();
-      expect(typeof authenticationService.createCookie(tokenData)).toEqual(
-        "string"
-      );
-    });
+test("should not throw an error", async () => {
+  const userData: UserDto = {
+    name: "Hong Gildong",
+    email: "gdhong@chosun.com",
+    password: "somepassword"
+  };
+
+  getRepository.mockReturnValue({
+    findOne: () => Promise.resolve(undefined),
+    create: () => ({ ...userData, id: 0 }),
+    save: () => Promise.resolve()
   });
 
-  describe("when registering a user", () => {
-    describe("if the email is already taken", () => {
-      it("should throw an error", async () => {
-        const userData: UserDto = {
-          name: "Hong Gildong",
-          email: "gdhong@chosun.com",
-          password: "somepassword"
-        };
-        (typeorm as any).getRepository.mockReturnValue({
-          findOne: () => Promise.resolve(userData)
-        });
-        const authenticationService = new AuthenticationService();
-        await expect(
-          authenticationService.register(userData)
-        ).rejects.toMatchObject(new Error(userData.email));
-      });
-    });
+  const authenticationService = new AuthenticationService();
+  await expect(authenticationService.register(userData)).resolves.toBeDefined();
+});
+```
 
-    describe("if the email is not taken", () => {
-      it("should not throw an error", async () => {
-        const userData: UserDto = {
-          name: "Hong Gildong",
-          email: "gdhong@chosun.com",
-          password: "somepassword"
-        };
-        (typeorm as any).getRepository.mockReturnValue({
-          findOne: () => Promise.resolve(undefined),
-          create: () => ({ ...userData, id: 0 }),
-          save: () => Promise.resolve()
-        });
-        const authenticationService = new AuthenticationService();
-        await expect(
-          authenticationService.register(userData)
-        ).resolves.toBeDefined();
-      });
-    });
+### mocking prototype
+
+```ts
+import { Users } from "./users";
+import { Http } from "./common/http";
+
+test("should get receive an error", async () => {
+  let instance = new Users();
+
+  Http.prototype.get = jest
+    .fn()
+    .mockImplementation(() => new Error("Something weird happened"));
+
+  const error: Error = await instance.all();
+
+  expect(error).toBeInstanceOf(Error);
+  expect(error.message).toBe("Something weird happened");
+});
+```
+
+### mocking module with type
+
+```ts
+import { AnalyticsApi } from "../../api/src";
+jest.mock("../../api/src");
+
+describe("foo", () => {
+  beforeAll(() => {
+    (AnalyticsApi as jest.Mock<AnalyticsApi>).mockImplementation(() => ({
+      listPolicies: jest.fn().mockResolvedValue("promiseValue")
+    }));
   });
+
+  beforeEach(() => {
+    (AnalyticsApi as jest.Mock<AnalyticsApi>).mockClear();
+  });
+});
+```
+
+### mocking module with moduleFactory
+
+```ts
+// tester.ts
+import { resolveWhenever } from "./testable";
+
+export const useResoveWhenever = () =>
+  resolveWhenever().then(() => console.log("now"));
+
+// tester.test.ts
+import { useResoveWhenever } from "./tester";
+jest.mock("./testable", () =>
+  jest.fn(() => ({
+    resolveWhenever: () => ({ then: cb => cb() })
+  }))
+);
+
+test("logs after resolve", () => {
+  const logSpy = jest.spyOn(console, "log").mockImplementation();
+  useResoveWhenever();
+  expect(logSpy).toHaveBeenCalled();
+});
+```
+
+### ts-jest `mocked` helper
+
+<https://kulshekhar.github.io/ts-jest/user/test-helpers>
+
+```ts
+// foo.ts
+export const foo = {
+  a: {
+    b: {
+      c: {
+        hello: (name: string) => `Hello, ${name}`
+      }
+    }
+  },
+  name: () => "foo"
+};
+
+// foo.spec.ts
+import { mocked } from "ts-jest/utils";
+import { foo } from "./foo";
+jest.mock("./foo");
+
+// here the whole foo var is mocked deeply
+const mockedFoo = mocked(foo, true);
+
+test("deep", () => {
+  // there will be no TS error here, and you'll have completion in modern IDEs
+  mockedFoo.a.b.c.hello("me");
+  // same here
+  expect(mockedFoo.a.b.c.hello.mock.calls).toHaveLength(1);
+});
+
+test("direct", () => {
+  foo.name();
+  // here only foo.name is mocked (or its methods if it's an object)
+  expect(mocked(foo.name).mock.calls).toHaveLength(1);
 });
 ```
