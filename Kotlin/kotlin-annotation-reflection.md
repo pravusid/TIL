@@ -37,7 +37,7 @@ const val TEST_TIMEOUT = 100L
 애노테이션을 붙일 때 어떤 요소에 애노테이션을 붙일지 표시할 필요가 있다.
 use-site target 선언으로 애노테이션을 붙일 요소를 정할 수 있다.
 
-다음은 `@Rule` 애노테이션을 프로퍼티 게터에 적용하는 예이다 : `@get:Rule`
+다음은 `@Rule` 애노테이션을 프로퍼티 getter에 적용하는 예이다 : `@get:Rule`
 
 애노테이션을 사용하는 예를 보자
 
@@ -55,7 +55,7 @@ class HasTempFolder {
 }
 ```
 
-자바에 선언된 애노테이션을 사용해 프로퍼티에 애노테이션을 붙이는 경우 기본적으로 프로퍼티의 필드에 애노테이션이 붙인다.
+자바에 선언된 애노테이션을 사용해 프로퍼티에 애노테이션을 붙이는 경우 기본적으로 프로퍼티의 필드에 애노테이션을 붙인다.
 하지만 코틀린으로 애노테이션을 선언하면 프로퍼티에 직접 적용할 수 있는 애노테이션을 만들 수 있다.
 지원하는 대상 목록은 다음과 같다.
 
@@ -196,7 +196,7 @@ interface KClass<T : Any> {
 
 클래스의 모든 멤버 목록은 `KCallable` 인스턴스의 컬렉션이다.
 `KCallable`은 함수와 프로퍼티를 아우르는 공통 상위 인터페이스이고 그 안에는 `call` 메소드가 들어있다.
-`call` 메소드를 사용하면 함수나 프로퍼티의 게터를 호출할 수 있다.
+`call` 메소드를 사용하면 함수나 프로퍼티의 getter를 호출할 수 있다.
 
 ```kotlin
 interface KCallable<out R> {
@@ -234,9 +234,10 @@ fun sum(x: Int, y: Int) = x + y
 `KFunction`의 인자 타입과 반환 타입을 모두 다 안다면 `invoke` 메소드를 호출하는게 낫다.
 `call` 메소드는 타입 안전성을 보장해주지 않기 때문이다.
 
-> `KFunctionN` 타입은 `KFunction`을 확장하며 `N`과 파라미터 개수가 같은 `invoke`를 추가로 포함한다. 이런 함수 타입들은 컴파일러가 생성한 합성타입이다. 따라서 `kotlin.reflect` 패키지에서 이런 타입의 정의를 찾을 수 는 없다.
+> `KFunctionN` 타입은 `KFunction`을 확장하며 `N`과 파라미터 개수가 같은 `invoke`를 추가로 포함한다.
+> 이런 함수 타입들은 컴파일러가 생성한 합성타입이다. 따라서 `kotlin.reflect` 패키지에서 이런 타입의 정의를 찾을 수 는 없다.
 
-`KProperty`의 `call` 메소드를 호출할 수도 있다. `KProperty`의 `call`은 프로퍼티의 게터를 호출한다.
+`KProperty`의 `call` 메소드를 호출할 수도 있다. `KProperty`의 `call`은 프로퍼티의 getter를 호출한다.
 최상위 프로퍼티는 `KProperty0` 인터페이스의 인스턴스로 표현되며, `KProperty0` 안에는 인자가 없는 `get` 메소드가 있다.
 
 > 최상위 수준이나 클래스 안에 정의된 프로퍼티만 리플렉션으로 접근할 수 있고 함수의 로컬 변수에는 접근할 수 없다.
@@ -285,7 +286,7 @@ private fun StringBuilder.serializeObject(obj: Any) {
 `KProperty`는 `KAnnotatedElement`를 확장하므로 `property.annotations`를 통해 프로퍼티의 모든 애노테이션을 얻을 수 있다.
 
 ```kotlin
-inline fun <reified T> KAnnotatedElement.findAnnotation(): T? =
+inline fun <reified T> KAnnotatedElement.findAnnotation(): T? {
   annotations.filterIsInstance<T>().firstOrNull()
 }
 ```

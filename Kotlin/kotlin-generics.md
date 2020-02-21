@@ -20,7 +20,7 @@ fun <T> List<T>.slice(indices: IntRange): List<T>
 ```
 
 함수의 타입 파라미터 `T`가 수신 객체와 반환타입에 쓰인다.
-이런 함수를 호출할 때 타입 인자를 명시적으로 지정할 수 있지만, 컴파일러가 추론하므로 불필요 한 경우가 많다.
+이런 함수를 호출할 때 타입 인자를 명시적으로 지정할 수 있지만, 컴파일러가 추론하므로 불필요한 경우가 많다.
 
 ```kotlin
 >>> val letters = ('a'..'z').toList()
@@ -316,7 +316,7 @@ interface List<out T> : Collection<T> {
 반공변성의 메소드는 `T`는 `in` 위치에서만 사용된다
 
 `Consumer<T>`를 예로 들어 설명하자면,
-타입 B가 타입 A의 하위타입인경우 `Consumer<A>`가 `Consumer<B>`의 하위타입인 관계가 성립할 때,
+타입 B가 타입 A의 하위타입인 경우 `Consumer<A>`가 `Consumer<B>`의 하위타입인 관계가 성립할 때,
 제네릭 클래스 `Consumer<T>`는 타입인자 `T`에 대해 반공변이다.
 
 `<? super B>`와 같은 제네릭으로 생각해 볼 수 있다.
