@@ -196,7 +196,7 @@ func ExampleNewIntGenerator_multiple() {
     gen2 := NewIntGenerator()
     fmt.Println(gen1(), gen1(), gen1())
     fmt.Println(gen2(), gen2(), gen2(), gen2(), gen2())
-    fmt.Println(gen1(), gen1(), gen1(), gen1()
+    fmt.Println(gen1(), gen1(), gen1(), gen1())
     // Output:
     // 1 2 3
     // 1 2 3 4 5
