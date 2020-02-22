@@ -224,7 +224,8 @@ console.log(y.reverseAndSort());
 #### Global-modifying modules
 
 Global-modifying 모듈은 불러올 때 전역범위의 기존 값을 변경한다.
-예를 들어, 불러오면 `String.prototype`에 새 멤버를 추가하는 라이브러리가 있을 수 있다. 이는 런타임 충돌 가능성 때문에 다소 위험하지만 이에 대한 선언파일을 작성할 수는 있다.
+예를 들어, 불러오면 `String.prototype`에 새 멤버를 추가하는 라이브러리가 있을 수 있다.
+이는 런타임 충돌 가능성 때문에 다소 위험하지만 이에 대한 선언파일을 작성할 수는 있다.
 
 ##### Global-modifying 모듈 식별
 
@@ -388,7 +389,8 @@ var d = require("myLib/bar/baz");
 console.log("Half the number of widgets is " + (foo / 2));
 ```
 
-> `declare var`를 사용하여 변수를 선언한다. 변수가 읽기 전용이면 `declare const`를 사용할 수 있다. 변수가 블록 범위인 경우 `declare let`을 사용할 수도 있다.
+> `declare var`를 사용하여 변수를 선언한다. 변수가 읽기 전용이면 `declare const`를 사용할 수 있다.
+> 변수가 블록 범위인 경우 `declare let`을 사용할 수도 있다.
 
 ```ts
 /** The number of widgets present */
@@ -589,7 +591,7 @@ function reverse(s: string): string;
 
 타입 파라미터를 사용하지 않는다면 제네릭을 사용하지 않아야 한다.
 
-<https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-type-inference-work-on-this-interface-interface-foot--->
+<https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-type-inference-work-on-this-interface-interface-foot-->
 
 ### 콜백 타입
 
@@ -645,7 +647,8 @@ interface Fetcher {
 
 콜백만 다른 별도의 overload를 작성하지 않아야 한다.
 
-> 콜백은 항상 매개변수를 무시할 수 있으므로 더 짧은 overload는 필요하지 않다. 짧은 콜백이 먼저 선언되면 잘못된 타입의 함수가 첫번 째 오버로드와 일치하게 되어 우선 전달된다.
+> 콜백은 항상 매개변수를 무시할 수 있으므로 더 짧은 overload는 필요하지 않다.
+> 짧은 콜백이 먼저 선언되면 잘못된 타입의 함수가 첫번 째 오버로드와 일치하게 되어 우선 전달된다.
 
 ```ts
 /* WRONG */
@@ -663,7 +666,8 @@ declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): vo
 보다 구체적인 오버로드 이전에 일반적인 오버로드를 선언하지 않아야 한다.
 좀 더 특수한 시그니처 뒤에 일반적인 시그니처를 둔다.
 
-> TypeScript는 함수 호출을 처리할 때 처음으로 일치하는 오버로드를 선택한다. 이전 오버로드가 나중의 오버로드보다 "더 일반적" 일 때, 이후 오버로드는 호출될 수 없다
+> TypeScript는 함수 호출을 처리할 때 처음으로 일치하는 오버로드를 선택한다.
+> 이전 오버로드가 나중의 오버로드보다 "더 일반적" 일 때, 이후 오버로드는 호출될 수 없다
 
 ```ts
 /* WRONG */
@@ -713,7 +717,8 @@ var x: Example;
 fn(x.diff);
 ```
 
-> 함수를 사용하는 곳에서 "strict null checking"을 사용하는 경우 지정되지 않는 매개 변수는 JavaScript의 `undefined`로 나타나므로 선택적 인수가 있는 함수에 명시적으로 `undefined` 값을 전달하는 것이 좋다.
+> 함수를 사용하는 곳에서 "strict null checking"을 사용하는 경우 지정되지 않는 매개 변수는 JavaScript의 `undefined`로 나타나므로
+> 선택적 인수가 있는 함수에 명시적으로 `undefined` 값을 전달하는 것이 좋다.
 
 아래의 코드는 엄격한 null 확인에서 허용되어야 한다
 

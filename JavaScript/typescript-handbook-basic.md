@@ -24,13 +24,11 @@
 - `any`: 알지 못하는 변수 타입 (최상위 타입으로 쓸 수도 있다)
 
 - `void`
-
   - `undefined` 또는 `null`만 할당할 수 있다
   - 일반적으로 반환이 없는 함수의 반환타입으로 사용됨
   - 변수 선언시 타입으로 `void`는 유용하지 않다
 
 - `undefined` / `null`
-
   - 다른 모든 타입의 서브 타입이다
   - `void`타입과 마찬가지로 변수의 타입으로 사용하기는 적절하지 않다
   - 컴파일러의 `--strictNullChecks` 옵션을 켜면 `void` 타입 혹은 각자의 타입인 `undefined` 또는 `null`에만 할당 가능하다
@@ -44,7 +42,6 @@
         - `typeof val === 'undefined'` for undefined.
 
 - `never`
-
   - 다른 모든 타입의 서브 타입이다 하지만 `never`타입의 서브타입은 없으며 어떠한 타입도 `never`타입에 위치에 할당할 수 없다
   - 절대로 발생하지 않는 값의 타입이다
     - 항상 `Error`를 반환하는 함수(`throw new Error()` | `return error`)

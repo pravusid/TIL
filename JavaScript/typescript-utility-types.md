@@ -216,7 +216,9 @@ obj.y = 20;
 obj.moveBy(5, 5);
 ```
 
-위의 예제에서 `makeObject` 인수의 methods 객체는 `thisType <D & M>`을 포함하는 문맥 타입을 가지므로, methods 객체 내 메소드에서의 this 타입은 `{ x: number, y: number } & { moveBy (dx: number, dy: number): number }`이다. methods 프로퍼티의 타입이 추론 대상임과 동시에 메소드의 `this` 타입의 source임을 확인하라.
+위의 예제에서 `makeObject` 인수의 methods 객체는 `thisType <D & M>`을 포함하는 문맥 타입을 가지므로,
+methods 객체 내 메소드에서의 this 타입은 `{ x: number, y: number } & { moveBy (dx: number, dy: number): number }`이다.
+methods 프로퍼티의 타입이 추론 대상임과 동시에 메소드의 `this` 타입의 source임을 확인하라.
 
 `ThisType<T>` 마커 인터페이스는 `lib.d.ts`에 선언 된 비어있는 인터페이스이다.
 인터페이스는 객체 리터럴의 문맥적 타입에서 인식되는 것 이외에도 비어있는 인터페이스처럼 작동한다.
