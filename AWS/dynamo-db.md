@@ -121,7 +121,11 @@ JS error object 예시
 
 ## 로컬 실행
 
-docker 기준
+jar 실행
+
+`java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb`
+
+docker 컨테이너 실행
 
 `docker run -d -p 8000:8000 --name dynamo amazon/dynamodb-local -jar DynamoDBLocal.jar -sharedDb`
 
