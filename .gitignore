@@ -10,3 +10,4 @@
 .wiki/index.md
 
 node_modules/
+Rust/**/target/
