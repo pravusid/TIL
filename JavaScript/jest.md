@@ -39,7 +39,10 @@ jest 기본 `NODE_ENV`는 `test`임
 
 ```js
 module.exports = {
-  setupFiles: ["dotenv/config"],
+  globalSetup: "<rootDir>/src/__tests__/global-setup.ts", // triggered once before all test suites
+  globalTeardown: "<rootDir>/src/__tests__/global-teardown.ts", // triggered once after all test suites
+  setupFiles: ["dotenv/config"], // run once per test file
+  setupFilesAfterEnv: ["<rootDir>/src/__tests__/global.ts"], // run once per test file
   moduleFileExtensions: ["js", "jsx", "json", "ts", "tsx"],
   testRegex: "^.+\\.spec\\.(js|jsx|ts|tsx)$",
   transform: {
@@ -48,6 +51,14 @@ module.exports = {
   coverageDirectory: "coverage",
   collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}"],
   testEnvironment: "node"
+};
+```
+
+`setup/teardown.js`
+
+```js
+module.exports = async () => {
+  // ...
 };
 ```
 
