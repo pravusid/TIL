@@ -57,6 +57,8 @@
 
 <https://github.com/typescript-eslint/typescript-eslint>
 
+<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin>
+
 - 실행: `npx eslint --ext .ts src`
 - 비활성화: `// eslint-disable-next-line {rule}`
 
