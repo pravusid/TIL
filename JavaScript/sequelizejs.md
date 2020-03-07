@@ -2,8 +2,6 @@
 
 <http://docs.sequelizejs.com/>
 
-sequelize-typescript: <https://github.com/RobinBuschmann/sequelize-typescript>
-
 ## Options
 
 - supportBigNumbers: true (driver default: false)
@@ -22,3 +20,33 @@ const sequelize = new Sequelize("database", "username", "password", {
 ## Composite foreign keys
 
 <https://github.com/sequelize/sequelize/issues/311>
+
+## sequelize-typescript
+
+sequelize-typescript: <https://github.com/RobinBuschmann/sequelize-typescript>
+
+### Model definition
+
+```ts
+import { Table, Column, Model, HasMany } from "sequelize-typescript";
+
+@Table
+class Person extends Model<Person> {
+  @Column
+  name: string;
+
+  @Column
+  birthday: Date;
+
+  @HasMany(() => Hobby)
+  hobbies: Hobby[];
+}
+```
+
+### Model Attributes 추출
+
+```ts
+import { Model } from "sequelize-typescript";
+
+export type Props<T> = Omit<T, keyof Model<T>>;
+```
