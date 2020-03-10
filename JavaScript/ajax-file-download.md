@@ -44,11 +44,11 @@ app.use(
 response
 
 ```js
-resp.setHeader('Content-Type', contentType);
-resp.setHeader('Content-Disposition', `attachment;filename="${fileName}"`);
+resp.setHeader("Content-Type", contentType);
+resp.setHeader("Content-Disposition", `attachment;filename="${fileName}"`);
 
 stream.pipe(resp);
-stream.on('error', err => {
-  resp.status(404).json({ message: '요청하신 파일이 존재하지 않습니다' });
+stream.on("error", err => {
+  resp.status(404).json({ message: "요청하신 파일이 존재하지 않습니다" });
 });
 ```
