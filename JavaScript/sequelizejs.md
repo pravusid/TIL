@@ -50,3 +50,11 @@ import { Model } from "sequelize-typescript";
 
 export type Props<T> = Omit<T, keyof Model<T>>;
 ```
+
+`sequelize` 모듈의 `Model` 추상클래스는 다음 프로퍼티를 포함한다.
+
+- `createdAt?: Date | any`
+- `updatedAt?: Date | any`
+- `deletedAt?: Date | any`
+
+Entity에서 해당 프로퍼티를 override 한다면 `Props<T>` 타입으로 정확한 타입을 추출할 수 없다.
