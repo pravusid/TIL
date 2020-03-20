@@ -1,5 +1,7 @@
 # Stream in Node.js
 
+<https://github.com/FEDevelopers/tech.description/wiki/Node.js-Stream-%EB%8B%B9%EC%8B%A0%EC%9D%B4-%EC%95%8C%EC%95%84%EC%95%BC%ED%95%A0-%EB%AA%A8%EB%93%A0-%EA%B2%83>
+
 ## 종류
 
 - `Readable`: 추상화된 읽기 가능한 데이터 stream
@@ -51,6 +53,7 @@ readable.on("end", () => {
   - `readable`
 
 - event on Writable stream
+
   - `drain`: Writable stream이 추가적인 데이터를 수신할 수 있을 때
   - `finish`: 모든 데이터가 flush될 때
   - `error`
@@ -210,7 +213,7 @@ process.stdin
 
 ## Examples
 
-파일을 읽어서 압축하는 도중 상태를 출력하며, 완료시 "Done" 메시지를 출력하는 예제
+### 파일을 읽어서 압축하는 도중 상태를 출력하며, 완료시 "Done" 메시지를 출력하는 예제
 
 ```js
 const fs = require("fs");
@@ -242,4 +245,32 @@ fs.createReadStream(file)
   )
   .pipe(fs.createWriteStream(file + ".zz"))
   .on("finish", () => console.log("Done"));
+```
+
+### Stream <-> Buffer 변환
+
+Stream to Buffer
+
+```js
+function streamToBuffer(stream) {
+  return new Promise((resolve, reject) => {
+    const buffers = [];
+    stream.on("error", reject);
+    stream.on("data", data => buffers.push(data));
+    stream.on("end", () => resolve(Buffer.concat(buffers)));
+  });
+}
+```
+
+Buffer to Stream
+
+```js
+let Readable = require("stream").Readable;
+
+function bufferToStream(buffer) {
+  const stream = new Readable();
+  stream.push(buffer);
+  stream.push(null);
+  return stream;
+}
 ```
