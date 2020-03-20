@@ -209,7 +209,9 @@ export class MyCustomLogger implements Logger {
   - `getTreeRepository({Type}, {connection-name?})`: 연결로부터 tree repository를 얻음
   - `getCustomRepository({Type}, {connection-name?})`: `AbstractRepository<T>`를 상속하거나 클래스에 `@EntityRepository()`를 사용하여 정의한 사용자 정의 repository를 얻는다
 
-## Transaction 예시
+## 활용
+
+### Transaction 예시
 
 ```ts
 export class PostController {
@@ -258,6 +260,44 @@ export class PostController {
 }
 ```
 
-## 테스트
+### columns > value-transformer
 
-> 테스트에서 사용할 때는 [Setup / Teardown] 단계에서 [연결 / 연결해제]
+<https://github.com/typeorm/typeorm/blob/master/test/functional/columns/value-transformer/value-transformer.ts>
+
+```ts
+const lowercase: ValueTransformer = {
+  to: (entityValue: string) => {
+    return entityValue.toLocaleLowerCase();
+  },
+  from: (databaseValue: string) => {
+    return databaseValue;
+  }
+};
+
+const encode: ValueTransformer = {
+  to: (entityValue: string) => {
+    return encodeURI(entityValue);
+  },
+  from: (databaseValue: string) => {
+    return decodeURI(databaseValue);
+  }
+};
+
+const encrypt: ValueTransformer = {
+  to: (entityValue: string) => {
+    return Buffer.from(entityValue).toString("base64");
+  },
+  from: (databaseValue: string) => {
+    return Buffer.from(databaseValue, "base64").toString();
+  }
+};
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column({ transformer: [lowercase, encode, encrypt] })
+  email: string;
+}
+```
