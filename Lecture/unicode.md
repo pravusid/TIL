@@ -96,3 +96,18 @@
 ### UTF-32
 
 한 글자를 32비트(4bytes)로 인코딩한다.
+
+## 한글평면
+
+- <https://d2.naver.com/helloworld/19187>
+- <https://d2.naver.com/helloworld/76650>
+
+| 이름                                         | 처음 | 끝   | 개수  |
+| -------------------------------------------- | ---- | ---- | ----- |
+| 한글 자모 (Hangul Jamo)                      | 1100 | 11FF | 256   |
+| 호환용 한글 자모 (Hangul Compatibility Jamo) | 3130 | 318F | 96    |
+| 한글 자모 확장 A (Hangul Jamo Extended A)    | A960 | A97F | 32    |
+| 한글 소리 마디 (Hangul Syllables)            | AC00 | D7AF | 11184 |
+| 한글 자모 확장 B (Hangul Jamo Extended B)    | D7B0 | D7FF | 80    |
+
+> 완성형 한글 범위(한글소리마디): '가'(U+AC00)부터 '힣'(U+D7A3)
