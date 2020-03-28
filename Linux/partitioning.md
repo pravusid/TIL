@@ -7,8 +7,17 @@
 ## 나누기를 권장하는 파티션
 
 - `swap`: 아래 참조
-- `/boot`: 250 MB
-- `/`: 최소 5 GB (보통 50 GB 정도를 할당하였음)
+
+- `/boot`: 512mb ~ 1gb
+
+  - legacy bios
+    - /boot: 512mb
+  - UEFI
+    - /boot: 512mb
+    - /boot/efi: 200mb (파일시스템을 EFI System Partition으로 설정)
+
+- `/`: 최소 5gb (보통 50gb 정도를 할당하였음)
+
 - `/home`: 나머지 공간
 
 ## swap
