@@ -14,7 +14,7 @@
     - /boot: 512mb
   - UEFI
     - /boot: 512mb
-    - /boot/efi: 200mb (파일시스템을 EFI System Partition으로 설정)
+    - /boot/efi: 200mb, 파일시스템을 fat32 & ESP(EFI System Partition)로 설정
 
 - `/`: 최소 5gb (보통 50gb 정도를 할당하였음)
 
