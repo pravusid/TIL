@@ -63,14 +63,13 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
 - VSCode `Tasks: Run Task`에서 선택할 수 있는 작업 입력
 - TypeScript 프로젝트(root 경로에 `tsconfig.json` 존재)는 tsc build/watch 작업이 기본 출력됨
 - Node 프로젝트(root 경로에 `package.json` 존재)는 npm script 작업이 기본 출력됨
+- 언어팩에 따라서 실행이 되지 않는 경우가 있으므로(build -> 빌드) `npm: build` 실행을 추천
 
 > `main.ts` 경로와 `dist/` 경로는 설정에 따라변경
 
-### Jest extension + NVM
+### node.js runtime 오류
 
 [`nvm` 사용시 `PATH`에서 node runtime을 찾지 못하는 문제](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_multi-version-support)
-
-> 옵션에 `"runtimeVersion": "<NODE_VESION_IN_NVM>"` 추가
 
 `.vscode/launch.json`
 
@@ -79,17 +78,13 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "name": "vscode-jest-tests",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      "args": ["--runInBand"],
-      "cwd": "${workspaceFolder}",
-      "runtimeVersion": "<NODE_VESION_IN_NVM>",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "disableOptimisticBPs": true
+      // ...
+      "runtimeVersion": "<NODE_VESION_IN_NVM>"
+      // ...
     }
   ]
 }
 ```
+
+> runtimeVersion을 지원하지 않는 version manager 사용 또는 위 옵션을 사용하지 않으려면
+> `~/.profile` 혹은 `~/.zprofile` 같은 환경변수 설정에서 기본 node/bin PATH를 지정한다.
