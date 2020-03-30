@@ -281,6 +281,17 @@ CREATE TABLE test(
 ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
+### 테이블 복사
+
+```sql
+-- 테이블 생성하여 복사
+CREATE TABLE <TARGET> DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+SELECT * FROM <SOURCE>;
+
+-- 생성한 테이블에 복사
+INSERT INTO <TARGET> SELECT * FROM <SOURCE>;
+```
+
 ## ALTER TABLE
 
 COLUMN 변경
