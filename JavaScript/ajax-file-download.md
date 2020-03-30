@@ -12,7 +12,7 @@ const url = window.URL.createObjectURL(
 
 const contentDisposition = response.headers["content-disposition"];
 const fileName = contentDisposition
-  ? contentDisposition.match(/filename="(.+)"/)[1]
+  ? contentDisposition.match(/filename\*=UTF-8''(.+)/)[1]
   : String(new Date().getTime());
 
 const tag = document.createElement("a");
@@ -45,7 +45,10 @@ response
 
 ```js
 resp.setHeader("Content-Type", contentType);
-resp.setHeader("Content-Disposition", `attachment;filename="${fileName}"`);
+resp.setHeader(
+  "Content-Disposition",
+  `attachment;filename*=UTF-8''${encodeURIComponent(fileName)}`
+);
 
 stream.pipe(resp);
 stream.on("error", err => {
