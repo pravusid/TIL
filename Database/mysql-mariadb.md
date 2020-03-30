@@ -1,5 +1,33 @@
 # MySQL || MariaDB
 
+## Case Sensitivity
+
+<https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html>
+
+### not case-sensitive
+
+partition, subpartition, column, index, stored routine, event, and resource group names, column aliases
+
+### case-sensitive
+
+names of logfile groups
+
+### by Platform
+
+database, table, table aliases and trigger names
+
+These are case-sensitive on Unix, but not so on Windows or macOS.
+
+### `lower_case_table_names` system variable
+
+On Unix, the default value of lower_case_table_names is 0. On Windows, the default value is 1. On macOS, the default value is 2.
+
+> This behavior applies to database names, table names and table aliases
+
+- 값 0: 이름은 생성시 지정된 대소문자로 저장되며 이름비교는 대소문자를 구분하여 실행함, case-sensitive인 경우만 적용됨, 대소문자를 구분하여 저장한 데이터가 있다면 이 옵션을 변경하지 않아야 함
+- 값 1: 이름은 소문자로 디스크에 저장되며 이름 비교는 대소문자 구분없이 실행됨
+- 값 2: 이름은 생성시 지정된 대소문자로 저장되며 이름 비교는 모두 소문자로 변환하여 실행함, 파일시스템이 not case-sensitive인 경우만 적용됨
+
 ## 시스템 설정
 
 서버 시스템 변수 확인
@@ -232,10 +260,12 @@ MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 
 #### 경우의 수
 
 - 고정 TimeZone
+
   - local datetime을 (10:00+09:00) DATETIME으로 저장하고 +09 timezone으로 연결
   - UTC datetime을 (01:00Z) DATETIME으로 저장하고 +00 timezone으로 연결
 
 - 변동 TimeZone
+
   - local datetime값을 가지고 있는 DATETIME을 `CONVERT_TZ` 사용하여 변환하고 timezone은 필요한 대로
   - UTC datetime을 (01:00Z) TIMESTAMP로 저장하고 timezone은 필요한 대로
 
@@ -297,6 +327,7 @@ ROLLBACK [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
 transaction_characteristic
 
 - `WITH CONSISTENT SNAPSHOT`
+
   - The WITH CONSISTENT SNAPSHOT modifier starts a consistent read for storage engines that are capable of it.
   - This applies only to InnoDB. The effect is the same as issuing a START TRANSACTION followed by a SELECT from any InnoDB table.
   - The WITH CONSISTENT SNAPSHOT modifier does not change the current transaction isolation level
@@ -306,6 +337,7 @@ transaction_characteristic
   - A warning is generated when the WITH CONSISTENT SNAPSHOT clause is ignored.
 
 - access mode
+
   - `READ WRITE`
   - `READ ONLY`
 
