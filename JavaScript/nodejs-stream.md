@@ -274,3 +274,15 @@ function bufferToStream(buffer) {
   return stream;
 }
 ```
+
+Buffer to Stream with PassThrough
+
+```js
+let PassThrough = require("stream").PassThrough;
+
+function bufferToStream(buffer) {
+  const stream = new PassThrough();
+  stream.end(buffer);
+  return stream;
+}
+```
