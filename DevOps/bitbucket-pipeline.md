@@ -5,11 +5,55 @@
 - <https://confluence.atlassian.com/bitbucket/configuring-your-pipeline-872013574.html>
 - <https://confluence.atlassian.com/x/14UWN>
 
+### SSH 사용
+
+- <https://confluence.atlassian.com/bitbucket/use-ssh-keys-in-bitbucket-pipelines-847452940.html>
+- <https://confluence.atlassian.com/bitbucket/deploy-using-scp-973481711.html>
+
 ## pipeline 무시
 
 커밋 메시지에 `[skip ci]` 또는 `[ci skip]` 포함
 
 ## Example
+
+### PR 빌드 & 테스트
+
+```yml
+image: atlassian/default-image:2
+
+pipelines:
+  pull-requests:
+    "**":
+      - step:
+          image: node:12.14.0
+          name: Install deps
+          caches:
+            - node
+          script:
+            - npm ci
+      - parallel:
+          - step:
+              image: node:12.14.0
+              name: Typecheck
+              caches:
+                - node
+              script:
+                - npm run typecheck
+          - step:
+              image: node:12.14.0
+              caches:
+                - node
+              name: Lint
+              script:
+                - npm run lint:quiet
+          - step:
+              image: node:12.14.0
+              caches:
+                - node
+              name: Test
+              script:
+                - npm run test
+```
 
 ### S3 배포 후 cloudfront invalidation
 
