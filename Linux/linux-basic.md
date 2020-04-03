@@ -140,13 +140,15 @@
 - 묶음: `tar zcvf <filename>.tar.gz <target>`
 - 풀기: `tar zxvf <filename>.tar.gz [-C 경로선택]`
 
-> 버전에 따라 입력대상(target) 위치가 가장 뒤에 오지 않으면 오류 발생할 수도 있음.
+> 버전에 따라 입력대상(target) 위치가 가장 뒤에 오지 않으면 오류 발생할 수도 있음.  
 > 입력대상은 전체(`*`), 숨김파일 포함 전체(`.`), 상대경로(`./foo`)등을 사용하고 디렉토리에 trailing slash 제외
 
-파일/디렉토리 제외: `--exclude 제외경로`
+파일/디렉토리 제외: `--exclude <경로>`
 
-- tar 대상 경로 내에 tar 결과파일이 포함되지 않도록 exclude 처리를 하지 않으면 `tar: ./<파일명>: file changed as we read it` 에러 발생
-- 버전에 따라 파일이 사전 생성되어 있지 않아도 오류 발생함, 따라서 파일 사전 생성: `touch <파일명>.tar.gz`
+`tar: ./<파일명>: file changed as we read it` 에러
+
+- tar 대상 경로 내에 tar 결과파일이 포함되지 않도록 exclude 처리
+- (버전에 따라, 파일이 생성되며 구조가 변한것으로 인식하므로) 파일 사전 생성: `touch <파일명>.tar.gz`
 
 ### 파일 위치 검색
 
@@ -160,7 +162,7 @@
 
 `which <실행명령>`: PATH에 정의된 경로만 검색하여 위치를 절대경로로 반환함
 
-`whereis <실행명령>`: 실행팡리, 소스, man 페이지를 대상으로 검색
+`whereis <실행명령>`: 실행파일, 소스, man 페이지를 대상으로 검색
 
 `locate <파일이름>`: `updatedb` 명령으로 갱신된 파일 목록 데이터베이스에서 검색함
 
