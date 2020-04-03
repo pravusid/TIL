@@ -19,13 +19,12 @@
 ### PR 빌드 & 테스트
 
 ```yml
-image: atlassian/default-image:2
+image: node:12.14.0
 
 pipelines:
   pull-requests:
     "**":
       - step:
-          image: node:12.14.0
           name: Install deps
           caches:
             - node
@@ -33,21 +32,18 @@ pipelines:
             - npm ci
       - parallel:
           - step:
-              image: node:12.14.0
               name: Typecheck
               caches:
                 - node
               script:
                 - npm run typecheck
           - step:
-              image: node:12.14.0
               caches:
                 - node
               name: Lint
               script:
                 - npm run lint:quiet
           - step:
-              image: node:12.14.0
               caches:
                 - node
               name: Test
