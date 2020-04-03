@@ -135,7 +135,18 @@
 
 - f: 파일이름 지정 (필수)
 
-> `tar cvf <filename>.tar <target>`
+일반적으로 사용하는 명령어는 다음과 같다
+
+- 묶음: `tar zcvf <filename>.tar.gz <target>`
+- 풀기: `tar zxvf <filename>.tar.gz [-C 경로선택]`
+
+> 버전에 따라 입력대상(target) 위치가 가장 뒤에 오지 않으면 오류 발생할 수도 있음.
+> 입력대상은 전체(`*`), 숨김파일 포함 전체(`.`), 상대경로(`./foo`)등을 사용하고 디렉토리에 trailing slash 제외
+
+파일/디렉토리 제외: `--exclude 제외경로`
+
+- tar 대상 경로 내에 tar 결과파일이 포함되지 않도록 exclude 처리를 하지 않으면 `tar: ./<파일명>: file changed as we read it` 에러 발생
+- 버전에 따라 파일이 사전 생성되어 있지 않아도 오류 발생함, 따라서 파일 사전 생성: `touch <파일명>.tar.gz`
 
 ### 파일 위치 검색
 
