@@ -209,9 +209,21 @@ export class MyCustomLogger implements Logger {
   - `getTreeRepository({Type}, {connection-name?})`: 연결로부터 tree repository를 얻음
   - `getCustomRepository({Type}, {connection-name?})`: `AbstractRepository<T>`를 상속하거나 클래스에 `@EntityRepository()`를 사용하여 정의한 사용자 정의 repository를 얻는다
 
+## 작동방식
+
+- `EntityManager` & `Repository` Interface
+
+  - `Repository` 내부에서 실제로는 `EntityManager` 호출
+  - <https://github.com/typeorm/typeorm/blob/master/src/entity-manager/EntityManager.ts>
+
+- 메소드 `Executor`
+
+  - `EntityManager`는 단순 작업은 `QueryBuilder`를 호출하고 복잡한 작업은 `Executor`를 호출함
+  - <https://github.com/typeorm/typeorm/blob/master/src/persistence/SubjectExecutor.ts>
+
 ## 대용량 처리
 
-TypeOrm에서 대용량 작업을 chunk 단위로 나누어 처리할 수 있다
+TypeOrm에서 대용량 작업을 `chunk` 단위로 나누어 처리할 수 있다
 
 - <https://typeorm.io/#/repository-api/additional-options>
 - 해당옵션은 `SaveOptions` & `RemoveOptions`에 포함되어 있다
@@ -222,8 +234,6 @@ TypeOrm에서 대용량 작업을 chunk 단위로 나누어 처리할 수 있다
 성능상 이점이 있지만 조건이 많은 요구사항을 처리하기는 부적합하다.
 
 대용량 작업이 필요하다면 직접 대상 배열을 쪼갠뒤 `insert`, `delete` 메소드를 순차적으로 호출해도 된다
-
-> 각 메소드 코드는 다음에서 확인: <https://github.com/typeorm/typeorm/blob/master/src/entity-manager/EntityManager.ts>
 
 ## 활용
 
