@@ -12,7 +12,8 @@ const url = window.URL.createObjectURL(
 
 const contentDisposition = response.headers["content-disposition"];
 const fileName = contentDisposition
-  ? contentDisposition.match(/filename\*=UTF-8''(.+)/)[1]
+  ? (contentDisposition.match(/filename\*=UTF-8''(.+)/) ??
+      contentDisposition.match(/filename="(.+)"/))[1]
   : String(new Date().getTime());
 
 const tag = document.createElement("a");
@@ -36,7 +37,7 @@ app.use(
   cors({
     origin: "http://localhost:8080",
     credentials: true,
-    exposedHeaders: ["Content-Disposition"]
+    exposedHeaders: ["Content-Disposition"],
   })
 );
 ```
@@ -51,7 +52,7 @@ resp.setHeader(
 );
 
 stream.pipe(resp);
-stream.on("error", err => {
+stream.on("error", (err) => {
   resp.status(404).json({ message: "요청하신 파일이 존재하지 않습니다" });
 });
 ```
