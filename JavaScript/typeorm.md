@@ -110,7 +110,7 @@ db 연결을 시도할 때 기본 옵션을 동적으로 override 할 수 있다
 const connectionOptions = await getConnectionOptions();
 Object.assign(connectionOptions, {
   namingStrategy: new CustomNamingStrategy(),
-  logger: new MyCustomLogger()
+  logger: new MyCustomLogger(),
 });
 const connection = await createConnection(connectionOptions);
 ```
@@ -128,7 +128,7 @@ export const connectToDatabase = async (env?: string) => {
 
   return createConnection(
     Object.assign(connectionOption, {
-      namingStrategy: new CustomNamingStrategy()
+      namingStrategy: new CustomNamingStrategy(),
     })
   );
 };
@@ -147,7 +147,7 @@ const connection: Connection = await createConnection({
   password: "test",
   database: "test",
   entities: [`${__dirname}/domain/**/*`],
-  namingStrategy: new CustomNamingStrategy()
+  namingStrategy: new CustomNamingStrategy(),
 });
 ```
 
@@ -208,6 +208,22 @@ export class MyCustomLogger implements Logger {
   - `getRepository({Type}, {connection-name?})`: 연결로부터 repository를 얻음
   - `getTreeRepository({Type}, {connection-name?})`: 연결로부터 tree repository를 얻음
   - `getCustomRepository({Type}, {connection-name?})`: `AbstractRepository<T>`를 상속하거나 클래스에 `@EntityRepository()`를 사용하여 정의한 사용자 정의 repository를 얻는다
+
+## 대용량 처리
+
+TypeOrm에서 대용량 작업을 chunk 단위로 나누어 처리할 수 있다
+
+- <https://typeorm.io/#/repository-api/additional-options>
+- 해당옵션은 `SaveOptions` & `RemoveOptions`에 포함되어 있다
+
+> 실제 처리되는 코드는 다음에서 확인: <https://github.com/typeorm/typeorm/blob/master/src/persistence/EntityPersistExecutor.ts>
+
+데이터 처리시 `insert`, `remove` 메소드는 단순한 작업만을 수행하므로(쿼리빌더 호출),
+성능상 이점이 있지만 조건이 많은 요구사항을 처리하기는 부적합하다.
+
+대용량 작업이 필요하다면 직접 대상 배열을 쪼갠뒤 `insert`, `delete` 메소드를 순차적으로 호출해도 된다
+
+> 각 메소드 코드는 다음에서 확인: <https://github.com/typeorm/typeorm/blob/master/src/entity-manager/EntityManager.ts>
 
 ## 활용
 
@@ -271,7 +287,7 @@ const lowercase: ValueTransformer = {
   },
   from: (databaseValue: string) => {
     return databaseValue;
-  }
+  },
 };
 
 const encode: ValueTransformer = {
@@ -280,7 +296,7 @@ const encode: ValueTransformer = {
   },
   from: (databaseValue: string) => {
     return decodeURI(databaseValue);
-  }
+  },
 };
 
 const encrypt: ValueTransformer = {
@@ -289,7 +305,7 @@ const encrypt: ValueTransformer = {
   },
   from: (databaseValue: string) => {
     return Buffer.from(databaseValue, "base64").toString();
-  }
+  },
 };
 
 @Entity()
