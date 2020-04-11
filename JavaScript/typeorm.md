@@ -147,7 +147,7 @@ const connection: Connection = await createConnection({
   username: "test",
   password: "test",
   database: "test",
-  entities: [`${join(__dirname, "../")}/domain/**/*.{js,ts}`],
+  entities: [`${join(__dirname, "..")}/domain/**/*.{js,ts}`],
   namingStrategy: new CustomNamingStrategy(),
 });
 ```
