@@ -137,6 +137,7 @@ export const connectToDatabase = async (env?: string) => {
 직접 연결설정을 입력할 수도 있다
 
 ```ts
+import { join } from "path";
 import { createConnection, Connection } from "typeorm";
 
 const connection: Connection = await createConnection({
@@ -146,7 +147,7 @@ const connection: Connection = await createConnection({
   username: "test",
   password: "test",
   database: "test",
-  entities: [`${__dirname}/domain/**/*`],
+  entities: [`${join(__dirname, "../")}/domain/**/*.{js,ts}`],
   namingStrategy: new CustomNamingStrategy(),
 });
 ```
