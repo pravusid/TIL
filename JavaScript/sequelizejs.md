@@ -13,7 +13,7 @@
 ```js
 const sequelize = new Sequelize("database", "username", "password", {
   dialect: "mysql",
-  dialectOptions: { decimalNumbers: true }
+  dialectOptions: { decimalNumbers: true },
 });
 ```
 
@@ -58,3 +58,34 @@ export type Props<T> = Omit<T, keyof Model<T>>;
 - `deletedAt?: Date | any`
 
 Entity에서 해당 프로퍼티를 override 한다면 `Props<T>` 타입으로 정확한 타입을 추출할 수 없다.
+
+## Troubleshooting
+
+### connection deadlock
+
+- <https://github.com/sequelize/sequelize/issues/11024>
+- <https://github.com/sequelize/sequelize/issues/11571>
+
+```ts
+import PQueue from "p-queue";
+import { Op, Transaction } from "sequelize";
+
+const transactionQueue = new PQueue({ concurrency: connectionPoolSize - 1 });
+
+export const dbTransaction = <T>(
+  fn: (transaction: Transaction) => Promise<T>
+) =>
+  transactionQueue.add(() =>
+    sequelize.transaction(async (transaction) => {
+      try {
+        const result = await fn(transaction);
+        return result;
+      } catch (e) {
+        if (e.parent?.code === "ER_LOCK_DEADLOCK") {
+          await (transaction as any).cleanup();
+        }
+        throw e;
+      }
+    })
+  );
+```
