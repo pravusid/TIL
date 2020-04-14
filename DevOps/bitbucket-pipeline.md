@@ -26,26 +26,20 @@ pipelines:
     "**":
       - step:
           name: Install deps
-          caches:
-            - node
           script:
             - npm ci
+          artifacts:
+            - "node_modules/**"
       - parallel:
           - step:
               name: Typecheck
-              caches:
-                - node
               script:
                 - npm run typecheck
           - step:
-              caches:
-                - node
               name: Lint
               script:
                 - npm run lint:quiet
           - step:
-              caches:
-                - node
               name: Test
               script:
                 - npm run test
