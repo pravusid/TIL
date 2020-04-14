@@ -68,7 +68,7 @@ Entity에서 해당 프로퍼티를 override 한다면 `Props<T>` 타입으로 �
 
 ```ts
 import PQueue from "p-queue";
-import { Op, Transaction } from "sequelize";
+import { Transaction } from "sequelize";
 
 const transactionQueue = new PQueue({ concurrency: connectionPoolSize - 1 });
 
