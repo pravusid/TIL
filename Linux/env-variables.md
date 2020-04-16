@@ -11,11 +11,13 @@
 ### Multi user mode
 
 - login shell
+
   - `/etc/profile`
   - `~/.bash_profile`: bash쉘을 통해 사용자의 로그인 세션이 열릴때 호출된다
   - `~/.profile`: 사용자의 로그인 세션이 열릴 때 호출된다
 
 - non login shell
+
   - `/etc/bash.bashrc`
   - `~/.bashrc`: 사용자에게만 적용되고, 리눅스 기본 쉘인 bash 쉘 세션이 생성될 때마다 로드된다
   - `~/.zshrc`: 사용자에게만 적용되고, zsh쉘 세션이 생성될 때 마다 로드된다
@@ -35,6 +37,7 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 `/bin/sh`을 login shell로 하고 `~/.profile`에 `export SHELL=/bin/zsh` 코드를 포함한다면,
 터미널을 열었을 때 터미널은 `zsh`를 실행할 것이다. (일부 터미널은 `$SHELL`을 따르지 않는다)
+
 > 이경우 여전히 login shell은 `sh` 이다.
 
 대부분의 설정에서 `~/.profile` 파일은 그래픽 디스플레이 매니저로 로그인 할 때 **X session startup scripts**에 의해서 로드된다.
