@@ -28,18 +28,24 @@ JavaScript Date 객체는 내부적으로 Milliseconds Unix Time을 사용하지
 const config = {
   //...
   typeCast: function (field, next) {
-    if (field.type === 'DATETIME') {
-      return new Date(`${field.string()}Z`) // can be 'Z' for UTC or an offset in the form '+HH:MM' or '-HH:MM'
+    if (field.type === "DATETIME") {
+      return new Date(`${field.string()}Z`); // can be 'Z' for UTC or an offset in the form '+HH:MM' or '-HH:MM'
     }
     return next();
-  }
-}
+  },
+};
 ```
 
 Database 입력 값에 UTC를 적용하려면 다음 두 방식을 사용할 수 있다 (검증 필요)
 
 - set timezone option to `'+0'` or `'+00:00'` or `'Z'`
 - run the node process with the timezone environment variable `TZ=UTC`
+
+## 에러처리
+
+- 에러코드: <https://github.com/sidorares/node-mysql2/blob/master/lib/constants/errors.js>
+- 에러패킷처리 (저수준): <https://github.com/sidorares/node-mysql2/blob/master/lib/packets/packet.js#L702>
+- 에러처리 (고수준): <https://github.com/sidorares/node-mysql2/blob/master/promise.js#L8>
 
 ## mysqljs vs node-mysql2
 
@@ -73,12 +79,12 @@ mysql의 집계함수 결과값은 DECIMAL/DOUBLE로 출력되는데, 두 드라
 JavaScript
 
 ```js
-require('iconv-lite').encodingExists('cesu8');
+require("iconv-lite").encodingExists("cesu8");
 ```
 
 TypeScript
 
 ```ts
-import * as iconv from 'iconv-lite';
-iconv.encodingExists('cesu8');
+import * as iconv from "iconv-lite";
+iconv.encodingExists("cesu8");
 ```
