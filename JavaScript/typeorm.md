@@ -238,6 +238,25 @@ TypeOrm에서 대용량 작업을 `chunk` 단위로 나누어 처리할 수 있�
 
 ## 활용
 
+### raw query with parameters
+
+<https://github.com/typeorm/typeorm/blob/master/src/driver/mysql/MysqlDriver.ts#L396>
+
+```ts
+// 테스트 위해 id = 1 고정
+const [query, parameters] = getConnection().driver.escapeQueryWithParameters(
+  `
+    INSERT INTO post(id, title, content, author, hit)
+    VALUES(1, :title, :content, :author, 0)
+    ON DUPLICATE KEY UPDATE hit = hit + 1
+  `,
+  { title: '제목', content: '본문', author: '작성자' }, // parameters
+  {}, // native parameters
+);
+
+const result = await getManager().query(query, parameters);
+```
+
 ### Transaction 예시
 
 ```ts
