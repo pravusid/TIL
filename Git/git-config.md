@@ -14,7 +14,15 @@
     gpgsign = true
 [diff]
     tool = vimdiff
+[alias]
+    a = "!git add $(git status -s | fzf -m | awk '{print $2}')"
+    b = "!git checkout $(\
+        _height=$(stty size | awk '{print $1}');\
+        git branch | egrep -v '^\\*' | fzf --preview \"git log {1} | head -n $_height\";\
+    )"
 ```
+
+> ref: <https://johngrib.github.io/wiki/git-alias/>
 
 ## include / includeIf
 
