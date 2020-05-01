@@ -49,7 +49,7 @@ TL;DR
 InnoDB `FOR UPDATE` 잠금은 row 단위 인데(unique 조건) 만약 행이 존재하지 않는다면
 해당 테이블에 [next-key-locks](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-next-key-locks) 적용 될 수 있음
 
-또한 여러 트랜잭션이 존재하지 않는 행에 대해 `SELECT... FOR UPDATE` 요청을 동시에 하면, 명확한 lock 대상이 없으므로 deadlock 발생가능
+또한 존재하지 않는 행에 대해 `SELECT... FOR UPDATE` 여러 트랜잭션이 동시에 요청을 하면, 명확한 lock 대상이 없으므로 deadlock 발생가능
 
 - <https://mysqlquicksand.wordpress.com/2019/12/20/select-for-update-on-non-existent-rows/>
 - <https://fastmail.blog/2017/12/09/mysql-lock-nonexistent-row/>
