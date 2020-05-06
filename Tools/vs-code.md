@@ -4,6 +4,19 @@
 
 <https://code.visualstudio.com/docs>
 
+## Formatting
+
+`.vscode/settings.json`
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
+}
+```
+
 ## Debugging
 
 <https://code.visualstudio.com/docs/editor/debugging>
