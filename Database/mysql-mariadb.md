@@ -314,7 +314,19 @@ ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [
 
 ## DML
 
-<https://dev.mysql.com/doc/refman/8.0/en/sql-syntax-data-manipulation.html>
+<https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html>
+
+### SELECT
+
+#### query cache
+
+```sql
+SET SESSION query_cache_type = OFF;
+SHOW VARIABLES LIKE 'query_cache_type';
+
+-- select 실행시 캐시 없이 할 수도 있음
+SELECT SQL_NO_CACHE * FROM <TABLE_NAME>;
+```
 
 ### INSERT SELECT
 
