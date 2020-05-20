@@ -20,11 +20,11 @@ function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
 
 const todo1 = {
   title: "organize desk",
-  description: "clear clutter"
+  description: "clear clutter",
 };
 
 const todo2 = updateTodo(todo1, {
-  description: "throw out trash"
+  description: "throw out trash",
 });
 ```
 
@@ -53,7 +53,7 @@ interface Todo {
 }
 
 const todo: Readonly<Todo> = {
-  title: "Delete inactive users"
+  title: "Delete inactive users",
 };
 
 todo.title = "Hello"; // Error: cannot reassign a readonly property
@@ -81,7 +81,7 @@ type Page = "home" | "about" | "contact";
 const x: Record<Page, PageInfo> = {
   about: { title: "about" },
   contact: { title: "contact" },
-  home: { title: "home" }
+  home: { title: "home" },
 };
 ```
 
@@ -100,7 +100,7 @@ type TodoPreview = Pick<Todo, "title" | "completed">;
 
 const todo: TodoPreview = {
   title: "Clean room",
-  completed: false
+  completed: false,
 };
 ```
 
@@ -112,7 +112,7 @@ type NoStatus = Pick<Todo, "title"> & Pick<Partial<Todo>, "description">;
 const picked1: NoStatus = { title: "포켓몬스터" }; // OK
 const picked2: NoStatus = {
   title: "포켓몬스터",
-  description: "피카츄는 내친구"
+  description: "피카츄는 내친구",
 }; // OK
 ```
 
@@ -207,8 +207,8 @@ let obj = makeObject({
     moveBy(dx: number, dy: number) {
       this.x += dx; // Strongly typed this
       this.y += dy; // Strongly typed this
-    }
-  }
+    },
+  },
 });
 
 obj.x = 10;
@@ -280,4 +280,14 @@ type D = Parameters<typeof Math.max>; // number[]
 type A = ConstructorParameters<ErrorConstructor>; // [(string | undefined)?]
 type B = ConstructorParameters<FunctionConstructor>; // string[]
 type C = ConstructorParameters<RegExpConstructor>; // [string, (string | undefined)?]
+```
+
+## `infer NonFunctionProperties`
+
+```ts
+type NonFunctionPropertyNames<T> = {
+  [K in keyof T]: T[K] extends Function ? never : K;
+}[keyof T];
+
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 ```
