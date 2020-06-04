@@ -14,6 +14,8 @@
     gpgsign = true
 [diff]
     tool = vimdiff
+[pull]
+    rebase = true
 [alias]
     a = "!git add $(git status -s | fzf -m | awk '{print $2}')"
     b = "!git checkout $(\
