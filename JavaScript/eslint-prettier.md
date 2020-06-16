@@ -3,6 +3,7 @@
 ## 차이
 
 - [`prettier-eslint`](https://github.com/prettier/prettier-eslint)
+
   - 구분: A JavaScript module exporting a single function
   - 역할: Runs the code (string) through `prettier` then `eslint --fix`. The output is also a string.
   - 사용법: Either calling the function in your code or via [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) if you prefer the command line.
@@ -11,6 +12,7 @@
   - 다른 것 사용필요: No
 
 - [`eslint-plugin-prettier`](https://github.com/prettier/eslint-plugin-prettier)
+
   - 구분: An ESLint plugin
   - 역할: Plugins usually contain implementations for additional rules that ESLint will check for. This plugin uses Prettier under the hood and will raise ESLint errors when your code differs from Prettier's expected output.
   - 사용법: Add it to your `.eslintrc`.
@@ -19,6 +21,7 @@
   - 다른 것 사용필요: You may want to turn off conflicting rules using `eslint-config-prettier`.
 
 - [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier)
+
   - 구분: An ESLint configuration
   - 역할: This config turns off formatting-related rules that might conflict with Prettier, allowing you to use Prettier with other ESLint configs like [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb).
   - 사용법: Add it to your `.eslintrc`.
@@ -73,7 +76,11 @@
   "env": {
     "node": true
   },
-  "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
   "rules": {
     "class-methods-use-this": "off",
     "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
@@ -83,12 +90,9 @@
     "import/extensions": "off",
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/no-parameter-properties": "off",
-    "@typescript-eslint/no-useless-constructor": ["error"]
+    "@typescript-eslint/no-useless-constructor": "error"
   },
   "overrides": [
     {
@@ -111,6 +115,25 @@
   ]
 }
 ```
+
+requiring typecheck 규칙을 사용하지 않는 경우 다음 규칙 추가
+
+```json
+{
+  "rules": {
+    // ...
+    "no-return-await": "off",
+    "require-await": "off",
+    "@typescript-eslint/await-thenable": "warn",
+    "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
+    "@typescript-eslint/require-await": "warn",
+    "@typescript-eslint/return-await": ["warn", "in-try-catch"]
+  }
+}
+```
+
+- recommended without typecheck: `plugin:@typescript-eslint/recommended`
+- recommended requiring typecheck: `plugin:@typescript-eslint/recommended-requiring-type-checking`
 
 ## Prettier
 
@@ -216,8 +239,10 @@ prettier-eslint Integration
 ### VSCode 확장 기능
 
 - ESLint
+
   - eslint 포함하지 않으므로 global or local 설치 필요
 
 - Prettier – Code Formatter
+
   - Prettier 확장은 prettier, prettier-eslint, prettier-tslint 포함
   - Prettier 확장은 configuration을 npm global에서 가져올 수 없고 local에서만 가져옴
