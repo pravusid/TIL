@@ -219,7 +219,7 @@ export class MyCustomLogger implements Logger {
 
 - 메소드 `Executor`
 
-  - `EntityManager`는 단순 작업은 `QueryBuilder`를 호출하고 복잡한 작업은 `Executor`를 호출함
+  - `EntityManager`는 단순 작업은 직접 `QueryBuilder`를 호출하고 복잡한 작업은 `Executor`를 통해 `QueryBuilder`를 호출함
   - <https://github.com/typeorm/typeorm/blob/master/src/persistence/SubjectExecutor.ts>
 
 ## 대용량 처리
