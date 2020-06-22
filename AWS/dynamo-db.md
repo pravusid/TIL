@@ -28,6 +28,7 @@ AWS SDK에서는 스로틀된 요청은 기본적으로 10번 재시도 함
 테이블에서 종류별 최대 5개의 보조 인덱스를 생성할 수 있다
 
 - Global secondary index: 파티션 키 및 정렬 키가 테이블의 파티션 키 및 정렬 키와 다를 수 있는 인덱스
+
   - 인덱스 크기 제약 없음
   - 테이블 생성 이후에도 생성 및 삭제가 가능하다
   - Eventual consistent read만 가능함
@@ -44,6 +45,7 @@ AWS SDK에서는 스로틀된 요청은 기본적으로 10번 재시도 함
 ### 용량 (Capacity Unit)
 
 - 1RCU
+
   - Eventual consistent read: 8KB/sec 처리
   - Strong consistent read: 4KB/sec 처리
   - 4KB 단위로 올림계산 (4KB block)
@@ -146,23 +148,23 @@ shell 접속 후 option에서 Access Key Id 설정(옵션사항)
 
 ```js
 export const awsDynamo = new AWS.DynamoDB.DocumentClient({
-  convertEmptyValues: true
+  convertEmptyValues: true,
 });
 ```
 
 ### Node에서 DynamoDB endpoint 설정 (Local DynamoDB)
 
 ```js
-const AWS = require("aws-sdk");
+const AWS = require('aws-sdk');
 
 AWS.config.update({
   credentials,
-  region: "ap-northeast-2"
+  region: 'ap-northeast-2',
 });
 
-const dynamoClient = new AWS.DynamoDB({ endpoint: "http://localhost:8000" });
+const dynamoClient = new AWS.DynamoDB({ endpoint: 'http://localhost:8000' });
 const dynamoDocClient = new AWS.DynamoDB.DocumentClient({
-  endpoint: "http://localhost:8000"
+  endpoint: 'http://localhost:8000',
 });
 ```
 
@@ -171,10 +173,10 @@ const dynamoDocClient = new AWS.DynamoDB.DocumentClient({
 ```js
 AWS.config.update({
   credentials,
-  region: "ap-northeast-2",
+  region: 'ap-northeast-2',
   dynamodb: {
-    endpoint: "http://localhost:8000"
-  }
+    endpoint: 'http://localhost:8000',
+  },
 });
 ```
 
@@ -183,19 +185,19 @@ AWS.config.update({
 ```js
 dynamodb.createTable(
   {
-    TableName: "cba-test",
+    TableName: 'cba-test',
     KeySchema: [
-      { AttributeName: "uid", KeyType: "HASH" },
-      { AttributeName: "createdAt", KeyType: "RANGE" }
+      { AttributeName: 'uid', KeyType: 'HASH' },
+      { AttributeName: 'createdAt', KeyType: 'RANGE' },
     ],
     AttributeDefinitions: [
-      { AttributeName: "uid", AttributeType: "S" },
-      { AttributeName: "createdAt", AttributeType: "N" }
+      { AttributeName: 'uid', AttributeType: 'S' },
+      { AttributeName: 'createdAt', AttributeType: 'N' },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5
-    }
+      WriteCapacityUnits: 5,
+    },
   },
   (err, data) => {
     if (err) ppJson(err);
@@ -205,24 +207,47 @@ dynamodb.createTable(
 );
 ```
 
+### Scan
+
+전체 데이터 순회
+
+```ts
+type EvalKey = { uid: string };
+
+async function readFromDynamo() {
+  let lastEvalKey: EvalKey;
+  do {
+    const { Count, ScannedCount, Items, LastEvaluatedKey } = await dynamoDbClient
+      .scan({
+        TableName: 'foo-bar',
+        ...(lastEvalKey && { ExclusiveStartKey: lastEvalKey }),
+      })
+      .promise();
+
+    console.log('Count', Count, 'ScannedCount', ScannedCount, 'LastEvaluatedKey', LastEvaluatedKey);
+    lastEvalKey = LastEvaluatedKey as EvalKey;
+  } while (lastEvalKey);
+}
+```
+
 ### Query
 
 ```js
 const response = dynamodb
   .query({
-    TableName: "cba-test",
-    KeyConditionExpression: "#uid = :uid",
-    FilterExpression: "#createdAt >= :createdAt",
+    TableName: 'cba-test',
+    KeyConditionExpression: '#uid = :uid',
+    FilterExpression: '#createdAt >= :createdAt',
     ExpressionAttributeNames: {
-      "#uid": "uid",
-      "#createdAt": "createdAt"
+      '#uid': 'uid',
+      '#createdAt': 'createdAt',
     },
     ExpressionAttributeValues: {
-      ":uid": query.uid,
-      ":createdAt": query.time
+      ':uid': query.uid,
+      ':createdAt': query.time,
     },
     ScanIndexForward: false, // ASC || DESC
-    Limit: query.limit
+    Limit: query.limit,
   })
   .promise();
 ```
@@ -235,12 +260,12 @@ const result = {
 };
 const response = dynamodb
   .put({
-    TableName: "cba-test",
+    TableName: 'cba-test',
     Item: result,
-    ConditionExpression: "attribute_not_exists(#uid)",
+    ConditionExpression: 'attribute_not_exists(#uid)',
     ExpressionAttributeNames: {
-      "#uid": "uid"
-    }
+      '#uid': 'uid',
+    },
   })
   .promise();
 ```
@@ -250,20 +275,20 @@ const response = dynamodb
 ```js
 const response = dynamodb
   .update({
-    TableName: "cba-test",
+    TableName: 'cba-test',
     Key: {
       uid: result.uid,
-      createdAt: result.createdAt
+      createdAt: result.createdAt,
     },
-    UpdateExpression: "SET #comment = :comment, #updatedAt = :updatedAt",
+    UpdateExpression: 'SET #comment = :comment, #updatedAt = :updatedAt',
     ExpressionAttributeNames: {
-      "#comment": "comment",
-      "#updatedAt": "updatedAt"
+      '#comment': 'comment',
+      '#updatedAt': 'updatedAt',
     },
     ExpressionAttributeValues: {
-      ":comment": result.comment,
-      ":updatedAt": new Date().getTime()
-    }
+      ':comment': result.comment,
+      ':updatedAt': new Date().getTime(),
+    },
   })
   .promise();
 ```
