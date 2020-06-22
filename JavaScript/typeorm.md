@@ -20,7 +20,7 @@ npm install mysql2 --save
 앱 실행 시작점에서 reflect-metadata를 불러온다
 
 ```ts
-import "reflect-metadata";
+import 'reflect-metadata';
 ```
 
 `tsconfig.json`에 다음을 추가한다
@@ -118,11 +118,11 @@ const connection = await createConnection(connectionOptions);
 db 연결 설정 파일을 변경할 수 있다
 
 ```ts
-import { createConnection, ConnectionOptionsReader } from "typeorm";
-import { CustomNamingStrategy } from "./custom.naming.strategy";
+import { createConnection, ConnectionOptionsReader } from 'typeorm';
+import { CustomNamingStrategy } from './custom.naming.strategy';
 
 export const connectToDatabase = async (env?: string) => {
-  const configName = env ? `ormconfig.${env}` : "ormconfig";
+  const configName = env ? `ormconfig.${env}` : 'ormconfig';
   const connectionOptions = new ConnectionOptionsReader({ configName }).all();
   const [connectionOption] = await connectionOptions;
 
@@ -137,17 +137,17 @@ export const connectToDatabase = async (env?: string) => {
 직접 연결설정을 입력할 수도 있다
 
 ```ts
-import { join } from "path";
-import { createConnection, Connection } from "typeorm";
+import { join } from 'path';
+import { createConnection, Connection } from 'typeorm';
 
 const connection: Connection = await createConnection({
-  type: "mysql",
-  host: "localhost",
+  type: 'mysql',
+  host: 'localhost',
   port: 3306,
-  username: "test",
-  password: "test",
-  database: "test",
-  entities: [`${join(__dirname, "..")}/domain/**/*.{js,ts}`],
+  username: 'test',
+  password: 'test',
+  database: 'test',
+  entities: [`${join(__dirname, '..')}/domain/**/*.{js,ts}`],
   namingStrategy: new CustomNamingStrategy(),
 });
 ```
@@ -155,19 +155,12 @@ const connection: Connection = await createConnection({
 ### Custom Naming Stragegy
 
 ```ts
-import { DefaultNamingStrategy } from "typeorm";
-import { snakeCase } from "typeorm/util/StringUtils";
+import { DefaultNamingStrategy } from 'typeorm';
+import { snakeCase } from 'typeorm/util/StringUtils';
 
 export class CustomNamingStrategy extends DefaultNamingStrategy {
-  columnName(
-    propertyName: string,
-    customName: string,
-    embeddedPrefixes: string[]
-  ): string {
-    return (
-      snakeCase(embeddedPrefixes.join("_")) +
-      (customName || snakeCase(propertyName))
-    );
+  columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string {
+    return snakeCase(embeddedPrefixes.join('_')) + (customName || snakeCase(propertyName));
   }
 
   relationName(propertyName: string): string {
@@ -178,11 +171,7 @@ export class CustomNamingStrategy extends DefaultNamingStrategy {
     return snakeCase(`${relationName}_${referencedColumnName}`);
   }
 
-  joinTableColumnName(
-    tableName: string,
-    propertyName: string,
-    columnName?: string
-  ): string {
+  joinTableColumnName(tableName: string, propertyName: string, columnName?: string): string {
     return snakeCase(`${tableName}_${columnName || propertyName}`);
   }
 }
@@ -191,7 +180,7 @@ export class CustomNamingStrategy extends DefaultNamingStrategy {
 ### Custom Logger
 
 ```ts
-import { Logger } from "typeorm";
+import { Logger } from 'typeorm';
 
 export class MyCustomLogger implements Logger {
   // implement all methods from logger class
@@ -205,6 +194,7 @@ export class MyCustomLogger implements Logger {
 - `getConnectionManager()`: 생성된 db연결을 보유하고 있는 객체 / get()으로 연결을 얻음
 
 - `getConnection()`: db 연결을 얻음
+
   - `getEntityManager({connection-name?})`: 연결로부터 entity manager를 얻음
   - `getRepository({Type}, {connection-name?})`: 연결로부터 repository를 얻음
   - `getTreeRepository({Type}, {connection-name?})`: 연결로부터 tree repository를 얻음
@@ -251,7 +241,7 @@ const [query, parameters] = getConnection().driver.escapeQueryWithParameters(
     ON DUPLICATE KEY UPDATE hit = hit + 1
   `,
   { title: '제목', content: '본문', author: '작성자' }, // parameters
-  {}, // native parameters
+  {} // native parameters
 );
 
 const result = await getManager().query(query, parameters);
@@ -261,27 +251,19 @@ const result = await getManager().query(query, parameters);
 
 ```ts
 export class PostController {
-  @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
-  async save(
-    post: Post,
-    category: Category,
-    @TransactionManager() entityManager: EntityManager
-  ) {
+  @Transaction('mysql') // "mysql" is a connection name. you can not pass it if you are using default connection.
+  async save(post: Post, category: Category, @TransactionManager() entityManager: EntityManager) {
     await entityManager.save(post);
     await entityManager.save(category);
   }
 
   // this save is not wrapped into the transaction
-  async nonSafeSave(
-    entityManager: EntityManager,
-    post: Post,
-    category: Category
-  ) {
+  async nonSafeSave(entityManager: EntityManager, post: Post, category: Category) {
     await entityManager.save(post);
     await entityManager.save(category);
   }
 
-  @Transaction("mysql") // "mysql" is a connection name. you can not pass it if you are using default connection.
+  @Transaction('mysql') // "mysql" is a connection name. you can not pass it if you are using default connection.
   async saveWithRepository(
     post: Post,
     category: Category,
@@ -294,7 +276,7 @@ export class PostController {
     return categoryRepository.findByName(category.name);
   }
 
-  @Transaction({ connectionName: "mysql", isolation: "SERIALIZABLE" }) // "mysql" is a connection name. you can not pass it if you are using default connection.
+  @Transaction({ connectionName: 'mysql', isolation: 'SERIALIZABLE' }) // "mysql" is a connection name. you can not pass it if you are using default connection.
   async saveWithNonDefaultIsolation(
     post: Post,
     category: Category,
@@ -331,16 +313,16 @@ const encode: ValueTransformer = {
 
 const encrypt: ValueTransformer = {
   to: (entityValue: string) => {
-    return Buffer.from(entityValue).toString("base64");
+    return Buffer.from(entityValue).toString('base64');
   },
   from: (databaseValue: string) => {
-    return Buffer.from(databaseValue, "base64").toString();
+    return Buffer.from(databaseValue, 'base64').toString();
   },
 };
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ transformer: [lowercase, encode, encrypt] })
