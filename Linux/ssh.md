@@ -68,6 +68,7 @@ Host <host-alias>
     HostName <remote-host>
     User <username>
     IdentityFile <~/.ssh/my-identity.pem>
+    ServerAliveInterval 60
 ```
 
 Identity 파일을 지정하지 않으면 `.ssh/id_rsa`가 기본으로 사용된다
