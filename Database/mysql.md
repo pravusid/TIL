@@ -1,4 +1,4 @@
-# MySQL || MariaDB
+# MySQL
 
 ## Case Sensitivity
 
