@@ -162,6 +162,8 @@ requiring typecheck 규칙을 사용하지 않는 경우 다음 규칙 추가
 
 ### 방법1: prettier + eslint
 
+<https://github.com/prettier/eslint-plugin-prettier#recommended-configuration>
+
 #### prettier in @javascript/ESLint
 
 <https://prettier.io/docs/en/eslint.html>
@@ -185,8 +187,6 @@ plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하
 `npm i --save-dev prettier`
 
 `npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
-
-<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin>
 
 `.eslintrc.json`
 
