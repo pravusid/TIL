@@ -246,3 +246,9 @@ prettier-eslint Integration
 
   - Prettier 확장은 prettier, prettier-eslint, prettier-tslint 포함
   - Prettier 확장은 configuration을 npm global에서 가져올 수 없고 local에서만 가져옴
+
+## 참고
+
+### airbnb 규칙에서 'ForOfStatement' is not allowed
+
+<https://github.com/airbnb/javascript/issues/1271>
