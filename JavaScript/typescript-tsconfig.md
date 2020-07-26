@@ -11,6 +11,8 @@
 
 ## 참조
 
+<https://www.typescriptlang.org/tsconfig>
+
 <https://www.typescriptlang.org/docs/handbook/compiler-options.html>
 
 <https://www.typescriptlang.org/docs/handbook/project-references.html>
@@ -30,14 +32,81 @@
 
 ## 옵션 자세히 보기
 
-컴파일러에는 출력 가능한 파일이 포함되어 있지 않다.
-예를 들어, 입력에 `index.ts`가 포함되어 있으면 `index.d.ts`와 `index.js`는 제외된다.
-따라서 확장자만 다른 파일은 같이 두지 않는 것이 좋다.
-
 `"compilerOptions"` 속성을 생략할 수 있으며 이 경우 컴파일러 기본값이 사용된다.
 마찬가지로 `tsconfig.json` 파일을 완전히 비워두면 모든 설정값이 기본값으로 적용된다.
 
 명령행에 지정된 컴파일러 옵션이 `tsconfig.json` 파일에서 지정된 설정을 대체한다.
+
+### 경로 관련 설정
+
+#### baseUrl
+
+<https://www.typescriptlang.org/tsconfig#baseUrl>
+
+<https://www.typescriptlang.org/tsconfig#paths>
+
+모듈 절대경로(non-relative) 설정(`paths`)에서 기준 경로를 설정할 때 사용하는 옵션
+
+<https://www.typescriptlang.org/docs/handbook/module-resolution.html#base-url>
+
+> 기본값: 없음
+
+#### rootDir
+
+<https://www.typescriptlang.org/tsconfig#rootDir>
+
+컴파일러는 컴파일 후 rootDir 내부와 동일한 구조를 출력 디렉토리에 유지한 채 출력한다.
+
+> 기본값: 선언파일을 제외한 입력파일에서 가장 긴 공통경로
+
+rootDir은 컴파일러 입력 포함/제외에 영향을 미치지 않는다.(출력물의 경로 구조에만 영향)
+
+그러나 outDir 외부에 컴파일 결과가 출력되지 않으므로, 결과적으로는 rootDir 외부 경로의 파일이 입력에 포함되지도 않는다.
+(컴파일 중 rootDir 외부 경로의 모듈 참조가 있다면 오류가 발생할 것이다)
+
+rootDir 옵션이 지정된 경우 `<configname>.tsbuildinfo` 파일(incremental build information)이 프로젝트 루트에 생성됨.
+이 경우 직접 파일 경로를 컴파일러 옵션에서 변경할 수 있음.
+
+```json
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
+    "rootDir": "./src",
+    "outDir": "./dist"
+  }
+}
+```
+
+This is correct since the output is relative to rootDir when specified.
+Since configFile is in parent directory relative to rootDir, the tsbuildinfo file goes in parent folder to outDir.
+
+From [d53efdf](https://github.com/microsoft/TypeScript/commit/d53efdf38058e37d52e794b6650689294e69b185)
+
+tsbuild info is generated at:
+
+- If composite or incremental then only the .tsbuildinfo will be generated
+- if --out or --outFile the file is outputFile.tsbuildinfo
+- if rootDir and outDir then outdir/relativePathOfConfigFromRootDir/configname.tsbuildinfo
+- if just outDir then outDir/configname.tsbuild
+- otherwise config.tsbuildinfo next to configFile
+
+<https://github.com/microsoft/TypeScript/issues/30925>
+
+#### rootDirs
+
+<https://www.typescriptlang.org/tsconfig#rootDirs>
+
+프로젝트 루트는 여러 경로인데 출력은 병합해야 하는 경우, 컴파일러에서 상대 모듈 가져오기를 처리하기 위한 옵션
+
+<https://www.typescriptlang.org/docs/handbook/module-resolution.html#virtual-directories-with-rootdirs>
+
+#### outDir
+
+<https://www.typescriptlang.org/tsconfig#outDir>
+
+컴파일러 출력경로
+
+> 기본값: 없음 == 소스 파일과 동일 경로에 컴파일된 파일이 생성됨
 
 ### `"files"`, `"include"`, `"exclude"`
 
@@ -67,6 +136,9 @@ glob패턴 세그먼트에 `*` 또는 `.*`만 포함된 경우 지원하는 확�
 `"include"`를 사용하여 포함한 파일은 `"exclude"` 속성을 사용하여 필터링 할 수 있다.
 
 그러나 `"files"` 속성을 사용하여 명시적으로 포함한 파일은 `"exclude"` 속성에 관계없이 항상 포함된다.
+
+컴파일러 입력에 `index.ts`가 포함되어 있으면 `index.d.ts`와 `index.js`는 제외된다.
+따라서 확장자만 다르고 이름이 같은 파일은 같이 두지 않는 것이 좋다.
 
 ### `@types`, `typeRoots`, `types`
 
@@ -105,7 +177,7 @@ types 패키지는 `index.d.ts` 파일이 있는 폴더 혹은 `package.json` �
 자동 포함은 모듈로 선언된 파일이 아니라 global 선언 파일을 사용할 때만 중요하다.
 예를 들어, `import "foo"`를 사용하면 TypeScript는 여전히 `node_modules` 및 `node_modules/@types` 폴더에서 `foo` 패키지를 찾는다.
 
-### `extends` 사용으로 설정 상속
+## `extends` 사용으로 설정 상속
 
 `tsconfig.json` 파일은 `extends` 속성으로 다른 파일에서 설정을 상속할 수 있다.
 
