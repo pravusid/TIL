@@ -270,3 +270,28 @@ branch 삭제
 - 슬래시(`/`)로 시작하면 하위 디렉토리에 적용되지(Recursivity) 않음
 - 디렉토리는 슬래시(`/`)를 끝에 사용하는 것으로 표현
 - 느낌표(`!`)로 시작하는 패턴의 파일은 무시하지 않음
+
+## 특정 기록 완전 삭제 (데이터 손상 위험)
+
+> 파일 이동이 있었다면, 파일이 존재했던 모든 경로의 기록을 삭제 해야함
+
+```sh
+git filter-branch --force --index-filter \
+  'git rm --cached --ignore-unmatch <URL_TO_FILE_OR_DIR>' \
+  --prune-empty --tag-name-filter cat -- --all
+```
+
+git repo 정리
+
+```sh
+rm -rf .git/refs/original/
+git reflog expire --expire=now --all
+git gc --prune=now
+git gc --aggressive --prune=now
+```
+
+원격 저장소 반영
+
+```sh
+git push --all --force
+```
