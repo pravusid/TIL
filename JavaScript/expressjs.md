@@ -38,9 +38,11 @@ export const errorHandler = (error: Error, request: Request, response: Response,
 
 type AsyncFunc = (req: Request, resp: Response, next: NextFunction) => Promise<any>;
 
-export const asyncHandler: (func: AsyncFunc) => AsyncFunc = func => {
+export const asyncHandler: (func: AsyncFunc) => AsyncFunc = (func) => {
   return (request, response, next) =>
-    Promise.resolve(func(request, response, next)).catch((error: Error) => errorHandler(error, request, response, next));
+    Promise.resolve(func(request, response, next)).catch((error: Error) =>
+      errorHandler(error, request, response, next)
+    );
 };
 ```
 
@@ -51,7 +53,10 @@ export const asyncHandler: (func: AsyncFunc) => AsyncFunc = func => {
 app.use(errorHandler);
 
 // foo.controller.ts
-this.routes.get('/hello', asyncHandler((req, resp) => this.foobar(req, resp)));
+this.routes.get(
+  '/hello',
+  asyncHandler((req, resp) => this.foobar(req, resp))
+);
 ```
 
 ## merging interfaces
@@ -81,7 +86,7 @@ declare global {
 }
 // OR
 {
-  "include": ["src/**/*", "types/*"]
+  "include": ["src/**/*", "types/**/*"]
 }
 ```
 
@@ -92,7 +97,7 @@ declare global {
 ```json
 {
   "compilerOptions": {
-    "typeRoots" : ["./node_modules/@types", "./types"]
+    "typeRoots": ["./node_modules/@types", "./types"]
   }
 }
 ```
@@ -102,7 +107,7 @@ declare global {
 ```txt
 <project_root>/
 -- tsconfig.json
--- typings/
+-- types/
   -- <module_name>/
     -- index.d.ts
 ```
