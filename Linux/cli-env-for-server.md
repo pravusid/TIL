@@ -2,8 +2,9 @@
 
 환경 초기화 스크립트
 
-- `bash-it`
+- `git`
 - `java`
+- `bash-it`
 - `fnm`
 - `nodejs`
 - `pm2`
