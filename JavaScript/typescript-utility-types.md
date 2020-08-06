@@ -295,9 +295,20 @@ type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 ## Mutable, Immutable
 
 ```ts
-export type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Primitive = undefined | null | boolean | string | number | Function | symbol | bigint;
 
-export type Immutable<T> = T extends Function | boolean | number | string | null | undefined
+export type Mutable<T> = T extends Primitive
+  ? T
+  : T extends ReadonlyArray<infer U>
+  ? Array<Mutable<U>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? Map<Mutable<K>, Mutable<V>>
+  : T extends ReadonlySet<infer S>
+  ? Set<Mutable<S>>
+  : { -readonly [P in keyof T]: Mutable<T[P]> };
+
+export type Immutable<T> = T extends Primitive
   ? T
   : T extends Array<infer U>
   ? ReadonlyArray<Immutable<U>>
