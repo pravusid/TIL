@@ -103,5 +103,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 또는 https agent 옵션사용
 
 ```js
+import axios from 'axios';
+import * as https from 'https';
+
 axios.get(URL, { httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
 ```
