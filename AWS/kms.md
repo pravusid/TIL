@@ -17,7 +17,7 @@ AWS Key Management System
   - KMS Host(스토리지): 암호화 CMK 저장
 
 - DataKey
-  
+
   - HSM: 평문 데이터키 생성 -> 평문 CMK로 암호화
   - 클라이언트: 평문 데이터키 + 암호화 데이터키 수신
 
@@ -44,3 +44,26 @@ AWS Key Management System
 
 - `Encrypt`: 평문 암호화 요청
 - `Decrypt`: 암호문 복호화 요청
+
+## 예제
+
+```ts
+test('데이터키 생성 후 복호화', async () => {
+  const key = await awsKms.generateDataKey({ KeyId: awsKmsKeyId, KeySpec: 'AES_256' }).promise();
+
+  const plainText = key.Plaintext.toString('hex');
+  console.log('DEBUG: key plain', plainText.length, plainText);
+
+  const cipherText = key.CiphertextBlob.toString('base64');
+  console.log('DEBUG: key cipher', cipherText.length, cipherText);
+
+  const decrypted = await awsKms
+    .decrypt({ KeyId: awsKmsKeyId, CiphertextBlob: Buffer.from(cipherText, 'base64') })
+    .promise();
+
+  const decryptedText = decrypted.Plaintext.toString('hex');
+  console.log('DEBUG: decrypted', decryptedText);
+
+  expect(plainText).toEqual(decryptedText);
+});
+```
