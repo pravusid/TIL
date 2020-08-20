@@ -43,6 +43,8 @@ sudo systemctl start nginx
 
 동일 sub-domain에서 443(https default), 8080 포트를 각각 listen
 
+> full chain -> 도메인 인증서 + 체인 인증서 + 루트 인증서
+
 ```conf
 # Default server configuration
 
