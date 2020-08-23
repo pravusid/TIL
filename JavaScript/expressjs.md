@@ -111,3 +111,69 @@ declare global {
   -- <module_name>/
     -- index.d.ts
 ```
+
+## HTTPS
+
+<https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options>
+
+ca 옵션은 다음 사항이 적용된다
+
+- 선택적으로 신뢰할 수 있는 CA 인증서를 대체할 수 있다. 기본값은 Mozilla가 선택한 잘 알려지고 믿을 수 있는 CA로 구성되어 있다.
+- 잘 알려진 CA에 연결되지 않은(not chainable) 인증서를 사용하는 경우, 인증서의 CA(Intermediate certificate)를 명시하지 않으면 연결에 실패한다.
+- 자체 서명 인증서를 사용하는 경우 자체 인증기관(own CA)이 명시되어야 한다.
+
+```ts
+import * as express from 'express';
+import { readFileSync } from 'fs';
+import { createServer } from 'https';
+
+require('dotenv').config();
+
+const app = express();
+
+createServer(
+  {
+    ca: readFileSync('cert/chain.crt'), // 인증서 체인
+    key: readFileSync('cert/server.key'), // 서버 비밀키
+    cert: readFileSync('cert/server.crt'), // 서버 도메인 인증서
+  },
+  app
+).listen(process.env.PORT || 3000, () => console.log('서버실행'));
+```
+
+<https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener>
+
+`rejectUnauthorized`
+
+- If not false the server will reject any connection which is not authorized with the list of supplied CAs.
+- This option only has an effect if requestCert is true
+- Default: `true`
+
+`requestCert`
+
+- If true the server will request a certificate from clients that connect and attempt to verify that certificate.
+- Default: `false`
+
+위의 두 옵션을 사용하고 자체 서명 인증서인 경우 클라이언트에서 인증서를 처리해야 한다
+
+<https://nodejs.org/api/tls.html#tls_tls_connect_options_callback>
+
+```ts
+const agent = new https.Agent({
+  // Necessary only if the server requires client certificate authentication.
+  key: fs.readFileSync('client-key.pem'),
+  cert: fs.readFileSync('client-cert.pem'),
+
+  // Necessary only if the server uses a self-signed certificate.
+  ca: [fs.readFileSync('server-cert.pem')],
+
+  // Necessary only if the server's cert isn't for "localhost".
+  checkServerIdentity: () => null,
+});
+
+// 참고: https Agent option
+interface AgentOptions extends http.AgentOptions, tls.ConnectionOptions {
+  rejectUnauthorized?: boolean;
+  maxCachedSessions?: number;
+}
+```
