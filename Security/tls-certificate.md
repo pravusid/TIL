@@ -86,3 +86,35 @@ openssl x509 -req -in myserver.csr -CA root-ca.crt -CAkey root-ca.key -CAcreates
 ### 검증
 
 `openssl x509 -in myserver.crt -text -noout`
+
+### 통신
+
+자체서명 인증서 과정에서 다음파일들이 생성된다
+
+- root CA 비밀키
+- root CA 인증서
+- 서버 개인키
+- 서버 인증서
+
+서버에서는 다음 파일을 가지고 클라이언트 요청을 받는다
+
+- 서버 개인키
+- 서버 인증서
+
+> 자체 서명은 사설 root CA 직접 서명이므로 인증서 chain은 필요없다
+
+클라이언트는 다음 파일을 가지고 자체서명 인증서를 사용하는 서버에 요청한다
+
+- root CA 인증서
+
+또는 클라이언트에서 `rejectUnauthorized = false`를 사용할 수도 있다 (인증서 검증하지 않음)
+
+## Two-way SSL communication
+
+클라이언트 인증이라고도 불린다
+
+- 클라이언트의 인증서와 서버의 인증서를 각각 생성
+- 클라이언트와 서버 각각에서 신뢰할 수 있는 CA에 상호의 인증서를 추가
+- 양쪽 모두가 신뢰할 수 있는 상황이 아니면 연결을 거부
+
+<https://www.ibm.com/support/knowledgecenter/SSRMWJ_7.0.1.13/com.ibm.isim.doc/securing/cpt/cpt_ic_security_ssl_scenario.html>
