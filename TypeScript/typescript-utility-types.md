@@ -292,6 +292,15 @@ type NonFunctionPropertyNames<T> = {
 type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 ```
 
+## `infer OnlyTypeProperties`
+
+```ts
+export type OnlyTypePropertyNames<T, O> = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  [K in keyof T]: T[K] extends O ? K : never;
+}[keyof T];
+```
+
 ## Mutable, Immutable
 
 ```ts
