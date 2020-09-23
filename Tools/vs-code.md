@@ -11,9 +11,9 @@
 ```json
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  }
+  "editor.codeActionsOnSave": ["source.addMissingImports", "source.organizeImports"],
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
 }
 ```
 
