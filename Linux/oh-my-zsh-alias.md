@@ -33,13 +33,16 @@ alias _="sudo"
 ## git
 
 - add
+
   - `ga`: `git add`
   - `gaa`: `git add --all`
 
 - commit
+
   - `gcmsg`: `git commit -m`
 
 - branch
+
   - `gb`: `git branch`
   - `gba`: `git branch -a`
   - `gbr`: `git branch --remote`
@@ -49,19 +52,23 @@ alias _="sudo"
   - `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
 
 - checkout
+
   - `gco`: `git checkout`
   - `gcd`: `git checkout develop`
   - `gcm`: `git checkout master`
   - `gcb`: `git checkout -b`
 
 - diff
+
   - `gd`: `git diff`
   - `gdv`: `git diff -w $@ | view -`
 
 - remote
+
   - `grv`: `git remote -v`
 
 - push
+
   - `gp`: `git push`
   - `gpv`: `git push -v`
   - `gpd`: `git push --dry-run`
@@ -70,35 +77,52 @@ alias _="sudo"
   - `gpsup`: `git push --set-upstream origin $(git_current_branch)`
 
 - fetch
+
   - `gf`: `git fetch`
   - `gfa`: `git fetch --all --prune`
 
 - pull
+
   - `gl`: `git pull`
 
 - merge
+
   - `gm`: `git merge`
   - `gmtvim`: `git mergetool --no-prompt --tool=vimdiff`
 
 - rebase
+
   - `grb`: `git rebase`
   - `grbi`: `git rebase -i`
   - `grbd`: `git rebase develop`
   - `grbm`: `git rebase master`
 
 - reset
+
   - `grh`: `git reset`
   - `grhh`: `git reset --hard`
 
 - rm / clean
+
   - `grm`: `git rm`
   - `grmc`: `git rm --cached`
   - `gclean`: `git clean -id`
 
 - status
+
   - `gst`: `git status`
   - `gsb`: `git status -sb`
 
+- stash
+
+  - `gsta`: `git stash save`
+  - `gstp`: `git stash pop`
+  - `gstd`: `git stash drop`
+  - `gstc`: `git stash clear`
+  - `gstl`: `git stash list`
+  - `gsts`: `git stash show --text`
+
 - log
+
   - `glols`: `git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --stat`
   - `glola`: `git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --all`
