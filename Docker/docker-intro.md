@@ -20,6 +20,8 @@ Docker는 리눅스 컨테이너 기술을 기반으로 두기 때문에 Windows
 
 설치: `curl -s https://get.docker.com/ | sudo sh`
 
+<https://docs.docker.com/engine/install/linux-postinstall/>
+
 도커 daemon은 root 소유의 유닉스 소켓을 사용하므로 사용자를 docker 그룹에 추가함
 
 ```sh
@@ -29,7 +31,8 @@ sudo groupadd docker
 # 사용자를 그룹에 추가
 sudo usermod -aG docker $USER # 현재 접속중인 사용자에게 권한주기
 
-# 권한이 주어지지 않았다면 다음을 실행
+# sudo 명령으로 첫 실행을 하여 ~/.docker 디렉토리 권한이 주어지지 않았다면
+# WARNING: Error loading config file: /home/user/.docker/config.json ... permission denied
 sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
 sudo chmod g+rwx "$HOME/.docker" -R
 ```
@@ -38,6 +41,12 @@ sudo chmod g+rwx "$HOME/.docker" -R
 
 ```sh
 sudo systemctl start docker
+```
+
+도커 서비스 자동실행
+
+```sh
+sudo systemctl enable docker
 ```
 
 ### Windows, MacOS
