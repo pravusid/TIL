@@ -83,15 +83,24 @@
   ],
   "rules": {
     "class-methods-use-this": "off",
+    "dot-notation": "off",
     "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "no-await-in-loop": "off",
     "no-empty-function": "off",
+    "no-restricted-syntax": "off",
+    "no-shadow": "off",
     "no-undef": "off",
+    "no-use-before-define": "off",
     "no-useless-constructor": "off",
     "import/extensions": "off",
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/dot-notation": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-empty-function": "warn",
     "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-shadow": "warn",
+    "@typescript-eslint/no-use-before-define": "warn",
     "@typescript-eslint/no-useless-constructor": "error"
   },
   "overrides": [
@@ -105,9 +114,9 @@
       },
       "plugins": ["jest"],
       "rules": {
-        "dot-notation": "off",
         "global-require": "off",
         "import/no-extraneous-dependencies": "off",
+        "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-var-requires": "off"
       }
