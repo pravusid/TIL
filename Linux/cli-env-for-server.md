@@ -25,7 +25,7 @@ sudo yum install -y git
 sudo yum install -y java-1.8.0-openjdk-devel.x86_64
 
 # install bash-it
-git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh
+git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh --silent
 source .bashrc
 
 sed -i "s/'bobby'/\"candy\"/" .bashrc
@@ -53,11 +53,16 @@ source .bashrc
 # install fnm
 curl -fsSL https://github.com/Schniz/fnm/raw/master/.ci/install.sh | bash
 
-export PATH=~/.fnm:$PATH
-eval "`fnm env --multi`"
+PATH=~/.fnm:$PATH
+eval "$(fnm env --shell=bash)"
 
-fnm use latest-erbium
+# set node version
+NODE_VERSION=v12.20.0
+
+fnm install $NODE_VERSION
+fnm use $NODE_VERSION
 fnm default $(node -v | sed 's/v//')
+
 source .bashrc
 
 # install pm2
@@ -83,4 +88,27 @@ ca ㅈㅂ wq
 
 map <F12> mzgg=G\`z
 EOM
+```
+
+CodeDeploy agent
+
+```sh
+sudo yum install -y ruby
+curl -O https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
+chmod +x install
+sudo ./install auto
+
+sudo sed -i 's/""/"ec2-user"/g' /etc/init.d/codedeploy-agent
+
+# 중요: Amazon Linux 2 AMI의 경우 다음 추가 명령을 실행합니다.
+sudo sed -i 's/#User=codedeploy/User=ec2-user/g' /usr/lib/systemd/system/codedeploy-agent.service
+
+sudo systemctl daemon-reload
+sudo chown ec2-user:ec2-user -R /opt/codedeploy-agent/
+sudo chown ec2-user:ec2-user -R /var/log/aws/
+
+sudo service codedeploy-agent start
+sudo service codedeploy-agent status
+
+ps aux | grep codedeploy-agent
 ```
