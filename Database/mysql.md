@@ -294,6 +294,14 @@ INSERT INTO <TARGET> SELECT * FROM <SOURCE>;
 
 ## ALTER TABLE
 
+PK 변경
+
+```sql
+ALTER TABLE `my_table` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`);
+-- 또는
+ALTER TABLE `my_table` DROP KEY `key_name`, ADD PRIMARY KEY (`id`);
+```
+
 COLUMN 변경
 
 ```sql
