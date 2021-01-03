@@ -2,9 +2,11 @@
 
 ## NPM
 
-<https://help.github.com/en/github/managing-packages-with-github-packages/configuring-npm-for-use-with-github-packages>
+<https://docs.github.com/en/free-pro-team@latest/packages/guides/configuring-npm-for-use-with-github-packages>
 
-## with Yarn
+## `.npmrc`
+
+<https://docs.npmjs.com/cli/v6/configuring-npm/npmrc>
 
 <https://github.com/yarnpkg/yarn/issues/4451>
 
