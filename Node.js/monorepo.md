@@ -27,6 +27,8 @@ yarn에서도 workspace 기능을 지원하는데 monorepo와 관련이 있지�
 monorepo 내의 node_modules 중복이 많아질 수록 yarn workspace의 성능이 좋다
 (참고: <https://doppelmutzi.github.io/monorepo-lerna-yarn-workspaces/>)
 
+> 의존성관리를 제외한 버전관리, 배포관리, 스크립트 실행은 lerna를 사용하는 것이 더 좋음 (yarn workspaces는 의존관계에 따른 순서 처리가 없음)
+
 ## Lerna
 
 <https://github.com/lerna/lerna>
@@ -85,6 +87,7 @@ lerna init --independent
 ```
 
 workspace 목록을 별도 표기하여 빌드 실행 우선순위를 지정할 수 있음
+(이 경우 lerna 커맨드 실행시 패키지 중복오류가 발생할 수 있으므로 전체 경로(`*`)만 사용하고 스크립트 실행등은 lerna run 사용)
 
 #### in packages
 
