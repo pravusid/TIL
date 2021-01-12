@@ -35,23 +35,24 @@ monorepo 내의 node_modules 중복이 많아질 수록 yarn workspace의 성능
 
 주요 명령어는 다음과 같다
 
-[init](https://github.com/lerna/lerna/tree/main/commands/init#readme)
+### [init](https://github.com/lerna/lerna/tree/main/commands/init#readme)
 
 > Create a new Lerna repo or upgrade an existing repo to the current version of Lerna
 
-[bootstrap](https://github.com/lerna/lerna/tree/main/commands/bootstrap#readme)
+### [bootstrap](https://github.com/lerna/lerna/tree/main/commands/bootstrap#readme)
 
 > Bootstrap the packages in the current Lerna repo. Installs all of their dependencies and links any cross-dependencies.
 
-[version](https://github.com/lerna/lerna/tree/main/commands/version#readme)
+### [version](https://github.com/lerna/lerna/tree/main/commands/version#readme)
 
-> Bump version of packages changed since the last release
+> Bump version of packages changed since the last release.
+> Identifies packages that have been updated since the previous tagged release
 
-[publish](https://github.com/lerna/lerna/tree/main/commands/publish#readme)
+### [publish](https://github.com/lerna/lerna/tree/main/commands/publish#readme)
 
 > Publish packages in the current project
 
-[run](https://github.com/lerna/lerna/tree/main/commands/run#readme)
+### [run](https://github.com/lerna/lerna/tree/main/commands/run#readme)
 
 > Run an npm script in each package that contains that script
 
