@@ -4,6 +4,16 @@
 
 <https://code.visualstudio.com/docs>
 
+## TypeScript SDK
+
+`.vscode/settings.json`
+
+```json
+{
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
+```
+
 ## Formatting
 
 `.vscode/settings.json`
@@ -13,7 +23,15 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": ["source.addMissingImports", "source.organizeImports"],
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true
+  "files.trimFinalNewlines": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.format.enable": false,
+  "typescript.format.enable": false
 }
 ```
 
