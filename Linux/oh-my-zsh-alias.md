@@ -32,6 +32,8 @@ alias _="sudo"
 
 ## git
 
+<https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/git/git.plugin.zsh>
+
 - add
 
   - `ga`: `git add`
@@ -51,12 +53,16 @@ alias _="sudo"
   - `gbnm`: `git branch --no-merged`
   - `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
 
-- checkout
+- switch
 
-  - `gco`: `git checkout`
-  - `gcd`: `git checkout develop`
-  - `gcm`: `git checkout master`
-  - `gcb`: `git checkout -b`
+  - `gsw`: `git switch`
+  - `gswc`: `git switch -c`
+
+- restore
+
+  - `grs`: `git restore`
+  - `grss`: `git restore --source`
+  - `grst`: `git restore --staged`
 
 - diff
 
@@ -96,11 +102,6 @@ alias _="sudo"
   - `grbi`: `git rebase -i`
   - `grbd`: `git rebase develop`
   - `grbm`: `git rebase master`
-
-- reset
-
-  - `grh`: `git reset`
-  - `grhh`: `git reset --hard`
 
 - rm / clean
 
