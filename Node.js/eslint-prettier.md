@@ -109,7 +109,7 @@
 }
 ```
 
-requiring typecheck 규칙을 사용하지 않는 경우 다음 규칙 추가
+`recommended-requiring-type-checking` 사용하지 않는 경우 다음 규칙 추가
 
 ```json
 {
