@@ -31,25 +31,31 @@
 
 ## @javascript/ESLint
 
-`npm i --save-dev eslint eslint-config-airbnb-base eslint-plugin-import`
+`npm i --save-dev eslint`
 
 `npm i --save-dev babel-eslint`
 
 `.eslintrc.json`
 
+<https://eslint.org/docs/user-guide/configuring#specifying-environments>
+
 ```json
 {
   "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
   "env": {
+    "es6": true,
     "node": true
   },
-  "extends": ["airbnb-base"]
+  "extends": ["eslint:recommended"]
 }
 ```
 
 ## @typescript/ESLint
 
-`npm i --save-dev eslint eslint-config-airbnb-base eslint-plugin-import`
+`npm i --save-dev eslint`
 
 `npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin`
 
@@ -61,6 +67,8 @@
 <https://github.com/typescript-eslint/typescript-eslint>
 
 <https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin>
+
+<https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin/src/configs>
 
 - 실행: `npx eslint --ext .ts src`
 - 비활성화: `// eslint-disable-next-line {rule}`
@@ -77,31 +85,13 @@
     "node": true
   },
   "extends": [
-    "airbnb-base",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "rules": {
-    "class-methods-use-this": "off",
-    "dot-notation": "off",
-    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
-    "no-await-in-loop": "off",
-    "no-empty-function": "off",
-    "no-restricted-syntax": "off",
-    "no-shadow": "off",
-    "no-undef": "off",
-    "no-use-before-define": "off",
-    "no-useless-constructor": "off",
-    "import/extensions": "off",
-    "import/no-unresolved": "off",
-    "import/prefer-default-export": "off",
-    "@typescript-eslint/dot-notation": "warn",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-empty-function": "warn",
-    "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/no-shadow": "warn",
-    "@typescript-eslint/no-use-before-define": "warn",
-    "@typescript-eslint/no-useless-constructor": "error"
+    "@typescript-eslint/no-namespace": "off"
   },
   "overrides": [
     {
@@ -113,13 +103,7 @@
         "jest": true
       },
       "plugins": ["jest"],
-      "rules": {
-        "global-require": "off",
-        "import/no-extraneous-dependencies": "off",
-        "@typescript-eslint/dot-notation": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-var-requires": "off"
-      }
+      "rules": {}
     }
   ]
 }
@@ -132,11 +116,14 @@ requiring typecheck 규칙을 사용하지 않는 경우 다음 규칙 추가
   "rules": {
     // ...
     "no-return-await": "off",
+    "no-unused-vars": "off",
     "require-await": "off",
     "@typescript-eslint/await-thenable": "warn",
     "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/require-await": "warn",
     "@typescript-eslint/return-await": ["warn", "in-try-catch"]
+    // ...
   }
 }
 ```
