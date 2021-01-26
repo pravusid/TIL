@@ -1,4 +1,4 @@
-# Serverless
+# AWS lambda
 
 ## Serverless Computing
 
@@ -8,7 +8,11 @@
 서버리스는 다른 모든 것을 신경쓸 필요 없이 CPU와 메모리만을 할당받아 코드를 실행한다.
 이러한 접근법을 Fuction as a Service 라고 부르기도 한다.
 
-## AWS lambda
+## Serverless Framework
+
+<https://serverless.com/framework/docs/>
+
+## lambda
 
 lambda + API gateway: <https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/with-on-demand-https-example.html>
 
@@ -37,6 +41,8 @@ lambda + API gateway: <https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/with-o
   - env var: `sam local <start-api|invoke> --env-vars env.json`
 - cleanup: `aws cloudformation delete-stack --stack-name <name> --region <region>`
 
-## Serverless Framework
+## Using AWS Lambda with Amazon SNS
 
-<https://serverless.com/framework/docs/>
+CloudWatch -> SNS -> Lambda 메시지 처리
+
+<https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/with-sns.html>
