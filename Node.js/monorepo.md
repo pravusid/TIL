@@ -8,7 +8,7 @@ monorepo 적용방식은 여러가지가 있지만 어느새 nodejs에서는 ler
 
 yarn에서도 workspace 기능을 지원하는데 monorepo와 관련이 있지만 monorepo 기능을 모두 지원하는 것은 아니다.
 
-> npm도 v7 이후 workspace를 지원할 예정이다
+> npm도 v7 이후 workspace 지원함
 
 둘은 고유 기능과 중복 기능이 있는데 중복기능은 상황에 맞는 패키지를 사용하면 된다.
 
