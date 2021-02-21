@@ -5,8 +5,8 @@
 ```sh
 [user]
     name = Sangdon Park
-    email = pravusid@gmail.com
-    signingkey = 4B0A009C0CC438F4
+    email = sandpark@pravusid.kr
+    signingkey = SOME_SIGN_KEY
 
 [core]
     autocrlf = input
