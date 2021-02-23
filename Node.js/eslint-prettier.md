@@ -29,7 +29,7 @@
   - `prettier` 커맨드 별도 실행필요: Yes
   - 다른 것 사용필요: No
 
-## @javascript/ESLint
+## @javascript-eslint
 
 `npm i --save-dev eslint`
 
@@ -53,7 +53,7 @@
 }
 ```
 
-## @typescript/ESLint
+## @typescript-eslint
 
 `npm i --save-dev eslint`
 
@@ -162,7 +162,7 @@
 
 <https://github.com/prettier/eslint-plugin-prettier#recommended-configuration>
 
-#### prettier in @javascript/ESLint
+#### prettier in @javascript-eslint
 
 <https://prettier.io/docs/en/eslint.html>
 
@@ -180,7 +180,7 @@ plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하
 }
 ```
 
-#### prettier in @typescript/ESLint
+#### prettier in @typescript-eslint
 
 `npm i --save-dev prettier`
 
@@ -188,9 +188,13 @@ plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하
 
 `.eslintrc.json`
 
+[8.0.0 이후 모든 플러그인 규칙을 통합하였다](https://github.com/prettier/eslint-config-prettier/blob/main/CHANGELOG.md#version-800-2021-02-21)
+
+> If you use `eslint-plugin-prettier`, all you need is [`plugin:prettier/recommended`](https://github.com/prettier/eslint-plugin-prettier#recommended-configuration)
+
 ```json
 {
-  "extends": ["plugin:prettier/recommended", "prettier/@typescript-eslint"]
+  "extends": ["plugin:prettier/recommended"]
 }
 ```
 
