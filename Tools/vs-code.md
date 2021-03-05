@@ -10,9 +10,13 @@
 
 ```json
 {
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib"
 }
 ```
+
+> The typescript.tsdk workspace setting only tells VS Code that a workspace version of TypeScript exists.
+> To actually start using the workspace version for IntelliSense, you must run the TypeScript: Select TypeScript Version command and select the workspace version.
 
 ## Formatting
 
