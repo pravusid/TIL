@@ -44,7 +44,9 @@ jest 기본 `NODE_ENV`는 `test`임
 
 ## jest설정 (ts기준)
 
-<https://jest-bot.github.io/jest/docs/configuration.html>
+- <https://jest-bot.github.io/jest/docs/configuration.html>
+- <https://jestjs.io/docs/en/configuration>
+- <https://kulshekhar.github.io/ts-jest/docs/getting-started/options>
 
 `npm i -D @types/jest jest ts-jest`
 
@@ -63,7 +65,8 @@ jest 기본 `NODE_ENV`는 `test`임
 `jest.config.js`
 
 ```js
-module.exports = {
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+module.exports = config = {
   globalSetup: '<rootDir>/src/__tests__/global-setup.ts', // triggered once before all test suites
   globalTeardown: '<rootDir>/src/__tests__/global-teardown.ts', // triggered once after all test suites
   setupFiles: ['dotenv/config'], // run once per test file
