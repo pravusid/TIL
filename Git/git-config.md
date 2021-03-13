@@ -49,9 +49,12 @@
 
 ```sh
 [include]
+    path = ~/.gitconfig_common
+
+[includeIf "gitdir:~/Documents/private/**"]
     path = ~/.gitconfig_private
 
-[includeIf "gitdir:~/Documents/dev/**"]
+[includeIf "gitdir:~/Documents/work/**"]
     path = ~/.gitconfig_work
 ```
 
