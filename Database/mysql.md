@@ -286,10 +286,15 @@ CREATE TABLE test(
 ```sql
 -- 테이블 생성하여 복사
 CREATE TABLE <TARGET> DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-SELECT * FROM <SOURCE>;
+SELECT * FROM <SOURCE> [WHERE <CONDITION>];
 
 -- 생성한 테이블에 복사
-INSERT INTO <TARGET> SELECT * FROM <SOURCE>;
+INSERT INTO <TARGET> SELECT * FROM <SOURCE> [WHERE <CONDITION>];
+
+-- 특정 컬럼만 복사
+-- target, source 테이블 컬럼의 순서가 매우 중요함! -> 해당 idx 데이터가 입력되는 것임
+INSERT INTO <TARGET_TABLE (col1, col2, ...)>
+SELECT <col1, col2, ...> FROM <SOURCE> [WHERE <CONDITION>];
 ```
 
 ## ALTER TABLE
