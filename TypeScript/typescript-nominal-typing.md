@@ -52,3 +52,11 @@ var str: string;
 str = fooId as any;
 str = barId as any;
 ```
+
+for me
+
+```ts
+interface FooBarId extends String {
+  readonly _fooBarIdBrand: never
+}
+```
