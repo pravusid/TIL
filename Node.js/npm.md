@@ -61,19 +61,18 @@ peer dependencies 확인: `npm info "패키지명@버전" peerDependencies`
 
 ### 설치
 
-우분투/데비안에서 설치
+<https://yarnpkg.com/getting-started/install>
 
 ```sh
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get update && sudo apt-get install yarn
+npm install -g yarn
 ```
 
-Note: Ubuntu 17.04 comes with cmdtest installed by default. If you’re getting errors from installing yarn, you may want to run sudo apt remove cmdtest first. Refer to this for more information.
-
-**설치이후 global package binaries 경로를 환경변수로 설정해주어야 한다. 기본경로는 `~/.yarn`이고 경로를 변경하면 `경로/bin`에 바이너리가 연결된다**
-
-yarn global bin will output the location where Yarn will install symlinks to your installed binaries. You can configure the base location with yarn config set prefix `<filepath>`.
+> Using a single package manager across your system has always been a problem.
+> To be stable, installs need to be run with the same package manager version across environments,
+> otherwise there's a risk we introduce accidental breaking changes between versions - after all,
+> that's why the concept of lockfile was introduced in the first place!
+> And with Yarn being in a sense your very first project dependency,
+> it should make sense to "lock it" as well.
 
 ### 기본 명령어
 
