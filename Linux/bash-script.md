@@ -26,7 +26,7 @@
 ### 변수 내 숫자연산
 
 - 변수 내부에서 숫자와 연산기호를 사용하려면 `expr` 키워드와 backtick(`)을 사용한다
-- 괄호 및 곱하기(*) 기호도 escape(`\`)문자로 사용해야함
+- 괄호 및 곱하기(\*) 기호도 escape(`\`)문자로 사용해야함
 
 ### 파라미터 변수
 
@@ -34,7 +34,7 @@
 
 파라미터 변수가 기본적으로 할당된다
 
-- $*="param1 param2 parm3"
+- $\*="param1 param2 parm3"
 - $0=명령
 - $1=param1
 - $2=param2
@@ -45,6 +45,8 @@
 외부 변수로 선언함 (현재 쉘 세션이 남아있는 동안 유효)
 
 ## 제어문
+
+<https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Conditional-Constructs>
 
 ### if문
 
@@ -81,15 +83,19 @@ esac
 
 ### 조건문 상의 비교연산자
 
+<https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html>
+
 > 확장 비교연산자를 사용하기 위해서는 괄호를 두개 써야한다 `[[ 조건 ]]`
 
 - 문자열 비교
+
   - `"A" == "A"`: 같은경우
   - `"A" != "B"`: 다른경우
   - `-n "str"`: NULL이 아닌경우
   - `-z "str"`: NULL인 경우
 
 - 산술 비교 (`수식1 <산술연산자> 수식2`)
+
   - `-eq`: 같은경우
   - `-ne`: 다른경우
   - `-gt`: 수식1이 큰경우
@@ -98,6 +104,7 @@ esac
   - `-le`: 수식1이 작거나 같은경우
 
 - 파일 처리 (`연산자 <파일이름>`)
+
   - `-d`: 파일이 디렉토리
   - `-e`: 파일이 존재
   - `-f`: 일반 파일인 경우
@@ -107,6 +114,15 @@ esac
   - `-r`: 파일 읽기 가능
   - `-w`: 파일 쓰기 가능
   - `-x`: 파일 실행 가능
+
+- 패턴매칭
+
+  - <https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Pattern-Matching>
+  - `X == pattern`
+
+- 정규표현식
+
+  - `X =~ 표현식`
 
 ### 조건문 상의 논리연산자
 
