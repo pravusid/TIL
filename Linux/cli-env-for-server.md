@@ -1,6 +1,18 @@
 # CLI env for Server
 
-환경 초기화 스크립트
+## sshd 설정
+
+## sudoer 설정
+
+```sh
+export EDITOR=vim
+visudo
+
+# User privilege specification
+<USER>    ALL=(ALL:ALL) NOPASSWD:ALL
+```
+
+## 환경 초기화 스크립트
 
 - `git`
 - `java`
@@ -13,22 +25,24 @@
 ```bash
 #!/usr/bin/env bash
 
-sudo yum update -y
-
 # timezone
 sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
-# install git
-sudo yum install -y git
-
-# install java
-sudo yum install -y java-1.8.0-openjdk-devel.x86_64
+if [[ $(grep '^ID=' /etc/os-release) == @(*centos*) ]]; then
+  sudo yum update -y
+  sudo yum install -y git
+  # sudo yum install -y java-1.8.0-openjdk-devel.x86_64
+elif [[ $(grep '^ID_LIKE=' /etc/os-release) == @(*debian*) ]]; then
+  sudo apt update && sudo apt upgrade -y
+  sudo apt install -y git
+  # sudo apt install -y openjdk-8-jdk
+fi
 
 # install bash-it
 git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh --silent
 source .bashrc
 
-sed -i "s/'bobby'/\"candy\"/" .bashrc
+sed -i "s/\"bobby\"/\"candy\"/" .bashrc
 
 export BASH_IT="/home/$(whoami)/.bash_it"
 source "$BASH_IT"/bash_it.sh
@@ -90,7 +104,7 @@ map <F12> mzgg=G\`z
 EOM
 ```
 
-CodeDeploy agent
+## CodeDeploy agent in AmazonLinux
 
 ```sh
 sudo yum install -y ruby
