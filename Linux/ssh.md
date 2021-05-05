@@ -32,6 +32,16 @@ RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private
 
 > permissions are too open 오류: 비공개 키의 권한을 변경한다: `chmod 400 ~/.ssh/id_rsa`
 
+### SSH 비공개키 변환 (to PEM)
+
+Convert `BEGIN OPENSSH PRIVATE KEY` to `BEGIN RSA PRIVATE KEY`:
+
+```sh
+cd ~/.ssh
+cp id_rsa id_rsa.pem
+ssh-keygen -p -m PEM -f id_rsa.pem
+```
+
 ### 비대칭 키를 사용해 인증 (비밀번호 입력 대신)
 
 공개키를 서버의 `authorized_keys`에 등록: `ssh-copy-id user@host`
@@ -50,8 +60,8 @@ chmod 644 ~/.ssh/known_hosts
 
 `/etc/ssh/sshd_config` 설정파일 수정
 
-```text
-# Change to no to disable tunnelled clear text passwords
+```txt
+PubkeyAuthentication yes
 PasswordAuthentication no
 ```
 
@@ -72,6 +82,12 @@ Host <host-alias>
 ```
 
 Identity 파일을 지정하지 않으면 `.ssh/id_rsa`가 기본으로 사용된다
+
+### root 로그인 차단
+
+```txt
+PermitRootLogin no
+```
 
 ## Secure Copy (SCP)
 
