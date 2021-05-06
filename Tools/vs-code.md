@@ -35,8 +35,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "javascript.format.enable": false,
-  "typescript.format.enable": false,
-  "eslint.validate": ["javascript", "typescript"]
+  "typescript.format.enable": false
 }
 ```
 

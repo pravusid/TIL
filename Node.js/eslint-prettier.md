@@ -210,27 +210,32 @@ eslint 설정이 끝난 상태에서(prettier-config & plugin 설정을 하지 �
 
 ### 설정
 
-내장 formatter를 비활성화
+> 기본설정은 다음 문서 참고: [Visual Studio Code](../Tools/vs-code.md)
+
+내장 formatter 대신 prettier 사용
 
 ```json
 {
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "javascript.format.enable": false,
   "typescript.format.enable": false
 }
 ```
 
-eslint에서 typescript 처리
+eslint에서 js, ts 처리
 
 ```json
 {
-  "eslint.validate": [
-    { "language": "typescript", "autoFix": true },
-    { "language": "typescriptreact", "autoFix": true }
-  ]
+  "eslint.validate": ["javascript", "typescript"]
 }
 ```
 
-prettier-eslint Integration
+optional: prettier-eslint Integration
 
 ```json
 {
