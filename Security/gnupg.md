@@ -25,18 +25,18 @@
 
 - 공개키 목록: `gpg -k`
 
-  - pub: 공개키
-  - uid: user id
-  - sub: sub key
-  - [SC]: for Signing & Certificate
-  - [E]: for Encryption
-  - [expires: yyyy-mm-dd]: 만료일
-  - trust values: ultimate, full, marginal, never, undefined, expired, unknown
+  - `pub`: 공개키
+  - `uid`: user id
+  - `sub`: sub key
+  - `[SC]`: for Signing & Certificate
+  - `[E]`: for Encryption
+  - `[expires: yyyy-mm-dd]`: 만료일
+  - `trust values`: ultimate, full, marginal, never, undefined, expired, unknown
 
 - 비밀키 목록: `gpg -K`
 
-  - sec: 비밀키
-  - ssb: secret sub key
+  - `sec`: 비밀키
+  - `ssb`: secret sub key
 
 ## 키 관리
 
