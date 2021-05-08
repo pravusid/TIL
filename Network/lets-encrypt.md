@@ -1,41 +1,118 @@
-# Let's Encrypt & CertBot
+# Let's Encrypt
 
 <https://letsencrypt.org/docs/>
 
-Let’s Encrypt is a free, automated, and open Certificate Authority
+> Let’s Encrypt is a free, automated, and open Certificate Authority
 
-Let's Encrypt 인증서는 3개월의 유효기간을 갖고 있으며, 자동 발급/갱신을 도와주는 certbot을 이용함
-
-```sh
-sudo apt-get install software-properties-common
-sudo add-apt-repository universe
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get install python-certbot-nginx
-```
+Let's Encrypt 인증서는 3개월의 유효기간을 갖고 있으며, 자동 발급/갱신을 도와주는 `acme.sh` or `certbot` 사용
 
 ## 인증서
 
-아래의 발급 과정을 거치면 다음 인증서가 생성됨
+발급 과정을 거치면 다음 인증서가 생성됨
 
-`/etc/letsencrypt/archive` -> (symbolic link) `/etc/letsencrypt/live/<domain_name>`
-
-- `fullchain.pem` : cert.pem + chain.pem
+- `privkey.pem` : 인증서 개인키
 - `cert.pem` : 도메인 인증서
 - `chain.pem` : Let’s Encrypt chain 인증서
-- `privkey.pem` : 인증서 개인키
+- `fullchain.pem` : cert.pem + chain.pem
 
-## 발급
+## Root CA 포함 인증
 
-## 발급: StandAlone
+Let's encrypt 인증서 fullchain에서 RootCA 인증서는 포함되지 않음 (Intermediate CA 정보만 입력된 Chain)
+
+> Let's encrypt 인증 구조: <https://letsencrypt.org/certificates/#root-certificates>
+
+따라서 Let's encrypt 인증서 대상으로 검증을 실행하면 오류가 발생함
+
+```sh
+openssl verify -CAfile chain.pem cert.pem
+# cert.pem: C = US, O = Let's Encrypt, CN = Let's Encrypt Authority X3
+# error 2 at 1 depth lookup:unable to get issuer certificate
+```
+
+발급받은 서버 인증서를 Root CA 포함된 fullchain 인증서로 재검증 할 수 있다
+
+```sh
+touch root-fullchain.pem
+cat ca.cer >> root-fullchain.pem
+cat <root-ca>.crt >> root-fullchain.pem
+
+openssl verify -CAfile root-fullchain.pem <my-cert>.cer
+```
+
+## acme.sh
+
+<https://acme.sh/>
+
+인증서 갱신에 사용되는 [ACME 프로토콜](https://tools.ietf.org/html/rfc8555) shell script 구현체이다
+
+여러 CA를 지원하지만 기본값으로 Let's encrypt를 사용할 수 있다.
+
+### acme.sh 설치
+
+```sh
+curl https://get.acme.sh | sh -s email=my@example.com
+```
+
+The installer will perform 3 actions:
+
+- Create and copy acme.sh to your home dir ($HOME): ~/.acme.sh/. All certs will be placed in this folder too.
+- Create alias for: acme.sh=~/.acme.sh/acme.sh.
+- Create daily cron job to check and renew the certs if needed.
+
+### acme.sh using Webroot
+
+<https://github.com/acmesh-official/acme.sh#2-just-issue-a-cert>
+
+도메인과 연결된 웹서버 serving 경로 내에서 쓰기 권한을 가지고 있으면, ACME 프로토콜을 통해 도메인 소유권을 확인받아 인증서를 발급받는다
+
+### acme.sh using DNS
+
+wildcard(`*`) 인증서는 DNS 방식을 사용해야 함
+
+#### [Automatic DNS API integration](https://github.com/acmesh-official/acme.sh#8-automatic-dns-api-integration)
+
+<https://github.com/acmesh-official/acme.sh/wiki/dnsapi>
+
+#### [Use DNS manual mode](https://github.com/acmesh-official/acme.sh#9-use-dns-manual-mode)
+
+<https://github.com/acmesh-official/acme.sh/wiki/dns-manual-mode>
+
+DNS API 사용가능한 경우 권장하지 않는 방법임(직접 도메인 txt record 수정해야 하고 자동갱신을 할 수 없다)
+
+### acme.sh 갱신 및 중단
+
+- <https://github.com/acmesh-official/acme.sh#12-how-to-renew-the-certs>
+- <https://github.com/acmesh-official/acme.sh#13-how-to-stop-cert-renewal>
+
+## Certbot
+
+- <https://certbot.eff.org/instructions>
+- <https://certbot.eff.org/docs/>
+- <https://certbot.eff.org/docs/using.html#getting-certificates-and-choosing-plugins>
+
+python으로 작성된 Let's encrypt 인증서 발급용 스크립트
+
+> `/etc/letsencrypt/archive` -> (symbolic link) `/etc/letsencrypt/live/<domain_name>`
+
+### Certbot: Standalone
+
+별도의 서버 없이 certbot 임시서버를 사용해 인증서를 생성함 (`80`번 포트를 사용할 수 있어야 한다)
 
 ```sh
 sudo certbot certonly --authenticator standalone \
     -d example.com -d www.example.com \
-    --pre-hook "systemctl stop apache2" --post-hook "systemctl start apache2"
     --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
 ```
 
-### 발급: Manual
+### Certbot: DNS
+
+> 도메인에 WildCard 사용을 위해서는 TXT record를 통한 DNS 인증을 해야한다
+
+#### Certbot: DNS plugins
+
+<https://certbot.eff.org/docs/using.html#dns-plugins>
+
+#### Certbot: DNS manual
 
 DNS의 TXT record로 인증 후 발급
 
@@ -50,7 +127,9 @@ certbot certonly --manual --preferred-challenges dns -d pravusid.kr -d www.pravu
 # -> 등록후 $ nslookup -q=TXT _acme-challenge.pravusid.kr 입력하여 적용 확인
 ```
 
-### 발급: NGINX + certbot webroot
+### Certbot: webroot
+
+#### Certbot: webroot NGINX
 
 Challenge Seed를 외부에서 접근 가능한 경로에(`/.well-known`)에 위치시켜 인증받는다
 
@@ -107,7 +186,7 @@ server {
 }
 ```
 
-### 발급 Apache + certbot webroot
+#### Certbot: webroot Apache
 
 아파치 설정파일
 
@@ -129,7 +208,12 @@ Alias /.well-known/acme-challenge/ "/var/www/certbot/.well-known/acme-challenge/
 
 `ProxyPass /.wellknown !`
 
-### 발급: NGINX + certbot auto
+### Certbot: auto NGINX
+
+> The Nginx plugin should work for most configurations. We recommend backing up Nginx configurations before using it
+> (though you can also revert changes to configurations with certbot --nginx rollback)
+
+인증서 발급: `sudo certbot --nginx -d example.com -d www.example.com`
 
 - `/etc/nginx/sites-available/default`
 - `/etc/nginx/sites-available/example.com`
@@ -185,26 +269,15 @@ sudo nginx -t
 sudo service nginx restart
 ```
 
-인증서 발급: `sudo certbot --nginx -d example.com -d www.example.com`
-
-## WildCard 사용
-
-도메인에 WildCard 사용을 위해서는 TXT record를 통해서만 가능한데,
-이를 자동으로 수행하기 위해 DNS 플러그인을 사용할 수 있다.
-
-<https://certbot.eff.org/docs/using.html#dns-plugins>
-
-## 도메인 변경
+### Certbot: 도메인 변경
 
 `certbot certonly --cert-name <인증서 이름> -d <도메인1>,<도메인2>`
 
-## 갱신
+### Certbot: 인증서 갱신
 
-갱신 가능여부 확인: `sudo certbot renew --dry-run`
-
-certbot-auto의 경우: `--no-self-upgrade`를 추가하여 certbot의 업그레이드를 막음
-
-Ubuntu의 경우 `/etc/cron.d/`에 certbot이 생성되어있음: <https://certbot.eff.org/docs/using.html#automated-renewals>
+- 갱신 가능여부 확인: `sudo certbot renew --dry-run`
+- certbot-auto의 경우: `--no-self-upgrade`를 추가하여 certbot의 업그레이드를 막음
+- Ubuntu의 경우 `/etc/cron.d/`에 certbot이 생성되어있음: <https://certbot.eff.org/docs/using.html#automated-renewals>
 
 > Many Linux distributions provide automated renewal when you use the packages installed through their system package manager.
 
@@ -217,10 +290,8 @@ crontab -e
 
 등록된 job을 확인한다: `crontab -l`
 
-## 제거
+### Certbot: 인증서 제거
 
-인증제거: `sudo certbot delete --cert-name <인증서이름>`
-
-인증제거(대화형): `sudo certbot delete`
-
-인증서 revoke: <https://certbot.eff.org/docs/using.html#revoking-certificates>
+- 인증제거: `sudo certbot delete --cert-name <인증서이름>`
+- 인증제거(대화형): `sudo certbot delete`
+- 인증서 revoke: <https://certbot.eff.org/docs/using.html#revoking-certificates>
