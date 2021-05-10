@@ -118,3 +118,27 @@ openssl x509 -req -in myserver.csr -CA root-ca.crt -CAkey root-ca.key -CAcreates
 - 양쪽 모두가 신뢰할 수 있는 상황이 아니면 연결을 거부
 
 <https://www.ibm.com/support/knowledgecenter/SSRMWJ_7.0.1.13/com.ibm.isim.doc/securing/cpt/cpt_ic_security_ssl_scenario.html>
+
+## 인증서 변환
+
+### PEM 을 PKCS#12 으로 변환
+
+cert.pem 파일로 통합
+
+`cat domain.crt chain1.crt chain2.crt root.crt > cert.pem`
+
+.pfx 파일로 저장
+
+`openssl pkcs12 -export -name example.com -in cert.pem -inkey private.key -out SecureSign.pfx`
+
+### .pfx 에서 .jks 변환
+
+`keytool -importkeystore -srckeystore SecureSign.pfx -srcstoretype pkcs12 -destkeystore SecureSign.jks -deststoretype jks`
+
+```sh
+대상 키 저장소 비밀번호 입력: ******
+새 비밀번호 다시 입력: ******
+소스 키 저장소 비밀번호 입력: ****** (pfx 생성시 지정한 암호)
+```
+
+> <https://www.securesign.kr/guides/SSL-Certificate-Convert-Format>
