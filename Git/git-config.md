@@ -60,6 +60,8 @@
 
 ## multiple ssh-keys
 
+`~/.ssh/config`
+
 ```conf
 Host github-private
     HostName github.com
