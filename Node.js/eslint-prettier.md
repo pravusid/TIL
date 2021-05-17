@@ -31,9 +31,10 @@
 
 ## @javascript-eslint
 
-`npm i --save-dev eslint`
-
-`npm i --save-dev babel-eslint`
+```sh
+npm i --save-dev eslint
+npm i --save-dev babel-eslint
+```
 
 `.eslintrc.json`
 
@@ -55,11 +56,11 @@
 
 ## @typescript-eslint
 
-`npm i --save-dev eslint`
-
-`npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin`
-
-`npm i --save-dev eslint-plugin-jest`
+```sh
+npm i --save-dev eslint
+npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
+npm i --save-dev eslint-plugin-jest
+```
 
 - @typescript-eslint/parser: ESLint가 TypeScript 코드를 처리할 수 있게 함
 - @typescript-eslint/eslint-plugin: TypeScript에 맞춘 ESLint rule의 모음
@@ -86,7 +87,6 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
@@ -110,6 +110,8 @@
   ]
 }
 ```
+
+> `@typescript-eslint/eslint-recommended` config is automatically included if you use either the `recommended` or `recommended-requiring-type-checking` configs.
 
 `recommended-requiring-type-checking` 사용하지 않는 경우 다음 규칙 추가
 
@@ -158,19 +160,23 @@
 
 ## ESLint Prettier Integration
 
-### 방법1: prettier + eslint
+### 방법1: prettier + (eslint | @typescript-eslint)
 
-<https://github.com/prettier/eslint-plugin-prettier#recommended-configuration>
+- <https://prettier.io/docs/en/eslint.html>
+- <https://github.com/prettier/eslint-plugin-prettier#installation>
 
-#### prettier in @javascript-eslint
-
-<https://prettier.io/docs/en/eslint.html>
+> add `plugin:prettier/recommended` as the **last extension** in your .eslintrc.json
 
 plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하므로, eslint-config-prettier를 함께 사용한다
 
-`npm i --save-dev prettier`
+```sh
+npm i --save-dev prettier
+npm i --save-dev eslint-plugin-prettier eslint-config-prettier
+```
 
-`npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
+[8.0.0 이후 모든 플러그인 규칙을 통합하였다](https://github.com/prettier/eslint-config-prettier/blob/main/CHANGELOG.md#version-800-2021-02-21). 따라서 JS, TS 관계 없이 동일한 설정으로 사용가능하다.
+
+> If you use `eslint-plugin-prettier`, all you need is [`plugin:prettier/recommended`](https://github.com/prettier/eslint-plugin-prettier#recommended-configuration)
 
 `.eslintrc.json` 설정에 추가 (plugin + enable all the recommended rules at once)
 
@@ -180,29 +186,13 @@ plugin 사용만으로는 eslint formatting rules와 prettier rules가 충돌하
 }
 ```
 
-#### prettier in @typescript-eslint
-
-`npm i --save-dev prettier`
-
-`npm i --save-dev eslint-plugin-prettier eslint-config-prettier`
-
-`.eslintrc.json`
-
-[8.0.0 이후 모든 플러그인 규칙을 통합하였다](https://github.com/prettier/eslint-config-prettier/blob/main/CHANGELOG.md#version-800-2021-02-21)
-
-> If you use `eslint-plugin-prettier`, all you need is [`plugin:prettier/recommended`](https://github.com/prettier/eslint-plugin-prettier#recommended-configuration)
-
-```json
-{
-  "extends": ["plugin:prettier/recommended"]
-}
-```
-
 ### 방법2: prettier-eslint
 
-eslint 설정이 끝난 상태에서(prettier-config & plugin 설정을 하지 않았음)
+eslint 설정이 끝난 상태에서 (prettier-config & plugin 설정을 하지 않았음) 설치함
 
 `npm i --save-dev prettier prettier-eslint prettier-eslint-cli`
+
+실행
 
 `prettier-eslint 'src/**/*.js'`
 
