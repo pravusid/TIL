@@ -22,6 +22,9 @@ pm2 start app.js -i <number-instances>
 
 # 한번에 종료하지 않고 클러스터 내에서 순차적으로 재시작
 pm2 reload <app_name>
+
+# Invoke reload
+pm2 startOrReload <app_name>
 ```
 
 ## CLI
