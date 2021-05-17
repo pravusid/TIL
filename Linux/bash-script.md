@@ -211,3 +211,24 @@ PROC_NAME=$1
 PID=$(pgrep -f $PROC_NAME)
 echo "$PID"
 ```
+
+## 병렬실행
+
+wait 사용
+
+> With no parameters it waits for all background processes to finish. With a PID it waits for the specific process.
+
+```sh
+process &
+process &
+process &
+wait
+```
+
+[GNU parallel](http://www.gnu.org/software/parallel/) 사용
+
+```sh
+echo {1..5} | parallel docker build -t ...{} ...{}
+```
+
+> <https://stackoverflow.com/questions/24843570/concurrency-in-shell-scripts>
