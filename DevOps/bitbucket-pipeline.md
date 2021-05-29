@@ -2,19 +2,23 @@
 
 ## Docs
 
-- <https://confluence.atlassian.com/bitbucket/configuring-your-pipeline-872013574.html>
-- <https://confluence.atlassian.com/x/14UWN>
+- <https://support.atlassian.com/bitbucket-cloud/docs/build-test-and-deploy-with-pipelines/>
+- <https://support.atlassian.com/bitbucket-cloud/docs/javascript-nodejs-with-bitbucket-pipelines/>
 
 ### SSH 사용
 
-- <https://confluence.atlassian.com/bitbucket/use-ssh-keys-in-bitbucket-pipelines-847452940.html>
-- <https://confluence.atlassian.com/bitbucket/deploy-using-scp-973481711.html>
+- <https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/>
+- <https://support.atlassian.com/bitbucket-cloud/docs/deploy-using-scp/>
 
 ## pipeline 무시
 
 커밋 메시지에 `[skip ci]` 또는 `[ci skip]` 포함
 
 ## Example
+
+### atlassian pipes
+
+<https://bitbucket.org/atlassian/workspace/projects/BPP>
 
 ### PR 빌드 & 테스트
 
@@ -23,13 +27,13 @@ image: node:12.14.0
 
 pipelines:
   pull-requests:
-    "**":
+    '**':
       - step:
           name: Install deps
           script:
             - npm ci
           artifacts:
-            - "node_modules/**"
+            - 'node_modules/**'
       - parallel:
           - step:
               name: Typecheck
@@ -48,7 +52,7 @@ pipelines:
 ### S3 배포 후 cloudfront invalidation
 
 ```yml
-image: node:10.15.3
+image: node:12.14.0
 
 pipelines:
   branches:
@@ -82,7 +86,7 @@ pipelines:
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
                 DISTRIBUTION_ID: $DISTRIBUTION_ID
                 PATHS: '/*'
-                # DEBUG: "<boolean>" # Optional
+                # DEBUG: '<boolean>' # Optional
             - pipe: atlassian/slack-notify:0.3.2
               variables:
                 WEBHOOK_URL: $WEBHOOK_URL
@@ -91,7 +95,7 @@ pipelines:
 
 ### codedeploy to ec2
 
-<https://confluence.atlassian.com/bitbucket/deploy-to-aws-with-codedeploy-976773337.html>
+<https://support.atlassian.com/bitbucket-cloud/docs/deploy-to-aws-with-codedeploy/>
 
 ```yml
 image: atlassian/default-image:2
@@ -107,8 +111,8 @@ pipelines:
           script:
             - npm ci --only=prod && npm run build
           artifacts:
-            - "**/*"
-            - "**/.*"
+            - '**/*'
+            - '**/.*'
 
       - step:
           name: Zip
@@ -127,10 +131,10 @@ pipelines:
                 AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
                 AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
                 AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
-                COMMAND: "upload"
+                COMMAND: 'upload'
                 APPLICATION_NAME: ${APPLICATION_NAME}
-                S3_BUCKET: "${AWS_DEPLOY_BUCKET}"
-                ZIP_FILE: "dist.zip"
+                S3_BUCKET: '${AWS_DEPLOY_BUCKET}'
+                ZIP_FILE: 'dist.zip'
 
       - step:
           name: Deploy with CodeDeploy
@@ -142,11 +146,11 @@ pipelines:
                 AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
                 AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
                 AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
-                COMMAND: "deploy"
+                COMMAND: 'deploy'
                 APPLICATION_NAME: ${APPLICATION_NAME}
                 DEPLOYMENT_GROUP: ${DEPLOYMENT_GROUP}
-                S3_BUCKET: "${AWS_DEPLOY_BUCKET}"
-                IGNORE_APPLICATION_STOP_FAILURES: "true"
-                # FILE_EXISTS_BEHAVIOR: "OVERWRITE"
-                WAIT: "true"
+                S3_BUCKET: '${AWS_DEPLOY_BUCKET}'
+                IGNORE_APPLICATION_STOP_FAILURES: 'true'
+                # FILE_EXISTS_BEHAVIOR: 'OVERWRITE'
+                WAIT: 'true'
 ```
