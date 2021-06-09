@@ -119,9 +119,9 @@ npm i --save-dev eslint-plugin-jest
 {
   "rules": {
     // ...
-    "no-return-await": "off",
     "no-unused-vars": "off",
     "require-await": "off",
+    "no-return-await": "off",
     "@typescript-eslint/await-thenable": "warn",
     "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
     "@typescript-eslint/no-unused-vars": "warn",
