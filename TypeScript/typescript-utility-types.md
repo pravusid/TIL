@@ -327,3 +327,19 @@ export type Immutable<T> = T extends Primitive
   ? ReadonlySet<Immutable<S>>
   : { readonly [P in keyof T]: Immutable<T[P]> };
 ```
+
+## Awaited
+
+```ts
+export type Awaited<T> = T extends Promise<infer U> ? U : T;
+```
+
+## Nullable, Optional
+
+```ts
+export type Nullable<T> = {
+  [P in keyof T]: T[P] | null;
+};
+
+export type Optional<T> = T | undefined;
+```
