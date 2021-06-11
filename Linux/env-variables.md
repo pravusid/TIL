@@ -105,6 +105,17 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 > 로그인 쉘에서 로그아웃 시 읽음
 
+## `$PATH`
+
+<https://stackoverflow.com/questions/25235357/path-at-end-or-beginning-of-path-export-in-bash-profile-for-git-on-mac>
+
+`PATH` 추가시 두 가지 선택을 할 수 있다
+
+- `PATH="/custom/path:$PATH"`
+- `PATH="$PATH:/custom/path"`
+
+> `PATH`는 순서대로 참조된다 (선두에 우선순위가 있음)
+
 ## 예시: `~/.profile` 환경변수 설정
 
 zsh를 사용중이면 `.zshenv` 파일에 환경변수를 설정해도 됨
