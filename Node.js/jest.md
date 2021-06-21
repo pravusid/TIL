@@ -119,6 +119,33 @@ module.exports = {
 }
 ```
 
+### Isolated Modules
+
+- <https://www.typescriptlang.org/tsconfig#isolatedModules>
+- <https://kulshekhar.github.io/ts-jest/docs/getting-started/options/isolatedModules>
+- <https://github.com/kulshekhar/ts-jest/issues/259>
+- <https://github.com/kulshekhar/ts-jest/issues/1115>
+
+기본적으로 `ts-jest`는 full type-checking 기능이 활성화된 프로젝트 context의 타입스크립트 컴파일러를 사용한다.
+
+그러나 타입스크립트의 'isolated module' 기능으로 각 파일을 별도로 컴파일 할 수 있다.
+이 경우 type-checking 및 `const`, `enum`, `namespace` 등의 일부 기능을 활용할 수 없으나 캐시가 없는 환경에서 더 빠르게 테스트를 실행할 수 있다.
+
+`jest.config.js`
+
+```js
+module.exports = {
+  // ...
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+  },
+};
+```
+
+> 참고 (ts-loader case): <https://github.com/TypeStrong/ts-loader#transpileonly>
+
 ## 실행
 
 유닛 테스트를 위한 파일명이 `___.spec.js/ts`로 끝나게 한다
