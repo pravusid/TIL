@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -29,9 +29,9 @@ jobs:
         npm run docs:build
       working-directory: ./.wiki
     - name: Deploy
-      uses: peaceiris/actions-gh-pages@v2.5.0
-      env:
-        PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-        EXTERNAL_REPOSITORY: pravusid/wiki
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./.wiki/docs/.vuepress/dist
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        personal_token: ${{ secrets.PERSONAL_TOKEN }}
+        external_repository: pravusid/wiki
+        publish_branch: gh-pages
+        publish_dir: ./.wiki/docs/.vuepress/dist
