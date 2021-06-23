@@ -142,3 +142,25 @@ cert.pem 파일로 통합
 ```
 
 > <https://www.securesign.kr/guides/SSL-Certificate-Convert-Format>
+
+#### jks 오류 (Cannot recover key)
+
+> Solution: The KeyStore password and The Key password should be the same.
+
+Changing both passwords using keytool
+
+Change KeyStore password
+
+```sh
+keytool -storepasswd -new %newpassword% -keystore %YourKeyStore%.jks
+# replace %newpassword% with your actual password, same with YourKeyStore
+```
+
+Change Alias key Password
+
+```sh
+keytool -keypasswd -alias %MyKeyAlias% -new %newpassword% -keystore KeyStore.jks
+# Note: supply old passwords for both keystore and alias when asked for them
+```
+
+<https://stackoverflow.com/questions/14606837/cannot-recover-key>
