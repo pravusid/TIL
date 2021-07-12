@@ -299,7 +299,7 @@ SELECT <col1, col2, ...> FROM <SOURCE> [WHERE <CONDITION>];
 
 ## ALTER TABLE
 
-PK 변경
+### PK 변경
 
 ```sql
 ALTER TABLE `my_table` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`);
@@ -307,7 +307,7 @@ ALTER TABLE `my_table` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`);
 ALTER TABLE `my_table` DROP KEY `key_name`, ADD PRIMARY KEY (`id`);
 ```
 
-COLUMN 변경
+### COLUMN 변경
 
 ```sql
 ALTER TABLE <TABLE> ADD <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'] [FIRST | AFTER <COLUMN_NAME>];
@@ -316,7 +316,7 @@ ALTER TABLE <TABLE> RENAME COLUMN <COLUMN_NAME> TO <NEW_COLUMN_NAME>;
 ALTER TABLE <TABLE> DROP COLUMN <COLUMN_NAME>;
 ```
 
-COLUMN 순서만 변경
+### COLUMN 순서만 변경
 
 ```sql
 -- 다른COLUMN 다음으로 이동
@@ -324,6 +324,18 @@ ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [
 -- 첫번째 위치로 이동
 ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [COMMENT '설명'] FIRST;
 ```
+
+### Character Set 변경
+
+> To change the table default character set and all character columns (CHAR, VARCHAR, TEXT) to a new character set, use a statement like this
+
+```sql
+ALTER TABLE tbl_name CONVERT TO CHARACTER SET charset_name;
+```
+
+이 경우 데이터를 보존하기 위해서 자동으로 컬럼 유형을 변경하게 된다 (`TEXT` -> `MEDIUMTEXT` ...)
+
+<https://dev.mysql.com/doc/refman/8.0/en/charset-conversion.html>
 
 ## DML
 
