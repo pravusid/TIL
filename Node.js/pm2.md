@@ -147,3 +147,11 @@ module.exports = {
 ```sh
 pm2 install pm2-logrotate
 ```
+
+## 참고
+
+### 오류처리
+
+<https://github.com/keymetrics/pm2-io-apm/blob/HEAD/src/features/notify.ts#L71>
+
+pm2는 실행중인 프로세스의 `uncaughtException`, `unhandledRejection`을 처리함 (기본 값 `true`)
