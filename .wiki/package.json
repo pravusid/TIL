@@ -9,12 +9,12 @@
   "author": "Sangdon Park",
   "license": "MIT",
   "dependencies": {
-    "vuepress": "^1.2.0"
+    "vuepress": "^1.8.2"
   },
   "devDependencies": {
-    "@vuepress/plugin-back-to-top": "^1.2.0",
-    "@vuepress/plugin-google-analytics": "^1.2.0",
-    "@vuepress/plugin-nprogress": "^1.2.0",
-    "directory-tree": "^2.2.4"
+    "@vuepress/plugin-back-to-top": "^1.8.2",
+    "@vuepress/plugin-google-analytics": "^1.8.2",
+    "@vuepress/plugin-nprogress": "^1.8.2",
+    "directory-tree": "^2.2.9"
   }
 }
