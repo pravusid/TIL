@@ -69,10 +69,10 @@ M  lib/simplegit.rb     # 내용을 변경하고 Staged에 추가함
 
 ## Merge
 
-development 브랜치를 master 브랜치로 merge
+development 브랜치를 main 브랜치로 merge
 
 ```sh
-git checkout master
+git checkout main
 git merge development
 ```
 
@@ -98,23 +98,23 @@ rebase는 RE-BASE로 커밋의 부모커밋을 변경한다는 개념이다
 B브랜치를 생성한 A브랜치의 커밋 이후, A 브랜치에서 발생한 변경점을 B브랜치에 적용한다는 것이다
 (현재 A브랜치의 HEAD를 B브랜치의 생성지점으로 변경).
 
-`git rebase master development`
+`git rebase main development`
 
 또는
 
 ```sh
 git checkout development
-git rebase master
+git rebase main
 ```
 
 rebase 진행도중 conflict가 발생한다면, merge시 conflict 해결과 같은 방법을 적용한 뒤
 
 `git rebase --continue` 명령어를 입력한다
 
-이후 development 브랜치는 master HEAD로부터 ff가 가능하므로
+이후 development 브랜치는 main HEAD로부터 ff가 가능하므로
 
 ```sh
-git checkout master
+git checkout main
 git merge development
 ```
 
@@ -190,7 +190,7 @@ git push origin feature-foobar
 또는 직접 merge 실행
 
 ```sh
-git merge --no-ff feature-foobar master
+git merge --no-ff feature-foobar main
 ```
 
 과정이 끝나면 branch는 닫는다
@@ -211,7 +211,7 @@ git push --delete origin feature-foobar
 - 브랜치 (강제)삭제: `git branch -D <branch>`
 - 브랜치 이름 변경: `git branch -m <before> <after>`
 - 체크아웃(Not staged 파일 변경점 되돌리기): `git checkout -- <filename>`
-- 병합된 로컬 브랜치 모두 삭제: `git branch --merged | egrep -v "(^\*|master|development|제외할브랜치)" | xargs git branch -d`
+- 병합된 로컬 브랜치 모두 삭제: `git branch --merged | egrep -v "(^\*|main|development|제외할브랜치)" | xargs git branch -d`
 
 ## Remote
 

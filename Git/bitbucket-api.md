@@ -6,5 +6,5 @@
 
 ```sh
 curl -s -S --user username:apppassword -L -O \
-  https://api.bitbucket.org/2.0/repositories/<ORGANISATION>/<REPO>/src/master/<FOLDER>/<FILE>
+  https://api.bitbucket.org/2.0/repositories/<ORGANISATION>/<REPO>/src/main/<FOLDER>/<FILE>
 ```

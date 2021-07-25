@@ -17,9 +17,9 @@
 
 ## :scroll: [Wiki](https://pravusid.kr/wiki/)
 
-[개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/master/.wiki/)
+[개인 Wiki 관련 정보](https://github.com/pravusid/TIL/tree/main/.wiki/)
 
-- push to origin/master
+- push to origin/main
 - trigger Github Actions
 - publish Github Pages to <https://github.com/pravusid/wiki/>
 - complete! 😎️

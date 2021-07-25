@@ -65,7 +65,7 @@ echo "[ -f ~/.bashrc.alias ] && source ~/.bashrc.alias" >> .bashrc
 source .bashrc
 
 # install fnm
-curl -fsSL https://github.com/Schniz/fnm/raw/master/.ci/install.sh | bash
+curl -fsSL https://fnm.vercel.app/install | bash
 
 PATH=~/.fnm:$PATH
 eval "$(fnm env --shell=bash)"

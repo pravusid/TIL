@@ -10,11 +10,11 @@
 
 ### Collection hierarchy
 
-![collection](https://raw.githubusercontent.com/pravusid/TIL/master/Java/img/collection_hierarchy.png)
+![collection](https://raw.githubusercontent.com/pravusid/TIL/main/Java/img/collection_hierarchy.png)
 
 ### Map hierarchy
 
-![map](https://raw.githubusercontent.com/pravusid/TIL/master/Java/img/map_hierarchy.png)
+![map](https://raw.githubusercontent.com/pravusid/TIL/main/Java/img/map_hierarchy.png)
 
 - java.util.SortedMap: key가 ascending order로 정렬된 map
 - java.util.NavigableMap
@@ -113,7 +113,7 @@ Key를 이용해서 Value를 찾는 Dictionary 자료구조이다.
 
 ### HashMap
 
-![HashMap](https://raw.githubusercontent.com/pravusid/TIL/master/Java/img/java-hashmap.png)
+![HashMap](https://raw.githubusercontent.com/pravusid/TIL/main/Java/img/java-hashmap.png)
 
 HashMap은 키-값 쌍으로 사용하도록 구현되어 있다.
 HashMap은 해싱 알고리즘을 사용하고 hashCode()와 equals()를 put() 과 get()을 쓸때 사용한다.

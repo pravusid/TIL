@@ -19,6 +19,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f git@github.com:pravusid/wiki.git master:gh-pages
+git push -f git@github.com:pravusid/wiki.git main:gh-pages
 
 cd -

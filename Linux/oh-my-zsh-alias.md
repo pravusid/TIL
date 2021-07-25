@@ -51,7 +51,7 @@ alias _="sudo"
   - `gbd`: `git branch -d`
   - `gbD`: `git branch -D`
   - `gbnm`: `git branch --no-merged`
-  - `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
+  - `gbda`: `git branch --no-color --merged | command grep -vE "^(*|\s*($(git_main_branch)|develop|dev)\s*$)" | command xargs -n 1 git branch -d`
 
 - switch
 
@@ -101,7 +101,7 @@ alias _="sudo"
   - `grb`: `git rebase`
   - `grbi`: `git rebase -i`
   - `grbd`: `git rebase develop`
-  - `grbm`: `git rebase master`
+  - `grbm`: `git rebase $(git_main_branch)`
 
 - rm / clean
 

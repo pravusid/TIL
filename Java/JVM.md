@@ -73,7 +73,7 @@ const #5 = Asciz admin;
 
 ## JVM 구조
 
-![JVM](https://raw.githubusercontent.com/pravusid/TIL/master/Java/img/jvm-struct.png)
+![JVM](https://raw.githubusercontent.com/pravusid/TIL/main/Java/img/jvm-struct.png)
 
 Class Loader가 컴파일된 자바 바이트코드를 Runtime Data Area에 불러오고 Execution Engine이 바이트코드를 실행한다.
 
