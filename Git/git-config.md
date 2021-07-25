@@ -2,29 +2,7 @@
 
 ## overall
 
-```sh
-[user]
-    name = Sangdon Park
-    email = sandpark@pravusid.kr
-    signingkey = SOME_SIGN_KEY
-
-[core]
-    autocrlf = input
-    excludesfile = ~/.gitignore_global
-
-[commit]
-    gpgsign = true
-
-[pull]
-    rebase = true
-
-[alias]
-    a = "!git add $(git status -s | fzf -m | awk '{print $2}')"
-    b = "!git checkout $(\
-        _height=$(stty size | awk '{print $1}');\
-        git branch | egrep -v '^\\*' | fzf --preview \"git log {1} | head -n $_height\";\
-    )"
-```
+<https://github.com/pravusid/sys-config/blob/main/.gitconfig>
 
 > ref: <https://johngrib.github.io/wiki/git-alias/>
 
