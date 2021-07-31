@@ -1,4 +1,4 @@
-# TLS Certificate
+# Public Key Infrastructure
 
 ## Root CA(certificate authorities)
 
@@ -118,6 +118,80 @@ openssl x509 -req -in myserver.csr -CA root-ca.crt -CAkey root-ca.key -CAcreates
 - 양쪽 모두가 신뢰할 수 있는 상황이 아니면 연결을 거부
 
 <https://www.ibm.com/support/knowledgecenter/SSRMWJ_7.0.1.13/com.ibm.isim.doc/securing/cpt/cpt_ic_security_ssl_scenario.html>
+
+## 인증서 구조
+
+- <https://en.wikipedia.org/wiki/X.509>
+- <https://ko.wikipedia.org/wiki/X.509>
+- <https://datatracker.ietf.org/doc/html/rfc5280>
+
+X.509는 공개키 기반(PKI) 인증구조의 ITU-T 표준이다
+
+### ASN.1 (Abstract Syntax Notation One)
+
+- <https://en.wikipedia.org/wiki/ASN.1>
+- <https://en.wikipedia.org/wiki/X.690>
+
+ASN.1은 직렬화/역직렬화 하여 크래스플랫폼에서 사용가능한 추상 구문 구조를 기술하는 표준 인터페이스 표현 언어이다
+
+ASN.1은 X.609 표준에 서술된 BER(Basic Encoding Rules), CER(Canonical Encoding Rules), DER(Distinguished Encoding Rules) 형식으로 인코딩하여 사용한다.
+
+<https://en.wikipedia.org/wiki/X.690#BER,_CER_and_DER_compared>
+
+X.509 표준에 사용되는 인증서를 기술할 때 사용되는 문법이다
+
+### 인증서 인코딩
+
+<https://www.ssl.com/guide/pem-der-crt-and-cer-x-509-encodings-and-conversions/>
+
+#### `PEM` (Privacy Enhanced Mail)
+
+본문은 Base64 ASCII 인코딩 되어 있으며, 첫 줄과 마지막 줄(헤더, 푸터)은 어떤 종류의 데이터인지 표시한다
+
+```txt
+-----BEGIN *****-----
+BASE64 ENCODED TEXT
+-----END *****_____
+```
+
+#### BINARY
+
+X.609(BER, CER, DER) 인코딩된 바이너리(이진) 데이터이다
+
+### 인증서 파일 확장자
+
+#### `.pem`
+
+**PEM** 형식으로 되어있는 파일이며 어떠한 인증서 관련 파일인지는 내용을 확인해 보아야 한다
+
+#### `.crt` or `.cer` (Certificate)
+
+일반적으로 인증서 파일의 확장자로 많이 쓰이고 주로 **PEM** 형식으로 되어있다.
+unix 계열에서는 주로 `crt`, 윈도우즈에서는 `cer` 확장자를 사용한다
+
+PEM 인증서인 경우 `-----BEGIN CERTIFICATE-----` 헤더로 시작한다
+
+#### `.csr` (Certificate Signing Request)
+
+인증서 발급 신청을 위해 CA에 요청할 내용이 담겨 있는 파일이며 주로 **PEM** 형식으로 되어있다.
+
+PEM 인증서인 경우 `-----BEGIN NEW CERTIFICATE REQUEST-----` 헤더로 시작한다
+
+#### `.key`
+
+일반적으로 개인키 파일에 사용하는 확장자이다(공개키에 쓸 수도 있다...). 주로 **PEM** 형식으로 되어 있으나, 바이너리 형식일 수도 있다
+
+#### `.pfx` or `.p12` (PKCS#12)
+
+<https://en.wikipedia.org/wiki/PKCS_12>
+
+일반적으로 X.509 인증서와 개인키를 하나의 파일에 포함한 **바이너리** 형식의 *archive file format*이다.
+
+PKCS#12 역시 서명하고 암호화 할 수 있으며 이 경우 "SafeBags"라 불린다.
+
+#### `.jks` (Java Key Store)
+
+일종의 자바에서 사용하는 _p12_ 포맷이지만 다른 시스템과 호환성은 없다. 자바9 이후로는 PKCS#12 포맷이 기본이 되었다.
 
 ## 인증서 변환
 
