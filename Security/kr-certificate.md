@@ -33,8 +33,58 @@ BouncyCastle 구현체 (Java)
 - <https://github.com/bcgit/bc-java/blob/master/jce/src/main/java/javax/crypto/EncryptedPrivateKeyInfo.java>
 - <https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java>
 
+### PKCS#7
+
+<https://en.wikipedia.org/wiki/PKCS_7>
+
+공인인증서 역시 PKCS#7 표준에 따라 개인키를 사용해 서명한 내용을 공개키와 함께 배포하면 해당 내용의 소유권을 인증할 수 있다
+
+또한 상위기관에서 서명한 CRL(Certificate Revocation List, 인증서 폐기 목록)을 확인하는 용도로도 사용된다.
+
+CRL을 사용한 인증서 검증과정은 다음과 같다
+
+- 인증서의 일련번호
+- 인증서 CRL Distribution Points 확인
+- CRL 서명 검증
+- CRL 내용에서 인증서 일련번호 검색
+
 ### 식별번호를 이용한 본인확인 기술규격
+
+<http://www.rootca.or.kr/kcac/down/TechSpec/1.5-KCAC.TS.SIVID.pdf>
+
+`VID = h(h(IDN, R)`
+
+- `VID`: 가상식별번호
+- `h`: 해쉬함수
+- `IDN`: 개인식별정보 (주민번호, 사업자등록번호)
+- `R`: 가입자를 식별할 수 있는 난수(RandomNum) (기밀성 유지를 위해 직접 전송하지는 않고 해싱함수에 사용하여 암호화 함)
+
+가상 식별번호는 위와 같은 방식으로 클라이언트에서 생성되며
+공인인증기관 공개키로 `VID` 및 `R` 값을 암호화하여 보내서 생성된 `VID` 값을 재검증하고 문제가 없으면 공인인증서가 발급된다
+
+식별번호는 공인인증서를 사용하는 기관에서도 요구할 수 있는데 해당 내용은 기술규격 부록 B에 기재되어 있다
+
+- (A) 유저
+
+  - (A-1) 유저는 `IDN`과 `R`을 사용기관에 전달하며 이때 두 값은 안전한 방법으로 전달해야 한다
+  - (A-2) A-1 단계의 `IDN` 값이 포함되어 있는 공인인증서를 사용기관에 전달한다
+
+- (B) 사용기관
+
+  - (B-1) A-2 단계에서 유저로 부터 전달받은 공인인증서에서 `VID` 값과 해쉬 알고리즘(`h`)을 추출한다
+  - (B-2) A-1 단계에서 유저로 부터 전달받은 `IDN`과 `R`값과 B-1 단계에서 구한 해쉬 알고리즘(`h`)을 사용하여 `VID*` 값을 구한다
+  - (B-3) B-1 단계의 `VID` 값과 B-2 단계의 `VID*` 값을 비교한다
+
+> 상황에 따라 `IDN`, `R` 값 중 하나 혹은 전부를 전달하지 않을 수도 있다 (사용기관에서 이미 식별번호를 가지고 있거나 두 값의 해쉬값만 전달)
 
 ## 공인인증서 활용
 
-### 국세청 홈택스
+### 국세청 홈택스 로그인
+
+로그인에 필요한 데이터는 다음과 같다
+
+- 공인인증서 일련번호
+- 공인인증서 공개키를 PEM 인코딩 한 값
+- 홈택스로부터 전자서명 요청받은 값 (pkcEncSsn)
+- 개인키로 전자서명한 값 (signed pkcEncSsn)
+- 개인키의 RandomNum
