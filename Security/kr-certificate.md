@@ -13,12 +13,17 @@
 
 발급받은 공인인증서는 인증서(`.cer`)와 개인키(`.key`)로 구성되어 있다
 
-- 공인인증서는 [X.509 V3 규격](https://en.wikipedia.org/wiki/X.509#Structure_of_a_certificate)을 따르고 있다
+- 공인인증서는
+
+  - [X.509 V3 규격](https://en.wikipedia.org/wiki/X.509#Structure_of_a_certificate)을 따르고 있다
+  - [전자서명 인증서 프로파일 규격](https://www.rootca.or.kr/kcac/down/TechSpec/1.1-KCAC.TS.CERTPROF.pdf)에서 인증서 구조를 확인할 수 있다
 
 - 개인키는
 
   - [PKCS#5](https://datatracker.ietf.org/doc/html/rfc2898) 및 [PKCS#8](https://en.wikipedia.org/wiki/PKCS_8) 형식을 사용하며
-  - [SEED 알고리즘](https://seed.kisa.or.kr/kisa/algorithm/EgovSeedInfo.do)으로 암호화 되어 있다
+  - 개인키를 ASN.1 구조로 파싱하면 [sequence[0]은 암호화 알고리즘, sequence[1]은 암호화된 개인키 정보이다](https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java#L20)
+  - [암호 알고리즘 규격](https://www.rootca.or.kr/kcac/down/TechSpec/2.3-KCAC.TS.ENC.pdf)을 확인할 수 있다
+  - 주요 알고리즘은 [SEED (OID: `1.2.410.200004.1.4`, `1.2.410.200004.1.15`)](https://seed.kisa.or.kr/kisa/algorithm/EgovSeedInfo.do), [PKCS#5 PBES2 (OID: `1.2.840.113549.1.5.13`)](https://datatracker.ietf.org/doc/html/rfc8018#section-6.2) 이다
 
 ### PKCS#8
 
@@ -41,6 +46,8 @@ BouncyCastle 구현체 (Java)
 
 또한 상위기관에서 서명한 CRL(Certificate Revocation List, 인증서 폐기 목록)을 확인하는 용도로도 사용된다.
 
+> 전자서명 인증서 프로파일 규격 6.2.12, 세부 규격은 <https://www.rootca.or.kr/kcac/down/TechSpec/1.2-KCAC.TS.CRLPROF.pdf> 참고
+
 CRL을 사용한 인증서 검증과정은 다음과 같다
 
 - 인증서의 일련번호
@@ -57,7 +64,7 @@ CRL을 사용한 인증서 검증과정은 다음과 같다
 - `VID`: 가상식별번호
 - `h`: 해쉬함수
 - `IDN`: 개인식별정보 (주민번호, 사업자등록번호)
-- `R`: 가입자를 식별할 수 있는 난수(RandomNum) (기밀성 유지를 위해 직접 전송하지는 않고 해싱함수에 사용하여 암호화 함)
+- `R`: 가입자를 식별할 수 있는 난수(RandomNum) (OID: `1.2.410.200004.10.1.1.3`)
 
 가상 식별번호는 위와 같은 방식으로 클라이언트에서 생성되며
 공인인증기관 공개키로 `VID` 및 `R` 값을 암호화하여 보내서 생성된 `VID` 값을 재검증하고 문제가 없으면 공인인증서가 발급된다
