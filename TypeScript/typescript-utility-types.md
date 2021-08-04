@@ -1,6 +1,7 @@
 # TypeScript - Utility Types
 
-<https://www.typescriptlang.org/docs/handbook/utility-types.html>
+- 문서: <https://www.typescriptlang.org/docs/handbook/utility-types.html>
+- 구현: <https://github.com/microsoft/TypeScript/blob/main/lib/lib.es5.d.ts#L1468>
 
 TypeScript에서는 타입 변환을 편리하게 할 수 있는 유틸리티 타입을 global scope로 사용할 수 있다.
 
@@ -19,18 +20,18 @@ function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
 }
 
 const todo1 = {
-  title: "organize desk",
-  description: "clear clutter",
+  title: 'organize desk',
+  description: 'clear clutter',
 };
 
 const todo2 = updateTodo(todo1, {
-  description: "throw out trash",
+  description: 'throw out trash',
 });
 ```
 
 ## `Required<T>`
 
-`T` 타입의 프로퍼티를 required(!optional)로 설정한 타입을 반환한다.
+`T` 타입의 모든 프로퍼티를 required(!optional)로 설정한 타입을 반환한다.
 
 ```ts
 interface Props {
@@ -53,10 +54,10 @@ interface Todo {
 }
 
 const todo: Readonly<Todo> = {
-  title: "Delete inactive users",
+  title: 'Delete inactive users',
 };
 
-todo.title = "Hello"; // Error: cannot reassign a readonly property
+todo.title = 'Hello'; // Error: cannot reassign a readonly property
 ```
 
 런타임에 재할당이 되지 않아야 하는 경우를 나타내는데 유용하다. (`Object.freeze`)
@@ -76,12 +77,12 @@ interface PageInfo {
   title: string;
 }
 
-type Page = "home" | "about" | "contact";
+type Page = 'home' | 'about' | 'contact';
 
 const x: Record<Page, PageInfo> = {
-  about: { title: "about" },
-  contact: { title: "contact" },
-  home: { title: "home" },
+  about: { title: 'about' },
+  contact: { title: 'contact' },
+  home: { title: 'home' },
 };
 ```
 
@@ -96,10 +97,10 @@ interface Todo {
   completed: boolean;
 }
 
-type TodoPreview = Pick<Todo, "title" | "completed">;
+type TodoPreview = Pick<Todo, 'title' | 'completed'>;
 
 const todo: TodoPreview = {
-  title: "Clean room",
+  title: 'Clean room',
   completed: false,
 };
 ```
@@ -107,14 +108,45 @@ const todo: TodoPreview = {
 `Todo`에서 `title`과 `description?`을 사용하는 타입의 예제는 다음과 같다.
 
 ```ts
-type NoStatus = Pick<Todo, "title"> & Pick<Partial<Todo>, "description">;
+type NoStatus = Pick<Todo, 'title'> & Pick<Partial<Todo>, 'description'>;
 
-const picked1: NoStatus = { title: "포켓몬스터" }; // OK
+const picked1: NoStatus = { title: '포켓몬스터' }; // OK
 const picked2: NoStatus = {
-  title: "포켓몬스터",
-  description: "피카츄는 내친구",
+  title: '포켓몬스터',
+  description: '피카츄는 내친구',
 }; // OK
 ```
+
+## `Omit<T, K>`
+
+`Omit<T, K>` 타입은 포함되지 않았는데 `Pick<T, Exclude<keyof T, K>>`타입으로 사용할 수 있기 때문이다.
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+  location: string;
+};
+
+type RemainingKeys = Exclude<keyof Person, 'location'>;
+type QuantumPerson = Pick<Person, RemainingKeys>;
+
+// equivalent to
+type QuantumPerson = {
+  name: string;
+  age: number;
+};
+```
+
+TypeScript 3.5에서 자주 발생하는 이러한 유형의 작업을 처리하기 위한 Helper 타입이 추기되었다.
+
+```ts
+type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
+```
+
+위와 같이 별도로 `Omit` 타입을 정의할 필요 없이 `lib.d.ts`에 포함된 타입을 사용하면 된다.
+
+컴파일러는 `Omit` 타입을 통해 제네릭에서 object rest destructuring 선언을 통해 생성된 타입을 표현한다.
 
 ## `Exclude<T,U>`
 
@@ -122,8 +154,8 @@ const picked2: NoStatus = {
 (`T` 타입에서 `U` 타입에 할당가능한 모든 프로퍼티를 제외함)
 
 ```ts
-type T0 = Exclude<"a" | "b" | "c", "a">; // "b" | "c"
-type T1 = Exclude<"a" | "b" | "c", "a" | "b">; // "c"
+type T0 = Exclude<'a' | 'b' | 'c', 'a'>; // "b" | "c"
+type T1 = Exclude<'a' | 'b' | 'c', 'a' | 'b'>; // "c"
 type T2 = Exclude<string | number | (() => void), Function>; // string | number
 ```
 
@@ -137,7 +169,7 @@ type T2 = Exclude<string | number | (() => void), Function>; // string | number
 (`T` 타입으로부터 `U` 타입에 할당할 수 있는 모든 프로퍼티를 추출)
 
 ```ts
-type T0 = Extract<"a" | "b" | "c", "a" | "f">; // "a"
+type T0 = Extract<'a' | 'b' | 'c', 'a' | 'f'>; // "a"
 type T1 = Extract<string | number | (() => void), Function>; // () => void
 ```
 
@@ -148,6 +180,34 @@ type T1 = Extract<string | number | (() => void), Function>; // () => void
 ```ts
 type T0 = NonNullable<string | number | undefined>; // string | number
 type T1 = NonNullable<string[] | null | undefined>; // string[]
+```
+
+## `Parameters<T>`
+
+함수 타입의 모든 파라미터 타입들을 추출한다.
+
+모든 파라미터 타입들을 튜플 타입 형태로 제공한다.
+대상이 함수가 아니면 `never` 타입을 반환한다.
+여러 파라미터가 단일 타입으로 구성된다면 해당타입의 배열로 출력된다.
+
+```ts
+type A = Parameters<() => void>; // []
+type B = Parameters<typeof Array.isArray>; // [any]
+type C = Parameters<typeof parseInt>; // [string, (number | undefined)?]
+type D = Parameters<typeof Math.max>; // number[]
+```
+
+## `ConstructorParameters<T>`
+
+생성자 함수 타입의 모든 파라미터 타입들을 추출한다.
+
+모든 파라미터 타입들을 튜플 타입 형태로 제공한다.
+대상이 (생성자)함수가 아니면 `never` 타입을 반환한다.
+
+```ts
+type A = ConstructorParameters<ErrorConstructor>; // [(string | undefined)?]
+type B = ConstructorParameters<FunctionConstructor>; // string[]
+type C = ConstructorParameters<RegExpConstructor>; // [string, (string | undefined)?]
 ```
 
 ## `ReturnType<T>`
@@ -181,6 +241,39 @@ type T1 = InstanceType<any>; // any
 type T2 = InstanceType<never>; // any
 type T3 = InstanceType<string>; // Error
 type T4 = InstanceType<Function>; // Error
+```
+
+## `ThisParameterType<T>`
+
+함수 타입의 `this` 파라미터 타입을, `this` 파라미터가 없는 경우 `unknown` 타입을 추출한다
+
+```ts
+function toHex(this: Number) {
+  return this.toString(16);
+}
+
+function numberToString(n: ThisParameterType<typeof toHex>) {
+  return toHex.apply(n);
+}
+```
+
+## `OmitThisParameter<T>`
+
+타입에서 `this` 파라미터를 제외한다
+
+만약 명시적으로 선언된 `this` 파라미터가 없다면 결과는 그대로의 타입이다.
+명시적으로 선언된 `this` 파라미터가 있으면 `this` 파리미터가 제외된 새 타입이 `T`로 부터 생성된다.
+
+제너릭은 지워지고, 마지막 함수의 overload signature가 새로운 함수타입으로 전파된다.
+
+```ts
+function toHex(this: Number) {
+  return this.toString(16);
+}
+
+const fiveToHex: OmitThisParameter<typeof toHex> = toHex.bind(5);
+
+console.log(fiveToHex());
 ```
 
 ## `ThisType<T>`
@@ -223,64 +316,16 @@ methods 프로퍼티의 타입이 추론 대상임과 동시에 메소드의 `th
 `ThisType<T>` 마커 인터페이스는 `lib.d.ts`에 선언 된 비어있는 인터페이스이다.
 인터페이스는 객체 리터럴의 문맥적 타입에서 인식되는 것 이외에도 비어있는 인터페이스처럼 작동한다.
 
-## `Omit<T, K>`
+## Intrinsic String Manipulation Types
 
-`Omit<T, K>` 타입은 포함되지 않았는데 `Pick<T, Exclude<keyof T, K>>`타입으로 사용할 수 있기 때문이다.
+<https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype>
 
-```ts
-type Person = {
-  name: string;
-  age: number;
-  location: string;
-};
+template string literals 타입의 유틸리티 타입으로 추가되었으며, 다음 네 가지가 있다
 
-type RemainingKeys = Exclude<keyof Person, "location">;
-type QuantumPerson = Pick<Person, RemainingKeys>;
-
-// equivalent to
-type QuantumPerson = {
-  name: string;
-  age: number;
-};
-```
-
-TypeScript 3.5에서 자주 발생하는 이러한 유형의 작업을 처리하기 위한 Helper 타입이 추기되었다.
-
-```ts
-type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
-```
-
-위와 같이 별도로 `Omit` 타입을 정의할 필요 없이 `lib.d.ts`에 포함된 타입을 사용하면 된다.
-
-컴파일러는 `Omit` 타입을 통해 제네릭에서 object rest destructuring 선언을 통해 생성된 타입을 표현한다.
-
-## `Parameters<T>`
-
-함수 타입의 모든 파라미터 타입들을 추출한다.
-
-모든 파라미터 타입들을 튜플 타입 형태로 제공한다.
-대상이 함수가 아니면 `never` 타입을 반환한다.
-여러 파라미터가 단일 타입으로 구성된다면 해당타입의 배열로 출력된다.
-
-```ts
-type A = Parameters<() => void>; // []
-type B = Parameters<typeof Array.isArray>; // [any]
-type C = Parameters<typeof parseInt>; // [string, (number | undefined)?]
-type D = Parameters<typeof Math.max>; // number[]
-```
-
-## `ConstructorParameters<T>`
-
-생성자 함수 타입의 모든 파라미터 타입들을 추출한다.
-
-모든 파라미터 타입들을 튜플 타입 형태로 제공한다.
-대상이 (생성자)함수가 아니면 `never` 타입을 반환한다.
-
-```ts
-type A = ConstructorParameters<ErrorConstructor>; // [(string | undefined)?]
-type B = ConstructorParameters<FunctionConstructor>; // string[]
-type C = ConstructorParameters<RegExpConstructor>; // [string, (string | undefined)?]
-```
+- `Uppercase<StringType>`
+- `Lowercase<StringType>`
+- `Capitalize<StringType>`
+- `Uncapitalize<StringType>`
 
 ## `infer NonFunctionProperties`
 
