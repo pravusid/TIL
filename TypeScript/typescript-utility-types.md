@@ -327,7 +327,9 @@ template string literals 타입의 유틸리티 타입으로 추가되었으며,
 - `Capitalize<StringType>`
 - `Uncapitalize<StringType>`
 
-## `infer NonFunctionProperties`
+## 타입활용
+
+### `infer NonFunctionProperties`
 
 ```ts
 type NonFunctionPropertyNames<T> = {
@@ -337,7 +339,7 @@ type NonFunctionPropertyNames<T> = {
 type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 ```
 
-## `infer OnlyTypeProperties`
+### `infer OnlyTypeProperties`
 
 ```ts
 export type OnlyTypePropertyNames<T, O> = {
@@ -346,7 +348,7 @@ export type OnlyTypePropertyNames<T, O> = {
 }[keyof T];
 ```
 
-## Mutable, Immutable
+### `Mutable<T>`, `Immutable<T>`
 
 ```ts
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -373,18 +375,61 @@ export type Immutable<T> = T extends Primitive
   : { readonly [P in keyof T]: Immutable<T[P]> };
 ```
 
-## Awaited
+### `Awaited<T>`
 
 ```ts
 export type Awaited<T> = T extends Promise<infer U> ? U : T;
 ```
 
-## Nullable, Optional
+### `Nullable<T>`
+
+`Partial<T>`과 유사하지만 `undefined` 대신 `null`을 사용하는 경우
 
 ```ts
 export type Nullable<T> = {
   [P in keyof T]: T[P] | null;
 };
+```
 
+### `Optional<T>`
+
+```ts
 export type Optional<T> = T | undefined;
+
+// 함수형 스타일로 결과를 처리할 수 있다
+export const unwrap = <T>(optional: Optional<T>): T => {
+  if (optional !== undefined) {
+    return optional;
+  }
+  throw new Error('optional object is undefined');
+};
+```
+
+### `Array.filter` with type-guard
+
+```ts
+// type narrowing issue in TS Array.filter
+Array.of(1, undefined, 2).filter(Boolean); // (number | undefined)[]
+
+// 타입가드가 포함된 HOF 사용시
+export function isTruthy<T>(obj: T | undefined | null): obj is T {
+  return !!obj;
+}
+
+Array.of(1, undefined, 2).filter(isTruthy); // number[]
+```
+
+type-guard를 객체의 프로퍼티에 적용할 수도 있다
+
+```ts
+export type Convinced<T, R extends keyof T> = {
+  [K in R]: T[K] extends infer I | null | undefined ? I : T[K];
+} &
+  Omit<T, R>;
+
+export function hasTruthyValueIn<K extends keyof T, T>(key: K) {
+  return (obj: T): obj is T & Convinced<T, K> => !!obj[key];
+}
+
+Array.of({ id: 1 }, { id: undefined }, { id: 2 }).filter(hasTruthyValueIn('id')); // { id: number }[]
 ```
