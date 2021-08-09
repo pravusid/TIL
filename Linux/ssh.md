@@ -26,13 +26,11 @@
 
 ### SSH 비대칭 키 발급
 
-RSA 방식의 비대칭키를 생성함. 비밀번호 대신 public key, private key를 활용해 인증한다.
+RSA 방식의 비대칭키를 생성함
 
-`ssh-keygen -t rsa -C "comment"`
-
-> permissions are too open 오류: 비공개 키의 권한을 변경한다: `chmod 400 ~/.ssh/id_rsa`
-
-### SSH 비공개키 변환 (to PEM)
+```sh
+ssh-keygen -t rsa -C "comment"
+```
 
 Convert `BEGIN OPENSSH PRIVATE KEY` to `BEGIN RSA PRIVATE KEY`:
 
@@ -47,6 +45,8 @@ ssh-keygen -p -m PEM -f id_rsa.pem
 공개키를 서버의 `authorized_keys`에 등록: `ssh-copy-id user@host`
 
 서버에서 권한 설정
+
+> permissions are too open 오류
 
 ```sh
 chmod 700 ~/.ssh
@@ -96,11 +96,13 @@ scp <옵션> <원본 경로 및 파일명> <대상 경로 및 파일명>
 ```
 
 - 옵션
+
   - `-P` : 포트번호
   - `-p` : 원본 파일 시간의 수정시간, 사용시간, 권한을 유지한다 (preserve)
   - `-r` : 하위 폴더/파일 모두 복사한다 (recursive)
 
 - 사용 예
+
   - 보내기 : `scp -rp 파일명 user@host:~/다운로드/파일명`
   - 받기 : `scp -rp user@host:~/다운로드/파일명 로컬경로/파일명`
 
