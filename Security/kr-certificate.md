@@ -8,8 +8,8 @@
 
 ## 기술규격
 
+- [인증서 관련 전체적인 개념은 다음을 참고](./public-key-infrastructure.md)
 - <https://www.rootca.or.kr/kor/standard/standard01A.jsp>
-- [인증서 구조](./public-key-infrastructure.md#인증서-구조)
 
 발급받은 공인인증서는 인증서(`.cer`)와 개인키(`.key`)로 구성되어 있다
 
@@ -21,39 +21,13 @@
 - 개인키는
 
   - [PKCS#5](https://datatracker.ietf.org/doc/html/rfc2898) 및 [PKCS#8](https://en.wikipedia.org/wiki/PKCS_8) 형식을 사용하며
-  - 개인키를 ASN.1 구조로 파싱하면 [sequence[0]은 암호화 알고리즘, sequence[1]은 암호화된 개인키 정보이다](https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java#L20)
+  - PKCS#8 개인키를 ASN.1 구조로 파싱하면 [sequence[0]은 암호화 알고리즘, sequence[1]은 암호화된 개인키 정보이다](https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java#L20)
   - [암호 알고리즘 규격](https://www.rootca.or.kr/kcac/down/TechSpec/2.3-KCAC.TS.ENC.pdf)을 확인할 수 있다
   - 주요 알고리즘은 [SEED (OID: `1.2.410.200004.1.4`, `1.2.410.200004.1.15`)](https://seed.kisa.or.kr/kisa/algorithm/EgovSeedInfo.do), [PKCS#5 PBES2 (OID: `1.2.840.113549.1.5.13`)](https://datatracker.ietf.org/doc/html/rfc8018#section-6.2) 이다
 
-### PKCS#8
-
-> 암호화된 개인키 포맷 표준이며 PEM 형식인 경우 헤더가 `-----BEGIN ENCRYPTED PRIVATE KEY----` 문구로 시작한다
-
-mono(.NET opensource) 구현체 (C#)
-
-- <https://github.com/mono/mono/blob/main/mcs/class/Mono.Security/Mono.Security.Cryptography/PKCS8.cs>
-
-BouncyCastle 구현체 (Java)
-
-- <https://github.com/bcgit/bc-java/blob/master/jce/src/main/java/javax/crypto/EncryptedPrivateKeyInfo.java>
-- <https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java>
-
-### PKCS#7
-
-<https://en.wikipedia.org/wiki/PKCS_7>
-
-공인인증서 역시 PKCS#7 표준에 따라 개인키를 사용해 서명한 내용을 공개키와 함께 배포하면 해당 내용의 소유권을 인증할 수 있다
-
-또한 상위기관에서 서명한 CRL(Certificate Revocation List, 인증서 폐기 목록)을 확인하는 용도로도 사용된다.
+### 공인인증서 Certificate Revocation List (인증서 폐기 목록) 확인
 
 > 전자서명 인증서 프로파일 규격 6.2.12, 세부 규격은 <https://www.rootca.or.kr/kcac/down/TechSpec/1.2-KCAC.TS.CRLPROF.pdf> 참고
-
-CRL을 사용한 인증서 검증과정은 다음과 같다
-
-- 인증서의 일련번호
-- 인증서 CRL Distribution Points 확인
-- CRL 서명 검증
-- CRL 내용에서 인증서 일련번호 검색
 
 ### 식별번호를 이용한 본인확인 기술규격
 

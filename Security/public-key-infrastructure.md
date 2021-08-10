@@ -6,10 +6,90 @@
 
 > 암호화 알고리즘 목록 출력: `openssl enc --list`
 
+### PKCS#1
+
+- <https://en.wikipedia.org/wiki/PKCS_1>
+- <https://datatracker.ietf.org/doc/html/rfc8017>
+
+RSA 암호표준이며 공개키와 비밀키(ASN.1) 규격, 암복호화/서명에 필요한 알고리즘과 인코딩 등을 정의한다
+
+PEM 형식인 경우 헤더는 다음과 같다
+
+- 비밀키: `-----BEGIN RSA PRIVATE KEY-----`
+- 공개키: `-----BEGIN RSA PUBLIC KEY-----`
+
+### PKCS#8
+
+개인키 포맷 표준이며 PEM 형식인 경우 헤더는 다음과 같다
+
+- 암호화된 경우: `-----BEGIN ENCRYPTED PRIVATE KEY----`
+- 암호화되지 않은 경우: `-----BEGIN PRIVATE KEY----`
+
+암호화된 경우 본문은 두 개의 Sequence로 구성되어 있다
+
+<https://datatracker.ietf.org/doc/html/rfc5208#section-6>
+
+- `EncryptionAlgorithmIdentifier`: 암호화 알고리즘 Identifier(OID)
+- `EncryptedData`: 암호화된 개인키
+
+```asn1
+EncryptedPrivateKeyInfo ::= SEQUENCE {
+  encryptionAlgorithm  EncryptionAlgorithmIdentifier,
+  encryptedData        EncryptedData
+}
+
+EncryptionAlgorithmIdentifier ::= SEQUENCE {
+  algorithm       OBJECT IDENTIFIER,
+  parameters      ANY DEFINED BY algorithm OPTIONAL
+}
+
+EncryptedData ::= OCTET STRING
+```
+
+암호화되지 않은 경우 다음의 Sequence로 구성되어 있다
+
+<https://datatracker.ietf.org/doc/html/rfc5208#section-5>
+
+```asn1
+PrivateKeyInfo ::= SEQUENCE {
+  version                   Version,
+  privateKeyAlgorithm       PrivateKeyAlgorithmIdentifier,
+  privateKey                PrivateKey,
+  attributes           [0]  IMPLICIT Attributes OPTIONAL
+}
+```
+
+> `AlgorithmIdentifier`: <https://datatracker.ietf.org/doc/html/rfc5280#section-4.1.1.2>
+
+mono(.NET opensource) 구현체 (C#)
+
+- <https://github.com/mono/mono/blob/main/mcs/class/Mono.Security/Mono.Security.Cryptography/PKCS8.cs>
+
+BouncyCastle 구현체 (Java)
+
+- <https://github.com/bcgit/bc-java/blob/master/jce/src/main/java/javax/crypto/EncryptedPrivateKeyInfo.java>
+- <https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java>
+
+### PKCS#7
+
+<https://en.wikipedia.org/wiki/PKCS_7>
+
+공인인증서 역시 PKCS#7 표준에 따라 개인키를 사용해 서명한 내용을 공개키와 함께 배포하면 해당 내용의 소유권을 인증할 수 있다
+
+또한 상위기관에서 서명한 CRL(Certificate Revocation List, 인증서 폐기 목록)을 확인하는 용도로도 사용된다.
+
+CRL을 사용한 인증서 검증과정은 다음과 같다
+
+- 인증서의 일련번호
+- 인증서 CRL Distribution Points 확인
+- CRL 서명 검증
+- CRL 내용에서 인증서 일련번호 검색
+
 ## ASN.1 (Abstract Syntax Notation One)
 
 - <https://en.wikipedia.org/wiki/ASN.1>
 - <https://en.wikipedia.org/wiki/X.690>
+- <https://letsencrypt.org/docs/a-warm-welcome-to-asn1-and-der/>
 
 ASN.1은 직렬화/역직렬화 하여 크래스플랫폼에서 사용가능한 추상 구문 구조를 기술하는 표준 인터페이스 표현 언어이다
 
