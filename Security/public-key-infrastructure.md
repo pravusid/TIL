@@ -1,10 +1,37 @@
 # Public Key Infrastructure
 
-## Root CA(certificate authorities)
+## PKCS (public-key cryptography standards)
+
+<https://en.wikipedia.org/wiki/PKCS>
+
+> 암호화 알고리즘 목록 출력: `openssl enc --list`
+
+## ASN.1 (Abstract Syntax Notation One)
+
+- <https://en.wikipedia.org/wiki/ASN.1>
+- <https://en.wikipedia.org/wiki/X.690>
+
+ASN.1은 직렬화/역직렬화 하여 크래스플랫폼에서 사용가능한 추상 구문 구조를 기술하는 표준 인터페이스 표현 언어이다
+
+ASN.1은 X.609 표준에 서술된 BER(Basic Encoding Rules), CER(Canonical Encoding Rules), DER(Distinguished Encoding Rules) 형식으로 인코딩하여 사용한다.
+
+<https://en.wikipedia.org/wiki/X.690#BER,_CER_and_DER_compared>
+
+PKCS 및 X.509 표준에 사용되는 문법이다
+
+## PKI 인증서 구조
+
+- <https://en.wikipedia.org/wiki/X.509>
+- <https://ko.wikipedia.org/wiki/X.509>
+- <https://datatracker.ietf.org/doc/html/rfc5280>
+
+X.509는 공개키 기반(PKI) 인증구조의 ITU-T 표준이다
+
+### Root CA (certificate authorities)
 
 최상위 인증기관
 
-## Intermediate certificate
+### Intermediate certificate
 
 <https://en.wikipedia.org/wiki/Chain_of_trust>
 
@@ -18,25 +45,35 @@ from: <https://engineering.linecorp.com/ko/blog/best-practices-to-secure-your-ss
 Root CA의 경우 브라우저나 기본 KeyStore에 포함되어 있다.
 하지만 Intermediate Certificate는 포함되지 않을 수 있으므로 TLS 제공자의 서버에서 제공해야 한다.
 
-## Domain certificate
+### Domain certificate
 
-> CA로 부터 인증을 받을 수 있다
+> CA로 부터 인증을 받을 수 있다, Https 인증서는 Domain 인증이지만 공인인증서라면 개인인증서에 해당한다
 
 예를 들어, Let’s Encrypt 경우 인증을 받으면 다음 파일들이 생성된다
 
-- privkey.pem: 도메인 인증서의 개인키
-- cert.pem: 서명된 도메인 인증서
+- `privkey.pem`: 도메인 인증서의 개인키
+- `cert.pem`: 서명된 도메인 인증서
 
 CA 정보를 담은 파일도 함께 생성된다
 
-- chain.pem: Let’s Encrypt의 중간 인증서(intermediate certificate)
-- fullchain.pem: `cert + chain`
+- `chain.pem`: Let’s Encrypt의 중간 인증서(intermediate certificate)
+- `fullchain.pem`: `cert + chain`
+
+## Two-way SSL communication
+
+클라이언트 인증이라고도 불린다
+
+- 클라이언트의 인증서와 서버의 인증서를 각각 생성
+- 클라이언트와 서버 각각에서 신뢰할 수 있는 CA에 상호의 인증서를 추가
+- 양쪽 모두가 신뢰할 수 있는 상황이 아니면 연결을 거부
+
+<https://www.ibm.com/support/knowledgecenter/SSRMWJ_7.0.1.13/com.ibm.isim.doc/securing/cpt/cpt_ic_security_ssl_scenario.html>
 
 ## Self-signed Certificate
 
 OpenSSL을 사용하여 Self Signed Certificate를 생성할 수 있다.
 
-### Root CA
+### Self-signed Root CA
 
 Root CA의 개인키를 생성한다: `openssl genrsa -aes256 -out root-ca.key 2048`
 
@@ -56,7 +93,7 @@ Common Name (e.g. server FQDN or YOUR name)
 Email Address
 ```
 
-### CA-signed Cert for My Server
+### Self-signed CA-signed Cert
 
 서버 비밀키 생성: `openssl genrsa -out myserver.key 2048`
 
@@ -109,36 +146,7 @@ openssl x509 -req -in myserver.csr -CA root-ca.crt -CAkey root-ca.key -CAcreates
 
 또는 클라이언트에서 `rejectUnauthorized = false`를 사용할 수도 있다 (인증서 검증하지 않음)
 
-## Two-way SSL communication
-
-클라이언트 인증이라고도 불린다
-
-- 클라이언트의 인증서와 서버의 인증서를 각각 생성
-- 클라이언트와 서버 각각에서 신뢰할 수 있는 CA에 상호의 인증서를 추가
-- 양쪽 모두가 신뢰할 수 있는 상황이 아니면 연결을 거부
-
-<https://www.ibm.com/support/knowledgecenter/SSRMWJ_7.0.1.13/com.ibm.isim.doc/securing/cpt/cpt_ic_security_ssl_scenario.html>
-
-## 인증서 구조
-
-- <https://en.wikipedia.org/wiki/X.509>
-- <https://ko.wikipedia.org/wiki/X.509>
-- <https://datatracker.ietf.org/doc/html/rfc5280>
-
-X.509는 공개키 기반(PKI) 인증구조의 ITU-T 표준이다
-
-### ASN.1 (Abstract Syntax Notation One)
-
-- <https://en.wikipedia.org/wiki/ASN.1>
-- <https://en.wikipedia.org/wiki/X.690>
-
-ASN.1은 직렬화/역직렬화 하여 크래스플랫폼에서 사용가능한 추상 구문 구조를 기술하는 표준 인터페이스 표현 언어이다
-
-ASN.1은 X.609 표준에 서술된 BER(Basic Encoding Rules), CER(Canonical Encoding Rules), DER(Distinguished Encoding Rules) 형식으로 인코딩하여 사용한다.
-
-<https://en.wikipedia.org/wiki/X.690#BER,_CER_and_DER_compared>
-
-X.509 표준에 사용되는 인증서를 기술할 때 사용되는 문법이다
+## 인증서 형식
 
 ### 인증서 인코딩
 
@@ -193,21 +201,84 @@ PKCS#12 역시 서명하고 암호화 할 수 있으며 이 경우 "SafeBags"라
 
 일종의 자바에서 사용하는 _p12_ 포맷이지만 다른 시스템과 호환성은 없다. 자바9 이후로는 PKCS#12 포맷이 기본이 되었다.
 
-## 인증서 변환
+## 비대칭 키 생성 (openssl)
 
-### PEM 을 PKCS#12 으로 변환
+<https://www.openssl.org/docs/manpages.html>
 
-cert.pem 파일로 통합
+```sh
+# private key
+openssl genrsa -out private.pem 2048
+# private key with cipher
+openssl genrsa -aes-256-cbc -out private.pem 2048
+# public key
+openssl rsa -in private.pem -out public.pem -pubout
+```
 
-`cat domain.crt chain1.crt chain2.crt root.crt > cert.pem`
+## 인증서 인코딩 변환
 
-.pfx 파일로 저장
+### PEM -> 바이너리(DER)
 
-`openssl pkcs12 -export -name example.com -in cert.pem -inkey private.key -out SecureSign.pfx`
+```sh
+# 인증서 변환
+openssl x509 -in cert.pem -out cert.der -outform der
 
-### .pfx 에서 .jks 변환
+# 개인키 변환 (암호화 파일은 암호 입력후 복호화 출력됨 -> 다시 암호화 필요)
+openssl rsa -in priv.pem -out priv.key -outform der
+```
 
-`keytool -importkeystore -srckeystore SecureSign.pfx -srcstoretype pkcs12 -destkeystore SecureSign.jks -deststoretype jks`
+### 바이너리(DER) -> PEM
+
+```sh
+# 인증서 변환
+openssl x509 -in cert.der -inform der -out cert.pem
+
+# 개인키 변환 (암호화 파일은 암호 입력후 복호화 출력됨 -> 다시 암호화 필요)
+openssl rsa -in priv.key -inform der -out priv.pem
+```
+
+## 인증서 유형 변환
+
+### 개인키 -> PKCS#8
+
+```sh
+# Convert a private key to PKCS#8 format using default parameters (AES with 256 bit key and hmacWithSHA256)
+openssl pkcs8 -in private.pem -topk8 -out private.key
+```
+
+### PKCS#8 -> PKCS#1
+
+```sh
+openssl rsa -in pkcs8.pem -out pkcs1.pem
+```
+
+### PKCS#12 -> PEM
+
+```sh
+# 인증서 추출
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+
+# 복호화된 개인키 추출
+openssl pkcs12 -in cert.p12 -out pri.pem -nocerts -nodes
+
+# 암호화된 개인키 추출
+openssl pkcs12 -in cert.p12 -out encPri.pem -nocerts
+# 개인키 복호화
+openssl rsa -in encPri.pem -out pri.pem
+```
+
+### PEM -> PKCS#12
+
+```sh
+# cert.pem 파일로 통합 (full-chain)
+cat domain.crt chain1.crt chain2.crt root.crt > cert.pem
+
+# .pfx/.p12 파일로 저장 (cert + privkey)
+openssl pkcs12 -export -out unified.p12 -in cert.pem -inkey priv.key [-name example.com] [-certfile root-chain.cer]
+```
+
+### PKCS#12 -> JKS
+
+`keytool -importkeystore -srckeystore unified.p12 -srcstoretype pkcs12 -destkeystore unified.jks -deststoretype jks`
 
 ```sh
 대상 키 저장소 비밀번호 입력: ******
