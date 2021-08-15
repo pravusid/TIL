@@ -11,3 +11,4 @@
 
 node_modules/
 Rust/**/target/
+^snippets/
