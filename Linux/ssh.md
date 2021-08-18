@@ -67,7 +67,15 @@ PasswordAuthentication no
 
 ### 공개키 복사
 
-`ssh-copy-id <user>@<host>`
+원격서버에서 패스워드 인증을 사용하는 경우
+
+> `-i` 옵션을 사용하지 않으면 기본값은 `id_rsa.pub`임
+
+`ssh-copy-id [-i pubkey_file] <user>@<host>`
+
+원격서버에서 공개키 인증을 사용하는 경우
+
+`ssh <user>@<host> 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_rsa.pub`
 
 ## SSH config 설정
 
