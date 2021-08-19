@@ -137,7 +137,7 @@ INSERT INTO mysql.user VALUES('%', 'userid', PASSWORD('password'));
 
 ### 권한
 
-권한확인
+현재사용자 권한 확인
 
 ```sql
 SHOW GRANTS FOR CURRENT_USER;
@@ -296,6 +296,8 @@ INSERT INTO <TARGET> SELECT * FROM <SOURCE> [WHERE <CONDITION>];
 INSERT INTO <TARGET_TABLE (col1, col2, ...)>
 SELECT <col1, col2, ...> FROM <SOURCE> [WHERE <CONDITION>];
 ```
+
+> 동일테이블 내 데이터 복사에도 사용가능함
 
 ## ALTER TABLE
 
