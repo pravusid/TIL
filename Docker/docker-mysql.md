@@ -66,6 +66,15 @@ docker \
 docker logs -f idpravus
 ```
 
+초기화 스크립트 `scripts/_init.sql` 예시
+
+```sql
+CREATE DATABASE idpravus_db;
+
+GRANT all privileges on idpravus_db.* to 'idpravus'@'%' identified by 'passwd@idpravus';
+flush privileges;
+```
+
 ## Dockerfile
 
 ```dockerfile
