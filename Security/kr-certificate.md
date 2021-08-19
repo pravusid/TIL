@@ -23,7 +23,7 @@
   - [PKCS#5](https://datatracker.ietf.org/doc/html/rfc2898) 및 [PKCS#8](https://en.wikipedia.org/wiki/PKCS_8) 형식을 사용하며
   - PKCS#8 개인키를 ASN.1 구조로 파싱하면 [sequence[0]은 암호화 알고리즘, sequence[1]은 암호화된 개인키 정보이다](https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java#L20)
   - [암호 알고리즘 규격](https://www.rootca.or.kr/kcac/down/TechSpec/2.3-KCAC.TS.ENC.pdf)을 확인할 수 있다
-  - 주요 알고리즘은 [SEED (OID: `1.2.410.200004.1.4`, `1.2.410.200004.1.15`)](https://seed.kisa.or.kr/kisa/algorithm/EgovSeedInfo.do), [PKCS#5 PBES2 (OID: `1.2.840.113549.1.5.13`)](https://datatracker.ietf.org/doc/html/rfc8018#section-6.2) 이다
+  - 암호화 방식은 [PBKDF1 (OID: `1.2.410.200004.1.4`, `1.2.410.200004.1.15`)](https://seed.kisa.or.kr/kisa/algorithm/EgovSeedInfo.do), [PKCS#5 PBES2 (OID: `1.2.840.113549.1.5.13`)](https://datatracker.ietf.org/doc/html/rfc8018#section-6.2) 키를 사용한 SEED 알고리즘이다
 
 ### 공인인증서 Certificate Revocation List (인증서 폐기 목록) 확인
 
