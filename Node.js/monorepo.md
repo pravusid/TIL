@@ -1,12 +1,11 @@
 # Mono Repository
 
-Mono Repository(이하 monorepo)는 관련성이 큰 패키지들을 단일 저장소에서 함께 관리하는 방식이다.
+Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에서 함께 관리하는 방식이다.
 
 ## monorepo in NodeJS
 
-monorepo 적용방식은 여러가지가 있지만 어느새 nodejs에서는 lerna가 표준이 되어가고 있다.
-
-yarn에서도 workspace 기능을 지원하는데 monorepo와 관련이 있지만 monorepo 기능을 모두 지원하는 것은 아니다.
+- NodeJS 환경의 monorepo 툴은 여러가지가 있지만 주로 lerna, yarn workspace를 사용한다
+- MS의 [Rush by TypeScript](https://rushjs.io/), Google의 [Bazel by Java](https://bazel.build/) 등을 사용할 수도 있다
 
 > npm도 v7 이후 workspace 지원함
 
