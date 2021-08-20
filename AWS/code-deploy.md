@@ -3,25 +3,50 @@
 ## CodeDeploy Agent
 
 - CodeDeploy CLI 설치
+
   - `sudo yum install ruby`
   - `curl -O https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install`
   - `chmod +x install`
   - `sudo ./install auto`
 
 - CodeDeploy Agent 실행
+
   - `sudo service codedeploy-agent start`
   - `sudo service codedeploy-agent status`
 
 - CodeDeploy Agent 사용자 변경: <https://aws.amazon.com/ko/premiumsupport/knowledge-center/codedeploy-agent-non-root-profile/>
+
+### CodeDeploy Agent in AmazonLinux
+
+```sh
+sudo yum install -y ruby
+curl -O https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
+chmod +x install
+sudo ./install auto
+
+sudo sed -i 's/""/"ec2-user"/g' /etc/init.d/codedeploy-agent
+
+# 중요: Amazon Linux 2 AMI의 경우 다음 추가 명령을 실행합니다.
+sudo sed -i 's/#User=codedeploy/User=ec2-user/g' /usr/lib/systemd/system/codedeploy-agent.service
+
+sudo systemctl daemon-reload
+sudo chown ec2-user:ec2-user -R /opt/codedeploy-agent/
+sudo chown ec2-user:ec2-user -R /var/log/aws/
+
+sudo service codedeploy-agent start
+sudo service codedeploy-agent status
+
+ps aux | grep codedeploy-agent
+```
 
 ### agent 실행 환경변수
 
 agent 실행시 환경변수는 다음과 같음
 
 1. LIFECYCLE_EVENT : This variable contains the name of the lifecycle event associated with the script.
-2. DEPLOYMENT_ID :  This variables contains the deployment ID of the current deployment.
-3. APPLICATION_NAME :  This variable contains the name of the application being deployed. This is the name the user sets in the console or AWS CLI.
-4. DEPLOYMENT_GROUP_NAME :  This variable contains the name of the deployment group. A deployment group is a set of instances associated with an application that you target for a deployment.
+2. DEPLOYMENT_ID : This variables contains the deployment ID of the current deployment.
+3. APPLICATION_NAME : This variable contains the name of the application being deployed. This is the name the user sets in the console or AWS CLI.
+4. DEPLOYMENT_GROUP_NAME : This variable contains the name of the deployment group. A deployment group is a set of instances associated with an application that you target for a deployment.
 5. DEPLOYMENT_GROUP_ID : This variable contains the ID of the deployment group in AWS CodeDeploy that corresponds to the current deployment
 
 ## 준비
