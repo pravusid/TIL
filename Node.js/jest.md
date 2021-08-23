@@ -42,7 +42,7 @@ jest 기본 `NODE_ENV`는 `test`임
 
 > <https://github.com/facebook/jest/blob/master/packages/jest-cli/bin/jest.js#L12-L14>
 
-## jest설정 (ts기준)
+## jest설정 (TypeScript기준)
 
 - <https://jest-bot.github.io/jest/docs/configuration.html>
 - <https://jestjs.io/docs/en/configuration>
@@ -145,6 +145,11 @@ module.exports = {
 ```
 
 > 참고 (ts-loader case): <https://github.com/TypeStrong/ts-loader#transpileonly>
+
+### ts-jest alternative
+
+- <https://github.com/aelbore/esbuild-jest>
+- <https://github.com/swc-project/jest>
 
 ## 실행
 
