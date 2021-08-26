@@ -1,18 +1,13 @@
 # Git 명령어
 
+<https://git-scm.com/book/ko/v2/Git의-기초-수정하고-저장소에-저장하기>
+
 git이 인식하는 파일 상태는 다음과 같다
 
-- unmodified
 - new file(`A`)
 - modified(`M`)
+- unmodified
 - untracked(`??`)
-
-각 파일들이 상태에 따라 위치할 수 있는 영역은 다음곽 같다
-
-- Commited (스냅샷에 포함됨 == unmodified가 됨)
-- Staging Area (Changes to be committed)
-- **Working Directory** (Changes not staged for commit)
-- Ignored (`.gitignore`에 선언됨)
 
 ```sh
 $ git status -s
@@ -23,9 +18,38 @@ M  lib/simplegit.rb     # 내용을 변경하고 Staged에 추가함
 ?? LICENSE.txt          # 아직 추적하지 않는 파일
 ```
 
+Working Directory 각 파일들은 상태에 따라 다음에 위치한다
+
+- Tracked
+
+  - Commited (스냅샷에 포함됨 == 이후 커밋에서 unmodified로 시작)
+
+  - Staged (Staging Area, Changes to be committed)
+
+    - modified
+    - new file
+    - deleted
+    - renamed
+    - `...`
+
+  - UnStaged (Changes not staged for commit)
+
+    - modified
+    - new file
+    - deleted
+    - renamed
+    - `...`
+
+  - Unmodified
+
+- Untracked
+
+- Ignored (`.gitignore`)
+
 ## Ignore / Untracking / Remove
 
 - 파일을 인덱스에서 삭제: Staging Area에서만 제거하고 워킹 디렉토리에 있는 파일은 지우지 않고 남겨둠
+
   - `git rm -r --cached <directory>`
   - `git rm --cached <filename>`
 
@@ -43,19 +67,23 @@ M  lib/simplegit.rb     # 내용을 변경하고 Staged에 추가함
 ## Tag
 
 - 목록
+
   - 태그 목록: `git tag`
   - 태그 검색: `git tag -l '검색어'` i.e. `git tag -l 'v1.4.2.*'`
 
 - 생성
+
   - Lightweight 태그 붙이기: `git tag <tag>`
   - 이전 커밋에 태그 붙이기: `git tag <tag> <commit_checksum>`
   - Annotated 태그 붙이기: `git tag -a <tag> -m '<message>'`
   - 서명한 태그 붙이기: `git tag -s <tag> -m '<message>'`
 
 - 검증
+
   - 서명한 태그 검증: `git tag -v [태그 이름]` (서명자의 공개키가 Keyring에 있어야 함)
 
 - 삭제
+
   - 태그 삭제: `git tag -d <tag>`
 
 ## Log / Reflog
@@ -72,16 +100,18 @@ M  lib/simplegit.rb     # 내용을 변경하고 Staged에 추가함
 development 브랜치를 main 브랜치로 merge
 
 ```sh
-git checkout main
+git switch main
 git merge development
 ```
 
 merge는 `--ff`(fast foward)가 기본 설정이다
 
 - `git merge --no-ff`
+
   - ff가 가능하더라도 3-way-merge 실행
 
 - `git merge --squash`
+
   - 대상 브랜치로부터 merge할 내용만 반영하고 merge는 실행하지 않음
   - 즉, 대상 브랜치의 모든 변경점을 하나로 합쳐서 병합할 브랜치 HEAD에 반영함
 
@@ -103,7 +133,7 @@ B브랜치를 생성한 A브랜치의 커밋 이후, A 브랜치에서 발생한
 또는
 
 ```sh
-git checkout development
+git switch development
 git rebase main
 ```
 
@@ -114,7 +144,7 @@ rebase 진행도중 conflict가 발생한다면, merge시 conflict 해결과 같
 이후 development 브랜치는 main HEAD로부터 ff가 가능하므로
 
 ```sh
-git checkout main
+git switch main
 git merge development
 ```
 
@@ -161,22 +191,22 @@ rebase는 HEAD에 의해서 참조된 브랜치의 새로운 base를 대상 브�
 작업시작을 위한 명령
 
 ```sh
-git checkout develop
+git switch develop
 git pull --rebase=preserve origin develop
-git checkout -b feature-foobar
+git switch -c feature-foobar
 # 작업을 한다
 git add --all
 git commit
 ```
 
-원격 저장소에 업데이트 된 내용이 있을 수 있으므로 우선 동기화하고 rebase 실행 
+원격 저장소에 업데이트 된 내용이 있을 수 있으므로 우선 동기화하고 rebase 실행
 
 > push 이후에는 rebase 하지 않는다
 
 ```sh
-git checkout develop
+git switch develop
 git pull --rebase=preserve
-git checkout feature-foobar
+git switch feature-foobar
 git rebase develop
 ```
 
@@ -201,25 +231,38 @@ git branch --delete feature-foobar
 git push --delete origin feature-foobar
 ```
 
-## Branch / Checkout
+## Branch / Checkout (Switch & Restore)
 
 - 로컬 브랜치 목록: `git branch`
 - 원격 브랜치 목록: `git branch -r`
 - 전체 브랜치 목록: `git branch -a`
-- 브랜치 생성: `git checkout -b <branch>`
 - 브랜치 삭제: `git branch --delete(-d) <branch>`
 - 브랜치 (강제)삭제: `git branch -D <branch>`
 - 브랜치 이름 변경: `git branch -m <before> <after>`
-- 체크아웃(Not staged 파일 변경점 되돌리기): `git checkout -- <filename>`
 - 병합된 로컬 브랜치 모두 삭제: `git branch --merged | egrep -v "(^\*|main|development|제외할브랜치)" | xargs git branch -d`
+
+> git 2.23 버전부터 checkout 명령이 switch, restore 명령으로 분리되었다
+
+<https://git-scm.com/docs/git-switch>
+
+- 브랜치 전환: `git switch <branch>`
+- 브랜치 생성: `git switch -c <branch> [from-commit]`
+- HEAD 이동 (detach): `git switch -d [<start-point>]`
+
+<https://git-scm.com/docs/git-restore>
+
+- 되돌리기(unstaged 파일 변경점 되돌리기): `git restore <filename>`
+- 되돌리기(staged -> unstaged): `git restore --staged <filename>`
 
 ## Remote
 
 - 생성한 브랜치 원격 저장소 최초 커밋시 push
+
   - `git push --set-upstream <remote> <branch>`
   - `git push -u <remote> <branch>`
 
 - 원격 저장소 브랜치와 연결
+
   - `git branch --set-upstream-to <remote>/<branch>`
   - alias `git branch -u <remote>/<branch>`
 
@@ -257,9 +300,11 @@ branch 삭제
 #### Remote Tag
 
 - Remote에 태그 Push: `git push <origin> <태그이름>`
+
 - Remote에 없는 태그 모두 Push: `git push origin --tags`
 
 - Remote 태그 삭제
+
   - `git push --delete origin tagname`
   - `git push origin :tagname`
 
