@@ -122,11 +122,12 @@ merge시 발생하는 conflict 해결
 
 ## Rebase
 
-rebase는 RE-BASE로 커밋의 부모커밋을 변경한다는 개념이다
+`RE-BASE`는 커밋의 부모커밋을 변경한다는 개념이다
 
 즉, A 브랜치로부터 생성된 B브랜치에서 작업 이후 A브랜치를 대상으로 rebase를 실행한다면,
 B브랜치를 생성한 A브랜치의 커밋 이후, A 브랜치에서 발생한 변경점을 B브랜치에 적용한다는 것이다
-(현재 A브랜치의 HEAD를 B브랜치의 생성지점으로 변경).
+
+(A브랜치의 마지막 커밋을 B브랜치의 생성지점으로 변경).
 
 `git rebase main development`
 
@@ -137,11 +138,20 @@ git switch development
 git rebase main
 ```
 
+실행 결과는 다음과 같다
+
+```txt
+Before                              After
+A---B---C---F---G (main)            A---B---C---F---G (main)
+         \                                           \
+          D---E (HEAD development)                   D'---E' (HEAD development)
+```
+
 rebase 진행도중 conflict가 발생한다면, merge시 conflict 해결과 같은 방법을 적용한 뒤
 
 `git rebase --continue` 명령어를 입력한다
 
-이후 development 브랜치는 main HEAD로부터 ff가 가능하므로
+이후 development 브랜치는 main 브랜치로 이동하여 `FF` 가능하므로
 
 ```sh
 git switch main
@@ -172,19 +182,49 @@ git merge development
 
 ### `git rebase --onto`
 
+기본 rebase 명령어
+
+- 지정한 브랜치의 도달할 수 있는 마지막 커밋 -> 현재 브랜치(HEAD 위치 브랜치)의 **base로** 설정한다
+
+<https://womanonrails.com/git-rebase-onto>
+
 #### `--onto` with 2 args
 
-rebase는 HEAD에 의해서 참조된 브랜치의 새로운 base를 대상 브랜치의 도달할 수 있는 마지막 커밋으로 변경한다.
+2개의 인자를 사용하는 onto rebase 명령어
 
-마지막 커밋 대신 특정 커밋을 참조하게 하려면 2개의 인자를 사용하는 `--onto` 옵션을 사용한다
+- `git rebase --onto <newparent_commit> <oldparent_commit>`
+- `newparent_commit` -> `oldparent_commit.child ~ HEAD`의 **base로** 설정한다
+- 세 번째 인자로 현재 브랜치를 사용하면, 2개의 인자를 사용한 것과 동일하게 작동한다
 
-`git rebase --onto <newparent> <oldparent>`
+`git rebase --onto F D` == `git rebase --onto F D my-branch`
+
+실행 결과는 다음과 같다
+
+```txt
+Before                                    After
+A---B---C---F---G (branch)                A---B---C---F---G (branch)
+         \                                             \
+          D---E---H---I (HEAD my-branch)                E'---H'---I' (HEAD my-branch)
+```
 
 #### `--onto` with 3 args
 
-3개의 인자를 사용하는 `rebase --onto`는 임의의 범위 커밋들의 base 커밋을 변경할 수 있다
+3개의 인자를 사용하는 onto rebase 명령어
 
-`git rebase --onto <newparent> <oldparent> <until>`
+- `git rebase --onto <newparent_commit> <oldparent_commit> <until_commit>`
+- 브랜치(2개의 인자 사용시) 대신 커밋이 세 번째 인자로 전달하고, 브랜치의 base가 아닌 해당 커밋 hierarchy base가 변경된다
+- `oldparent_commit.child ~ until_commit` 범위로 새로운 detached 커밋 hierarchy가 생성하고 `newparent_commit` 커밋을 base로 삼는다
+
+`git rebase --onto F D H`
+
+```txt
+Before                                    After
+A---B---C---F---G (branch)                A---B---C---F---G (branch)
+         \                                        |    \
+          D---E---H---I (HEAD my-branch)          |     E'---H' (HEAD)
+                                                   \
+                                                    D---E---H---I (my-branch)
+```
 
 ### rebase를 통한 원격 작업 예시
 
