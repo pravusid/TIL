@@ -98,9 +98,11 @@ yarn dlx @yarnpkg/sdks vscode
 
 파일 구조
 
+- `.pnp.cjs`: node가 패키지를 불러오는데 사용할 의존성 트리가 포함됨 (ZeroInstall 관련사항)
+
 - `.yarn`
 
-  - `cache`: 압축된 의존성이 위치함 (globalCache 및 zeroInstall 관련사항)
+  - `cache`: 압축된 의존성이 위치함 (GlobalCache 및 ZeroInstall 관련사항)
   - `patches`: `yarn patch-commit` 명령어 결과물인 패치
   - `plugins`, `releases`: 저장소에서 사용하는 yarn 관련 파일들 (`yarn-berry.cjs` ...)
   - `sdks`: 에디터 통합등을 위한 sdk 위치함
@@ -112,8 +114,6 @@ yarn dlx @yarnpkg/sdks vscode
 - `yarn.lock`: lockfile
 
 - `.yarnrc.yml`: yarn 설정파일
-
-- `.pnp.cjs`: node가 패키지를 불러오는데 사용할 의존성 트리가 포함됨
 
 Zero Install
 
