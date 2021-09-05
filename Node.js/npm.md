@@ -96,6 +96,33 @@ yarn berry는 `node_modules` 대신 압축된 의존성이 [PnP](https://yarnpkg
 yarn dlx @yarnpkg/sdks vscode
 ```
 
+파일 구조
+
+- `.yarn`
+
+  - `cache`: 압축된 의존성이 위치함 (globalCache 및 zeroInstall 관련사항)
+  - `patches`: `yarn patch-commit` 명령어 결과물인 패치
+  - `plugins`, `releases`: 저장소에서 사용하는 yarn 관련 파일들 (`yarn-berry.cjs` ...)
+  - `sdks`: 에디터 통합등을 위한 sdk 위치함
+  - `unplugged`
+    - 의존성 압축을 풀어서 관리함
+    - native 파일이 포함된 경우 자동으로 unplug 실행함 <https://github.com/yarnpkg/berry/pull/853>
+  - `versions`: 버전 플러그인이 릴리즈 정의를 위해 사용하는 기록
+
+- `yarn.lock`: lockfile
+
+- `.yarnrc.yml`: yarn 설정파일
+
+- `.pnp.cjs`: node가 패키지를 불러오는데 사용할 의존성 트리가 포함됨
+
+Zero Install
+
+> `node_modules` 디렉토리와 용량 및 파일 숫자면에서 엄청난 변화가 있으므로,
+> 버전관리에 포함시켜 CI 및 배포등의 과정에서 의존성 다운로드 및 설치를 생략할 수 있다
+
+- <https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored>
+- <https://yarnpkg.com/features/zero-installs/>
+
 ### 기본 명령어
 
 - `yarn` == `npm install` packages.json에 명시된 의존성 패키지를 다운로드/설치 한다.
