@@ -47,10 +47,11 @@ Helper를 여러개 사용할 수도 있다.
 
 git askpass 환경변수를 사용해서 git 명령어 호출시 비밀번호 입력을 생략할 수 있다.
 
-> 되도록이면 운영체제의 키체인을 사용해서 암호화 저장해야 한다
+> 되도록 운영체제의 키체인을 사용해서 암호화 저장해야 한다
 
 ```sh
 echo 'echo $GIT_TOKEN' > $HOME/.git-askpass
+chmod +x $HOME/.git-askpass
 
 export GIT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export GIT_ASKPASS=$HOME/.git-askpass
