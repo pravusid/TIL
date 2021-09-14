@@ -321,6 +321,15 @@ remote에서 삭제한 branch 로컬 반영(로컬에서도 브랜치 삭제): `
 
 `git pull --rebase`
 
+#### 다른 브랜치 pull
+
+> HEAD 위치가 아닌 다른 브랜치 pull
+
+```sh
+git fetch <remote> <another-branch>:<another-branch>
+git pull <remote> <another-branch>:<another-branch>
+```
+
 ### Push
 
 #### Remote Branch
