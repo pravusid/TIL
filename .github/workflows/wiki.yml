@@ -11,27 +11,36 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+
+    - uses: pnpm/action-setup@v2.0.1
+      with:
+        version: 6.15.1
+
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+        cache-dependency-path: '.wiki/pnpm-lock.yaml'
+
     - name: Ready to build
       run: |
-        yarn
+        pnpm install
         rm -rf docs/*
         cp -r ../* docs/
         node create.index.js
         cat index.md >> docs/README.md
-        yarn run docs:build
-      working-directory: ./.wiki
+        pnpm run docs:build
+      working-directory: .wiki
+
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         personal_token: ${{ secrets.PERSONAL_TOKEN }}
         external_repository: pravusid/wiki
         publish_branch: gh-pages
-        publish_dir: ./.wiki/docs/.vuepress/dist
+        publish_dir: .wiki/docs/.vuepress/dist
