@@ -12,31 +12,29 @@ Express.js 4버전에서는 Router에서 Promise처리를 지원하지 않음
 
 따라서 Router에서 Async Function을 사용하려면 두 방법 중 하나를 선택해야 함
 
-### `express-promise-router` 사용
+### 라이브러리 사용
 
-Express 기본 라우터 대신 사용한다.
-
-```js
-// app.ts
-import expressPromiseRouter from 'express-promise-router';
-
-const router = expressPromiseRouter();
-
-app.use((error: Error, request: Request, response: Response, next: NextFunction) => {
-  response.status(500).json({ message: error.message });
-  next();
-});
-```
+- [`express-async-errors`](https://github.com/davidbanham/express-async-errors)
+- [`express-promise-router`](https://github.com/express-promise-router/express-promise-router)
 
 ### Wrapping Route Functions
 
 ```ts
-export const errorHandler = (error: Error, request: Request, response: Response, next: NextFunction) => {
+export const errorHandler = (
+  error: Error,
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
   response.status(500).json({ message: error.message });
   next();
 };
 
-type AsyncFunc = (req: Request, resp: Response, next: NextFunction) => Promise<any>;
+type AsyncFunc = (
+  req: Request,
+  resp: Response,
+  next: NextFunction
+) => Promise<any>;
 
 export const asyncHandler: (func: AsyncFunc) => AsyncFunc = (func) => {
   return (request, response, next) =>
@@ -54,7 +52,7 @@ app.use(errorHandler);
 
 // foo.controller.ts
 this.routes.get(
-  '/hello',
+  "/hello",
   asyncHandler((req, resp) => this.foobar(req, resp))
 );
 ```
@@ -67,7 +65,7 @@ this.routes.get(
 `types/express.d.ts`
 
 ```ts
-import { User } from '../src/domain/user';
+import { User } from "../src/domain/user";
 
 declare global {
   namespace Express {
@@ -123,22 +121,22 @@ ca 옵션은 다음 사항이 적용된다
 - 자체 서명 인증서를 사용하는 경우 자체 인증기관(own CA)이 명시되어야 한다.
 
 ```ts
-import * as express from 'express';
-import { readFileSync } from 'fs';
-import { createServer } from 'https';
+import * as express from "express";
+import { readFileSync } from "fs";
+import { createServer } from "https";
 
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 
 createServer(
   {
-    ca: readFileSync('cert/chain.crt'), // 인증서 체인
-    key: readFileSync('cert/server.key'), // 서버 비밀키
-    cert: readFileSync('cert/server.crt'), // 서버 도메인 인증서
+    ca: readFileSync("cert/chain.crt"), // 인증서 체인
+    key: readFileSync("cert/server.key"), // 서버 비밀키
+    cert: readFileSync("cert/server.crt"), // 서버 도메인 인증서
   },
   app
-).listen(process.env.PORT || 3000, () => console.log('서버실행'));
+).listen(process.env.PORT || 3000, () => console.log("서버실행"));
 ```
 
 <https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener>
@@ -161,11 +159,11 @@ createServer(
 ```ts
 const agent = new https.Agent({
   // Necessary only if the server requires client certificate authentication.
-  key: fs.readFileSync('client-key.pem'),
-  cert: fs.readFileSync('client-cert.pem'),
+  key: fs.readFileSync("client-key.pem"),
+  cert: fs.readFileSync("client-cert.pem"),
 
   // Necessary only if the server uses a self-signed certificate.
-  ca: [fs.readFileSync('server-cert.pem')],
+  ca: [fs.readFileSync("server-cert.pem")],
 
   // Necessary only if the server's cert isn't for "localhost".
   checkServerIdentity: () => null,
