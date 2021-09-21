@@ -16,7 +16,8 @@
 ```
 
 > The typescript.tsdk workspace setting only tells VS Code that a workspace version of TypeScript exists.
-> To actually start using the workspace version for IntelliSense, you must run the TypeScript: Select TypeScript Version command and select the workspace version.
+> To actually start using the workspace version for IntelliSense, you must run the TypeScript:
+> Select TypeScript Version command and select the workspace version.
 
 ## Formatting
 
@@ -27,13 +28,15 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": ["source.addMissingImports", "source.organizeImports"],
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "files.trimFinalNewlines": true
+}
+```
+
+for JS, TS
+
+```json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "javascript.format.enable": false,
   "typescript.format.enable": false
 }
