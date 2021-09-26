@@ -88,3 +88,7 @@ TypeScript
 import * as iconv from "iconv-lite";
 iconv.encodingExists("cesu8");
 ```
+
+## 쿼리결과 스트림 처리
+
+<https://github.com/sidorares/node-mysql2/issues/677>
