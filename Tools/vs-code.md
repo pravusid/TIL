@@ -1,8 +1,7 @@
 # Visual Studio Code
 
-<https://github.com/microsoft/vscode-recipes>
-
-<https://code.visualstudio.com/docs>
+- <https://github.com/microsoft/vscode-recipes>
+- <https://code.visualstudio.com/docs>
 
 ## TypeScript SDK
 
@@ -26,19 +25,34 @@
 ```json
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": ["source.addMissingImports", "source.organizeImports"],
+  "editor.codeActionsOnSave": [
+    "source.addMissingImports",
+    "source.organizeImports"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true
 }
 ```
 
-for JS, TS
+for JavaScript, TypeScript
 
 ```json
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "javascript.format.enable": false,
-  "typescript.format.enable": false
+  "typescript.format.enable": false,
+  "javascript.validate.enable": false
+}
+```
+
+for VueJS
+
+```json
+{
+  "[vue]": {
+    "editor.defaultFormatter": "octref.vetur"
+  },
+  "vetur.validation.template": false
 }
 ```
 
@@ -48,9 +62,13 @@ for JS, TS
 
 ### Nodemon + TypeScript
 
-[Nodemon과 debugger attaching](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_attaching-to-nodejs)
+attaching debugger to Nodemon
 
-npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/register\" src/main.ts",`
+- <https://nodejs.org/en/docs/guides/debugging-getting-started/#command-line-options>
+- <https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_attaching-to-nodejs>
+- <https://github.com/Microsoft/vscode-recipes/tree/main/nodemon>
+
+npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r source-map-support/register --inspect=9229' dist/main.js"`
 
 `.vscode/launch.json`
 
@@ -59,14 +77,13 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
   "version": "0.2.0",
   "configurations": [
     {
-      // https://github.com/Microsoft/vscode-recipes/tree/master/nodemon
       "type": "node",
       "request": "attach",
-      "name": "Node: Nodemon",
-      "internalConsoleOptions": "neverOpen",
+      "name": "Debug: Nodemon, TypeScript",
       "protocol": "inspector",
-      "processId": "${command:PickProcess}",
-      "restart": true
+      "port": 9229,
+      "restart": true,
+      "sourceMaps": true
     }
   ]
 }
@@ -85,8 +102,8 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug TypeScript in Node.js",
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "name": "Debug: TypeScript in Node.js",
+      "preLaunchTask": "npm: build",
       "program": "${workspaceFolder}/src/main.ts",
       "cwd": "${workspaceFolder}",
       "protocol": "inspector",
@@ -125,4 +142,4 @@ npm script: `"debug": "nodemon --watch src --exec \"node --inspect -r ts-node/re
 ```
 
 > runtimeVersion을 지원하지 않는 version manager 사용 또는 위 옵션을 사용하지 않으려면
-> `~/.profile` 혹은 `~/.zprofile` 같은 환경변수 설정에서 기본 node/bin PATH를 지정한다.
+> `~/.profile`, `~/.zprofile`, `~/.zshenv` 같은 환경변수 설정에서 기본 node/bin PATH를 지정한다.
