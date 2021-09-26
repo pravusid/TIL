@@ -4,31 +4,32 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
 
 ## monorepo in NodeJS
 
-- NodeJS 환경의 monorepo 툴은 여러가지가 있지만 주로 lerna, yarn workspace를 사용한다
+- NodeJS 환경의 monorepo 툴은 여러가지가 있지만 주로 node package manager(npm, yarn, pnpm), lerna 등을 사용한다
 - MS의 [Rush by TypeScript](https://rushjs.io/), Google의 [Bazel by Java](https://bazel.build/) 등을 사용할 수도 있다
 
-> npm도 v7 이후 workspace 지원함
+mororepo 툴이 수행하는 주요기능은 다음과 같다
 
-둘은 고유 기능과 중복 기능이 있는데 중복기능은 상황에 맞는 패키지를 사용하면 된다.
+- 버전관리 (version)
+- 배포관리 (publish)
+- 스크립트 실행 (run)
+- 의존성관리 (bootstrap / hoist, symlink)
 
-- lerna
+> monorepo 내의 node_modules 중복이 많아질 수록 lerna의 성능이 좋지 않다
+> -- <https://doppelmutzi.github.io/monorepo-lerna-yarn-workspaces/>
 
-  - 버전관리 (version)
-  - 배포관리 (publish)
-  - 스크립트 실행 (run)
-  - 의존성관리 (bootstrap / hoist, symlink)
+## pnpm workspace
 
-- yarn workspace
+<https://pnpm.io/workspaces>
 
-  - 스크립트 실행 (run)
-  - 의존성관리 (add / hoist, symlink)
+## yarn classic workspace
 
-monorepo 내의 node_modules 중복이 많아질 수록 yarn workspace의 성능이 좋다
-(참고: <https://doppelmutzi.github.io/monorepo-lerna-yarn-workspaces/>)
+<https://classic.yarnpkg.com/en/docs/workspaces/>
 
-> 의존성관리를 제외한 버전관리, 배포관리, 스크립트 실행은 lerna를 사용하는 것이 더 좋음 (yarn workspaces는 의존관계에 따른 순서 처리가 없음)
+<https://classic.yarnpkg.com/en/docs/cli/workspace>
 
-## Lerna
+<https://classic.yarnpkg.com/en/docs/cli/workspaces>
+
+## lerna
 
 <https://github.com/lerna/lerna>
 
@@ -55,15 +56,7 @@ monorepo 내의 node_modules 중복이 많아질 수록 yarn workspace의 성능
 
 > Run an npm script in each package that contains that script
 
-## Yarn workspace
-
-<https://classic.yarnpkg.com/en/docs/workspaces/>
-
-<https://classic.yarnpkg.com/en/docs/cli/workspace>
-
-<https://classic.yarnpkg.com/en/docs/cli/workspaces>
-
-## monorepo 적용 (w/ github package registry)
+## monorepo 적용 (w/ lerna, github package registry)
 
 <https://viewsource.io/publishing-and-installing-private-github-packages-using-yarn-and-lerna/>
 
