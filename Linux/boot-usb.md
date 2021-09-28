@@ -1,5 +1,7 @@
 # Linux Boot USB 생성 in Linux
 
+> [Ventoy](https://www.ventoy.net/en/index.html) 사용 추천
+
 - ISO 파일 다운로드
 
 - 다운로드한 ISO 파일 체크섬 확인 `$ sha1sum -c <linux-image>.iso.sha1`
