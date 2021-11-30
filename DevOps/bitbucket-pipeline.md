@@ -23,7 +23,7 @@
 ### PR 빌드 & 테스트
 
 ```yml
-image: node:12.14.0
+image: node:16.13.0
 
 pipelines:
   pull-requests:
@@ -52,7 +52,7 @@ pipelines:
 ### S3 배포 후 cloudfront invalidation
 
 ```yml
-image: node:12.14.0
+image: node:16.13.0
 
 pipelines:
   branches:
@@ -64,7 +64,7 @@ pipelines:
           script:
             - npm ci
             - npm run build
-            - pipe: atlassian/aws-s3-deploy:0.3.7
+            - pipe: atlassian/aws-s3-deploy:1.1.0
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
@@ -79,7 +79,7 @@ pipelines:
                 # EXPIRES: '<timestamp>' # Optional.
                 # EXTRA_ARGS: '<string>' # Optional.
                 # DEBUG: '<boolean>' # Optional.
-            - pipe: atlassian/aws-cloudfront-invalidate:0.1.3
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
@@ -87,7 +87,7 @@ pipelines:
                 DISTRIBUTION_ID: $DISTRIBUTION_ID
                 PATHS: '/*'
                 # DEBUG: '<boolean>' # Optional
-            - pipe: atlassian/slack-notify:0.3.2
+            - pipe: atlassian/slack-notify:2.0.0
               variables:
                 WEBHOOK_URL: $WEBHOOK_URL
                 MESSAGE: 'SLACK MESSAGE!'
@@ -98,35 +98,29 @@ pipelines:
 <https://support.atlassian.com/bitbucket-cloud/docs/deploy-to-aws-with-codedeploy/>
 
 ```yml
-image: atlassian/default-image:2
+image: atlassian/default-image:3
 
 pipelines:
   branches:
     master:
       - step:
-          image: node:12.14.0
-          name: Build
+          image: node:16.13.0
+          name: Build & Compress
           caches:
             - node
           script:
+            - apt-get update && apt-get install -y zip
             - npm ci --only=prod && npm run build
-          artifacts:
-            - '**/*'
-            - '**/.*'
-
-      - step:
-          name: Zip
-          script:
             - zip -r dist.zip ./
           artifacts:
             - dist.zip
 
       - step:
-          name: Upload to S3
+          name: Upload & Deploy with CodeDeploy
           services:
             - docker
           script:
-            - pipe: atlassian/aws-code-deploy:0.2.10
+            - pipe: atlassian/aws-code-deploy:1.1.1
               variables:
                 AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
                 AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -135,13 +129,7 @@ pipelines:
                 APPLICATION_NAME: ${APPLICATION_NAME}
                 S3_BUCKET: '${AWS_DEPLOY_BUCKET}'
                 ZIP_FILE: 'dist.zip'
-
-      - step:
-          name: Deploy with CodeDeploy
-          services:
-            - docker
-          script:
-            - pipe: atlassian/aws-code-deploy:0.2.10
+            - pipe: atlassian/aws-code-deploy:1.1.1
               variables:
                 AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
                 AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -150,7 +138,7 @@ pipelines:
                 APPLICATION_NAME: ${APPLICATION_NAME}
                 DEPLOYMENT_GROUP: ${DEPLOYMENT_GROUP}
                 S3_BUCKET: '${AWS_DEPLOY_BUCKET}'
-                IGNORE_APPLICATION_STOP_FAILURES: 'true'
+                IGNORE_APPLICATION_STOP_FAILURES: 'false'
                 # FILE_EXISTS_BEHAVIOR: 'OVERWRITE'
                 WAIT: 'true'
 ```
