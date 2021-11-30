@@ -4,7 +4,7 @@ specifiers:
   '@vuepress/plugin-back-to-top': ^1.8.2
   '@vuepress/plugin-google-analytics': ^1.8.2
   '@vuepress/plugin-nprogress': ^1.8.2
-  directory-tree: ^2.3.1
+  directory-tree: ^3.0.1
   vuepress: ^1.8.2
 
 dependencies:
@@ -14,7 +14,7 @@ devDependencies:
   '@vuepress/plugin-back-to-top': 1.8.2
   '@vuepress/plugin-google-analytics': 1.8.2
   '@vuepress/plugin-nprogress': 1.8.2
-  directory-tree: 2.4.0
+  directory-tree: 3.0.1
 
 packages:
 
@@ -3171,8 +3171,8 @@ packages:
       path-type: 3.0.0
     dev: false
 
-  /directory-tree/2.4.0:
-    resolution: {integrity: sha512-AM03Th+ypDAHefyB6SP3uezaWkTbol1P43CS5yFU7wePTuHnR4YoHgY6KbGHLr/a065ocN26l9lXOoFBzzM31w==}
+  /directory-tree/3.0.1:
+    resolution: {integrity: sha512-IJL5L/zd73xbchfsIKMrhaRJCt28ek1UsS6LNZ6b9r7m+VbU1fd7JZAypn6gl1g4hpxn21QF3/scAWKIOMk4Ug==}
     engines: {node: '>=10.0'}
     dev: true
 
