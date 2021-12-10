@@ -377,6 +377,8 @@ export type Immutable<T> = T extends Primitive
 
 ### `Awaited<T>`
 
+> TypeScript 4.5 버전에서 추가됨 <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#the-awaited-type-and-promise-improvements>
+
 ```ts
 export type Awaited<T> = T extends Promise<infer U> ? U : T;
 ```
@@ -417,6 +419,18 @@ export function isTruthy<T>(obj: T | undefined | null): obj is T {
 }
 
 Array.of(1, undefined, 2).filter(isTruthy); // number[]
+```
+
+type-guard를 인스턴스 타입확인에 적용할 수도 있다
+
+```ts
+/**
+ * @interface predicate
+ */
+export const typeOf =
+  <In, Out extends In>(Proto: ClassType<Out>) =>
+  (obj: In | undefined | null): obj is Out =>
+    obj instanceof Proto;
 ```
 
 type-guard를 객체의 프로퍼티에 적용할 수도 있다
