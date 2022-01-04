@@ -20,6 +20,12 @@
 
 <https://bitbucket.org/atlassian/workspace/projects/BPP>
 
+### deployment
+
+<https://support.atlassian.com/bitbucket-cloud/docs/set-up-and-monitor-deployments/>
+
+> We support deploying to test, staging, and production type environments, and they must be listed in this order in each pipeline.
+
 ### PR 빌드 & 테스트
 
 ```yml
@@ -58,6 +64,7 @@ pipelines:
   branches:
     master:
       - step:
+          name: Deploy
           deployment: production
           caches:
             - node
@@ -117,6 +124,7 @@ pipelines:
 
       - step:
           name: Upload & Deploy with CodeDeploy
+          deployment: production
           services:
             - docker
           script:
