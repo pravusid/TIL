@@ -75,7 +75,16 @@ lerna init --independent
 {
   "name": "monorepo",
   "private": true,
-  "workspaces": ["packages/core", "packages/*"]
+  "workspaces": ["packages/core", "packages/*"],
+  "scripts": {
+    "build": "lerna run build --stream",
+    "clean": "lerna run clean --parallel",
+    "deps": "yarn exec --workspaces -- ncu",
+    "deps:update": "yarn exec --workspaces -- ncu --target minor -u",
+    "deps:clean": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' +",
+    "version:all": "lerna version --no-changelog",
+    "publish:all": "yarn run clean && yarn run build && lerna publish from-package"
+  }
 }
 ```
 
