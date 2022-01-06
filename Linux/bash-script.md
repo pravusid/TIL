@@ -2,12 +2,8 @@
 
 ## 환경변수
 
-- HOME: 현재 사용자의 홈디렉토리
-- USER: 현재 사용자의 이름
-- HOSTNAME: 호스트 이름
-- PATH: 시스템 PATH
-- PWD: 사용자의 현재 작업 디렉토리
-- ...
+> - <https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Variables.html>
+> - <https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html>
 
 ## 변수
 
@@ -26,19 +22,47 @@
 ### 변수 내 숫자연산
 
 - 변수 내부에서 숫자와 연산기호를 사용하려면 `expr` 키워드와 backtick(`)을 사용한다
-- 괄호 및 곱하기(\*) 기호도 escape(`\`)문자로 사용해야함
+- 괄호 및 곱하기(`*`) 기호도 escape(`\`)문자로 사용해야함
 
 ### 파라미터 변수
 
-해당 스크립트 명령을 다음과 같이 실행했다면: `<명령> param1 param2 parm3`
+해당 스크립트 명령을 다음과 같이 실행했다면: `<명령> param1 param2 param2 ... param10`
 
 파라미터 변수가 기본적으로 할당된다
 
-- $\*="param1 param2 parm3"
-- $0=명령
-- $1=param1
-- $2=param2
-- $3=param3
+- `$*`=전체 매개변수
+- `$@`=전체 매개변수
+- `$0`=명령
+- `$1`=param1
+- `$2`=param2
+- `$3`=param3
+- ...
+- `${10}`=param10
+- `$#`=매개변수 개수
+
+### 배열
+
+```sh
+array=("a" "b" "c")
+array[3]="variable"
+
+echo "배열 전체 ${array[@]}"
+echo "배열 전체 개수 ${#array[@]}"
+
+# 4번째 요소 삭제
+unset array[3]
+
+# 배열 전체 삭제
+unset array
+```
+
+### special parameters
+
+<https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html>
+
+## shell expansion
+
+<https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html>
 
 ### export
 
@@ -232,3 +256,15 @@ echo {1..5} | parallel docker build -t ...{} ...{}
 ```
 
 > <https://stackoverflow.com/questions/24843570/concurrency-in-shell-scripts>
+
+## 실행 상대경로
+
+```sh
+# 스크립트가 실행된 상대경로를 구한다
+current_dir=$(dirname $BASH_SOURCE)
+# if symlink (GNU)
+current_dir=$(dirname $(readlink -f $BASH_SOURCE))
+```
+
+> - <https://stackoverflow.com/questions/24112727/relative-paths-based-on-file-location-instead-of-current-working-directory>
+> - <https://stackoverflow.com/questions/35006457/choosing-between-0-and-bash-source>
