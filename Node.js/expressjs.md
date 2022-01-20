@@ -1,5 +1,7 @@
 # Express.js
 
+> 신규 프로젝트라면 [fastify](https://www.fastify.io/) 사용을 고려하는 것이 좋음
+
 ## 배포
 
 배포 후 환경변수를 production으로 변경해야 함: `NODE_ENV=production node app.js`
@@ -175,3 +177,22 @@ interface AgentOptions extends http.AgentOptions, tls.ConnectionOptions {
   maxCachedSessions?: number;
 }
 ```
+
+## Graceful Shutdown
+
+> <https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html>
+
+nodejs 서버를 사용하는 다른 라이브러리에도 적용가능함
+
+### terminus
+
+[`@godaddy/terminus`](https://github.com/godaddy/terminus) 실행순서
+
+- `beforeShutdown`
+- `onSignal`
+- `onShutdown`
+
+### 다른 선택지
+
+- <https://github.com/gquittet/graceful-server>
+- <https://github.com/sebhildebrandt/http-graceful-shutdown>
