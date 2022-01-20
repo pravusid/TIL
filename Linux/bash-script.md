@@ -264,6 +264,9 @@ echo {1..5} | parallel docker build -t ...{} ...{}
 current_dir=$(dirname $BASH_SOURCE)
 # if symlink (GNU)
 current_dir=$(dirname $(readlink -f $BASH_SOURCE))
+
+# 실행할 스크립트 내부에서 아래 명령 이후 내용은 wd가 변경된 상태로 수행됨
+cd $current_dir
 ```
 
 > - <https://stackoverflow.com/questions/24112727/relative-paths-based-on-file-location-instead-of-current-working-directory>
