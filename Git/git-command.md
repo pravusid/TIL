@@ -180,6 +180,15 @@ git merge development
 커밋 메시지 접두사로 `squash!` 또는 `fixup!`을 사용한다면
 대화형 rebase가 실행됨과 동시에 해당 커밋들은 squash와 fixup 상태인 것을 볼 수 있다.
 
+#### 특정커밋에 적용
+
+<https://fle.github.io/git-tip-keep-your-branch-clean-with-fixup-and-autosquash.html>
+
+```sh
+git commit --fixup <commit_hash> #특정 커밋에 변경사항을 적용한다는 표시를 해둔다
+git rebase -i --autosquash #fixup, squash 표시한 커밋을 자동 적용한다
+```
+
 ### `git rebase --onto`
 
 기본 rebase 명령어
