@@ -438,12 +438,29 @@ type-guard를 객체의 프로퍼티에 적용할 수도 있다
 ```ts
 export type Convinced<T, R extends keyof T> = {
   [K in R]: T[K] extends infer I | null | undefined ? I : T[K];
-} &
-  Omit<T, R>;
+} & Omit<T, R>;
 
 export function hasTruthyValueIn<K extends keyof T, T>(key: K) {
   return (obj: T): obj is T & Convinced<T, K> => !!obj[key];
 }
 
 Array.of({ id: 1 }, { id: undefined }, { id: 2 }).filter(hasTruthyValueIn('id')); // { id: number }[]
+```
+
+### WritableKeys
+
+- <https://stackoverflow.com/a/52473108>
+- <https://stackoverflow.com/a/49579497>
+- <https://github.com/Microsoft/TypeScript/issues/27024#issuecomment-421529650>
+
+```ts
+type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? A : B;
+
+type WritableKeys<T> = {
+  [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, P>;
+}[keyof T];
+
+type ReadonlyKeys<T> = {
+  [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, never, P>;
+}[keyof T];
 ```
