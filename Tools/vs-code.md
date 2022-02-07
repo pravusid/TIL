@@ -25,10 +25,7 @@
 ```json
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": [
-    "source.addMissingImports",
-    "source.organizeImports"
-  ],
+  "editor.codeActionsOnSave": ["source.addMissingImports", "source.organizeImports"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true
@@ -50,9 +47,8 @@ for VueJS
 ```json
 {
   "[vue]": {
-    "editor.defaultFormatter": "octref.vetur"
-  },
-  "vetur.validation.template": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
 ```
 
