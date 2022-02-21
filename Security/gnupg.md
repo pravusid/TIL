@@ -40,9 +40,34 @@
 
 ## 키 관리
 
+- public|secret key 불러오기: `gpg --import <key-file>`
 - public key 내보내기: `gpg --armor --export <key-id|uid>`
 - secret key 내보내기: `gpg --armor --export-secret-keys <key-id|uid>`
-- secret key 정보 변경: `gpg --edit-key <key-id|uid>` (help 명령어로 작업확인)
-- key 불러오기: `gpg --import <key-file>`
-- secret key 삭제: `gpg --delete-secret-key <key-id|uid>`
 - public key 삭제: `gpg --delete-key <key-id|uid>`
+- secret key 삭제: `gpg --delete-secret-key <key-id|uid>`
+
+## 키 정보 변경
+
+```sh
+gpg --edit-key <key-id|uid>
+
+# 도움말
+gpg> help
+
+# 유효기간 변경
+gpg> expire
+gpg> <유효기간>
+gpg> save
+
+# 비밀번호 변경
+gpg> passwd
+gpg> save
+```
+
+## 관련 파일 확장자
+
+> <https://stackoverflow.com/questions/58929260/what-are-the-meaningful-differences-between-gpg-sig-asc>
+
+- `.gpg`: GNU Privacy Guard public keyring file, binary format
+- `.sig`: GPG signed document file, binary format
+- `.asc`: ASCII-armored signature with or without wrapped document, plain text format
