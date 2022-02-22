@@ -82,11 +82,13 @@ PasswordAuthentication no
 `.ssh/config`
 
 ```sh
+Host *
+    ServerAliveInterval 60
+
 Host <host-alias>
     HostName <remote-host>
     User <username>
-    IdentityFile <~/.ssh/my-identity.pem>
-    ServerAliveInterval 60
+    IdentityFile ~/.ssh/my-identity.pem
 ```
 
 Identity 파일을 지정하지 않으면 `.ssh/id_rsa`가 기본으로 사용된다
