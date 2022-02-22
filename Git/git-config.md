@@ -1,31 +1,20 @@
 # Git Config
 
-## overall
-
 <https://github.com/pravusid/sys-config/blob/main/.gitconfig>
 
-> ref: <https://johngrib.github.io/wiki/git-alias/>
+## refs
+
+- <https://git-scm.com/docs/git-config>
+- <https://johngrib.github.io/wiki/git-alias/>
 
 ## git diff with delta
 
-<https://github.com/dandavison/delta>
-
-```conf
-[core]
-    pager = delta
-
-[delta]
-    plus-color = "#012800"
-    minus-color = "#340001"
-    syntax-theme = Nord
-
-[interactive]
-    diffFilter = delta --color-only
-```
+- <https://github.com/dandavison/delta>
+- <https://dandavison.github.io/delta/>
 
 ## include / includeIf
 
-```sh
+```conf
 [include]
     path = ~/.gitconfig_common
 
@@ -37,6 +26,17 @@
 ```
 
 ## multiple ssh-keys
+
+### (방법1) git_config 사용
+
+> gitconfig include / includeIf 옵션과 함께 사용
+
+```conf
+[core]
+    sshCommand = ssh -o IdentitiesOnly=yes -i ~/.ssh/id_rsa_git -F /dev/null
+```
+
+### (방법2) ssh_config 사용
 
 `~/.ssh/config`
 
