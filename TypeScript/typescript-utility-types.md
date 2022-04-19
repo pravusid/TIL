@@ -464,3 +464,16 @@ type ReadonlyKeys<T> = {
   [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, never, P>;
 }[keyof T];
 ```
+
+### Discriminated unions with Helper
+
+<https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions>
+
+> 식별자로 필터링한 결과에 타입적용
+
+```ts
+export type Id<I, T> = { _id: I } & T;
+
+export const findById = <T extends Id<unknown, unknown>, I extends T['_id']>(list: T[], id: I & T['_id']) =>
+  list.find((e): e is Extract<T, { _id: I }> => e._id === id);
+```
