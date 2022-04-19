@@ -52,17 +52,23 @@ test('데이터키 생성 후 복호화', async () => {
   const key = await awsKms.generateDataKey({ KeyId: awsKmsKeyId, KeySpec: 'AES_256' }).promise();
 
   const plainText = key.Plaintext.toString('hex');
+  
   console.log('DEBUG: key plain', plainText.length, plainText);
+  // DEBUG: key plain 64 f17fd6182d4a424e3a1fd521f91ccd3e4cb046147e39618a59cd74e6f2c2934e
 
   const cipherText = key.CiphertextBlob.toString('base64');
+  
   console.log('DEBUG: key cipher', cipherText.length, cipherText);
+  // DEBUG: key cipher 248 AQIDAHibNNbamTy5G37jNxgsywbPN1PEVfY0WLKWJPEGqaUsHQGyg8meJHuzz2/0TcL79E5UAAAAfiB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMx+6hAzlAaXI/z9z5AgEQgDtJgHdda/U8Zr0/4FjJADt2biqDzaqP2UBX8BfKos9TcpxdDew1/e3W6vU9gWi64O/0NNoP85xa7rjS1w==
 
   const decrypted = await awsKms
     .decrypt({ KeyId: awsKmsKeyId, CiphertextBlob: Buffer.from(cipherText, 'base64') })
     .promise();
 
   const decryptedText = decrypted.Plaintext.toString('hex');
+  
   console.log('DEBUG: decrypted', decryptedText);
+  // DEBUG: decrypted f17fd6182d4a424e3a1fd521f91ccd3e4cb046147e39618a59cd74e6f2c2934e
 
   expect(plainText).toEqual(decryptedText);
 });
