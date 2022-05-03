@@ -329,6 +329,8 @@ template string literals 타입의 유틸리티 타입으로 추가되었으며,
 
 ## 타입활용
 
+<https://github.com/type-challenges/type-challenges>
+
 ### `infer NonFunctionProperties`
 
 ```ts
@@ -476,4 +478,13 @@ export type Id<I, T> = { _id: I } & T;
 
 export const findById = <T extends Id<unknown, unknown>, I extends T['_id']>(list: T[], id: I & T['_id']) =>
   list.find((e): e is Extract<T, { _id: I }> => e._id === id);
+```
+
+### Union to Intersection
+
+- <https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type>
+- <https://github.com/type-challenges/type-challenges/issues/122>
+
+```ts
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 ```
