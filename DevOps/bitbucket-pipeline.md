@@ -14,6 +14,29 @@
 
 커밋 메시지에 `[skip ci]` 또는 `[ci skip]` 포함
 
+## Cache
+
+<https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/>
+
+### npm cache
+
+- `npm ci` 명령어의 경우 실행 직후 `node_modules` 디렉토리를 삭제하므로 캐시를 사용하기 위해서는 커스텀 캐시를 선언해야 한다
+- <https://community.developer.atlassian.com/t/caching-and-installing-node-dependencies-in-pipeline/35659>
+
+```yml
+pipelines:
+  default:
+  - step:
+      name: Install, build and tests
+      caches:
+        - npm
+      script:
+        - npm ci
+definitions:
+  caches:
+    npm: $HOME/.npm
+```
+
 ## Example
 
 ### atlassian pipes
