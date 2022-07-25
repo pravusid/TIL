@@ -263,3 +263,18 @@ http {
     # ...
 }
 ```
+
+## Forward Proxy
+
+```conf
+server {
+    listen 6666;
+    server_name proxy;
+    resolver 192.168.1.1;
+
+    location / {
+        proxy_pass $scheme://$host$request_uri;
+        proxy_set_header Host $http_host;
+    }
+}
+```

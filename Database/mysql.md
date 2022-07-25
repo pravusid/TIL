@@ -478,3 +478,9 @@ MySQL의 `GROUP BY`는 표준과 다르게 작동해서 조건이 아닌 컬럼�
 - 직접 설정파일(`/etc/mysql/my.cnf`)의 `sql_mode`를 수정하여도 된다.
 
 설정을 변경하였다면 `mysqld`를 재시작한다
+
+## JSON
+
+<https://dev.mysql.com/doc/refman/8.0/en/json-search-functions.html>
+
+> JSON path에 한글이 포함되어 있다면 double quotes로 감싸야 한다
