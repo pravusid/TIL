@@ -56,6 +56,9 @@ AWS SDK에서는 스로틀된 요청은 기본적으로 10번 재시도 함
 
 트랜잭션 처리의 경우 2배의 용량이 필요(읽기의 경우 Strong consistent read 기준)
 
+> Projection Expressions 기능으로 RCU 사용량을 줄일 수는 없는 것으로 보임
+> (공식문서에 관련언급이 없고, stackoverflow 다수의 의견도 그러함)
+
 ### 예약어
 
 <https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/ReservedWords.html>
