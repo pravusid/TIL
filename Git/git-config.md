@@ -6,6 +6,7 @@
 
 - <https://git-scm.com/docs/git-config>
 - <https://johngrib.github.io/wiki/git-alias/>
+- <https://gist.github.com/junegunn/f4fca918e937e6bf5bad>
 
 ## git diff with delta
 
