@@ -5,8 +5,8 @@
 ## 개념
 
 - Application
-  - SourceCode -> Versions (N)
 
-- Environment (M)
+  - SourceCode -> Application Version (N)
+  - AWS resources -> Environment (M)
 
-> N * M 경우의 수 선택배포 가능
+> 동시에 M개의 배포 가능 (배포 총 경우의 수 == N * M)

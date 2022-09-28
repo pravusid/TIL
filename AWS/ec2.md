@@ -30,6 +30,10 @@ sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 `aws ec2 describe-instances --instance-ids <인스턴스id> --query 'Reservations[].Instances[].PublicDnsName'`
 
+## EBS 볼륨크기 변경
+
+<https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html>
+
 ## Windows 인스턴스 관리자 암호
 
 <https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/WindowsGuide/ResettingAdminPassword_EC2Config.html>

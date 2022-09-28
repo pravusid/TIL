@@ -2,18 +2,7 @@
 
 ## CodeDeploy Agent
 
-- CodeDeploy CLI 설치
-
-  - `sudo yum install ruby`
-  - `curl -O https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install`
-  - `chmod +x install`
-  - `sudo ./install auto`
-
-- CodeDeploy Agent 실행
-
-  - `sudo service codedeploy-agent start`
-  - `sudo service codedeploy-agent status`
-
+- CLI 환경에서 Agent 설치: <https://docs.aws.amazon.com/ko_kr/codedeploy/latest/userguide/codedeploy-agent-operations-install-linux.html>
 - CodeDeploy Agent 사용자 변경: <https://aws.amazon.com/ko/premiumsupport/knowledge-center/codedeploy-agent-non-root-profile/>
 
 ### CodeDeploy Agent in AmazonLinux
@@ -25,16 +14,17 @@ chmod +x install
 sudo ./install auto
 
 sudo sed -i 's/""/"ec2-user"/g' /etc/init.d/codedeploy-agent
-
 # 중요: Amazon Linux 2 AMI의 경우 다음 추가 명령을 실행합니다.
 sudo sed -i 's/#User=codedeploy/User=ec2-user/g' /usr/lib/systemd/system/codedeploy-agent.service
 
 sudo systemctl daemon-reload
+
 sudo chown ec2-user:ec2-user -R /opt/codedeploy-agent/
 sudo chown ec2-user:ec2-user -R /var/log/aws/
 
-sudo service codedeploy-agent start
-sudo service codedeploy-agent status
+sudo systemctl enable codedeploy-agent
+sudo systemctl start codedeploy-agent
+sudo systemctl status codedeploy-agent
 
 ps aux | grep codedeploy-agent
 ```
