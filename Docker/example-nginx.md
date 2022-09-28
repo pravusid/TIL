@@ -1,8 +1,8 @@
-# Docker NGINX
+# Docker Example: NGINX
 
 ## 설정
 
-[NGINX](../Network/nginx.md) 참고
+[[nginx]] 참고
 
 ## 실행
 

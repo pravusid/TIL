@@ -1,4 +1,4 @@
-# Jenkins with Docker
+# Docker Example: Jenkins
 
 ```sh
 docker run \
