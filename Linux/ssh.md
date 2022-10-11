@@ -236,3 +236,57 @@ Host server1
 - <https://goteleport.com/blog/security-hardening-ssh-bastion-best-practices/>
 
 Bation Host는 외부에서 유일하게 연결할 수 있는 SSH 호스트로, 내부의 다른 호스트에 접근하는 기착지가 된다
+
+#### Bastion Host 연결을 위한 클라이언트 설정
+
+`.ssh/config`
+
+```conf
+Match User bastionuser
+   PermitTTY no
+   X11Forwarding no
+   PermitTunnel no
+   GatewayPorts no
+   ForceCommand /usr/sbin/nologin
+
+Host *-myhost
+    ProxyJump bastionuser@bastion.example.com
+```
+
+#### Bastion Server 설정
+
+`/etc/ssh/sshd_config`
+
+```conf
+# Prohibit regular SSH clients from allocating virtual terminals, forward X11, etc
+PermitTTY no
+X11Forwarding no
+PermitTunnel no
+GatewayPorts no
+
+# Prohibit launching any remote commands
+ForceCommand /usr/sbin/nologin
+```
+
+사용자 설정
+
+<https://aws.amazon.com/ko/premiumsupport/knowledge-center/new-user-accounts-linux-instance/>
+
+```sh
+# 사용자 생성
+sudo useradd -s /sbin/nologin -m bastionuser --disabled-password
+
+# 실행 컨텍스트 변경
+sudo su - bastionuser
+
+cd /home/bastionuser
+
+mkdir .ssh
+chmod 700 .ssh
+
+touch .ssh/authorized_keys
+chmod 600 .ssh/authorized_keys
+
+cat >> .ssh/authorized_keys
+# 퍼블릭키 입력이 끝나면 ctrl + d
+```
