@@ -85,7 +85,7 @@ PasswordAuthentication no
 Host *
     ServerAliveInterval 60
 
-Host <host-alias>
+Host <host-alias1> [<host-alias2> ...]
     HostName <remote-host>
     User <username>
     IdentityFile ~/.ssh/my-identity.pem
@@ -118,9 +118,11 @@ scp <옵션> <원본 경로 및 파일명> <대상 경로 및 파일명>
 
 ## SSH Port Forwarding (Tunneling)
 
-- C(압축하여 접속)
-- N(shell 명령어 실행 금지)
-- f(백그라운드로 실행)
+<https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Tunnels>
+
+- `C` (압축하여 접속)
+- `N` (shell 명령어 실행 금지)
+- `f` (백그라운드로 실행)
 
 ### Local Forwarding
 
@@ -130,7 +132,18 @@ scp <옵션> <원본 경로 및 파일명> <대상 경로 및 파일명>
 
 remote는 server에서 도달할 수 있는 `<hostname | ip address>`를 사용하여야 한다
 
-예시: `ssh -i ~/.ssh/id_rsa -N -L 8080:localhost:3000 pravusid@pravusid.kr`
+`ssh -i ~/.ssh/id_rsa -N -L 8080:localhost:3000 -L 8081:192.168.0.100:3001 me@pravusid.kr`
+
+`.ssh/config` 설정으로도 실행가능하다
+
+```conf
+Host pravusid
+    HostName pravusid.kr
+    User me
+    LocalForward 8080 localhost:3000
+    LocalForward 8081 192.168.0.100:3001
+    ExitOnForwardFailure yes
+```
 
 ### Remote Forwarding
 
@@ -138,10 +151,88 @@ remote는 server에서 도달할 수 있는 `<hostname | ip address>`를 사용�
 
 다음의 연결이 성립한다: `public.example.com:8080 -> localhost:80`
 
-사용을 위해서 ssh 옵션을 변경해야 한다
+사용을 위해서 ssh 설정을 변경해야 한다
 
 `/etc/ssh/sshd_config`
 
 ```sh
 GatewayPorts yes
 ```
+
+## SSH Proxy
+
+### SSH Agent Forwarding vs SSH ProxyJump
+
+- <https://rabexc.org/posts/pitfalls-of-ssh-agents>
+- <https://www.infoworld.com/article/3619278/proxyjump-is-safer-than-ssh-agent-forwarding.html>
+
+ProxyJump를 사용해야 하는 이유
+
+- agent forwarding의 경우 인증체인에서 루트권한이 있다면, agent가 바인딩된 unix-domain 소켓을 사용하여 ssh-agent를 탈취할 수 있음
+- forward agent를 사용하지 않는 프록시 점프 사용을 권장함 (OpenSSH 7.3 이상의 버전)
+- ProxyJump는 로컬 클라이언트의 표준 입출력을 목적지 호스트로 포워딩한다
+
+### ProxyCommand vs ProxyJump
+
+- <https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts>
+- <https://goteleport.com/blog/ssh-proxyjump-ssh-proxycommand/>
+
+ProxyJump 명령어는 OpenSSH 7.3버전 이상에서 지원하므로 버전 미만에서는 ProxyCommand를 사용해야 한다
+
+<https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts#Old_Methods_of_Passing_Through_Jump_Hosts>
+
+#### 단일 Host 점프
+
+프록시점프는 다음 명령어로 실행할 수 있다
+
+`ssh -J <juser@jump_server:port> dev@192.168.200.200`
+
+> 점프서버 포트 22는 생략가능
+
+`.ssh/config` 설정은 다음과 같다
+
+```conf
+Host remote_server
+    HostName 192.168.200.200
+    User dev
+    ProxyJump <juser@jump_server:port>
+```
+
+#### 여러 Host 점프
+
+여러 호스트를 대상으로 점프할 수도 있다
+
+`ssh -J <juser1@jump_server1:port>,<juser2@jump_server2:port>,<juser3@jump_server3:port> dev@192.168.200.200`
+
+`.ssh/config` 설정은 다음과 같다
+
+```conf
+Host remote_server_multi
+    HostName 192.168.200.200
+    User dev
+    ProxyJump <juser1@jump_server1:port>,<juser2@jump_server2:port>,<juser3@jump_server3:port>
+```
+
+#### 특정 조건에서만 ProxyJump를 실행
+
+설정에서 Match를 사용하면 된다
+
+<https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts#Conditional_Use_of_Jump_Hosts>
+
+```conf
+# 현재 IP주소가 192.168.100.10 인 경우 프록시점프를 실행함
+Match host server1 !exec "ifconfig en0 | grep 192.168.100.10"
+    ProxyJump user@<jump server>
+
+Host server1
+    Hostname 192.168.100.20
+```
+
+설정을 수정한 경우 별도의 인자 없이 Proxy를 실행할 수 있다: `ssh remoteserver`
+
+### Bastion Host 설정
+
+- <https://goteleport.com/blog/ssh-bastion-host/>
+- <https://goteleport.com/blog/security-hardening-ssh-bastion-best-practices/>
+
+Bation Host는 외부에서 유일하게 연결할 수 있는 SSH 호스트로, 내부의 다른 호스트에 접근하는 기착지가 된다
