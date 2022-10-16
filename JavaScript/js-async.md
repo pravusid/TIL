@@ -1,16 +1,14 @@
 # JavaScript Async
 
-## 유형
-
-### Callback, 콜백
+## Callback, 콜백
 
 <https://ko.javascript.info/callbacks>
 
-### Promise, 프로미스
+## Promise, 프로미스
 
 <https://ko.javascript.info/promise-basics>
 
-### Async & Await
+## Async & Await
 
 <https://ko.javascript.info/async-await>
 
@@ -23,7 +21,15 @@
   - `await` 키워드 미사용: 동기함수에서 오류발생한 것과 동일한 오류발생
   - `await` 키워드 사용: `processTicksAndRejections` 마이크로태스크큐에서 오류발생 ([[nodejs-event-loop]] 참고)
 
-### `return await`
+### Async Stacktrace in V8
+
+> The fundamental difference between await and vanilla promises is that await X() suspends execution of the current function,
+> while promise.then(X) continues execution of the current function after adding the X call to the callback chain.
+>
+> -- <https://mathiasbynens.be/notes/async-stack-traces>
+
+- <https://v8.dev/docs/stack-trace-api#async-stack-traces>
+- <https://cloudreports.net/v8-zero-cost-async-stack-traces/>
 
 <https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/errorhandling/returningpromises.md>
 
