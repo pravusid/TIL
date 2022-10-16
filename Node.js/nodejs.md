@@ -32,11 +32,18 @@ C: nodejs 관련 파일 삭제
 
 ## http
 
-Node.js는 다양한 작업을 수행할 수 있지만, 웹 기반 Application에 적합하도록 많은 투자가 이루어지고 있다.
+<https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/>
 
-node에서 http는 first class citizen 이다.
+nodejs 는 다양한 작업을 수행할 수 있지만, 웹 기반 Application에 적합하도록 많은 투자가 이루어지고 있다.
 
-node server 예제
+### 의존성
+
+<https://nodejs.org/ko/docs/meta/topics/dependencies/#llhttp>
+
+> HTTP 파싱은 llhttp라는 경량 C 라이브러리가 처리합니다.
+> 이는 시스템 호출이나 할당을 하려고 만들어진 것이 아니므로 요청당 아주 작은 메모리 공간만 차지합니다.
+
+### nodejs server 예제
 
 ```js
 const http = require('http');
@@ -55,12 +62,5 @@ server.listen(port, hostname, () => {
 });
 ```
 
-### 서버 실행
-
-`node index.js`
-
-hot-reload를 위해서 nodemon을 이용한다
-
-`yarn global add nodemon`
-
-`nodemon index.js`
+> 이 서버로 오는 HTTP 요청마다 createServer에 전달된 함수가 한 번씩 호출됩니다.
+> 사실 createServer가 반환한 Server 객체는 EventEmitter이고 여기서는 server 객체를 생성하고 리스너를 추가하는 축약 문법을 사용한 것입니다.
