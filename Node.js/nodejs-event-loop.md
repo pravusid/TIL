@@ -90,7 +90,6 @@
 #### nextTickQueue
 
 - process.nextTick()으로 실행하는 nextTickQueue는 이벤트 루프의 일부가 아니다
-- 즉, 현재작업을 제외하고 가장 높은 실행 우선순위를 가지고 있는 것이다
 - 페이즈와는 다르게 시스템 실행한도 초과에 영향을 받지 않으므로 I/O starvation을 유발할 수 있다
 
 #### microTaskQueue

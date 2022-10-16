@@ -99,6 +99,21 @@ pros & cons
   - 노드 장애등으로 데이터가 누락될 수 있음
   - 캐시 이탈 (대부분의 데이터는 사용될 일이 없음) -> TTL 사용
 
+## Persistence (영구저장)
+
+<http://redisgate.kr/redis/configuration/persistence.php>
+
+### AOF(Append Only File)
+
+- 입력/수정/삭제 명령이 실행될 때 마다 appendonly.aof 파일에 기록됨
+- 기본적으로 파일에 append를 실행하지만, 계속 추가만하면 파일이 너무 커지므로 특정시점에 전체 데이터를 다시 쓴다
+
+### RDB(snapshot)
+
+- RDB는 특정 시점의 메모리에 있는 데이터 전체를 바이너리 파일로 저장
+- AOF 파일보다 사이즈가 작다
+- `BGSAVE` 또는 `SAVE` 명령으로 RDB 파일을 생성할 수 있다
+
 ## 보안
 
 ### ACL
@@ -132,6 +147,8 @@ pros & cons
 <https://redis.io/docs/manual/scaling/>
 
 ## 활용사례
+
+<https://devs0n.tistory.com/92>
 
 ### 좋아요
 
