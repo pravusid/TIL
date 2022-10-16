@@ -22,8 +22,9 @@
 - <https://meetup.toast.com/posts/245>
 - <https://tech.kakao.com/2020/11/10/if-kakao-2020-commentary-01-kakao/>
 - <https://tech.kakao.com/2022/02/09/k8s-redis/>
-- <https://www.youtube.com/watch?v=mPB2CZiAkKM>
 - <https://deview.kr/2021/sessions/526>
+- <https://www.youtube.com/watch?v=mPB2CZiAkKM>
+- <https://www.youtube.com/watch?v=92NizoBL4uA>
 
 ## 키 (key)
 
@@ -172,10 +173,14 @@ pros & cons
 
 ## 주의사항
 
+### maxclient 설정 값 변경
+
+50,000 정도로 설정할 것
+
 ### 영구저장소로 사용하지 말것
 
 - AOF, RDB 기능은 성능을 떨어뜨리고 장애 발생가능성을 높임
-- 스토리지로 사용하려면 AOF를 사용하는 것이 나음
+- 만약, 스토리지로 사용한다면 AOF를 사용하는 것이 나음
 
 관련 `redis.conf` 설정
 
@@ -191,6 +196,11 @@ auto-aof-rewrite-percentage 100
 
 ### 메모리 관련설정을 잊지 말것
 
+- 물리적 메모리보다 더 많은 용량을 사용하게 되면 swap을 사용하면서 속도가 매우 느려짐
+- maxmemory 설정량보다 더 많은 값을 사용할 수 있으므로 설정은 가용메모리의 60~70% 정도로 지정
+- 메모리 설정 및 RSS(Resident Set Size) 값 모니터링 필요
+- ziplist 설정으로 메모리 사용량을 줄일 수도 있다
+
 ```conf
 maxmemory <가용 메모리의 60~70%>
 maxmemory-policy volatile-lru
@@ -199,6 +209,10 @@ maxmemory-policy volatile-lru
 ### 장애발생 가능성이 있는 커맨드 사용하지 말 것
 
 `O(N)` 시간복잡도로 작동하는 커맨드는 장애를 일으킬 수 있다
+
+### 컬렉션 하나에 너무 많은 아이템을 담지 말 것
+
+10,000개를 넘어가면 성능상문제가 발생할 가능성이 있다
 
 ### 보안설정
 
