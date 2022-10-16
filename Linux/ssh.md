@@ -274,7 +274,9 @@ ForceCommand /usr/sbin/nologin
 
 ```sh
 # 사용자 생성
-sudo useradd -s /sbin/nologin -m bastionuser --disabled-password
+sudo useradd -m bastionuser && sudo passwd -d bastionuser
+# 사용자 생성 (ubuntu)
+sudo useradd -m bastionuser --disabled-password
 
 # 실행 컨텍스트 변경
 sudo su - bastionuser
@@ -289,4 +291,7 @@ chmod 600 .ssh/authorized_keys
 
 cat >> .ssh/authorized_keys
 # 퍼블릭키 입력이 끝나면 ctrl + d
+
+# 사용자 shell 변경
+sudo usermod -s /sbin/nologin bastionuser
 ```
