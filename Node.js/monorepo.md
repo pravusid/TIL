@@ -1,10 +1,27 @@
-# Mono Repository
+# Mono Repository (monorepo)
 
 Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에서 함께 관리하는 방식이다.
 
-## monorepo in NodeJS
+## refs
 
-- NodeJS 환경의 monorepo 툴은 여러가지가 있지만 주로 node package manager(npm, yarn, pnpm), lerna 등을 사용한다
+- overview
+  - <https://d2.naver.com/helloworld/0923884>
+  - <https://d2.naver.com/helloworld/7553804>
+- Nx
+  - <https://nx.dev/getting-started/intro>
+- TuboRepo
+  - <https://turborepo.org/docs>
+  - <https://engineering.linecorp.com/ko/blog/monorepo-with-turborepo>
+- Rush
+  - <https://rushjs.io/pages/intro/get_started/>
+  - <https://medium.com/mildang/rush로-프론트엔드-모노레포-도입기-5da0c5bc9b30>
+  - <https://dev.to/kkazala/series/17133>
+- Lerna
+  - <https://medium.com/jung-han/lerna-로-모노레포-해보러나-34c8e008106a>
+
+## monorepo in nodejs
+
+- Node.js 환경의 monorepo 툴은 여러가지가 있지만 주로 node package manager(npm, yarn, pnpm), lerna 등을 사용한다
 - MS의 [Rush by TypeScript](https://rushjs.io/), Google의 [Bazel by Java](https://bazel.build/) 등을 사용할 수도 있다
 
 mororepo 툴이 수행하는 주요기능은 다음과 같다
@@ -15,19 +32,12 @@ mororepo 툴이 수행하는 주요기능은 다음과 같다
 - 의존성관리 (bootstrap / hoist, symlink)
 
 > monorepo 내의 node_modules 중복이 많아질 수록 lerna의 성능이 좋지 않다
+>
 > -- <https://doppelmutzi.github.io/monorepo-lerna-yarn-workspaces/>
 
 ## pnpm workspace
 
 <https://pnpm.io/workspaces>
-
-## yarn classic workspace
-
-<https://classic.yarnpkg.com/en/docs/workspaces/>
-
-<https://classic.yarnpkg.com/en/docs/cli/workspace>
-
-<https://classic.yarnpkg.com/en/docs/cli/workspaces>
 
 ## lerna
 
@@ -137,10 +147,6 @@ workspace 목록을 별도 표기하여 빌드 실행 우선순위를 지정할 
 }
 ```
 
-### TypeScript
+### monorepo 내부의 다른 모듈 사용
 
-타입스크립트 컴파일러 설정과 type export 경로 처리에 주의해야 한다
-
-### 사용
-
-다른 모듈을 사용하기 위해서는 `Peer Dependencies` 또는 `Dependencies` 선언한 뒤 `import` 해서 사용한다
+다른 모듈을 사용하기 위해서는 `dependencies` 선언한 뒤 `import` 해서 사용한다
