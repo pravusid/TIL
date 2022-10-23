@@ -339,6 +339,15 @@ git fetch <remote> <another-branch>:<another-branch>
 git pull <remote> <another-branch>:<another-branch>
 ```
 
+#### pull force
+
+<https://stackoverflow.com/questions/1125968/how-do-i-force-git-pull-to-overwrite-local-files>
+
+```sh
+git fetch origin main
+git reset --hard origin/main
+```
+
 ### Push
 
 #### Remote Branch
