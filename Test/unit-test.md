@@ -154,6 +154,8 @@ Gerard Meszaros가 분류하고 마틴 파울러가 소개한 테스트 더블�
 
 ### Obvious abuses
 
+> [Please don't mock me - Justin Searls - JSConf US 2018](https://www.youtube.com/watch?v=x8sKpJwq6lY)
+
 #### Using partial Mock
 
 Dependency를 Totally Real / Totally Fake 둘 중 하나가 안전하다.

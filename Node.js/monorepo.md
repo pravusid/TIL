@@ -5,6 +5,7 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
 ## refs
 
 - overview
+  - <https://monorepo.tools/>
   - <https://d2.naver.com/helloworld/0923884>
   - <https://d2.naver.com/helloworld/7553804>
 - Nx
@@ -18,6 +19,11 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
   - <https://dev.to/kkazala/series/17133>
 - Lerna
   - <https://medium.com/jung-han/lerna-로-모노레포-해보러나-34c8e008106a>
+- etc
+  - [우리는 하나다! 모노레포 with pnpm](https://www.youtube.com/watch?v=Bycg5w5qXfE)
+  - [일백개 패키지 모노레포 우아하게 운영하기](https://www.youtube.com/watch?v=ajtpcFkXqqg&t=6126s)
+  - [모노레포_마이크로 아키텍처를 지향하며](https://www.youtube.com/watch?v=CsbBuE_MF2U)
+  - [모노레포 희망편 (Feat.Polylith)](https://www.youtube.com/watch?v=CCo7T3m6LLM)
 
 ## monorepo in nodejs
 
