@@ -421,6 +421,8 @@ export type DeepPartial<T> = T extends object
 
 ### `Array.filter` with type-guard
 
+<https://github.com/microsoft/TypeScript/issues/16655>
+
 ```ts
 // type narrowing issue in TS Array.filter
 Array.of(1, undefined, 2).filter(Boolean); // (number | undefined)[]
@@ -457,6 +459,34 @@ export function hasTruthyValueIn<K extends keyof T, T>(key: K) {
 }
 
 Array.of({ id: 1 }, { id: undefined }, { id: 2 }).filter(hasTruthyValueIn('id')); // { id: number }[]
+```
+
+#### `Array.filter` with overloading
+
+<https://www.karltarvas.com/2021/03/11/typescript-array-filter-boolean.html>
+
+`types/lib.es5.d.ts`
+
+```ts
+/** @link https://stackoverflow.com/a/51390763/1470607 */
+type Falsy = false | 0 | '' | null | undefined;
+
+interface Array<T> {
+  /**
+   * Returns the elements of an array that meet the condition specified in a callback function.
+   * @param predicate A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array.
+   * @param thisArg An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value.
+   */
+  filter<S extends T>(predicate: BooleanConstructor, thisArg?: any): Exclude<S, Falsy>[];
+}
+```
+
+`tsconfig.json`
+
+```json
+{
+  "include": ["lib.es5.d.ts"]
+}
 ```
 
 ### WritableKeys
