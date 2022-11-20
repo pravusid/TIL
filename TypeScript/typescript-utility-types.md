@@ -1,7 +1,7 @@
 # TypeScript - Utility Types
 
 - 문서: <https://www.typescriptlang.org/docs/handbook/utility-types.html>
-- 구현: <https://github.com/microsoft/TypeScript/blob/main/lib/lib.es5.d.ts#L1468>
+- 구현: <https://github.com/microsoft/TypeScript/blob/main/lib/lib.es5.d.ts#L1530>
 
 TypeScript에서는 타입 변환을 편리하게 할 수 있는 유틸리티 타입을 global scope로 사용할 수 있다.
 
@@ -407,6 +407,16 @@ export const unwrap = <T>(optional: Optional<T>): T => {
   }
   throw new Error('optional object is undefined');
 };
+```
+
+### `DeepPartial<T>`
+
+```ts
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
 ```
 
 ### `Array.filter` with type-guard
