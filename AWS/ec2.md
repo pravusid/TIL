@@ -65,3 +65,36 @@ sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 관리자 암호를 Random으로 지정하고, `EC2Launch > Shutdown with Sysprep` 실행후 이미지를 생성하면 암호를 재생성 할 수 있음
 
 <https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/WindowsGuide/ec2launch.html#ec2launch-sysprep>
+
+## 버스트 가능 인스턴스 (T)
+
+<https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/burstable-performance-instances.html>
+
+> 기존 Amazon EC2 인스턴스 유형은 고정된 CPU 리소스를 제공하는 반면,
+> 성능 순간 확장 가능 인스턴스는 기본 수준의 CPU 사용률을 제공하면서 기본 수준 이상으로 CPU 사용률을 버스트하는 기능을 제공합니다.
+> 이렇게 하면 기준 CPU와 추가 버스트 CPU 사용량에 대해서만 비용을 지불하면 되므로 컴퓨팅 비용이 절감됩니다.
+> 기준 사용률과 버스트 기능은 CPU 크레딧에 의해 좌우됩니다.
+
+### 핵심개념
+
+<https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/burstable-credits-baseline-concepts.html>
+
+- 시간당 적립되는 크레딧 수 = [기준 사용률(%)](https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/burstable-credits-baseline-concepts.html#burstable-performance-instances-credit-table)] x vCPU 수 x 60분
+- 분당 소비되는 CPU 크레딧 = vCPU 수 x CPU 사용률 x 1분
+- 적립 - 소비 크레딧은 누적 한도(일반적으로 24시간 동안 적립되는 최대 크레딧 수)까지 적립됨
+
+### 무제한 모드 (unlimited)
+
+- <https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/burstable-performance-instances-unlimited-mode.html>
+- <https://blog.wisen.co.kr/pages/blog/blog-detail.html?idx=2726>
+
+> unlimited로 구성된 성능 순간 확장 가능 인스턴스의 CPU 크레딧 밸런스가 감소하면 잉여 크레딧을 사용하여 기준 이상으로 버스트할 수 있습니다.
+> CPU 사용률이 기준 미만으로 떨어지면 획득한 CPU 크레딧을 사용하여 이전에 소비한 잉여 크레딧을 청산할 수 있습니다.
+> CPU 크레딧을 획득하고 잉여 크레딧을 청산하는 기능을 통해 Amazon EC2은 24시간 동안 인스턴스의 CPU 사용률을 평균 수준으로 유지할 수 있습니다.
+> 24시간 동안의 평균 CPU 사용량이 기준을 초과하는 경우 인스턴스에 추가 사용량에 대해 vCPU 시간당 고정 추가 요금이 청구됩니다.
+
+- 무제한 모드에서는 잔여 크레딧이 0이 되면, 기준 사용률 이하로 제한되지 않고 잉여(surplus) 크레딧을 적립하게 된다
+- 잉여 크레딧의 한도는 크레딧 누적 한도와 동일하다
+- 잉여 크레딧 누적 한도를 초과하여 적립하게 되면 초과분에 대해 과금이 이루어진다
+
+> [무제한 모드 vs 고정 CPU 손익분기](https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/burstable-performance-instances-unlimited-mode-concepts.html#when-to-use-unlimited-mode)
