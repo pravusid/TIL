@@ -507,7 +507,7 @@ type ReadonlyKeys<T> = {
 }[keyof T];
 ```
 
-### Discriminated unions with Helper
+### Discriminated unions with helper
 
 <https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions>
 
@@ -527,4 +527,59 @@ export const findById = <T extends Id<unknown, unknown>, I extends T['_id']>(lis
 
 ```ts
 type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+```
+
+### Tuple to Union
+
+<https://ghaiklor.github.io/type-challenges-solutions/en/medium-tuple-to-union.html>
+
+```ts
+type Arr = ['1', '2', '3'];
+
+const a: TupleToUnion<Arr>; // expected to be '1' | '2' | '3'
+
+type TupleToUnion<T extends unknown[]> = T[number];
+```
+
+### Unique Array elements
+
+- <https://ja.nsommer.dk/articles/type-checked-unique-arrays.html>
+- <https://stackoverflow.com/questions/57016728/is-there-a-way-to-define-type-for-array-with-unique-items-in-typescript>
+- <https://stackoverflow.com/questions/71235152/exhaustive-list-of-keys-of-type>
+
+> 컴파일타임에 tuple을 인자로 전달해야 하므로 유용하지는 않음
+
+### Exhaustive Array elements
+
+> curried function, class(closure)등을 활용
+
+#### class (or closure)
+
+- <https://github.com/gvergnaud/ts-pattern/blob/main/src/types/Match.ts>
+- [Array containing all options of type value in Typescript](https://stackoverflow.com/a/58508661)
+
+#### curried function
+
+- [enforce-that-an-array-is-exhaustive-over-a-union-type](https://stackoverflow.com/a/55266531)
+
+```ts
+type Furniture = 'chair' | 'table' | 'lamp' | 'ottoman';
+
+type AtLeastOne<T> = [T, ...T[]];
+
+const exhaustiveStringTuple =
+  <T extends string>() =>
+  <L extends AtLeastOne<T>>(
+    ...x: L extends any ? (Exclude<T, L[number]> extends never ? L : Exclude<T, L[number]>[]) : never
+  ) =>
+    x;
+
+const missingFurniture = exhaustiveStringTuple<Furniture>()('chair', 'table', 'lamp');
+// error, Argument of type '"chair"' is not assignable to parameter of type '"ottoman"'
+
+const extraFurniture = exhaustiveStringTuple<Furniture>()('chair', 'table', 'lamp', 'ottoman', 'bidet');
+// error, "bidet" is not assignable to a parameter of type 'Furniture'
+
+const furniture = exhaustiveStringTuple<Furniture>()('chair', 'table', 'lamp', 'ottoman');
+// okay
 ```
