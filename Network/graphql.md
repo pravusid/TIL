@@ -22,7 +22,12 @@
 
 ### GraphQL Servers
 
-- <https://github.com/graphql/express-graphql>
+<https://github.com/graphql/graphql-over-http>
+
+> If you want a feature-full server with bleeding edge technologies, you're recommended to use one of the following.
+>
+> -- <https://github.com/graphql/graphql-http#servers>
+
 - <https://github.com/mercurius-js/mercurius>
 - <https://github.com/apollographql/apollo-server>
 - <https://github.com/prisma-labs/graphql-yoga>
