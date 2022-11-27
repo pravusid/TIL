@@ -64,3 +64,17 @@
 ### Code-first & TypeGraphQL
 
 - <https://typegraphql.com/>
+
+## GraphQLError
+
+- <https://github.com/graphql/graphql-js/blob/main/src/error/GraphQLError.ts>
+- <https://spec.graphql.org/draft/#sec-Errors>
+
+클라이언트에서 확인 가능한 오류는 `GraphQLFormattedError`이다
+
+<https://github.com/graphql/graphql-js/blob/main/src/error/GraphQLError.ts#L218>
+
+- message: (짧고 이해할 수 있게 요약한) 오류메시지
+- locations: 요청 GraphQL doucment(query, mutation)에서 오류가 발생한 위치 (line, column)
+- path: 필드 처리중 오류가 발생한 경우 해당 필드 (null 응답을 클라이언트에서 구분하기 위함 == 런타임 오류 or 실제 null 응답)
+- extensions: 추가 정보입력을 위한 값 (자유롭게 사용할 수 있고, 구현체에 따라 다름)
