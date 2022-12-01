@@ -1,4 +1,4 @@
-# Download files via AJAX
+# AJAX file Download (web browser)
 
 ## client
 
