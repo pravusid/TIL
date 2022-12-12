@@ -55,7 +55,7 @@
 - Schema-first
 
   - `schema.graphql` 파일을 문자열로 변환하여 `graphql.buildSchema` 함수에 전달
-  - `schema.graphql` 파일을 대상으로 code generation 실행
+  - `schema.graphql` 파일을 대상으로 [code generation](https://the-guild.dev/graphql/codegen/docs/getting-started) 실행
 
 - Code-first
 
