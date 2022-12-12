@@ -327,6 +327,30 @@ template string literals 타입의 유틸리티 타입으로 추가되었으며,
 - `Capitalize<StringType>`
 - `Uncapitalize<StringType>`
 
+## ClassType
+
+<https://www.typescriptlang.org/docs/handbook/2/generics.html#using-class-types-in-generics>
+
+```ts
+type Clazz<T> = {
+  new (...args: any[]): T;
+};
+
+// 다음 타입도 Clazz<T> 타입과 같은 결과를 출력함
+type Construct<T> = new (...args: any[]) => T;
+```
+
+ClassType 활용
+
+```ts
+class Test {
+  constructor() {}
+}
+
+const a: Clazz<Test> = Test;
+const b: Construct<Test> = Test;
+```
+
 ## 타입활용
 
 <https://github.com/type-challenges/type-challenges>
