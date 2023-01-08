@@ -22,21 +22,12 @@ Express.js 4버전에서는 Router에서 Promise처리를 지원하지 않음
 ### Wrapping Route Functions
 
 ```ts
-export const errorHandler = (
-  error: Error,
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (error: Error, request: Request, response: Response, next: NextFunction) => {
   response.status(500).json({ message: error.message });
   next();
 };
 
-type AsyncFunc = (
-  req: Request,
-  resp: Response,
-  next: NextFunction
-) => Promise<any>;
+type AsyncFunc = (req: Request, resp: Response, next: NextFunction) => Promise<any>;
 
 export const asyncHandler: (func: AsyncFunc) => AsyncFunc = (func) => {
   return (request, response, next) =>
@@ -54,12 +45,12 @@ app.use(errorHandler);
 
 // foo.controller.ts
 this.routes.get(
-  "/hello",
+  '/hello',
   asyncHandler((req, resp) => this.foobar(req, resp))
 );
 ```
 
-## merging interfaces
+## merging interfaces in TypeScript
 
 - <https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-serve-static-core/index.d.ts>
 - <https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express/index.d.ts>
@@ -67,7 +58,7 @@ this.routes.get(
 `types/express.d.ts`
 
 ```ts
-import { User } from "../src/domain/user";
+import { User } from '../src/domain/user';
 
 declare global {
   namespace Express {
@@ -123,22 +114,22 @@ ca 옵션은 다음 사항이 적용된다
 - 자체 서명 인증서를 사용하는 경우 자체 인증기관(own CA)이 명시되어야 한다.
 
 ```ts
-import * as express from "express";
-import { readFileSync } from "fs";
-import { createServer } from "https";
+import * as express from 'express';
+import { readFileSync } from 'fs';
+import { createServer } from 'https';
 
-require("dotenv").config();
+require('dotenv').config();
 
 const app = express();
 
 createServer(
   {
-    ca: readFileSync("cert/chain.crt"), // 인증서 체인
-    key: readFileSync("cert/server.key"), // 서버 비밀키
-    cert: readFileSync("cert/server.crt"), // 서버 도메인 인증서
+    ca: readFileSync('cert/chain.crt'), // 인증서 체인
+    key: readFileSync('cert/server.key'), // 서버 비밀키
+    cert: readFileSync('cert/server.crt'), // 서버 도메인 인증서
   },
   app
-).listen(process.env.PORT || 3000, () => console.log("서버실행"));
+).listen(process.env.PORT || 3000, () => console.log('서버실행'));
 ```
 
 <https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener>
@@ -161,11 +152,11 @@ createServer(
 ```ts
 const agent = new https.Agent({
   // Necessary only if the server requires client certificate authentication.
-  key: fs.readFileSync("client-key.pem"),
-  cert: fs.readFileSync("client-cert.pem"),
+  key: fs.readFileSync('client-key.pem'),
+  cert: fs.readFileSync('client-cert.pem'),
 
   // Necessary only if the server uses a self-signed certificate.
-  ca: [fs.readFileSync("server-cert.pem")],
+  ca: [fs.readFileSync('server-cert.pem')],
 
   // Necessary only if the server's cert isn't for "localhost".
   checkServerIdentity: () => null,
@@ -180,19 +171,11 @@ interface AgentOptions extends http.AgentOptions, tls.ConnectionOptions {
 
 ## Graceful Shutdown
 
-> <https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html>
+- <https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html>
+- [[nodejs-graceful-shutdown]]
 
-nodejs 서버를 사용하는 다른 라이브러리에도 적용가능함
+## 경로별 bodyParser 사용
 
-### terminus
-
-[`@godaddy/terminus`](https://github.com/godaddy/terminus) 실행순서
-
-- `beforeShutdown`
-- `onSignal`
-- `onShutdown`
-
-### 다른 선택지
-
-- <https://github.com/gquittet/graceful-server>
-- <https://github.com/sebhildebrandt/http-graceful-shutdown>
+> bodyParser (global)미들웨어를 경로별로 지정하려면 순서에 유의해야 함
+>
+> -- <https://github.com/expressjs/express/issues/3932>
