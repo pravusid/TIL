@@ -1,5 +1,9 @@
 # NGINX
 
+- <http://nginx.org/en/docs/>
+- <http://nginx.org/en/docs/http/ngx_http_core_module.html>
+- <http://nginx.org/en/docs/http/ngx_http_proxy_module.html>
+
 Web Server (Apache와 2강 구도를 형성하고 있다)
 
 - Apache : 요청을 Multi Processing Module 방식으로 처리
@@ -278,3 +282,22 @@ server {
     }
 }
 ```
+
+## Timeout
+
+- client_header_timeout: default 60s
+- client_body_timeout: default 60s
+- keepalive_timeout: default 75s
+- send_timeout: default 60s
+- proxy_connect_timeout: default 60s
+- proxy_read_timeout: default 60s
+- proxy_send_timeout: default 60s
+
+## Troubleshooting
+
+### nginx client-max-body-size
+
+<https://stackoverflow.com/questions/2056124/nginx-client-max-body-size-has-no-effect>
+
+- [공식문서](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size)에서 해당옵션의 context: `http, server, location`
+- 중첩 context에서 하위 context는 상위 context 값을 상속받지만, client-max-body-size 옵션은 의도대로 작동하지 않는 경우가 있는듯 하다
