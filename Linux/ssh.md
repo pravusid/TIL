@@ -93,6 +93,17 @@ Host <host-alias1> [<host-alias2> ...]
 
 Identity 파일을 지정하지 않으면 `.ssh/id_rsa`가 기본으로 사용된다
 
+### Host Key Checking 비활성화
+
+`~/.ssh/known_hosts` 등록시 키검증 생략 (MITM 위험성)
+
+`.ssh/config`
+
+```sh
+Host *
+    StrictHostKeyChecking no
+```
+
 ### root 로그인 차단
 
 ```txt
