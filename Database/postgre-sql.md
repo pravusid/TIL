@@ -26,38 +26,36 @@ mydb에서 대화형 터미널 프로그램 실행 : `psql mydb`
 
 `\?` : 내장명령 확인
 
-
-
 ## 명령어
 
 ### 유저생성
 
 `create user wwwi with password 'wwwi'`
 
-### 데이터베이스  만들기
+### 데이터베이스 만들기
 
 `create database wwwi`
 
 ### 자료형
 
-|                               |                        |
-| ----------------------------- | ---------------------- |
-| smailint                      | 2 바이트 정수               |
-| integer                       | 4 바이트 정수               |
-| bigint                        | 8 바이트 정수               |
-| decimal(a, a)/numeric(a, s)   | 10진수형                  |
-| real                          | 6자리 단정도 부동소수점          |
-| double precision              | 15 자리 배정도 부동소수점        |
-| serial                        | 4 바이트 일련번호             |
-| bigserial                     | 8 바이트 일련번호             |
-| date                          | 일자                     |
-| time                          | 시간                     |
-| timestamp                     | 일자시간                   |
-| char(문자수)/character           | 고정길이 문자열  (최대 4096 문자) |
-| varchar(문자수)/charcter varying | 가변길이 문자열  (최대 4096 문자) |
-| text                          | 무제한 텍스트                |
-| Large Object                  | oid형                   |
-| boolean/bool                  | true/false             |
+|                                  |                                  |
+| -------------------------------- | -------------------------------- |
+| smailint                         | 2 바이트 정수                    |
+| integer                          | 4 바이트 정수                    |
+| bigint                           | 8 바이트 정수                    |
+| decimal(a, a)/numeric(a, s)      | 10진수형                         |
+| real                             | 6자리 단정도 부동소수점          |
+| double precision                 | 15 자리 배정도 부동소수점        |
+| serial                           | 4 바이트 일련번호                |
+| bigserial                        | 8 바이트 일련번호                |
+| date                             | 일자                             |
+| time                             | 시간                             |
+| timestamp                        | 일자시간                         |
+| char(문자수)/character           | 고정길이 문자열 (최대 4096 문자) |
+| varchar(문자수)/charcter varying | 가변길이 문자열 (최대 4096 문자) |
+| text                             | 무제한 텍스트                    |
+| Large Object                     | oid형                            |
+| boolean/bool                     | true/false                       |
 
 ### 테이블 만들기
 
