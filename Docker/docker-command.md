@@ -37,6 +37,18 @@ docker run -d -p 3306:3306 \
   mysql:5.7
 ```
 
+### --restart 옵션으로 재부팅 후 자동시작
+
+```sh
+docker run -d --restart always ...
+```
+
+실행시 옵션을 설정하지 않은 경우
+
+```sh
+docker update --restart=always <container-id|container-name>
+```
+
 ## docker ps
 
 실행중인 컨테이너 목록을 출력

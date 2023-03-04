@@ -5,7 +5,7 @@
 
 ## 설치
 
-`docker pull mariadb:latest`
+`docker pull mysql:latest`
 
 ## 설정 & 실행
 
@@ -18,8 +18,11 @@ docker \
   --detach \
   # db를 컨테이너 밖으로 연결 / 현재 경로를 지정한다면 {데이터경로} == $(pwd)/data
   --volume <데이터경로>:/var/lib/mysql \
-  # 관리자 비밀번호 (설정 or empty 택 1)
+  # root host 설정 (기본값 '%')
+  --env MYSQL_ROOT_HOST=localhost \
+  # root 비밀번호 (설정 or random or empty 택 1)
   --env MYSQL_ROOT_PASSWORD=<MYSQL_ROOT_PASSWORD> \
+  --env MYSQL_RANDOM_ROOT_PASSWORD=true \
   --env MYSQL_ALLOW_EMPTY_PASSWORD=true \
   # user, password, database
   --env MYSQL_USER=<MYSQL_USER> \
@@ -29,7 +32,7 @@ docker \
   --name <MYSQL_CONTAINER_NAME> \
   --publish 3306:3306 \
   # 실행할 이미지
-  mariadb:latest \
+  mysql:latest \
   # 인코딩 설정 (args)
   --character-set-server=utf8mb4 \
   --collation-server=utf8mb4_unicode_ci
@@ -83,7 +86,7 @@ flush privileges;
 ## Dockerfile
 
 ```dockerfile
-FROM mariadb:latest
+FROM mysql:latest
 
 ENV LANG=C.UTF-8
 ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
