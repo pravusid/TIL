@@ -239,35 +239,51 @@ FLUSH PRIVILEGES;
 
 <https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html>
 
-`default-time-zone='timezone'` 서버 타임존을 지정할 수 있다.
+타임존은 다음 명령어로 조회할 수 있다
+별도 설정을 하지 않았다면 기본값은 global(SYSTEM), session(SYSTEM), system(OS_TIMEZONE) 이다
 
-세션 타임존은 기본적으로 서버 타임존을 가져오지만 다음의 명령으로 세션 시간대를 설정할 수 있다: `SET time_zone = timezone;`
+```sql
+select @@global.time_zone, @@session.time_zone, @@system_time_zone;
+/*
++--------------------+---------------------+--------------------+
+| @@global.time_zone | @@session.time_zone | @@system_time_zone |
++--------------------+---------------------+--------------------+
+| SYSTEM             | SYSTEM              | UTC                |
++--------------------+---------------------+--------------------+
+*/
+```
 
-전역 시간대와 세션 시간대는 다음으로 검색할 수 있다: `SELECT @@GLOBAL.time_zone, @@SESSION.time_zone;`
+> AWS RDS, Docker 등에서 db를 생성했을 때 일반적인 시스템(OS) [[timezone]] 값은 UTC이다
 
-### 시각/날짜 처리
+세션(글로벌) 타임존은 다음 명령으로 변경할 수 있다
 
-MySQL은 TIMESTAMP 값을 현재 시간대에서 UTC로 저장하고, 저장된 UTC값을 현재 시간대로 변환하여 출력한다.
-(DATETIME: `YYYY-MM-DD hh:mm:ss[.fraction]`, DATE, TIME은 변환과정이 없다)
+```sql
+SET time_zone='Asia/Seoul';
+SET GLOBAL time_zone='Asia/Seoul';
+```
 
-기본적으로 각 연결의 시간대는 서버의 설정값이지만, 시간대는 연결별로 설정할 수 있다.
+타임존을 영구 설정하기위해서는 `my.cnf` 설정을 변경한다
 
-- DATETIME: 8 bytes(< 5.6.4) -> 5 bytes + fractional seconds storage
-- TIMESTAMP: 4 bytes(< 5.6.4) -> 4 bytes + fractional seconds storage
+```conf
+default-time-zone='Asia/Seoul'
+```
 
-<https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_date-format>
+### 날짜|시각 데이터타입
 
-#### 경우의 수
+<https://dev.mysql.com/doc/refman/8.0/en/datetime.html>
 
-- 고정 TimeZone
+- DATETIME
 
-  - local datetime을 (10:00+09:00) DATETIME으로 저장하고 +09 timezone으로 연결
-  - UTC datetime을 (01:00Z) DATETIME으로 저장하고 +00 timezone으로 연결
+  - storage: 8 bytes(< 5.6.4) -> 5 bytes + fractional seconds storage (6digit; microseconds)
+  - range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'
 
-- 변동 TimeZone
+- TIMESTAMP
 
-  - local datetime값을 가지고 있는 DATETIME을 `CONVERT_TZ` 사용하여 변환하고 timezone은 필요한 대로
-  - UTC datetime을 (01:00Z) TIMESTAMP로 저장하고 timezone은 필요한 대로
+  - storage: 4 bytes(< 5.6.4) -> 4 bytes + fractional seconds storage (6digit; microseconds)
+  - range: '1970-01-01 00:00:01.000000' to '2038-01-19 03:14:07.999999'
+
+> timestamp 값을 저장할 때는 로컬타임에서 UTC로 변환하여 저장하고, 조회할 때 UTC에서 로컬타임으로 변환하여 출력한다.
+> 기본적으로(별도의 설정을 하지 않았다면) 각 연결의 타임존 설정은 서버의 타임존이다.
 
 ## DDL
 
