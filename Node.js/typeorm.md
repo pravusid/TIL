@@ -329,3 +329,25 @@ export class User {
   email: string;
 }
 ```
+
+## Troubleshooting
+
+### 테스트 실행 오류
+
+테스트코드에서 db 커넥션을 생성하고 테스트를 실행할 때 다음 오류가 발생하는 경우가 있다
+
+```txt
+Test suite failed to run
+Cannot add a test after tests have started running. Tests must be defined synchronously.
+```
+
+- <https://stackoverflow.com/a/66058192>
+- <https://github.com/typeorm/typeorm/issues/1654#issuecomment-368618650>
+
+이는 orm 설정의 entities 경로에 테스트파일이 포함되어 있는 경우 발생할 수 있으며, 설정을 다음과 같이 변경한다
+
+```json
+{
+  entities: ['src/entities/**/!(*.spec.ts)']
+}
+```
