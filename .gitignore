@@ -5,6 +5,7 @@
 !.vscode/extensions.json
 
 .ipynb_checkpoints/
+.obsidian/
 
 .wiki/docs/
 .wiki/index.md

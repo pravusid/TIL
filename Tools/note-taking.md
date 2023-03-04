@@ -2,11 +2,11 @@
 
 [[digital-garden]] 구성을 위한 도구 정리
 
-## 사용
+## 구성
 
 - Database → Notion
-- Programming → VSCode + Foam → <https://pravusid.kr/wiki/> (digital garden)
-- Personal Note → VSCode + Foam
+- DigitalGarden → VSCodeFoam | Obsidian → <https://pravusid.kr/wiki/>
+- PersonalNote → VSCodeFoam | Obsidian
 - Worklog → LogSeq
 
 ---
