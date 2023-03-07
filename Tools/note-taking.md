@@ -13,7 +13,7 @@
 
 ## 노트앱 비교
 
-- `VSCode + Foam`, `Obsidian.md`
+- `VSCode & Foam`, `Obsidian.md`
 
   - plain markdown 스타일임
   - block reference 문법이 `[[file#block]]` 임
@@ -22,3 +22,19 @@
 
   - outliner 스타일임
   - block reference 문법이 `((block))` 임
+
+## Extensions
+
+### Obsidian
+
+- plugins
+  - Obsidian Linter
+
+### Logseq
+
+- plugins
+  - Block to page
+  - Logseq Markmap
+  - Tags
+- theme
+  - Dev theme
