@@ -565,25 +565,27 @@ const a: TupleToUnion<Arr>; // expected to be '1' | '2' | '3'
 type TupleToUnion<T extends unknown[]> = T[number];
 ```
 
-### Unique Array elements
+### Unique Array Elements
 
 - <https://ja.nsommer.dk/articles/type-checked-unique-arrays.html>
 - <https://stackoverflow.com/questions/57016728/is-there-a-way-to-define-type-for-array-with-unique-items-in-typescript>
 - <https://stackoverflow.com/questions/71235152/exhaustive-list-of-keys-of-type>
 
-> 컴파일타임에 tuple을 인자로 전달해야 하므로 유용하지는 않음
+> ~~컴파일타임에 tuple을 인자로 전달해야 하므로 유용하지는 않음~~
+>
+> TypeScript 5.0에 도입된 [const Type Parameters](https://github.com/microsoft/TypeScript/pull/51865)를 사용해보면 좋을듯
 
-### Exhaustive Array elements
+### Exhaustive Array Elements
 
-> curried function, class(closure)등을 활용
+> class, closure, recursive type 등을 활용
 
-#### class (or closure)
+#### class
 
-- <https://github.com/gvergnaud/ts-pattern/blob/main/src/types/Match.ts>
+<https://github.com/gvergnaud/ts-pattern/blob/main/src/types/Match.ts>
+
+#### closure
+
 - [Array containing all options of type value in Typescript](https://stackoverflow.com/a/58508661)
-
-#### curried function
-
 - [enforce-that-an-array-is-exhaustive-over-a-union-type](https://stackoverflow.com/a/55266531)
 
 ```ts
@@ -606,4 +608,58 @@ const extraFurniture = exhaustiveStringTuple<Furniture>()('chair', 'table', 'lam
 
 const furniture = exhaustiveStringTuple<Furniture>()('chair', 'table', 'lamp', 'ottoman');
 // okay
+```
+
+#### typing
+
+[how-to-exhaustive-check-the-elements-in-an-array-in-typescript](https://stackoverflow.com/a/74354311)
+
+```ts
+type Country = 'uk' | 'france' | 'india';
+
+type MapOfKeysOf<U extends string> = {
+  [key in U]: MapOfKeysOf<Exclude<U, key>>;
+};
+
+type ExhaustiveArrayOfObjects<
+  Keys extends { [key: string]: {} },
+  T = {},
+  KeyName extends string = 'value'
+> = {} extends Keys
+  ? []
+  : {
+      [key in keyof Keys]: [T & Record<KeyName, key>, ...ExhaustiveArrayOfObjects<Keys[key], T, KeyName>];
+    }[keyof Keys];
+
+type Option = {
+  label: string;
+  id: Country;
+};
+
+const data: ExhaustiveArrayOfObjects<MapOfKeysOf<Country>, Option, 'id'> = [
+  {
+    label: 'United Kingdom',
+    id: 'uk',
+  },
+  {
+    label: 'France',
+    id: 'france',
+  },
+  {
+    label: 'India',
+    id: 'india',
+  },
+];
+```
+
+### Enum Value
+
+```ts
+/**
+ * @link https://stackoverflow.com/questions/72050271/check-if-value-exists-in-string-enum-in-typescript
+ */
+export function isValueInEnum<E extends string>(strEnum: Record<string, E>) {
+  const enumValues = Object.values(strEnum) as string[];
+  return (value: string | null | undefined): value is E => !!value && enumValues.includes(value);
+}
 ```
