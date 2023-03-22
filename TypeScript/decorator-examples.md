@@ -1,6 +1,10 @@
 # TypeScript Decorator 예제
 
-## Method Hook
+## ECMAScript Decorators
+
+<https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators>
+
+## (Experimetal) Method Hook
 
 ```ts
 /* decorator */
@@ -26,9 +30,22 @@ export async function count<R>(target: HookTarget<R>) {
 }
 
 class Foo {
-  @Hook(fn => count(fn))
+  @Hook((fn) => count(fn))
   async test(name: string): Promise<void> {
     // ...
   }
+}
+```
+
+### 화살표 함수 사용시
+
+```ts
+export function Hook<R>(hookDescriptor: (hookTarget: HookTarget<R>) => Promise<R>) {
+  return (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) => {
+    const original = descriptor.value;
+    descriptor.value = (...args: unknown[]) => {
+      return hookDescriptor(original.bind(target, ...args));
+    };
+  };
 }
 ```
