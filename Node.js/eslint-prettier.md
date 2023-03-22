@@ -152,8 +152,8 @@ npm i --save-dev eslint-plugin-jest
   "jsxSingleQuote": true,
   "trailingComma": "all",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
-  "arrowParens": "avoid",
+  "bracketSameLine": false,
+  "arrowParens": "always",
   "endOfLine": "lf"
 }
 ```
