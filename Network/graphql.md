@@ -14,6 +14,7 @@
 - [GraphQL API 까짓거 운영해보지 뭐](https://tv.naver.com/v/16969996)
 - [GraphQL이 가져온 에어비앤비 프론트앤드 기술의 변천사](https://tv.naver.com/v/16970011)
 - [Domain Graph Service를 활용한 광고 서비스의 GraphQL API 구현 사례](https://tv.naver.com/v/23652389)
+- [GraphQL 잘 쓰고 계신가요? (Production-ready GraphQL)](https://youtu.be/9G2vT4C4sAY)
 
 ## Ecosystem
 
