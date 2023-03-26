@@ -65,6 +65,8 @@
 
 ## import 구문 확장자 관련
 
+- <https://github.com/microsoft/TypeScript/issues/49083>
+- <https://www.reddit.com/r/typescript/comments/uuivss/module_node16_should_support_extension_rewriting/>
 - <https://github.com/nodejs/node/issues/46006>
 - <https://github.com/microsoft/TypeScript/issues/37582>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#resolution-customization-flags>
