@@ -9,7 +9,7 @@
   - SourceCode -> Application Version (N)
   - AWS resources -> Environment (M)
 
-> 동시에 M개의 배포 가능 (배포 총 경우의 수 == N * M)
+> 동시에 M개의 배포 가능 (배포 총 경우의 수 == N x M)
 
 ## 환경구성
 
@@ -75,7 +75,17 @@ proxy_read_timeout 90s;
 - <https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/ebextensions.html>
 - <https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/command-options-general.html>
 
-### ALBv2
+#### timezone
+
+`.ebextensions/00-set-timezone.config`
+
+```yml
+commands:
+  set_time_zone:
+    command: ln -f -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+```
+
+#### ALBv2
 
 생성 환경의 로드밸런서 설정 변경
 
@@ -101,3 +111,11 @@ option_settings:
 > Remove default security group from EC2-Instance
 >
 > -- <https://github.com/aws/elastic-beanstalk-roadmap/issues/44>
+
+EC2 key pair 등록한 경우 보안그룹에 22번 포트 ingress 생성되는 것으로 보임
+
+> 등록한 key pair 삭제 (웹 콘솔에는 기능 없음)
+>
+> `aws elasticbeanstalk update-environment --environment-name $ENV --options-to-remove 'Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName'`
+>
+> -- <https://github.com/aws/elastic-beanstalk-roadmap/issues/78>
