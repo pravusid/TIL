@@ -35,6 +35,11 @@
   - env var: `sam local <start-api|invoke> --env-vars env.json`
 - cleanup: `aws cloudformation delete-stack --stack-name <name> --region <region>`
 
+### SAM permissions
+
+- <https://docs.aws.amazon.com/ko_kr/serverless-application-model/latest/developerguide/sam-permissions.html>
+- <https://aws.amazon.com/ko/blogs/compute/simplifying-serverless-permissions-with-aws-sam-connectors/>
+
 ## Using AWS Lambda with Amazon SNS
 
 CloudWatch -> SNS -> Lambda 메시지 처리
