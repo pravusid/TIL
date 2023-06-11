@@ -70,3 +70,8 @@
 - <https://github.com/nodejs/node/issues/46006>
 - <https://github.com/microsoft/TypeScript/issues/37582>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#resolution-customization-flags>
+
+## import default 관련
+
+- [TypeScript module "node16" does not work with CommonJS dependencies](https://github.com/microsoft/TypeScript/issues/49271)
+- [This expression is not callable for ESM consuming CJS with default export](https://github.com/microsoft/TypeScript/issues/52086)
