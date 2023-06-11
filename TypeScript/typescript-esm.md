@@ -73,5 +73,8 @@
 
 ## import default 관련
 
+> ESM에서 CommonJS 모듈을 불러올 때 named export, default export 선언이 섞여있고 별도의 처리가 없다면 오류 발생할 수 있음
+
+- <https://nodejs.org/docs/latest/api/esm.html#interoperability-with-commonjs>
 - [TypeScript module "node16" does not work with CommonJS dependencies](https://github.com/microsoft/TypeScript/issues/49271)
 - [This expression is not callable for ESM consuming CJS with default export](https://github.com/microsoft/TypeScript/issues/52086)
