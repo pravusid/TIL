@@ -1,6 +1,6 @@
 # Mono Repository (monorepo)
 
-Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에서 함께 관리하는 방식이다.
+Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에서 함께 관리하는 방법론이다
 
 ## refs
 
@@ -27,9 +27,6 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
 
 ## monorepo in nodejs
 
-- Node.js 환경의 monorepo 툴은 여러가지가 있지만 주로 node package manager(npm, yarn, pnpm), lerna 등을 사용한다
-- MS의 [Rush by TypeScript](https://rushjs.io/), Google의 [Bazel by Java](https://bazel.build/) 등을 사용할 수도 있다
-
 mororepo 툴이 수행하는 주요기능은 다음과 같다
 
 - 버전관리 (version)
@@ -37,17 +34,23 @@ mororepo 툴이 수행하는 주요기능은 다음과 같다
 - 스크립트 실행 (run)
 - 의존성관리 (bootstrap / hoist, symlink)
 
-> monorepo 내의 node_modules 중복이 많아질 수록 lerna의 성능이 좋지 않다
->
-> -- <https://doppelmutzi.github.io/monorepo-lerna-yarn-workspaces/>
-
 ## pnpm workspace
 
 <https://pnpm.io/workspaces>
 
+## Nx
+
+### Nx 예제
+
+- <https://github.com/ddd-by-examples/library-nestjs>
+
 ## lerna
 
 <https://github.com/lerna/lerna>
+
+> monorepo 내의 node_modules 중복이 많아질 수록 lerna의 성능이 좋지 않다
+>
+> -- <https://doppelmutzi.github.io/monorepo-lerna-yarn-workspaces/>
 
 주요 명령어는 다음과 같다
 
