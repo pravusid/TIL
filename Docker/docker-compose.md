@@ -4,7 +4,7 @@
 
 ## 설치
 
-- <https://github.com/pravusid/sys-config#prerequisite>
+- <https://github.com/pravusid/dotfiles#prerequisite>
 - <https://docs.docker.com/compose/install/>
 
 ## Compose CLI

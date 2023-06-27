@@ -1,6 +1,6 @@
 # Git Config
 
-<https://github.com/pravusid/sys-config/blob/main/.gitconfig>
+<https://github.com/pravusid/dotfiles/blob/main/.gitconfig>
 
 ## refs
 

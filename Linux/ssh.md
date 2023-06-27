@@ -26,10 +26,11 @@
 
 ### SSH 비대칭 키 발급
 
-RSA 방식의 비대칭키를 생성함
+RSA(ed25519) 방식의 비대칭키를 생성함
 
 ```sh
 ssh-keygen -t rsa -C "comment"
+ssh-keygen -t ed25519 -C "comment"
 ```
 
 Convert `BEGIN OPENSSH PRIVATE KEY` to `BEGIN RSA PRIVATE KEY`:

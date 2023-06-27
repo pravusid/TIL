@@ -119,3 +119,7 @@ EC2 key pair 등록한 경우 보안그룹에 22번 포트 ingress 생성되는 
 > `aws elasticbeanstalk update-environment --environment-name $ENV --options-to-remove 'Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName'`
 >
 > -- <https://github.com/aws/elastic-beanstalk-roadmap/issues/78>
+
+### EIP
+
+[Remove public IP on single instance deployments](https://github.com/aws/elastic-beanstalk-roadmap/issues/47)
