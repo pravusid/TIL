@@ -1,4 +1,4 @@
-# nodejs performance issue
+# nodejs performance analyzer
 
 ## clinic.js
 
@@ -18,7 +18,7 @@ nodejs 성능 문제 분석도구
 - Event Loop Delay ms
 - Active Handles
 
-#### doctor 실행
+#### Doctor 실행
 
 ```sh
 clinic doctor --on-port 'autocannon localhost:$PORT' -- node dist/main.js
@@ -50,3 +50,8 @@ clinic doctor --on-port 'autocannon localhost:$PORT' -- node dist/main.js
 - <https://github.com/grafana/k6>
 - <https://github.com/apache/jmeter>
 - <https://github.com/naver/ngrinder>
+
+## deoptexplorer-vscode
+
+- <https://devblogs.microsoft.com/typescript/introducing-deopt-explorer/>
+- <https://github.com/microsoft/deoptexplorer-vscode>
