@@ -6,6 +6,7 @@
 - [Agile 20주년 : 실패한 반란](https://news.hada.io/topic?id=4788)
 - [왜 일부 개발자들은 애자일을 싫어하는가](https://news.hada.io/topic?id=661)
 - [제품팀 vs 기능팀](https://sonujung.com/product-team-vs-function-team)
+- [애자일 개발에 관한 Atlassian의 간단명료한 가이드](https://www.atlassian.com/ko/agile)
 
 ### 스크럼
 
@@ -23,6 +24,7 @@
 - [Codestates PMB 10 | 토스 사례분석](https://brunch.co.kr/@tinleycaresbout/3)
 - [당근마켓에서의 배움 - 애자일하게 일한다는 것](https://velog.io/@jinkyuhan/애자일하게-일한다는-것)
 - [어떻게 하면 좋은 프로덕트 팀, 그로스 팀을 만들 수 있을까요?](https://blog.ab180.co/posts/good-product-growth-team)
+- [입사 첫 날 만나는 토스 문화 소개 문서](https://blog.toss.im/article/toss-team-culture)
 
 ### ShapeUp (BaseCamp)
 
