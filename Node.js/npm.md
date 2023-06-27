@@ -1,6 +1,6 @@
 # npm (node.js package manager)
 
-## npm 기초명령어
+## npm
 
 ### npm install
 
@@ -60,6 +60,25 @@ peer dependencies 확인: `npm info "패키지명@버전" peerDependencies`
 ### npm 캐시삭제
 
 `npm cache clean --force`
+
+### npmrc
+
+> npm gets its config settings from the command line, environment variables, and npmrc files.
+
+- <https://docs.npmjs.com/cli/v9/configuring-npm/npmrc>
+- <https://docs.npmjs.com/cli/v9/using-npm/config>
+
+```env
+fund=false
+audit=false
+```
+
+## pnpm
+
+### pre/post scripts
+
+- [Don't run the pre/post scripts](https://github.com/pnpm/pnpm/issues/2891)
+- <https://pnpm.io/cli/run#enable-pre-post-scripts>
 
 ## yarn
 

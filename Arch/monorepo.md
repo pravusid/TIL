@@ -36,6 +36,8 @@ mororepo 툴이 수행하는 주요기능은 다음과 같다
 
 ## pnpm workspace
 
+[[npm#pnpm]]
+
 <https://pnpm.io/workspaces>
 
 ## Nx
