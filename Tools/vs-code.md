@@ -42,7 +42,7 @@ for JavaScript, TypeScript
 }
 ```
 
-for VueJS
+for vuejs
 
 ```json
 {
@@ -51,6 +51,11 @@ for VueJS
   }
 }
 ```
+
+- <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#case-insensitive-import-sorting-in-editors>
+- <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#remove-unused-imports-and-sort-imports-commands-for-editors>
+- <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-8.html#exclude-specific-files-from-auto-imports>
+- <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-7.html#group-aware-organize-imports>
 
 ## Debugging
 
@@ -139,3 +144,13 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 
 > runtimeVersion을 지원하지 않는 version manager 사용 또는 위 옵션을 사용하지 않으려면
 > `~/.profile`, `~/.zprofile`, `~/.zshenv` 같은 환경변수 설정에서 기본 node/bin PATH를 지정한다.
+
+## Go to definition goes to `.d.ts`
+
+[[monorepo]] 구성할 때 설정필요
+
+> Can you please try adding `"declarationMap": true` to the **compilerOptions in your tsconfig**
+> This will generated a map so that go to definition can just back to the original ts source instead of the generated d.ts
+>
+> -- <https://github.com/microsoft/vscode/issues/73201>
+> -- <https://www.typescriptlang.org/tsconfig#declarationMap>
