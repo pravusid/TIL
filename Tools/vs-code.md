@@ -81,7 +81,6 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
       "type": "node",
       "request": "attach",
       "name": "Debug: Nodemon, TypeScript",
-      "protocol": "inspector",
       "port": 9229,
       "restart": true,
       "sourceMaps": true
@@ -107,7 +106,6 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
       "preLaunchTask": "npm: build",
       "program": "${workspaceFolder}/src/main.ts",
       "cwd": "${workspaceFolder}",
-      "protocol": "inspector",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
