@@ -111,3 +111,7 @@
 | 한글 자모 확장 B (Hangul Jamo Extended B)    | D7B0 | D7FF | 80    |
 
 > 완성형 한글 범위(한글소리마디): '가'(U+AC00)부터 '힣'(U+D7A3)
+
+## 각종 유니코드 공백 (space)
+
+<https://en.wikipedia.org/wiki/Space_(punctuation)#Types_of_spaces>
