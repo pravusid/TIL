@@ -663,3 +663,25 @@ export function isValueInEnum<E extends string>(strEnum: Record<string, E>) {
   return (value: string | null | undefined): value is E => !!value && enumValues.includes(value);
 }
 ```
+
+### Prettify
+
+<https://www.totaltypescript.com/concepts/the-prettify-helper>
+
+```ts
+type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {}
+```
+
+Intersected Object Type (`{ a: string } & { b: string }`)을 정리해서 보여줌
+
+> `{ a: string; b: string }`
+
+### 자동완성가능한 literal union
+
+<https://github.com/microsoft/TypeScript/issues/29729>
+
+```ts
+type LiteralUnion<T extends U, U = string> = T | (U & {})
+```
