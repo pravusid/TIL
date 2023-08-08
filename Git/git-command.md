@@ -335,8 +335,8 @@ remote에서 삭제한 branch 로컬 반영(로컬에서도 브랜치 삭제): `
 > HEAD 위치가 아닌 다른 브랜치 pull
 
 ```sh
-git fetch <remote> <another-branch>:<another-branch>
-git pull <remote> <another-branch>:<another-branch>
+git fetch <remote> <local-branch>:<remote-branch>
+git pull <remote> <local-branch>:<remote-branch>
 ```
 
 #### pull force
@@ -362,7 +362,7 @@ branch 삭제
 
 `git push origin :<branch>`
 
-> alias `[empty-localbranch]:[remotebranch]` === 비어있는 localbranch(empty reference)를 원격의 remotebranch로 push
+> alias `[empty-local-branch]:[remote-branch]` === 비어있는 local-branch(empty reference)를 원격의 remote-branch로 push
 
 #### Remote Tag
 
