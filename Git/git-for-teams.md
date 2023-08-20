@@ -2,6 +2,8 @@
 
 ## 커밋 메시지
 
+<https://www.conventionalcommits.org/ko/>
+
 ```text
 add: 게시물 조회기능
 ───  ─────────────
