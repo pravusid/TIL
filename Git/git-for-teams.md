@@ -107,3 +107,26 @@ release 브랜치에 커밋된 버그수정은 다시 develop 브랜치에 백�
 각각의 커밋은 새로운 부모를 갖게 되면서 완전히 새로운 확인자를 할당받게 된다.
 특히 새로운 부모를 할당받는 커밋이 이전에 원격 저장소를 통해 공유된 적이 있다면 혼란을 초래한다.
 새로운 확인자 뿐만아니라 커밋을 재생할 때마다 충돌 해결에 시간이 소요된다.
+
+## GitFlow
+
+- <https://docs.github.com/ko/get-started/quickstart/github-flow>
+- <https://docs.gitlab.com/ee/topics/gitlab_flow.html#production-branch-with-gitlab-flow>
+- <https://medium.com/burdaforward/state-of-ci-cd-and-the-dreaded-git-flow-fce92d04fb07>
+- [Git Flow 가 CI/CD 와 어울리지 않는 이유 by David Farley](https://creampuffy.tistory.com/183)
+- [Git Flow에서 트렁크 기반 개발으로 나아가기 - 맘시터 기술블로그](https://tech.mfort.co.kr/blog/2022-08-05-trunk-based-development/)
+- [더 나은 Git 워크플로우를 향해서](https://black7375.tistory.com/92)
+
+## Sapling
+
+Meta에서 사용하는 Git 호환 버전 관리
+
+- [Sapling - 사용자 친화적이고 스케일러블한 Git 호환 버전 관리](https://news.hada.io/topic?id=7887)
+- <https://sapling-scm.com/>
+
+### Git Branchless
+
+Meta의 Sapling과 유사한 Git 워크플로우 지원도구
+
+- [Git-Branchless - 브랜치를 사용하지 않는 Git 워크플로우 지원 도구 모음](https://news.hada.io/topic?id=6970)
+- <https://github.com/arxanas/git-branchless>
