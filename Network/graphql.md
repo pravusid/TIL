@@ -33,7 +33,7 @@
 - <https://github.com/apollographql/apollo-server>
 - <https://github.com/prisma-labs/graphql-yoga>
 
-#### DataLoader
+### DataLoader
 
 - <https://github.com/graphql/dataloader>
 - <https://shopify.engineering/solving-the-n-1-problem-for-graphql-through-batching>
@@ -47,7 +47,7 @@ GraphQL에서만 사용할 수 있는 것은 아니므로, 다른 곳에서도 �
 
 <https://www.prisma.io/docs/guides/performance-and-optimization/query-optimization-performance#solving-the-n1-problem>
 
-##### DataLoader 작동방식
+#### DataLoader 작동방식
 
 <https://github.com/graphql/dataloader#batching>
 
@@ -73,7 +73,7 @@ const lastInvited = await userLoader.load(user.lastInvitedID);
 console.log(`User 2 last invited ${lastInvited}`);
 ```
 
-##### DataLoader 일괄처리 함수
+#### DataLoader 일괄처리 함수
 
 > 일괄처리함수는 데이터의 키 배열을 받아서 키에 대응하는 데이터 또는 오류객체 배열의 프로미스를 반환한다.
 > 로더는 일괄처리함수에서 `this` context로 제공된다.
@@ -92,7 +92,7 @@ const loader = new DataLoader(batchFunction);
 - 반환 값의 배열 크기는 입력받은 키 배열의 크기와 같아야 한다
 - 반환 값의 배열 순서는 입력받는 키의 순서에 대응해야 한다
 
-##### DataLoader 캐싱
+#### DataLoader 캐싱
 
 <https://github.com/graphql/dataloader#caching>
 
