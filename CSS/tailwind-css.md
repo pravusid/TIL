@@ -2,10 +2,18 @@
 
 <https://tailwindcss.com/>
 
+## Origin
+
+- <https://adamwathan.me/css-utility-classes-and-separation-of-concerns/>
+- <https://news.ycombinator.com/item?id=21553496>
+- [The evolution of scalable CSS](https://frontendmastery.com/posts/the-evolution-of-scalable-css/)
+  - [(번역) 확장 가능한 CSS의 진화](https://ykss.netlify.app/translation/the_evolution_of_scalable_css/)
+
 ## Refs
 
 - <https://darkghosthunter.medium.com/tailwind-the-base-the-components-and-the-utilities-a81137c52534>
-- <https://ykss.netlify.app/translation/the_pros_and_cons_of_tailwindcss/>
+- [The Pros and Cons of TailwindCSS](https://webartisan.info/the-pros-and-cons-of-tailwindcss)
+  - [(번역) Tailwind CSS의 장점과 단점](https://ykss.netlify.app/translation/the_pros_and_cons_of_tailwindcss/)
 - <https://fe-developers.kakaoent.com/2022/220303-tailwind-tips/>
 - <https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/>
 
