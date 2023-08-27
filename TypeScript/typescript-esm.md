@@ -71,6 +71,7 @@
 - <https://github.com/nodejs/node/issues/46006>
 - <https://github.com/microsoft/TypeScript/issues/37582>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#resolution-customization-flags>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/#decorator-metadata>
 
 ## import default 관련
 

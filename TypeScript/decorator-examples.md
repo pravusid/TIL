@@ -2,7 +2,10 @@
 
 ## ECMAScript Decorators
 
-<https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators>
+[[typescript-handbook-decorators]]
+
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/#decorator-metadata>
 
 ## (Experimetal) Method Hook
 
