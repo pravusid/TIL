@@ -52,14 +52,17 @@ Flux, Elm, immutable.js, baobab, RxJS 등의 영향을 받아 만들어짐
 ### Redux 원칙
 
 - Single Source of Truth
+
   - 어플리케이션의 state를 위해 단 하나의 store(상태트리)를 사용
 
 - State is Read-only
+
   - app에서 store의 state를 직접 변경할 수 없고 변경을 위해서는 action을 emit 하여 dispatch되어야 함
   - view나 네트워크 콜백이 직접적으로 상태를 변경하지 않는다, 대신 상태를 변경하려는 의도를 전달한다
   - 모든 변경은 중앙에 집중되어 있고 변경은 순차적으로 이루어지므로 어더한 경쟁 상태도 없다
 
 - Changes are made with pure Function
+
   - action객체를 처리하는 함수를 reducer라고 부른다
   - reducer는 정보를 받아서 state를 어떻게 업데이트할지 정의한다(이전상태를 받아 다음 상태를 반환)
   - reducer는 '순수 함수'로 작성되어야 함 : 비동기 처리, 네트워크 및 DB접근, 인수변경, API사용(Math.random()...) => 불가
@@ -116,7 +119,7 @@ Redux에서 action creators는 단순히 action을 반환한다
 function addTodo(text) {
   return {
     type: ADD_TODO,
-    text
+    text,
   };
 }
 ```
@@ -127,7 +130,7 @@ function addTodo(text) {
 function addTodoWithDispatch(text) {
   const action = {
     type: ADD_TODO,
-    text
+    text,
   };
   dispatch(action);
 }
@@ -143,8 +146,8 @@ dispatch(completeTodo(index));
 대신 bound action creator를 만들어서 dispatch를 동시에 처리 할 수 있다
 
 ```js
-const boundAddTodo = text => dispatch(addTodo(text));
-const boundCompleteTodo = index => dispatch(completeTodo(index));
+const boundAddTodo = (text) => dispatch(addTodo(text));
+const boundCompleteTodo = (index) => dispatch(completeTodo(index));
 
 boundAddTodo(text);
 boundCompleteTodo(index);
@@ -164,18 +167,18 @@ action creators는 비동기일 수 있으며 side effect가 존재할 수 있�
  * action types
  */
 
-export const ADD_TODO = "ADD_TODO";
-export const TOGGLE_TODO = "TOGGLE_TODO";
-export const SET_VISIBILITY_FILTER = "SET_VISIBILITY_FILTER";
+export const ADD_TODO = 'ADD_TODO';
+export const TOGGLE_TODO = 'TOGGLE_TODO';
+export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
 
 /*
  * other constants
  */
 
 export const VisibilityFilters = {
-  SHOW_ALL: "SHOW_ALL",
-  SHOW_COMPLETED: "SHOW_COMPLETED",
-  SHOW_ACTIVE: "SHOW_ACTIVE"
+  SHOW_ALL: 'SHOW_ALL',
+  SHOW_COMPLETED: 'SHOW_COMPLETED',
+  SHOW_ACTIVE: 'SHOW_ACTIVE',
 };
 
 /*
@@ -251,11 +254,11 @@ reducer가 순수함수인 것이 매우 중요하다. reducer 내부에서 절�
 redux는 최초 reducer를 `undefined` 상태와 함께 호출된다.
 
 ```js
-import { VisibilityFilters } from "./actions";
+import { VisibilityFilters } from './actions';
 
 const initialState = {
   visibilityFilter: VisibilityFilters.SHOW_ALL,
-  todos: []
+  todos: [],
 };
 
 function todoApp(state = initialState, action) {
@@ -267,7 +270,7 @@ function todoApp(state = initialState, action) {
 이제는 `SET_VISIBILITY_FILTER`를 처리해보자. 할 일은 `visibilityFilter` 상태를 변경하는 것 뿐이다.
 
 ```js
-import { SET_VISIBILITY_FILTER, VisibilityFilters } from "./actions";
+import { SET_VISIBILITY_FILTER, VisibilityFilters } from './actions';
 
 // ...
 
@@ -275,7 +278,7 @@ function todoApp(state = initialState, action) {
   switch (action.type) {
     case SET_VISIBILITY_FILTER:
       return Object.assign({}, state, {
-        visibilityFilter: action.filter
+        visibilityFilter: action.filter,
       });
     default:
       return state;
@@ -300,12 +303,7 @@ function todoApp(state = initialState, action) {
 `SET_VISIBILITY_FILTER`와 마찬가지로 `ADD_TODO` 및 `TOGGLE_TODO` action을 가져온 다음 reducer를 확장하여 이를 처리한다.
 
 ```js
-import {
-  ADD_TODO,
-  TOGGLE_TODO,
-  SET_VISIBILITY_FILTER,
-  VisibilityFilters
-} from "./actions";
+import { ADD_TODO, TOGGLE_TODO, SET_VISIBILITY_FILTER, VisibilityFilters } from './actions';
 
 // ...
 
@@ -313,7 +311,7 @@ function todoApp(state = initialState, action) {
   switch (action.type) {
     case SET_VISIBILITY_FILTER:
       return Object.assign({}, state, {
-        visibilityFilter: action.filter
+        visibilityFilter: action.filter,
       });
     case ADD_TODO:
       return Object.assign({}, state, {
@@ -321,20 +319,20 @@ function todoApp(state = initialState, action) {
           ...state.todos,
           {
             text: action.text,
-            completed: false
-          }
-        ]
+            completed: false,
+          },
+        ],
       });
     case TOGGLE_TODO:
       return Object.assign({}, state, {
         todos: state.todos.map((todo, index) => {
           if (index === action.index) {
             return Object.assign({}, todo, {
-              completed: !todo.completed
+              completed: !todo.completed,
             });
           }
           return todo;
-        })
+        }),
       });
     default:
       return state;
@@ -354,13 +352,8 @@ function todoApp(state = initialState, action) {
 코드에서 `todos`와 `visibilityFilter`는 완전히 독립적으로 갱신되는 것으로 보인다.
 
 ```js
-import { combineReducers } from "redux";
-import {
-  ADD_TODO,
-  TOGGLE_TODO,
-  SET_VISIBILITY_FILTER,
-  VisibilityFilters
-} from "./actions";
+import { combineReducers } from 'redux';
+import { ADD_TODO, TOGGLE_TODO, SET_VISIBILITY_FILTER, VisibilityFilters } from './actions';
 const { SHOW_ALL } = VisibilityFilters;
 
 function visibilityFilter(state = SHOW_ALL, action) {
@@ -379,14 +372,14 @@ function todos(state = [], action) {
         ...state,
         {
           text: action.text,
-          completed: false
-        }
+          completed: false,
+        },
       ];
     case TOGGLE_TODO:
       return state.map((todo, index) => {
         if (index === action.index) {
           return Object.assign({}, todo, {
-            completed: !todo.completed
+            completed: !todo.completed,
           });
         }
         return todo;
@@ -398,7 +391,7 @@ function todos(state = [], action) {
 
 const todoApp = combineReducers({
   visibilityFilter,
-  todos
+  todos,
 });
 
 export default todoApp;
@@ -427,8 +420,8 @@ reducer가 있으면 store를 쉽게 만들 수 있다.
 이전 섹션에서 `combineReducers()`를 사용하여 어러 reducer를 하나로 결합하였는데, 이를 `createStore()`에 전달한다.
 
 ```js
-import { createStore } from "redux";
-import todoApp from "./reducers";
+import { createStore } from 'redux';
+import todoApp from './reducers';
 const store = createStore(todoApp);
 ```
 
@@ -443,12 +436,7 @@ const store = createStore(todoApp, window.STATE_FROM_SERVER);
 사용예시
 
 ```js
-import {
-  addTodo,
-  toggleTodo,
-  setVisibilityFilter,
-  VisibilityFilters
-} from "./actions";
+import { addTodo, toggleTodo, setVisibilityFilter, VisibilityFilters } from './actions';
 
 // Log the initial state
 console.log(store.getState());
@@ -458,9 +446,9 @@ console.log(store.getState());
 const unsubscribe = store.subscribe(() => console.log(store.getState()));
 
 // Dispatch some actions
-store.dispatch(addTodo("Learn about actions"));
-store.dispatch(addTodo("Learn about reducers"));
-store.dispatch(addTodo("Learn about store"));
+store.dispatch(addTodo('Learn about actions'));
+store.dispatch(addTodo('Learn about reducers'));
+store.dispatch(addTodo('Learn about store'));
 store.dispatch(toggleTodo(0));
 store.dispatch(toggleTodo(1));
 store.dispatch(setVisibilityFilter(VisibilityFilters.SHOW_COMPLETED));
@@ -504,19 +492,19 @@ let previousState = {
   todos: [
     {
       text: 'Read the docs.',
-      complete: false
-    }
-  ]
-}
+      complete: false,
+    },
+  ],
+};
 
 // 수행될 action(할 일에 추가)
 let action = {
   type: 'ADD_TODO',
-  text: 'Understand the flow.'
-}
+  text: 'Understand the flow.',
+};
 
 // reducer는 다음 애플리케이션 상태를 반환한다
-let nextState = todoApp(previousState, action)
+let nextState = todoApp(previousState, action);
 ```
 
 reducer는 순수 함수이다. 오로지 다음 상태만 계산한다. 따라서 완벽히 예측 가능해야 한다.
@@ -535,25 +523,25 @@ Redux는 각각의 상태 트리 분기를 관리하는 reducer로 분할 할 �
 ```js
 function todos(state = [], action) {
   // Somehow calculate it...
-  return nextState
+  return nextState;
 }
 
 function visibleTodoFilter(state = 'SHOW_ALL', action) {
   // Somehow calculate it...
-  return nextState
+  return nextState;
 }
 
 let todoApp = combineReducers({
   todos,
-  visibleTodoFilter
-})
+  visibleTodoFilter,
+});
 ```
 
 action을 발생시키면, `combineReducers`는 두 개의 reducer를 호출하는 `todoApp`을 반환한다.
 
 ```js
-let nextTodos = todos(state.todos, action)
-let nextVisibleTodoFilter = visibleTodoFilter(state.visibleTodoFilter, action)
+let nextTodos = todos(state.todos, action);
+let nextVisibleTodoFilter = visibleTodoFilter(state.visibleTodoFilter, action);
 ```
 
 그런 다음 두 결과 집합을 단일 상태트리로 결합한다
@@ -561,8 +549,8 @@ let nextVisibleTodoFilter = visibleTodoFilter(state.visibleTodoFilter, action)
 ```js
 return {
   todos: nextTodos,
-  visibleTodoFilter: nextVisibleTodoFilter
-}
+  visibleTodoFilter: nextVisibleTodoFilter,
+};
 ```
 
 `combineReducers()`는 편리한 helper이지만 반드시 사용하지 않아도 되고, 각자의 root reducer를 작성할 수 있다.
@@ -591,20 +579,20 @@ redux 앱은 Angular, Ember, vanilla JavaScript와 함께 만들 수 있다.
 
 ```js
 // index.js
-import React from 'react'
-import ReactDOM from 'react-dom'
-import TodoApp from './TodoApp'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TodoApp from './TodoApp';
 
-import { Provider } from 'react-redux'
-import store from './redux/store'
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
-const rootElement = document.getElementById('root')
+const rootElement = document.getElementById('root');
 ReactDOM.render(
   <Provider store={store}>
     <TodoApp />
   </Provider>,
   rootElement
-)
+);
 ```
 
 #### Connecting the Components
@@ -614,10 +602,12 @@ react-redux는 Redux store 값을 읽을 수 있도록 `connect` 함수를 제�
 `connect` 함수는 두 인자를 취한다(둘 다 optional 이다)
 
 - `mapStateToProps`
+
   - store 상태가 변할 때 마다 호출된다
   - 전체 store state를 받아서 컴포넌트가 필요로 하는 데이터를 반환해야 한다
 
 - `mapDispatchToProps`
+
   - 파라미터는 함수 또는 객체가 될 수 있다
   - 함수인 경우 컴포넌트 생성시 한 번 호출된다. `dispatch`를 인자로 받아서 `dispatch`를 사용하여 액션을 보내는 함수로 구성된 객체를 반환해야 한다.
   - action creators로 구성된 객체인 경우, 각 action creator는 호출될 때 자동으로 action을 dispatch하는 prop 함수로 전환된다.
@@ -627,25 +617,19 @@ react-redux는 Redux store 값을 읽을 수 있도록 `connect` 함수를 제�
 ```js
 const mapStateToProps = (state, ownProps) => ({
   // ... computed data from state and optionally ownProps
-})
+});
 
 const mapDispatchToProps = {
   // ... normally is an object full of action creators
-}
+};
 
 // `connect`는 wrapping할 컴포넌트를 받아들일 새로운 함수를 반환한다
-const connectToStore = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+const connectToStore = connect(mapStateToProps, mapDispatchToProps);
 // connectToStore 함수는 연결된 wrapper 컴포넌트를 반환한다
-const ConnectedComponent = connectToStore(Component)
+const ConnectedComponent = connectToStore(Component);
 
 // 일반적으로 다음 방법을 통해 두 작업을 한번에 처리할 수 있다
-connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Component)
+connect(mapStateToProps, mapDispatchToProps)(Component);
 ```
 
 먼저 `<AddTodo />`를 다루어보자. 새로운 할 일을 추가하려면 `store`에 대한 변경사항을 트리거해야 한다.
@@ -655,16 +639,16 @@ connect(
 
 ```js
 // redux/actions.js
-import { ADD_TODO } from './actionTypes'
+import { ADD_TODO } from './actionTypes';
 
-let nextTodoId = 0
-export const addTodo = content => ({
+let nextTodoId = 0;
+export const addTodo = (content) => ({
   type: ADD_TODO,
   payload: {
     id: ++nextTodoId,
-    content
-  }
-})
+    content,
+  },
+});
 
 // ... other actions
 ```
@@ -675,17 +659,14 @@ action creator를 `connect`로 전달하면, 컴포넌트는 이를 prop으로 �
 // components/AddTodo.js
 
 // ... other imports
-import { connect } from 'react-redux'
-import { addTodo } from '../redux/actions'
+import { connect } from 'react-redux';
+import { addTodo } from '../redux/actions';
 
 class AddTodo extends React.Component {
   // ... component implementation
 }
 
-export default connect(
-  null,
-  { addTodo }
-)(AddTodo)
+export default connect(null, { addTodo })(AddTodo);
 ```
 
 `<AddTodo />` 컴포넌트는 부모 컴포넌트인 `<Connect(AddTodo) />`로 감싸진다.
@@ -696,40 +677,34 @@ export default connect(
 ```js
 // components/AddTodo.js
 
-import React from 'react'
-import { connect } from 'react-redux'
-import { addTodo } from '../redux/actions'
+import React from 'react';
+import { connect } from 'react-redux';
+import { addTodo } from '../redux/actions';
 
 class AddTodo extends React.Component {
   // ...
 
   handleAddTodo = () => {
     // dispatches actions to add todo
-    this.props.addTodo(this.state.input)
+    this.props.addTodo(this.state.input);
 
     // sets state back to empty string
-    this.setState({ input: '' })
-  }
+    this.setState({ input: '' });
+  };
 
   render() {
     return (
       <div>
-        <input
-          onChange={e => this.updateInput(e.target.value)}
-          value={this.state.input}
-        />
+        <input onChange={(e) => this.updateInput(e.target.value)} value={this.state.input} />
         <button className="add-todo" onClick={this.handleAddTodo}>
           Add Todo
         </button>
       </div>
-    )
+    );
   }
 }
 
-export default connect(
-  null,
-  { addTodo }
-)(AddTodo)
+export default connect(null, { addTodo })(AddTodo);
 ```
 
 이제 `<AddTodo />`는 store에 연결되었다. 할 일을 추가하면 변경을 store에 전달하는 action이 dispatch된다.
@@ -801,10 +776,10 @@ selector 함수에서 복잡한 조회 또는 데이터 계산을 캡슐화 하�
 
 어떤 종류의 컴포넌트를 사용하는지에 따라 `connect`를 호출하는 다양한 방법이 있다.
 
-| | store 구독하지 않음 | store 구독함 |
-| --- | --- | --- |
-| Action Creators 주입하지 않음 | `connect()(Component)` | `connect(mapStateToProps)(Component)` |
-| Action Creators 주입 | `connect(null, mapDispatchToProps)(Component)` | `connect(mapStateToProps, mapDispatchToProps)(Component)` |
+|                               | store 구독하지 않음                            | store 구독함                                              |
+| ----------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Action Creators 주입하지 않음 | `connect()(Component)`                         | `connect(mapStateToProps)(Component)`                     |
+| Action Creators 주입          | `connect(null, mapDispatchToProps)(Component)` | `connect(mapStateToProps, mapDispatchToProps)(Component)` |
 
 ##### store를 구독하지도 않고 action creators를 주입하지도 않는 경우
 
@@ -815,7 +790,7 @@ selector 함수에서 복잡한 조회 또는 데이터 계산을 캡슐화 하�
 
 ```js
 // ... Component
-export default connect()(Component) // Component will receive `dispatch` (just like our <TodoList />!)
+export default connect()(Component); // Component will receive `dispatch` (just like our <TodoList />!)
 ```
 
 ##### store를 구독하지만 action creators를 주입하지 않는 경우
@@ -827,8 +802,8 @@ export default connect()(Component) // Component will receive `dispatch` (just l
 
 ```js
 // ... Component
-const mapStateToProps = state => state.partOfState
-export default connect(mapStateToProps)(Component)
+const mapStateToProps = (state) => state.partOfState;
+export default connect(mapStateToProps)(Component);
 ```
 
 ##### store를 구독하지 않지만 action creators는 주입하는 경우
@@ -839,12 +814,9 @@ export default connect(mapStateToProps)(Component)
 - `mapDispatchToProps`와 함께 주입한 각 action creators를 props로 받아, 호출되면 자동으로 action을 dispatch함
 
 ```js
-import { addTodo } from './actionCreators'
+import { addTodo } from './actionCreators';
 // ... Component
-export default connect(
-  null,
-  { addTodo }
-)(Component)
+export default connect(null, { addTodo })(Component);
 ```
 
 ##### store를 구독하고 action creators도 주입하는 경우
@@ -855,11 +827,8 @@ export default connect(
 - `mapDispatchToProps`와 함께 주입한 각 action creators를 props로 받아, 호출되면 자동으로 action을 dispatch함
 
 ```js
-import * as actionCreators from './actionCreators'
+import * as actionCreators from './actionCreators';
 // ... Component
-const mapStateToProps = state => state.partOfState
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Component)
+const mapStateToProps = (state) => state.partOfState;
+export default connect(mapStateToProps, actionCreators)(Component);
 ```
