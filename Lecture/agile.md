@@ -7,6 +7,9 @@
 - [왜 일부 개발자들은 애자일을 싫어하는가](https://news.hada.io/topic?id=661)
 - [제품팀 vs 기능팀](https://sonujung.com/product-team-vs-function-team)
 - [애자일 개발에 관한 Atlassian의 간단명료한 가이드](https://www.atlassian.com/ko/agile)
+- [EoA pt.1 가장 효과적인 애자일 프레임워크 13가지](https://yozm.wishket.com/magazine/detail/2177/)
+- [EoA pt.2 애자일 프레임워크 제대로 활용하는 법](https://yozm.wishket.com/magazine/detail/2196/)
+- [EoA pt.3 토스에서 요즘 '애자일'하는 방법](https://yozm.wishket.com/magazine/detail/2203/)
 
 ### 스크럼
 
@@ -16,6 +19,7 @@
 - [빅테크의 프로젝트 관리 방식, 그리고 스크럼의 기이한 부재](https://velog.io/@dlwocks31/translation-project-management-at-big-tech)
 - [큰 기술 회사들은 어떻게 프로젝트를 진행할까](https://news.hada.io/topic?id=6747)
 - [왜 당신의 일일 스탠드업 미팅은 실패하는가](https://news.hada.io/topic?id=8352)
+- [스크럼은 암 입니다](https://news.hada.io/topic?id=10612)
 
 ## 기업사례
 

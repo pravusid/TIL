@@ -34,6 +34,12 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
   - [Part 3: Configuring a Monorepo](https://javascript.plainenglish.io/2e4608701964)
   - [Part 4: Managing a Monorepo](https://javascript.plainenglish.io/a48adc99823e)
 
+- Pnpm and Nx monorepo
+
+  - <https://www.javierbrea.com/blog/pnpm-nx-monorepo-01/>
+  - <https://www.javierbrea.com/blog/pnpm-nx-monorepo-02/>
+  - <https://www.javierbrea.com/blog/pnpm-nx-monorepo-03/>
+
 ## vids
 
 - [우리는 하나다! 모노레포 with pnpm](https://www.youtube.com/watch?v=Bycg5w5qXfE)
