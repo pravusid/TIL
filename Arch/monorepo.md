@@ -44,19 +44,25 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
 
 - [우리는 하나다! 모노레포 with pnpm](https://www.youtube.com/watch?v=Bycg5w5qXfE)
 - [일백개 패키지 모노레포 우아하게 운영하기](https://www.youtube.com/watch?v=Ix9gxqKOatY)
-- [모노레포_마이크로 아키텍처를 지향하며](https://www.youtube.com/watch?v=CsbBuE_MF2U)
+- [모노레포 마이크로 아키텍처를 지향하며](https://www.youtube.com/watch?v=CsbBuE_MF2U)
 - [모노레포 희망편 (Feat.Polylith)](https://www.youtube.com/watch?v=CCo7T3m6LLM)
 
 ## monorepo in nodejs
 
 mororepo 툴이 수행하는 주요기능은 다음과 같다
 
-- 버전 관리 (version)
 - 배포 관리 (publish)
 - 스크립트 실행 (run)
 - 의존성 관리 (root 레벨에서 monorepo 전체 의존성을 관리하는 경우)
+- ~~버전 관리 (version)~~ (툴에 따라서 지원하지 않을 수 있음)
 
-## PackageManagers
+### Version Managers
+
+- <https://github.com/changesets/changesets>
+- <https://nx.dev/recipes/adopting-nx/lerna-and-nx#version-management-&-publishing>
+- <https://turbo.build/repo/docs/handbook/publishing-packages/versioning-and-publishing>
+
+## Package Managers
 
 주요 패키지매니저(npm, pnpm, yarn)들은 워크스페이스 기능을 지원한다.
 워크스페이스 옵션을 지정하면 지정한 경로의 패키지를 우선 참조하여, 패키지를 설치했을 때 `node_moudles`에 패키지 링크를 생성한다.
