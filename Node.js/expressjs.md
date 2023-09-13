@@ -8,26 +8,37 @@
 
 앱 내부에서 `process.env.NODE_ENV` 값에 할당되어 express 배포시 최적화 처리됨
 
+## Middleware
+
+> Express is a routing and middleware web framework that has minimal functionality of its own:
+> An Express application is essentially a series of middleware function calls.
+
+미들웨어의 `next` 함수는 다음과 같이 동작한다
+
+- 미들웨어는 정의한 순서대로 순차 실행되며 `next` 함수로 흐름을 조절한다
+- 미들웨어 파라미터 중 `next` 함수를 실행하면 다음 미들웨어를 호출한다
+- `next` 함수에 `'route'` 문자열을 제외한 값을 전달하여 실행하는 경우 나머지 미들웨어를 건너뛰고 에러핸들러를 실행한다
+- `next('route')`를 호출하는 경우 다음 라우트 핸들러를 호출한다: `app.get('/path', handlerA, handlerB)` 일때 A -> B
+- `next` 함수를 호출하지 않으면 응답(`res`)을 처리해야 하며, 둘 다 하지 않으면 요청은 중단된 상태로 남는다 (left hanging)
+
 ## ErrorHandling
 
-Express.js 4버전에서는 Router에서 Promise처리를 지원하지 않음
+- Express.js 4버전에서는 Router에서 Promise처리를 지원하지 않음
+- 따라서 Router에서 Async Function을 사용하려면 두 방법 중 하나를 선택해야 함
 
-따라서 Router에서 Async Function을 사용하려면 두 방법 중 하나를 선택해야 함
-
-### 라이브러리 사용
+### 방법1. 라이브러리 사용
 
 - [`express-async-errors`](https://github.com/davidbanham/express-async-errors)
 - [`express-promise-router`](https://github.com/express-promise-router/express-promise-router)
 
-### Wrapping Route Functions
+### 방법2. Wrapping Route Functions
 
 ```ts
 export const errorHandler = (error: Error, request: Request, response: Response, next: NextFunction) => {
   response.status(500).json({ message: error.message });
-  next();
 };
 
-type AsyncFunc = (req: Request, resp: Response, next: NextFunction) => Promise<any>;
+type AsyncFunc = (req: Request, resp: Response, next: NextFunction) => Promise<unknown>;
 
 export const asyncHandler: (func: AsyncFunc) => AsyncFunc = (func) => {
   return (request, response, next) =>
@@ -49,6 +60,22 @@ this.routes.get(
   asyncHandler((req, resp) => this.foobar(req, resp))
 );
 ```
+
+### Error Handling Middleware
+
+<https://expressjs.com/en/guide/error-handling.html>
+
+> 에러핸들러는 4개의 인자 `(err, req, res, next)`를 갖는 미들웨어이다
+
+사용자정의 에러핸들러를 정의할 때 다음 사항에 유의해야 한다
+
+- **반드시 미들웨어 및 라우트 호출을 정의한 뒤 마지막으로 정의해야 한다** (정의한 순서대로 실행되므로)
+- express 미들웨어 마지막에는 항상 기본 에러핸들러가 실행된다 (별도로 정의하지 않아도 실행된다)
+- 사용자정의 에러핸들러에서 `next(err)` 함수를 호출하는 경우 기본 에러핸들러가 실행된다
+- 사용자정의 에러핸들러에서 `next` 함수를 호출하지 않는다면 반드시 응답(`res`객체)을 처리해야 한다
+
+> 과거 nodejs는 비동기 호출을 위해 콜백을 사용했고, 콜백의 첫 파라미터는 항상 optional error 였기 때문에
+> `next` 함수를 콜백으로 바로 넘기는 경우 오류가 발생한 경우 에러핸들러를 간단하게 호출할 수 있었을 거라 추측된다
 
 ## merging interfaces in TypeScript
 
