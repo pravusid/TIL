@@ -93,13 +93,14 @@ compose 파일의 기본 경로는 `./docker-compose.yml`이다.
 <https://docs.docker.com/compose/compose-file/>
 
 ```yml
-version: "3.7"
-services:
+version: '3'
+name: my_project_name
 
+services:
   redis:
     image: redis:alpine
     ports:
-      - "6379"
+      - '6379'
     networks:
       - frontend
     deploy:
@@ -123,7 +124,7 @@ services:
   vote:
     image: dockersamples/examplevotingapp_vote:before
     ports:
-      - "5000:80"
+      - '5000:80'
     networks:
       - frontend
     depends_on:
@@ -138,7 +139,7 @@ services:
   result:
     image: dockersamples/examplevotingapp_result:before
     ports:
-      - "5001:80"
+      - '5001:80'
     networks:
       - backend
     depends_on:
@@ -171,10 +172,10 @@ services:
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
-      - "8080:8080"
+      - '8080:8080'
     stop_grace_period: 1m30s
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - '/var/run/docker.sock:/var/run/docker.sock'
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -191,17 +192,18 @@ volumes:
 
 ```yml
 version: '3'
+name: my_project_name
 
 services:
   mysql:
     image: mysql:8
     container_name: dco_mysql
     ports:
-      - 3306:3306
+      - '3306:3306'
     volumes:
       - ./initdb/:/docker-entrypoint-initdb.d/
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_ROOT_PASSWORD=root@mysql
       - MYSQL_USER=idpravus
       - MYSQL_PASSWORD=idpravus@mysql
       - LANG=C.UTF-8
@@ -213,7 +215,7 @@ services:
     image: redis:6
     container_name: dco_redis
     ports:
-      - 6379:6379
+      - '6379:6379'
     command:
       - --requirepass idpravus@redis
 ```
