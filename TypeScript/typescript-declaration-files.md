@@ -19,7 +19,9 @@
 예를 들어, jQuery를 사용했다면 단순히 `$` 변수를 참조하여 변수를 사용할 수 있다.
 
 ```ts
-$(() => { console.log('hello!'); });
+$(() => {
+  console.log('hello!');
+});
 ```
 
 일반적으로 글로벌 라이브러리 문서에서 HTML 스크립트 태그로 어떻게 라이브러리를 사용하는지 볼 수 있다.
@@ -39,16 +41,16 @@ UMD 라이브러리 설명서는 글로벌 라이브러리 설명서와 구별�
 
 ```ts
 function createGreeting(s) {
-  return "Hello, " + s;
+  return 'Hello, ' + s;
 }
 ```
 
 또는
 
 ```ts
-window.createGreeting = function(s) {
-  return "Hello, " + s;
-}
+window.createGreeting = function (s) {
+  return 'Hello, ' + s;
+};
 ```
 
 글로벌 라이브러리 코드를 살펴보면 일반적으로 다음 내용을 볼 수 있다.
@@ -84,13 +86,13 @@ ES6, CommonJS 및 RequireJS는 모듈 가져오기와 비슷한 개념을 가지
 예를 들어, JavaScript CommonJS(Node.js)에서
 
 ```js
-var fs = require("fs");
+var fs = require('fs');
 ```
 
 TypeScript나 ES6에서 `import` 키워드를 동일한 목적으로 사용할 수 있다
 
 ```ts
-import fs = require("fs");
+import fs = require('fs');
 ```
 
 일반적으로 모듈러 라이브러리 문서에 다음 중 하나가 포함되어 있다
@@ -110,7 +112,7 @@ define(..., ['someLib'], function(someLib) {
 모듈러 라이브러리는 일반적으로 다음 중 일부를 포함한다
 
 - Unconditional calls to require or define
-- Declarations like import * as a from 'b'; or export c;
+- Declarations like import \* as a from 'b'; or export c;
 - Assignments to exports or module.exports
 
 매우 드물게 다음을 포함한다
@@ -129,7 +131,7 @@ Moment.js와 같은 인기있는 라이브러리는 이 방식으로 작성되�
 예를 들어 Node.js 또는 RequireJS를 사용하면 다음과 같이 작성할 수 있다.
 
 ```ts
-import moment = require("moment");
+import moment = require('moment');
 console.log(moment.format());
 ```
 
@@ -170,7 +172,7 @@ JQuery, Moment.js, lodash와 같은 인기 라이브러리는 UMD 패키지로 �
 모듈이 함수처럼 호출된다면 `module-function.d.ts`를 사용한다
 
 ```ts
-var x = require("foo");
+var x = require('foo');
 // Note: calling 'x' as a function
 var y = x(42);
 ```
@@ -178,9 +180,9 @@ var y = x(42);
 모듈을 `new` 키워드로 생성할 수 있는 경우 `module-class.d.ts`를 사용한다
 
 ```ts
-var x = require("bar");
+var x = require('bar');
 // Note: using 'new' operator on the imported variable
-var y = new x("hello");
+var y = new x('hello');
 ```
 
 모듈이 함수처럼 호출가능하거나 `new` 키워드로 생성가능하지 않다면 `module.d.ts`를 사용한다.
@@ -208,7 +210,7 @@ global-modifying 모듈과 마찬가지로 런타임 충돌가능성이 높아�
 글로벌 플러그인은 일반적으로 문서에서 쉽게 식별할 수 있다
 
 ```ts
-var x = "hello, world";
+var x = 'hello, world';
 // Creates new methods on built-in types
 console.log(x.startsWithHello());
 
@@ -234,11 +236,11 @@ Global-modifying 모듈은 일반적으로 문서에서 쉽게 식별할 수 있
 
 ```ts
 // 'require' call that doesn't use its return value
-var unused = require("magic-string-time");
+var unused = require('magic-string-time');
 /* or */
-require("magic-string-time");
+require('magic-string-time');
 
-var x = "hello, world";
+var x = 'hello, world';
 // Creates new methods on built-in types
 console.log(x.startsWithHello());
 
@@ -270,7 +272,7 @@ function getThing(): someLib.thing;
 라이브러리가 모듈에 의존하는 경우 `import` 문을 사용한다
 
 ```ts
-import * as moment from "moment";
+import * as moment from 'moment';
 function getThing(): moment;
 ```
 
@@ -308,7 +310,7 @@ import * as someLib from 'someLib';
 
 ```ts
 declare namespace cats {
-  interface KittySettings { }
+  interface KittySettings {}
 }
 ```
 
@@ -316,7 +318,7 @@ declare namespace cats {
 
 ```ts
 // at top-level
-interface CatsKittySettings { }
+interface CatsKittySettings {}
 ```
 
 또한 이 방식은 선언파일을 사용자들을 방해하지 않고 라이브러리를 UMD로 전환할 수 있음을 보장한다.
@@ -334,7 +336,7 @@ TypeScript는 로더에 의존하지 않기 때문에 컴파일 타임에 정책
 예를 들어, 일반적인 express 사용법은 다음과 같다.
 
 ```ts
-import exp = require("express");
+import exp = require('express');
 var app = exp();
 ```
 
@@ -362,10 +364,10 @@ myLib
 이는 다음처럼 불러올 수 있다
 
 ```ts
-var a = require("myLib");
-var b = require("myLib/foo");
-var c = require("myLib/bar");
-var d = require("myLib/bar/baz");
+var a = require('myLib');
+var b = require('myLib/foo');
+var c = require('myLib/bar');
+var d = require('myLib/bar/baz');
 ```
 
 선언 파일 구조는 다음과 같아야 한다
@@ -386,7 +388,7 @@ var d = require("myLib/bar/baz");
 전역 변수 `foo`는 존재하는 위젯 수를 포함한다
 
 ```ts
-console.log("Half the number of widgets is " + (foo / 2));
+console.log('Half the number of widgets is ' + foo / 2);
 ```
 
 > `declare var`를 사용하여 변수를 선언한다. 변수가 읽기 전용이면 `declare const`를 사용할 수 있다.
@@ -402,7 +404,7 @@ declare var foo: number;
 `greet` 함수를 호출하여 사용자에게 인사를 한다
 
 ```ts
-greet("hello, world");
+greet('hello, world');
 ```
 
 > `declare funtion`을 사용하여 함수를 선언한다
@@ -416,8 +418,8 @@ declare function greet(greeting: string): void;
 전역 변수 `myLib`에는 인사 생성을 위한 `makeGreeting` 함수와 지금 까지 작성된 인사말 수를 나타내는 `numberOfGreetings` 프로퍼티가 있다.
 
 ```ts
-let result = myLib.makeGreeting("hello, world");
-console.log("The computed greeting is:" + result);
+let result = myLib.makeGreeting('hello, world');
+console.log('The computed greeting is:' + result);
 
 let count = myLib.numberOfGreetings;
 ```
@@ -437,7 +439,7 @@ declare namespace myLib {
 
 ```ts
 let x: Widget = getWidget(43);
-let arr: Widget[] = getWidget("all of them");
+let arr: Widget[] = getWidget('all of them');
 ```
 
 > 다음과 같이 선언한다
@@ -458,8 +460,8 @@ declare function getWidget(s: string): Widget[];
 
 ```ts
 greet({
-  greeting: "hello world",
-  duration: 4000
+  greeting: 'hello world',
+  duration: 4000,
 });
 ```
 
@@ -481,11 +483,11 @@ declare function greet(setting: GreetingSettings): void;
 
 ```ts
 function getGreeting() {
-  return "howdy";
+  return 'howdy';
 }
 class MyGreeter extends Greeter {}
 
-greet("hello");
+greet('hello');
 greet(getGreeting);
 greet(new MyGreeter());
 ```
@@ -504,9 +506,9 @@ declare function greet(g: GreetingLike): void;
 `.log(...)`에 LogOptions을 사용하고 `.alert(...)`에 AlertOptions를 사용할 수 있다.
 
 ```ts
-const g = new Greeter("Hello");
+const g = new Greeter('Hello');
 g.log({ verbose: true });
-g.alert({ modal: false, title: "Current Greeting" });
+g.alert({ modal: false, title: 'Current Greeting' });
 ```
 
 > organize types를 위해 namespace를 사용한다
@@ -545,13 +547,13 @@ declare namespace GreetingLib.Options {
 `Greeter` 객체를 인스턴스화 하여 greeter를 생성하거나, 상속하여 사용자 정의 greeter를 만들 수 있다
 
 ```ts
-const myGreeter = new Greeter("hello, world");
-myGreeter.greeting = "howdy";
+const myGreeter = new Greeter('hello, world');
+myGreeter.greeting = 'howdy';
 myGreeter.showGreeting();
 
 class SpecialGreeter extends Greeter {
   constructor() {
-    super("Very special greetings");
+    super('Very special greetings');
   }
 }
 ```
@@ -653,7 +655,7 @@ interface Fetcher {
 ```ts
 /* WRONG */
 declare function beforeAll(action: () => void, timeout?: number): void;
-declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void
+declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void;
 
 /* OK */
 declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void;
@@ -726,7 +728,7 @@ fn(x.diff);
 var x: Example;
 // When written with overloads, incorrectly an error because of passing 'undefined' to 'string'
 // When written with optionals, correctly OK
-x.diff("something", true ? undefined : "hour");
+x.diff('something', true ? undefined : 'hour');
 ```
 
 #### Union 타입 사용
@@ -745,7 +747,7 @@ interface Moment {
 /* OK */
 interface Moment {
   utcOffset(): number;
-  utcOffset(b: number|string): Moment;
+  utcOffset(b: number | string): Moment;
 }
 ```
 
@@ -754,7 +756,7 @@ interface Moment {
 ```ts
 function fn(x: string): void;
 function fn(x: number): void;
-function fn(x: number|string) {
+function fn(x: number | string) {
   // 별도의 오버로드로 작성되었다면, 부정확함 -> 오류
   // union 타입으로 작성되었다면, 정확함 -> 허용됨
   return moment().utcOffset(x);
@@ -899,8 +901,7 @@ console.log(a.x + a.y); // OK
 예를 들어, 클래스에 static 멤버를 추가할 수 있다
 
 ```ts
-class C {
-}
+class C {}
 // ... elsewhere ...
 namespace C {
   export let x: number;
@@ -915,15 +916,15 @@ let y = C.x; // OK
 
 ```ts
 namespace X {
-  export interface Y { }
-  export class Z { }
+  export interface Y {}
+  export class Z {}
 }
 
 // ... elsewhere ...
 namespace X {
   export var Y: number;
   export namespace Z {
-    export class C { }
+    export class C {}
   }
 }
 type X = string;
@@ -948,7 +949,7 @@ type X = string;
 
 ### Using with `export =` or `import`
 
-`export`와 `import` 선언은 내보내기나 가져오기 대상 전체(*all meanings*)를 가져온다
+`export`와 `import` 선언은 내보내기나 가져오기 대상 전체(_all meanings_)를 가져온다
 
 ## Publishing
 
@@ -1006,10 +1007,31 @@ npm install --save @types/lodash
 설치한 이후 불러와서 사용하기만 하면 된다
 
 ```ts
-import * as _ from "lodash";
-_.padStart("Hello TypeScript!", 20, " ");
+import * as _ from 'lodash';
+_.padStart('Hello TypeScript!', 20, ' ');
 ```
 
 ### 검색
 
 대부분의 경우 타입 선언패키지는 npm 패키지 이름과 같으며 접두사가 `@types/`이지만 필요한 경우 <https://aka.ms/types>에서 직접 찾을 수 있다.
+
+## Examples
+
+### process.env
+
+- <https://stackoverflow.com/questions/45194598/using-process-env-in-typescript>
+- <https://typescript.tv/errors/#TS2669>
+
+`global.d.ts`
+
+```ts
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      FOO_ENV_VAR: string;
+    }
+  }
+}
+
+export {};
+```
