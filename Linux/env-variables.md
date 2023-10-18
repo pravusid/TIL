@@ -2,6 +2,11 @@
 
 `env` 명령어로 출력 및 관리 할 수 있다
 
+## references
+
+- <https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout>
+- <https://superuser.com/questions/187639/zsh-not-hitting-profile>
+
 ## 계층
 
 ### Single user mode
@@ -127,7 +132,24 @@ export PATH="$PATH:$APP_HOME:$APP_HOME/bin"
 export APP_HOME="/APP경로"
 ```
 
-## references
+## XDG Base Directory
 
-- <https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout>
-- <https://superuser.com/questions/187639/zsh-not-hitting-profile>
+- <https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html>
+- <https://wiki.archlinux.org/title/XDG_Base_Directory>
+
+### XDG Base Directory 기본경로
+
+- There is a single base directory relative to which user-specific data files should be written.
+  - This directory is defined by the environment variable `$XDG_DATA_HOME`
+- There is a single base directory relative to which user-specific configuration files should be written.
+  - This directory is defined by the environment variable `$XDG_CONFIG_HOME`
+- There is a single base directory relative to which user-specific state data should be written.
+  - This directory is defined by the environment variable `$XDG_STATE_HOME`
+- There is a set of preference ordered base directories relative to which data files should be searched.
+  - This set of directories is defined by the environment variable `$XDG_DATA_DIRS`
+- There is a set of preference ordered base directories relative to which configuration files should be searched.
+  - This set of directories is defined by the environment variable `$XDG_CONFIG_DIRS`
+- There is a single base directory relative to which user-specific non-essential (cached) data should be written.
+  - This directory is defined by the environment variable `$XDG_CACHE_HOME`
+- There is a single base directory relative to which user-specific runtime files and other file objects should be placed.
+  - This directory is defined by the environment variable `$XDG_RUNTIME_DIR`
