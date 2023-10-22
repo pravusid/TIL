@@ -1,3 +1,7 @@
+---
+tags: nodejs/db, orm
+---
+
 # TypeORM
 
 <http://typeorm.io>
@@ -348,6 +352,6 @@ Cannot add a test after tests have started running. Tests must be defined synchr
 
 ```json
 {
-  entities: ['src/entities/**/!(*.spec.ts)']
+  "entities": ["src/entities/**/!(*.spec.ts)"]
 }
 ```

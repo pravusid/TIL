@@ -1,3 +1,7 @@
+---
+tags: nodejs/db, orm
+---
+
 # Sequelize.js
 
 <http://docs.sequelizejs.com/>
@@ -11,8 +15,8 @@
 이를 `number`로 변경하려면 `sequelize`의 경우 다음처럼 적용한다
 
 ```js
-const sequelize = new Sequelize("database", "username", "password", {
-  dialect: "mysql",
+const sequelize = new Sequelize('database', 'username', 'password', {
+  dialect: 'mysql',
   dialectOptions: { decimalNumbers: true },
 });
 ```
@@ -28,7 +32,7 @@ sequelize-typescript: <https://github.com/RobinBuschmann/sequelize-typescript>
 ### Model definition
 
 ```ts
-import { Table, Column, Model, HasMany } from "sequelize-typescript";
+import { Table, Column, Model, HasMany } from 'sequelize-typescript';
 
 @Table
 class Person extends Model<Person> {
@@ -46,7 +50,7 @@ class Person extends Model<Person> {
 ### Model Attributes 추출
 
 ```ts
-import { Model } from "sequelize-typescript";
+import { Model } from 'sequelize-typescript';
 
 export type Props<T> = Omit<T, keyof Model<T>>;
 ```
@@ -67,21 +71,19 @@ Entity에서 해당 프로퍼티를 override 한다면 `Props<T>` 타입으로 �
 - <https://github.com/sequelize/sequelize/issues/11571>
 
 ```ts
-import PQueue from "p-queue";
-import { Transaction } from "sequelize";
+import PQueue from 'p-queue';
+import { Transaction } from 'sequelize';
 
 const transactionQueue = new PQueue({ concurrency: connectionPoolSize - 1 });
 
-export const dbTransaction = <T>(
-  fn: (transaction: Transaction) => Promise<T>
-) =>
+export const dbTransaction = <T>(fn: (transaction: Transaction) => Promise<T>) =>
   transactionQueue.add(() =>
     sequelize.transaction(async (transaction) => {
       try {
         const result = await fn(transaction);
         return result;
       } catch (e) {
-        if (e.parent?.code === "ER_LOCK_DEADLOCK") {
+        if (e.parent?.code === 'ER_LOCK_DEADLOCK') {
           await (transaction as any).cleanup();
         }
         throw e;
