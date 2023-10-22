@@ -10,26 +10,6 @@ JavaScript Runtime
 2. Event driven : 순차적으로 작업을 실행하는 것이 아니라 작업에서 무엇을 처리해야하는지만 알려주고(callback) 시간이 걸리는 처리들을 EventListener로 위임한다.
 3. Nonblocking I/O / Asynchronous : single thread로 작동하므로 다중 요청 처리를 위해서 비동기 nonblocking I/O로 처리가 이루어짐
 
-## 설치
-
-<https://nodejs.org/en/download/package-manager/>
-
-## 삭제
-
-A-1: npm, npm global modules 모두 삭제
-
-`npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs npm -g rm`
-
-A-2: 삭제에 관리자 권한이 필요하면
-
-`npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs sudo npm -g rm`
-
-B: 설치할 때 사용한 `package-manager` 통해 `nodejs` 삭제
-
-C: nodejs 관련 파일 삭제
-
-`sudo rm -rf /usr/local/share/man/man1/node* /usr/local/lib/dtrace/node.d ~/.npm ~/.node-gyp`
-
 ## http
 
 <https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/>
