@@ -47,7 +47,7 @@ Mono Repository(이하 monorepo)는 관련 패키지들을 단일 저장소에�
 - [모노레포 마이크로 아키텍처를 지향하며](https://www.youtube.com/watch?v=CsbBuE_MF2U)
 - [모노레포 희망편 (Feat.Polylith)](https://www.youtube.com/watch?v=CCo7T3m6LLM)
 
-## monorepo in nodejs
+## monorepo features
 
 mororepo 툴이 수행하는 주요기능은 다음과 같다
 
@@ -56,7 +56,7 @@ mororepo 툴이 수행하는 주요기능은 다음과 같다
 - 의존성 관리 (root 레벨에서 monorepo 전체 의존성을 관리하는 경우)
 - ~~버전 관리 (version)~~ (툴에 따라서 지원하지 않을 수 있음)
 
-### Version Managers
+## Version Managers
 
 - <https://github.com/changesets/changesets>
 - <https://nx.dev/recipes/adopting-nx/lerna-and-nx#version-management-&-publishing>
@@ -83,11 +83,15 @@ mororepo 툴이 수행하는 주요기능은 다음과 같다
 
 <https://pnpm.io/workspaces>
 
+[`pnpm-workspace.yaml`](https://pnpm.io/pnpm-workspace_yaml)
+
 ### npm workspace
 
 [[npm#npm]]
 
-<https://docs.npmjs.com/cli/v9/using-npm/workspaces>
+<https://docs.npmjs.com/cli/v10/using-npm/workspaces>
+
+[`package-json`](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#workspaces)
 
 ## Nx
 
@@ -103,6 +107,10 @@ mororepo 툴이 수행하는 주요기능은 다음과 같다
 npx create-nx-workspace --pm pnpm
 ```
 
+### Nx Configuration
+
+[`nx.json`](https://nx.dev/reference/nx-json)
+
 ## Turborepo
 
 <https://turbo.build/repo/docs>
@@ -115,6 +123,10 @@ npx create-nx-workspace --pm pnpm
 ```sh
 npx create-turbo@latest
 ```
+
+### Turborepo Configuration
+
+[`turbo.json`](https://turbo.build/repo/docs/reference/configuration)
 
 ## lerna
 
@@ -147,7 +159,7 @@ npx create-turbo@latest
 
 > Run an npm script in each package that contains that script
 
-## monorepo 적용 (w/ lerna, github package registry)
+### monorepo 적용 (w/ lerna, github package registry)
 
 <https://viewsource.io/publishing-and-installing-private-github-packages-using-yarn-and-lerna/>
 
@@ -158,9 +170,7 @@ lerna init --independent
 
 프로젝트 루트에 `package.json` 파일과 `lerna.json` 설정파일이 생성된다
 
-### `package.json`
-
-#### root
+#### `package.json` - root
 
 ```json
 {
@@ -182,7 +192,7 @@ lerna init --independent
 workspace 목록을 별도 표기하여 빌드 실행 우선순위를 지정할 수 있음
 (이 경우 lerna 커맨드 실행시 패키지 중복오류가 발생할 수 있으므로 전체 경로(`*`)만 사용하고 스크립트 실행등은 lerna run 사용)
 
-#### in packages
+#### `package.json` - packages
 
 <https://docs.npmjs.com/cli/v6/configuring-npm/package-json#repository>
 
@@ -206,7 +216,7 @@ workspace 목록을 별도 표기하여 빌드 실행 우선순위를 지정할 
 }
 ```
 
-### `lerna.json`
+#### `lerna.json`
 
 다음 내용을 추가한다
 
@@ -227,10 +237,6 @@ workspace 목록을 별도 표기하여 빌드 실행 우선순위를 지정할 
   }
 }
 ```
-
-### monorepo 내부의 다른 모듈 사용
-
-다른 모듈을 사용하기 위해서는 `dependencies` 선언한 뒤 `import` 해서 사용한다
 
 ## Rush
 
