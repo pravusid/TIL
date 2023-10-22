@@ -2,6 +2,7 @@
 
 - <https://github.com/microsoft/vscode-recipes>
 - <https://code.visualstudio.com/docs>
+- <https://code.visualstudio.com/docs/getstarted/settings#_default-settings>
 
 ## TypeScript SDK
 
