@@ -99,6 +99,12 @@ option_settings:
     SecurityGroups: <SG_ID>,<OTHER_SG_ID>
 ```
 
+### 구성 옵션
+
+#### 환경 속성
+
+<https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/custom-platforms-scripts.html>
+
 ## 참고
 
 ### timeout
