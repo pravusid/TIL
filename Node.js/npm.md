@@ -169,7 +169,7 @@ Zero Install
 yarn cache clean
 ```
 
-## package publishing
+## npm package publishing
 
 TS 기준
 
@@ -203,3 +203,13 @@ TS 기준
   }
 }
 ```
+
+### npm package publishing & lockfile
+
+<https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json#package-lockjson-vs-npm-shrinkwrapjson>
+
+> The difference is that package-lock.json cannot be published, and it will be ignored if found in any place other than the root project.
+> In contrast, npm-shrinkwrap.json allows publication, and defines the dependency tree from the point encountered.
+> This is not recommended unless deploying a CLI tool or otherwise using the publication process for producing production packages.
+
+그러나, 패키지매니저에 따라 `npm-shrinkwrap` 파일 역시 무시될 수 있다. <https://pnpm.io/limitations>
