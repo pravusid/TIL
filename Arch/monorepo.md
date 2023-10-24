@@ -94,12 +94,15 @@ pnpm에서는 다음 옵션을 고려해볼 수 있다
 
 - <https://pnpm.io/cli/deploy>
 - <https://pnpm.io/npmrc#shared-workspace-lockfile>
+- `pnpm install --filter` - 참고 (<https://yarnpkg.com/features/workspaces#focused-installs>)
 
 관련 문서
 
 - [Bundling up project for deployment](https://github.com/pnpm/pnpm/issues/2198)
 - [A deploy command](https://github.com/pnpm/pnpm/issues/4378)
-- <https://github.com/vercel/next.js/issues/45258>
+- [NextJS 13 (latest) package not working in monorepos](https://github.com/vercel/next.js/issues/45258)
+- [Allow pnpm install --filter to install dependencies of workspace dependencies](https://github.com/pnpm/pnpm/issues/4493)
+- [In a monorepo: pnpm install --filter "package..." doesn't install root directory packages](https://github.com/pnpm/pnpm/issues/5179)
 
 ### npm workspace
 
