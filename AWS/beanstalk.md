@@ -11,7 +11,7 @@
 
 > 동시에 M개의 배포 가능 (배포 총 경우의 수 == N x M)
 
-## 환경구성
+## 환경 구성
 
 ### 리눅스 플랫폼 확장
 
@@ -104,6 +104,12 @@ option_settings:
 #### 환경 속성
 
 <https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/custom-platforms-scripts.html>
+
+### 저장된 구성
+
+<https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/environment-configuration-savedconfig.html>
+
+`save configuration` 값은 S3에 저장된다: `s3://elasticbeanstalk-{region}-{account}/resources/templates/{application}/`
 
 ## 참고
 
