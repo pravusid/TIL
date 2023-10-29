@@ -86,14 +86,30 @@ Working Directory 각 파일들은 상태에 따라 다음에 위치한다
 
   - 태그 삭제: `git tag -d <tag>`
 
-## Log / Reflog
+## Reflog
 
-- reflog 출력: `git reflog`
+- <https://git-scm.com/docs/git-reflog>
+- <https://git-scm.com/book/ko/v2/Git의-내부-운영-및-데이터-복구>
+
+> Reference logs, or "reflogs", record when the tips of branches and other references were updated in the local repository.
+> Reflogs are useful in various Git commands, to specify the old value of a reference.
+> For example, HEAD@{2} means "where HEAD used to be two moves ago"
+
+- reflog 출력: `git reflog [ref:-HEAD]`
 - reflog 남기기: `git update-ref`
 
-## Reset / Revert
+## Reset
 
-- Unstaging: `git reset HEAD <filename>`
+<https://git-scm.com/book/ko/v2/Git-도구-Reset-명확히-알고-가기>
+
+- commit level: `git reset [--soft|--hard] [commit:-HEAD]`
+- file level: `git reset [commit:-HEAD] [paths]`
+
+reset 명령은 정해진 순서대로 세 개의 트리를 덮어써 나가다가 옵션에 따라 지정한 곳에서 멈춘다.
+
+- HEAD가 가리키는 브랜치를 옮긴다. (--soft 옵션이 붙으면 여기까지)
+- Index를 HEAD가 가리키는 상태로 만든다. (--hard 옵션이 붙지 않았으면 여기까지)
+- 워킹 디렉토리를 Index의 상태로 만든다.
 
 ## Merge
 
