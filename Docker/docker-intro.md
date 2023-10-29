@@ -24,6 +24,10 @@ Docker는 리눅스 컨테이너 기술을 기반으로 두기 때문에 Windows
 
 도커 daemon은 root 소유의 유닉스 소켓을 사용하므로 사용자를 docker 그룹에 추가함
 
+> 추가하지 않았을 때 다음 오류가 발생할 수 있다
+>
+> `Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock`
+
 ```sh
 # docker 그룹생성 (이미 생성되어 있음)
 sudo groupadd docker
@@ -35,6 +39,9 @@ sudo usermod -aG docker $USER # 현재 접속중인 사용자에게 권한주기
 # WARNING: Error loading config file: /home/user/.docker/config.json ... permission denied
 sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
 sudo chmod g+rwx "$HOME/.docker" -R
+
+# 재시작 하거나 다음 명령어 실행
+newgrp docker
 ```
 
 도커 서비스 시작
