@@ -1,4 +1,4 @@
-# CSS Flexbox
+# CSS flexbox
 
 ## Examples
 
