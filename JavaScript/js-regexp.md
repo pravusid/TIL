@@ -1,13 +1,17 @@
-# JavaScript 정규표현식
+# JavaScript 정규표현식 (regexp)
 
-- <https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/%EC%A0%95%EA%B7%9C%EC%8B%9D>
+- <https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Regular_expressions>
 - <https://github.com/ziishaned/learn-regex/blob/master/translations/README-ko.md>
+- <https://en.wikipedia.org/wiki/Regular_expression>
+- <https://www.regular-expressions.info/quickstart.html>
 
-## 예약어
+## 예약어 (특수문자)
 
 `[ ] ( ) { } . * + ? ^ $ \ |`
 
 ## 정규표현식 규칙
+
+<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet>
 
 정규표현식 리터럴은 `const regexp = /ab+c/;` 와 같이 슬래쉬(`/`)로 감싸는 패턴을 사용한다
 
@@ -23,7 +27,7 @@
 | `{n}`    | 정확히 n번 반복                     | `/ap{2}/` => **app**le             |
 | `{n,}`   | n번 이상 반복                       | `/ap{1,}/` => **app**le            |
 | `{n,m}`  | 최소 n번, 최대 m번                  | `/ap{2,4}/` => **apppp**ppple      |
-| `x|y`    | x 또는 y                            | `/p|l/` => a**ppppl**e             |
+| `x\|y`   | x 또는 y                            | `/p\|l/` => a**ppppl**e            |
 | `[xyz]`  | 대괄호 안의 모든문자                | `/a[px]e/` => a**p**e or a**x**e   |
 | `[^xyz]` | 대괄호 안의 문자를 제외한 모든문자  | `/a[^px]/` => axe or ape           |
 | `.`      | 줄 바꿈을 제외한 모든문자           | `/.pp/` => **app**le               |
@@ -38,16 +42,26 @@
 | `\S`     | 공백 문자가 아닌 모든문자           |                                    |
 | `\t`     | 탭                                  |                                    |
 
+### Character classes
+
+<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes>
+
+> 대부분의 정규표현식 처리기에서 character class 내부는 다른규칙이 적용되고, 사용할 수 있는 특수문자는 다음과 같다.
+> `backslash \, caret ^, hyphen -`
+>
+> -- <https://www.regular-expressions.info/charclass.html>
+> -- <https://stackoverflow.com/questions/19976018>
+
 ### capturing & non-capturing
 
 | 문자      | 일치                                          | 예제                                                               |
 | --------- | --------------------------------------------- | ------------------------------------------------------------------ |
 | `(x)`     | x를 묶고(하위패턴), `\위치`에 대응            | `/(foo) (bar) \1 \2/`는 "foo bar foo bar"는 정규식 순서대로 대응함 |
 | `(?:x)`   | x를 묶지만(하위패턴), `\위치`에 대응 하지않음 | `/(?:foo){1,2}/` 처럼 문자를 묶어 하위패턴을 정의할 때 사용        |
-| `x(?=y)`  | y 앞의 x에 대응 (lookahead)                   | `[T|t]he(?=\sfat)` => **The** fat cat sat on the mat.              |
-| `x(?!y)`  | not y 앞의 x에 대응 (negated lookahead)       | `[T|t]he(?!\sfat)` => The fat cat sat on **the** mat.              |
-| `(?<=y)x` | y 뒤의 x에 대응 (lookbehind)                  | `(?<=[T|t]he\s)(fat|mat)` => The **fat** cat sat on the **mat**.   |
-| `(?<!y)x` | not y 뒤의 x에 대응 (negated lookbehind)      | `(?<![T|t]he\s)(cat)` => The cat sat on **cat**.                   |
+| `x(?=y)`  | y 앞의 x에 대응 (lookahead)                   | `[T\|t]he(?=\sfat)` => **The** fat cat sat on the mat.             |
+| `x(?!y)`  | not y 앞의 x에 대응 (negated lookahead)       | `[T\|t]he(?!\sfat)` => The fat cat sat on **the** mat.             |
+| `(?<=y)x` | y 뒤의 x에 대응 (lookbehind)                  | `(?<=[T\|t]he\s)(fat\|mat)` => The **fat** cat sat on the **mat**. |
+| `(?<!y)x` | not y 뒤의 x에 대응 (negated lookbehind)      | `(?<![T\|t]he\s)(cat)` => The cat sat on **cat**.                  |
 
 ### flag
 
