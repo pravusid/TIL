@@ -16,6 +16,14 @@
   - [(번역) Tailwind CSS의 장점과 단점](https://ykss.netlify.app/translation/the_pros_and_cons_of_tailwindcss/)
 - <https://fe-developers.kakaoent.com/2022/220303-tailwind-tips/>
 - <https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/>
+- [Tailwind CSS에서 혼란을 방지하기 위한 5가지 모범 사례](https://velog.io/@lky5697/5-best-practices-for-preventing-chaos-in-tailwind-css)
+
+## Plugins & Components
+
+- <https://github.com/tailwindlabs/tailwindcss-forms>
+- <https://github.com/shadcn-ui/ui>
+- <https://github.com/saadeghi/daisyui>
+- <https://github.com/mdbootstrap/TW-Elements>
 
 ## install
 
