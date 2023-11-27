@@ -164,7 +164,7 @@ app.listen();
 - path: 필드 처리중 오류가 발생한 경우 해당 필드 (null 응답을 클라이언트에서 구분하기 위함 == 런타임 오류 or 실제 null 응답)
 - extensions: 추가 정보입력을 위한 값 (자유롭게 사용할 수 있고, 구현체에 따라 다름)
 
-### Error in Apollo Server
+### GraphQLError in Apollo Server
 
 > v4 부터 `ApolloError` 클래스 및 `toApolloError` 함수는 사라짐
 >
@@ -172,3 +172,11 @@ app.listen();
 
 - <https://github.com/apollographql/apollo-server/blob/main/packages/server/src/errors/index.ts>
 - <https://www.apollographql.com/docs/apollo-server/data/errors>
+
+### GraphQLError in Apollo Client Core
+
+[error-policies](https://www.apollographql.com/docs/react/data/error-handling/#graphql-error-policies) 설정 값에 따라 오류처리방식이 다르다
+
+> 기본정책(`none`)에서 오류가 발생하면 `throw new ApolloError({ graphQLErrors: getGraphQLErrorsFromResult(result) });` 코드가 실행된다
+>
+> -- <https://github.com/apollographql/apollo-client/blob/main/src/core/QueryManager.ts>
