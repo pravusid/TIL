@@ -18,14 +18,19 @@
 - <https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/>
 - [Tailwind CSS에서 혼란을 방지하기 위한 5가지 모범 사례](https://velog.io/@lky5697/5-best-practices-for-preventing-chaos-in-tailwind-css)
 
-## Plugins & Components
+## Libraries
 
-- <https://github.com/ben-rogerson/twin.macro>
-- <https://github.com/dcastil/tailwind-merge>
+### Plugins & Components
+
 - <https://github.com/tailwindlabs/tailwindcss-forms>
 - <https://github.com/shadcn-ui/ui>
 - <https://github.com/saadeghi/daisyui>
 - <https://github.com/mdbootstrap/TW-Elements>
+
+### Tools
+
+- <https://github.com/ben-rogerson/twin.macro>
+- <https://github.com/dcastil/tailwind-merge>
 
 ## install
 
