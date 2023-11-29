@@ -80,6 +80,8 @@
 
 > 자동완성 기능을 다양한 상황에서 사용하려면 별도의 설정이 필요하다
 
+- <https://github.com/tailwindlabs/tailwindcss/issues/7553>
 - <https://github.com/tailwindlabs/tailwindcss/discussions/7554>
 - <https://github.com/ben-rogerson/twin.macro/discussions/227>
 - <https://github.com/paolotiu/tailwind-intellisense-regex-list>
+- <https://github.com/lukeed/clsx?tab=readme-ov-file#tailwind-support>
