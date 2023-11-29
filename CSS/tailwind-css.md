@@ -20,6 +20,8 @@
 
 ## Plugins & Components
 
+- <https://github.com/ben-rogerson/twin.macro>
+- <https://github.com/dcastil/tailwind-merge>
 - <https://github.com/tailwindlabs/tailwindcss-forms>
 - <https://github.com/shadcn-ui/ui>
 - <https://github.com/saadeghi/daisyui>
@@ -68,3 +70,10 @@
 
 > 브라우저간의 불일치를 완화하고, 직접작성한 디자인 시스템을 쉽게 적용하기 위해서 tailwind에서 정의한 기본 스타일을 말한다.
 > 보통은 브라우저 기본 스타일을 제거하는 형태로 정의되어 있고, tailwind 설정에서 비활성화 할 수도 있다.
+
+## VisualStudioCode Extension
+
+> 자동완성 기능을 다양한 상황에서 사용하려면 별도의 설정이 필요하다
+
+- <https://github.com/tailwindlabs/tailwindcss/discussions/7554>
+- <https://github.com/paolotiu/tailwind-intellisense-regex-list>
