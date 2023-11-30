@@ -10,6 +10,54 @@ JavaScript Runtime
 2. Event driven : 순차적으로 작업을 실행하는 것이 아니라 작업에서 무엇을 처리해야하는지만 알려주고(callback) 시간이 걸리는 처리들을 EventListener로 위임한다.
 3. Nonblocking I/O / Asynchronous : single thread로 작동하므로 다중 요청 처리를 위해서 비동기 nonblocking I/O로 처리가 이루어짐
 
+## Node.js CLI
+
+<https://nodejs.org/dist/latest-v20.x/docs/api/cli.html>
+
+### `--enable-source-maps`
+
+- Added in: v15.11.0, v14.18.0 (Stable)
+- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--enable-source-maps>
+- <https://github.com/evanw/node-source-map-support?tab=readme-ov-file#node-12120>
+
+### `--import=module`
+
+- Added in: v19.0.0 (Experimental)
+- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--importmodule>
+
+> Follows ECMAScript module resolution rules.
+> Use --require to load a CommonJS module. Modules preloaded with --require will run before modules preloaded with --import.
+
+### `--env-file=config`
+
+- Added in: v20.6.0 (Active development)
+- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--env-fileconfig>
+
+```bash
+# You can pass multiple --env-file arguments. Subsequent files override pre-existing variables defined in previous files.
+node --env-file=.env --env-file=.development.env index.js
+```
+
+### `--watch`, `--watch-path`
+
+- Added in: v18.11.0, v16.19.0 (Experimental)
+- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--watch>
+- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--watch-path>
+- `--watch-preserve-output`: Disable the clearing of the console when watch mode restarts the process.
+
+```bash
+# This flag cannot be combined with --check, --eval, --interactive, --test, or the REPL.
+node --watch-path=./src --watch-path=./tests index.js
+```
+
+### `--max-old-space-size=SIZE` (in megabytes)
+
+<https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--max-old-space-sizesize-in-megabytes>
+
+```bash
+NODE_OPTIONS="--max-old-space-size=4096" node index.js
+```
+
 ## http
 
 <https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/>
