@@ -1,6 +1,7 @@
 # HTML Layout
 
-문서 구조관련 HTML 태그는 [[html-semantic]] 참고
+- 문서 구조관련 HTML 태그는 [[html-semantic]] 참고
+- 레이아웃을 위한 주요 CSS 기능은 [[css-position]], [[css-flexbox]], [[css-grid]] 참고
 
 ## 헤더, 본문형
 
