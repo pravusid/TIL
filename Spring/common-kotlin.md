@@ -1,5 +1,10 @@
 # Spring Framework with Kotlin
 
+## Refs
+
+- <https://docs.spring.io/spring-framework/reference/languages/kotlin.html>
+- [코프링 프로젝트 투입 일주일 전: 주니어 개발자의 코틀린 도입 이야기](https://www.inflearn.com/course/lecture?courseSlug=인프콘2023-다시보기&unitId=177910)
+
 ## Starter
 
 Kotlin Spring MVC 프로젝트 생성은 <https://start.spring.io/>에서 가능하다
