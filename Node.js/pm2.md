@@ -17,7 +17,7 @@ pm2 update
 ## Cluster
 
 ```sh
-// cluster: n (n개), -n (core 수 - n개)
+# cluster: n (n개), -n (core 수 - n개)
 pm2 start app.js -i <number-instances>
 
 # 한번에 종료하지 않고 클러스터 내에서 순차적으로 재시작
@@ -57,6 +57,10 @@ pm2 reloadLogs
 
 # Send system signal to script
 pm2 sendSignal SIGUSR2 my-app
+
+# Serve static file over http
+# To automatically redirect all queries to the index.html use the --spa option
+pm2 serve <path> <port> [--spa]
 ```
 
 ## Ecosystem File
