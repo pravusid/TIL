@@ -1,5 +1,7 @@
 # Linting and Formatting
 
+> <https://eslint.org/blog/2023/10/deprecating-formatting-rules/> [(번역)](https://velog.io/@typo/deprecation-of-formatting-rules)
+
 ## 차이
 
 - [`prettier-eslint`](https://github.com/prettier/prettier-eslint)
