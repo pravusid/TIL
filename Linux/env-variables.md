@@ -43,13 +43,13 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 `/bin/sh`을 login shell로 하고 `~/.profile`에 `export SHELL=/bin/zsh` 코드를 포함한다면,
 터미널을 열었을 때 터미널은 `zsh`를 실행할 것이다. (일부 터미널은 `$SHELL`을 따르지 않는다)
 
-> 이경우 여전히 login shell은 `sh` 이다.
+> 이 경우 여전히 login shell은 `sh` 이다.
 
 대부분의 설정에서 `~/.profile` 파일은 그래픽 디스플레이 매니저로 로그인 할 때 **X session startup scripts**에 의해서 로드된다.
 
 ### terminal emulator (gnome terminal...)
 
-터미널 에뮬레이터를 시작하여 shell prompt를 얻거나 shell을 명시적으로 시작하면, 해당 shell은 **non login shell**이다.
+터미널 에뮬레이터를 시작한 뒤 shell prompt를 얻거나(`bash`) shell script를 실행하면(`bash foo.bash`), 해당 shell은 **non login shell**이다.
 
 `~/.profile` (또는 `~/.zprofile`) 파일은 로그인 했을 때 실행하는 명령들 이므로 non-login shell에서는 해당 파일을 읽지 않는다.
 
@@ -82,7 +82,7 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 > 로그인 시 읽음
 
 - 툴과 관련한 환경변수
-- 명령어 실행과 관련한 환경설정 (i.e. `export FZF_DEFAULT_COMMAND="fd --type f"`)
+- 명령어 실행과 관련한 환경설정
 
 이 파일을 수정하면 새로운 login shell을 실행하여 변경한 설정이 적용된 shell을 사용할 수 있다: `exec zsh --login`
 
