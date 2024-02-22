@@ -19,6 +19,17 @@
   - backtick (명령실행)
   - reverse-slash (escape)
 
+### 변수와 curly braces
+
+<https://stackoverflow.com/questions/8748831/when-do-we-need-curly-braces-around-shell-variables>
+
+```bash
+$var      # use the variable
+${var}    # same as above
+${var}bar # expand var, and append "bar" too
+$varbar   # same as ${varbar}, i.e expand a variable called varbar, if it exists.
+```
+
 ### 변수 내 숫자연산
 
 - 변수 내부에서 숫자와 연산기호를 사용하려면 `expr` 키워드와 backtick(`)을 사용한다
@@ -37,12 +48,12 @@
 - `$2`=param2
 - `$3`=param3
 - ...
-- `${10}`=param10
+- `$10`=param10
 - `$#`=매개변수 개수
 
 ### 배열
 
-```sh
+```bash
 array=("a" "b" "c")
 array[3]="variable"
 
@@ -55,6 +66,33 @@ unset array[3]
 # 배열 전체 삭제
 unset array
 ```
+
+### 변수 기본값 할당(대체)
+
+```bash
+echo 1 ${FOO:="hello"}
+echo 2 $FOO
+# 1 hello
+# 2 hello
+
+echo 1 ${BAR:-"world"}
+echo 2 $BAR
+# 1 world
+# 2
+```
+
+<https://unix.stackexchange.com/questions/122845/using-a-b-for-variable-assignment-in-scripts>
+
+|                    | Parameter set and not null | Parameter set but null | Parameter unset |
+| ------------------ | -------------------------- | ---------------------- | --------------- |
+| ${parameter:-word} | substitute parameter       | substitute word        | substitute word |
+| ${parameter-word}  | substitute parameter       | substitute null        | substitute word |
+| ${parameter:=word} | substitute parameter       | assign word            | assign word     |
+| ${parameter=word}  | substitute parameter       | substitute null        | assign word     |
+| ${parameter:?word} | substitute parameter       | error, exit            | error, exit     |
+| ${parameter?word}  | substitute parameter       | substitute null        | error, exit     |
+| ${parameter:+word} | substitute word            | substitute null        | substitute null |
+| ${parameter+word}  | substitute word            | substitute word        | substitute null |
 
 ### special parameters
 
@@ -76,7 +114,7 @@ unset array
 
 `[ 조건 ]`의 각 단어 사이는 모두 공백이 있어야 한다
 
-```sh
+```bash
 if [ 조건1 ]; then
   조건1이 참인 경우 실행
 elif [ 조건2 ]
@@ -89,7 +127,7 @@ fi
 
 ### case문
 
-```sh
+```bash
 case <변수> in
   조건1)
     조건1의 경우 실행;;
@@ -164,7 +202,7 @@ esac
 
 ### for-in문
 
-```sh
+```bash
 for 변수 in 값1 값2
 do
   반복할 명령
@@ -173,7 +211,7 @@ done
 
 ### while문
 
-```sh
+```bash
 while [ 조건 ]
 do
   반복할 명령
@@ -184,7 +222,7 @@ done
 
 조건이 거짓인 동안 계속 반복한다
 
-```sh
+```bash
 until [ 조건 ]
 do
   반복할 명령
@@ -200,7 +238,7 @@ done
 
 함수를 선언하고 호출시 인자를 넘길 수 있다. 넘긴 인자는 함수내부에서 파라미터로 호출 가능하다.
 
-```sh
+```bash
 함수명 () {
   echo `expr $1 + $2`
 }
@@ -228,7 +266,7 @@ done
 
 ### process id
 
-```sh
+```bash
 #!/bin/bash
 
 PROC_NAME=$1
@@ -242,7 +280,7 @@ wait 사용
 
 > With no parameters it waits for all background processes to finish. With a PID it waits for the specific process.
 
-```sh
+```bash
 process &
 process &
 process &
@@ -251,7 +289,7 @@ wait
 
 [GNU parallel](http://www.gnu.org/software/parallel/) 사용
 
-```sh
+```bash
 echo {1..5} | parallel docker build -t ...{} ...{}
 ```
 
@@ -259,7 +297,7 @@ echo {1..5} | parallel docker build -t ...{} ...{}
 
 ## 실행 상대경로
 
-```sh
+```bash
 # 스크립트가 실행된 상대경로를 구한다
 current_dir=$(dirname $BASH_SOURCE)
 # if symlink (GNU)
