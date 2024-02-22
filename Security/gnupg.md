@@ -54,14 +54,34 @@ gpg --edit-key <key-id|uid>
 # 도움말
 gpg> help
 
+# 비밀번호 변경
+gpg> passwd
+gpg> save
+```
+
+### 키 갱신 (유효기간 변경)
+
+<https://unix.stackexchange.com/questions/552707/how-to-renew-an-expired-encryption-subkey-with-gpg>
+
+```sh
+gpg --edit-key <key-id|uid>
+
 # 유효기간 변경
 gpg> expire
 gpg> <유효기간>
 gpg> save
 
-# 비밀번호 변경
-gpg> passwd
-gpg> save
+# subkey 선택: 1~n, 0(선택해제), *(모두선택)
+gpg> key <number>
+```
+
+갱신 명령어 사용
+
+```sh
+gpg --quick-set-expire <key-id> <period> [subkeys]
+
+# key, subkey 일괄갱신
+# gpg --quick-set-expire <key-id> 2y && gpg --quick-set-expire <key-id> 2y "*"
 ```
 
 ## 관련 파일 확장자
