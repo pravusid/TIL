@@ -1,9 +1,8 @@
 # CSS flexbox
 
-## Examples
-
 - <https://flexboxpatterns.com/>
 - <https://d2.naver.com/helloworld/8540176>
+- <https://www.joshwcomeau.com/css/interactive-guide-to-flexbox/>
 
 ## Basic
 

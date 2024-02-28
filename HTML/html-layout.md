@@ -2,6 +2,7 @@
 
 - 문서 구조관련 HTML 태그는 [[html-semantic]] 참고
 - 레이아웃을 위한 주요 CSS 기능은 [[css-position]], [[css-flexbox]], [[css-grid]] 참고
+- [How To Center a Div - The Ultimate Guide to Centering in CSS](https://www.joshwcomeau.com/css/center-a-div/)
 
 ## 헤더, 본문형
 
