@@ -32,7 +32,8 @@
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true
 }
 ```
 
