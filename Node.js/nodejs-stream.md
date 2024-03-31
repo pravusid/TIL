@@ -1,6 +1,7 @@
 # Stream in Node.js
 
-<https://github.com/FEDevelopers/tech.description/wiki/Node.js-Stream-%EB%8B%B9%EC%8B%A0%EC%9D%B4-%EC%95%8C%EC%95%84%EC%95%BC%ED%95%A0-%EB%AA%A8%EB%93%A0-%EA%B2%83>
+- <https://nodejs.org/api/stream.html>
+- <https://github.com/FEDevelopers/tech.description/wiki/Node.js-Stream-당신이-알아야할-모든-것>
 
 ## 종류
 
@@ -18,11 +19,10 @@ HTTP의 경우 (Readable)`http.ImcomingMessage` -> (Writable)`http.ServerRespons
 `Readable` stream으로부터 `Duplex` 혹은 `Transform` 혹은 `Writable` stream으로 `pipe를` 사용할 수 있다.
 
 ```js
-readableStream
-  .pipe(transformStream1)
-  .pipe(transformStream2)
-  .pipe(writable);
+readableStream.pipe(transformStream1).pipe(transformStream2).pipe(writable);
 ```
+
+<https://nodejs.org/api/stream.html#readablepipedestination-options>
 
 ### event
 
@@ -35,11 +35,11 @@ readable.pipe(writable);
 위의 코드는 다음과 같을 것이다.
 
 ```js
-readable.on("data", chunk => {
+readable.on('data', (chunk) => {
   writable.write(chunk);
 });
 
-readable.on("end", () => {
+readable.on('end', () => {
   writable.end();
 });
 ```
@@ -62,28 +62,28 @@ readable.on("end", () => {
 
 ### Paused / Flowing
 
-Readable stream은 기본적으로 Paused 상태이나 Flowing으로 상태를 변경할 수 있다.
+- Readable stream은 기본적으로 Paused 상태이나 Flowing으로 상태를 변경할 수 있다.
+- Paused Readable stream은 `read()` 메소드로 처리할 수 있다.
+- Flowing Readable stream은 event handler에 의해서 처리되고 consumer가 없다면 데이터는 사라진다.
+- 두 상태간의 변경은 `resume()`(to Flowing) / `pause()`(to Paused) 메소드를 사용하면 된다.
+- `pipe` 메소드를 사용한다면 두 종류의 Readable stream을 모두 처리가능하다.
 
-Paused Readable stream은 `read()` 메소드로 처리할 수 있다.
+### Streams Promises API
 
-Flowing Readable stream은 event handler에 의해서 처리되고 consumer가 없다면 데이터는 사라진다.
-
-두 상태간의 변경은 `resume()`(to Flowing) / `pause()`(to Paused) 메소드를 사용하면 된다.
-
-`pipe` 메소드를 사용한다면 두 종류의 Readable stream을 모두 처리가능하다.
+<https://nodejs.org/api/stream.html#streams-promises-api>
 
 ## 생성
 
 ### Writable stream
 
 ```js
-const { Writable } = require("stream");
+const { Writable } = require('stream');
 
 const outStream = new Writable({
   write(chunk, encoding, cb) {
     console.log(chunk.toString());
     cb();
-  }
+  },
 });
 
 process.stdin.pipe(outStream);
@@ -108,7 +108,7 @@ const inStream = new Readable({
     if (this.currentCharCode > 90) {
       this.push(null); // 더 이상 데이터 없음
     }
-  }
+  },
 });
 inStream.currentCharCode = 65;
 
@@ -120,7 +120,7 @@ inStream.pipe(process.stdout);
 ### Duplex
 
 ```js
-const { Duplex } = require("stream");
+const { Duplex } = require('stream');
 
 const inoutStream = new Duplex({
   write(chunk, encoding, callback) {
@@ -134,7 +134,7 @@ const inoutStream = new Duplex({
     if (this.currentCharCode > 90) {
       this.push(null);
     }
-  }
+  },
 });
 inoutStream.currentCharCode = 65;
 
@@ -151,13 +151,13 @@ Duplex의 읽기/쓰기 stream은 독립적으로 동작하며 단지 둘을 합
 Transform stream에서는 `read`나 `write` 메소드 역할을 동시에 수행하는 `transform` 메소드를 구현한다.
 
 ```js
-const { Transform } = require("stream");
+const { Transform } = require('stream');
 
 const toUpperCase = new Transform({
   transform(chunk, encoding, callback) {
     this.push(chunk.toString().toUpperCase());
     callback();
-  }
+  },
 });
 
 process.stdin.pipe(toUpperCase).pipe(process.stdout);
@@ -166,19 +166,14 @@ process.stdin.pipe(toUpperCase).pipe(process.stdout);
 기본적으로 스트림은 버퍼(Buffer)나 문자열(String) 값을 소비하지만, `objectMode` 옵션으로 JavaScript 객체를 사용할 수 있다.
 
 ```js
-const { Transform } = require("stream");
+const { Transform } = require('stream');
 
 const commaSplitter = new Transform({
   readableObjectMode: true,
   transform(chunk, encoding, callback) {
-    this.push(
-      chunk
-        .toString()
-        .trim()
-        .split(",")
-    );
+    this.push(chunk.toString().trim().split(','));
     callback();
-  }
+  },
 });
 
 const arrayToObject = new Transform({
@@ -191,24 +186,20 @@ const arrayToObject = new Transform({
     }
     this.push(obj);
     callback();
-  }
+  },
 });
 
 const objectToString = new Transform({
   writableObjectMode: true,
   transform(chunk, encoding, callback) {
-    this.push(JSON.stringify(chunk) + "\n");
+    this.push(JSON.stringify(chunk) + '\n');
     callback();
     // 콜백의 두번째 인자로 push할 수도 있다
     // callback(null, JSON.stringify(chunk) + "\n");
-  }
+  },
 });
 
-process.stdin
-  .pipe(commaSplitter)
-  .pipe(arrayToObject)
-  .pipe(objectToString)
-  .pipe(process.stdout);
+process.stdin.pipe(commaSplitter).pipe(arrayToObject).pipe(objectToString).pipe(process.stdout);
 ```
 
 ## Examples
@@ -216,35 +207,35 @@ process.stdin
 ### 파일을 읽어서 압축하는 도중 상태를 출력하며, 완료시 "Done" 메시지를 출력하는 예제
 
 ```js
-const fs = require("fs");
-const zlib = require("zlib");
+const fs = require('fs');
+const zlib = require('zlib');
 const file = process.argv[2];
 
 fs.createReadStream(file)
   .pipe(zlib.createGzip())
-  .on("data", () => process.stdout.write("."))
-  .pipe(fs.createWriteStream(file + ".gz"))
-  .on("finish", () => console.log("Done"));
+  .on('data', () => process.stdout.write('.'))
+  .pipe(fs.createWriteStream(file + '.gz'))
+  .on('finish', () => console.log('Done'));
 ```
 
 event handler를 등록하는 대신 Transform을 사용할 수 있다
 
 ```js
 // ...
-const { Transform } = require("stream");
+const { Transform } = require('stream');
 
 fs.createReadStream(file)
   .pipe(zlib.createGzip())
   .pipe(
     new Transform({
       transform(chunk, encoding, callback) {
-        process.stdout.write(".");
+        process.stdout.write('.');
         callback(null, chunk);
-      }
+      },
     })
   )
-  .pipe(fs.createWriteStream(file + ".zz"))
-  .on("finish", () => console.log("Done"));
+  .pipe(fs.createWriteStream(file + '.zz'))
+  .on('finish', () => console.log('Done'));
 ```
 
 ### Stream <-> Buffer 변환
@@ -255,9 +246,9 @@ Stream to Buffer
 function streamToBuffer(stream) {
   return new Promise((resolve, reject) => {
     const buffers = [];
-    stream.on("error", reject);
-    stream.on("data", data => buffers.push(data));
-    stream.on("end", () => resolve(Buffer.concat(buffers)));
+    stream.on('error', reject);
+    stream.on('data', (data) => buffers.push(data));
+    stream.on('end', () => resolve(Buffer.concat(buffers)));
   });
 }
 ```
@@ -265,7 +256,7 @@ function streamToBuffer(stream) {
 Buffer to Stream
 
 ```js
-let Readable = require("stream").Readable;
+let Readable = require('stream').Readable;
 
 function bufferToStream(buffer) {
   const stream = new Readable();
@@ -278,7 +269,7 @@ function bufferToStream(buffer) {
 Buffer to Stream with PassThrough
 
 ```js
-let PassThrough = require("stream").PassThrough;
+let PassThrough = require('stream').PassThrough;
 
 function bufferToStream(buffer) {
   const stream = new PassThrough();
