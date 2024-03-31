@@ -16,13 +16,17 @@ HTTP의 경우 (Readable)`http.ImcomingMessage` -> (Writable)`http.ServerRespons
 
 ### pipe
 
-`Readable` stream으로부터 `Duplex` 혹은 `Transform` 혹은 `Writable` stream으로 `pipe를` 사용할 수 있다.
+`Readable stream`으로부터 `Duplex` 혹은 `Transform` 혹은 `Writable stream`으로 `pipe`를 사용할 수 있다.
 
 ```js
 readableStream.pipe(transformStream1).pipe(transformStream2).pipe(writable);
 ```
 
 <https://nodejs.org/api/stream.html#readablepipedestination-options>
+
+> - Pipe에서는 기본적으로 소스인 Readable stream에서 **'end' 이벤트**가 발생하면, Writable stream의 `end()`가 호출되어 더 이상 쓰기가 작동하지 않는다
+> - 이 기본기능을 비활성화 하려면 `{ end: false }` 옵션을 사용하면되고, destination Writable stream은 열려있는 상태가 유지된다
+> - 중요한 주의사항은, Readable stream 처리중 오류가 발생하면 Writable destination은 자동으로 닫히지 않는다는 것이다 (메모리 누수 방지를 위해 오류발생시 수동으로 닫아야 함)
 
 ### event
 
@@ -71,6 +75,20 @@ readable.on('end', () => {
 ### Streams Promises API
 
 <https://nodejs.org/api/stream.html#streams-promises-api>
+
+> Added in: v15.0.0
+
+- `stream.pipeline(source[, ...transforms], destination[, options])`
+- `stream.finished(stream[, options])`
+
+```js
+import { pipeline } from 'node:stream/promises';
+import { createReadStream, createWriteStream } from 'node:fs';
+import { createGzip } from 'node:zlib';
+
+await pipeline(createReadStream('archive.tar'), createGzip(), createWriteStream('archive.tar.gz'));
+console.log('Pipeline succeeded.');
+```
 
 ## 생성
 
