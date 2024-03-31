@@ -1,18 +1,20 @@
 # JavaScript Async
 
-## Callback, 콜백
+## JavaScript Async: Intro
 
-<https://ko.javascript.info/callbacks>
+- <https://developer.mozilla.org/ko/docs/Learn/JavaScript/Asynchronous>
+- <https://developer.mozilla.org/ko/docs/Web/API/HTML_DOM_API/Microtask_guide> → [[nodejs-event-loop#microTaskQueue]]
+- <https://ko.javascript.info/callbacks>
+- <https://ko.javascript.info/promise-basics>
+- <https://ko.javascript.info/async-await>
 
-## Promise, 프로미스
+## JavaScript Async: 참고
 
-<https://ko.javascript.info/promise-basics>
+- <https://v8.dev/blog/fast-async>
+- <https://lydiahallie.framer.website/blog/promise-execution>
+- [자바스크립트의 await 사건의 지평선](https://velog.io/@sehyunny/await-event-horizon)
 
-## Async & Await
-
-<https://ko.javascript.info/async-await>
-
-### `async` 키워드
+## `async` 키워드
 
 - `async` 키워드를 사용하였을 때 반환값이 Promise가 아닌경우 Resolved Promise로 감싸서 반환하게 된다
 
@@ -21,7 +23,7 @@
   - `await` 키워드 미사용: 동기함수에서 오류발생한 것과 동일한 오류발생
   - `await` 키워드 사용: `processTicksAndRejections` 마이크로태스크큐에서 오류발생 ([[nodejs-event-loop]] 참고)
 
-### Async Stacktrace in V8
+## Async Stacktrace in V8
 
 > The fundamental difference between await and vanilla promises is that await X() suspends execution of the current function,
 > while promise.then(X) continues execution of the current function after adding the X call to the callback chain.
@@ -40,16 +42,16 @@
 
 ```js
 async function throwAsync(msg) {
-  await null // need to await at least something to be truly async (see note #2)
-  throw Error(msg)
+  await null; // need to await at least something to be truly async (see note #2)
+  throw Error(msg);
 }
 
-async function returnWithoutAwait () {
-  return throwAsync('missing returnWithoutAwait in the stacktrace')
+async function returnWithoutAwait() {
+  return throwAsync('missing returnWithoutAwait in the stacktrace');
 }
 
 // 👎 will NOT have returnWithoutAwait in the stacktrace
-returnWithoutAwait().catch(console.log)
+returnWithoutAwait().catch(console.log);
 ```
 
 오류 발생하여도 stacktrace에 `throwAsync` 함수가 보이지 않는다
@@ -63,16 +65,16 @@ Error: missing returnWithoutAwait in the stacktrace
 
 ```js
 async function throwAsync(msg) {
-  await null // need to await at least something to be truly async (see note #2)
-  throw Error(msg)
+  await null; // need to await at least something to be truly async (see note #2)
+  throw Error(msg);
 }
 
 async function returnWithAwait() {
-  return await throwAsync('with all frames present')
+  return await throwAsync('with all frames present');
 }
 
 // 👍 will have returnWithAwait in the stacktrace
-returnWithAwait().catch(console.log)
+returnWithAwait().catch(console.log);
 ```
 
 오류 발생하면 stacktrace에 `throwAsync` 함수가 보인다
