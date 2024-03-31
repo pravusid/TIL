@@ -64,6 +64,27 @@ Working Directory 각 파일들은 상태에 따라 다음에 위치한다
 - Staging Area의 데이터를 마지막 커밋에 추가: `git commit --amend`
 - Tracking 파일 전체를 Staging 생략하고 커밋: `git commit -a`
 
+### Commit 수정
+
+방법1. autosquash
+
+```sh
+git commit --fixup <수정할_커밋_ID>
+git rebase --autosquash
+```
+
+방법2. interactive rebase
+
+```sh
+git rebase -i <수정할_커밋_직전커밋_ID>
+
+# 수정할 커밋을 edit으로 변경하고 저장
+# 체크아웃 상태에서 코드 수정
+
+git commit --amend
+git rebase --continue
+```
+
 ## Tag
 
 - 목록
