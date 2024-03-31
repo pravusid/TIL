@@ -351,6 +351,50 @@ const a: Clazz<Test> = Test;
 const b: Construct<Test> = Test;
 ```
 
+## `NoInfer<T>`
+
+> TypeScript 5.4에서 추가되었다
+
+<https://devblogs.microsoft.com/typescript/announcing-typescript-5-4/#the-noinfer-utility-type>
+
+문제가 되는 상황
+
+- `C` 타입은 `colors` 변수의 추론된 타입만 사용하는 것이 의도이다
+- 그러나 `C` 타입을 추론할 때 `defaultColor` 변수 타입도 추론에 포함된다
+
+```ts
+function createStreetLight<C extends string>(colors: C[], defaultColor?: C) {
+  // ...
+}
+
+// Oops! This undesirable, but is allowed!
+createStreetLight(['red', 'yellow', 'green'], 'blue');
+```
+
+NoInfer 사용하지 않고 해결
+
+```ts
+function createStreetLight<C extends string, D extends C>(colors: C[], defaultColor?: D) {}
+
+createStreetLight(['red', 'yellow', 'green'], 'blue');
+//                                            ~~~~~~
+// error!
+// Argument of type '"blue"' is not assignable to parameter of type '"red" | "yellow" | "green" | undefined'.
+```
+
+NoInfer 사용해서 해결
+
+```ts
+function createStreetLight<C extends string>(colors: C[], defaultColor?: NoInfer<C>) {
+  // ...
+}
+
+createStreetLight(['red', 'yellow', 'green'], 'blue');
+//                                            ~~~~~~
+// error!
+// Argument of type '"blue"' is not assignable to parameter of type '"red" | "yellow" | "green" | undefined'.
+```
+
 ## 타입활용
 
 <https://github.com/type-challenges/type-challenges>
@@ -671,7 +715,7 @@ export function isValueInEnum<E extends string>(strEnum: Record<string, E>) {
 ```ts
 type Prettify<T> = {
   [K in keyof T]: T[K];
-} & {}
+} & {};
 ```
 
 Intersected Object Type (`{ a: string } & { b: string }`)을 정리해서 보여줌
@@ -683,5 +727,5 @@ Intersected Object Type (`{ a: string } & { b: string }`)을 정리해서 보여
 <https://github.com/microsoft/TypeScript/issues/29729>
 
 ```ts
-type LiteralUnion<T extends U, U = string> = T | (U & {})
+type LiteralUnion<T extends U, U = string> = T | (U & {});
 ```
