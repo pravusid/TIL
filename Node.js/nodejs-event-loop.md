@@ -1,8 +1,7 @@
 # Node.js Event Loop
 
-- <https://nodejs.org/ko/docs/guides/event-loop-timers-and-nexttick/>
-- <https://nodejs.org/ko/docs/guides/dont-block-the-event-loop/>
-- <https://nodejs.org/ko/docs/guides/timers-in-node/>
+- <https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick>
+- <https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop>
 - <https://evan-moon.github.io/2019/08/01/nodejs-event-loop-workflow/>
 - <https://www.korecmblog.com/node-js-event-loop/>
 - <https://dev.to/altamashali/nodejs-event-loop-in-action-d5o>

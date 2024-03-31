@@ -70,7 +70,7 @@ for vuejs
 
 attaching debugger to Nodemon
 
-- <https://nodejs.org/en/docs/guides/debugging-getting-started/#command-line-options>
+- <https://nodejs.org/en/learn/getting-started/debugging#command-line-options>
 - <https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_attaching-to-nodejs>
 - <https://github.com/Microsoft/vscode-recipes/tree/main/nodemon>
 

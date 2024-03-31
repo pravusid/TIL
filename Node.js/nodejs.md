@@ -12,18 +12,16 @@ JavaScript Runtime
 
 ## Node.js CLI
 
-<https://nodejs.org/dist/latest-v20.x/docs/api/cli.html>
+<https://nodejs.org/docs/latest/api/cli.html>
 
 ### `--enable-source-maps`
 
 - Added in: v15.11.0, v14.18.0 (Stable)
-- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--enable-source-maps>
 - <https://github.com/evanw/node-source-map-support?tab=readme-ov-file#node-12120>
 
 ### `--import=module`
 
 - Added in: v19.0.0 (Experimental)
-- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--importmodule>
 
 > Follows ECMAScript module resolution rules.
 > Use --require to load a CommonJS module. Modules preloaded with --require will run before modules preloaded with --import.
@@ -31,7 +29,6 @@ JavaScript Runtime
 ### `--env-file=config`
 
 - Added in: v20.6.0 (Active development)
-- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--env-fileconfig>
 
 ```bash
 # You can pass multiple --env-file arguments. Subsequent files override pre-existing variables defined in previous files.
@@ -41,8 +38,6 @@ node --env-file=.env --env-file=.development.env index.js
 ### `--watch`, `--watch-path`
 
 - Added in: v18.11.0, v16.19.0 (Experimental)
-- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--watch>
-- <https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--watch-path>
 - `--watch-preserve-output`: Disable the clearing of the console when watch mode restarts the process.
 
 ```bash
@@ -52,21 +47,19 @@ node --watch-path=./src --watch-path=./tests index.js
 
 ### `--max-old-space-size=SIZE` (in megabytes)
 
-<https://nodejs.org/dist/latest-v20.x/docs/api/cli.html#--max-old-space-sizesize-in-megabytes>
-
 ```bash
 NODE_OPTIONS="--max-old-space-size=4096" node index.js
 ```
 
 ## http
 
-<https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/>
+<https://nodejs.org/en/learn/modules/anatomy-of-an-http-transaction>
 
 nodejs 는 다양한 작업을 수행할 수 있지만, 웹 기반 Application에 적합하도록 많은 투자가 이루어지고 있다.
 
 ### 의존성
 
-<https://nodejs.org/ko/docs/meta/topics/dependencies/#llhttp>
+~~<https://nodejs.org/ko/docs/meta/topics/dependencies/#llhttp>~~
 
 > HTTP 파싱은 llhttp라는 경량 C 라이브러리가 처리합니다.
 > 이는 시스템 호출이나 할당을 하려고 만들어진 것이 아니므로 요청당 아주 작은 메모리 공간만 차지합니다.
