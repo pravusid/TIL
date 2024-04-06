@@ -1,6 +1,7 @@
 # TailwindCSS
 
-<https://tailwindcss.com/>
+- <https://tailwindcss.com/>
+- <https://github.com/aniftyco/awesome-tailwindcss>
 
 ## Origin
 
