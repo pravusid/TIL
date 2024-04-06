@@ -150,7 +150,7 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 
 ## Go to definition goes to `.d.ts`
 
-[[monorepo]] 구성할 때 설정필요
+[[monorepo]], [TypeScript Project References](https://www.typescriptlang.org/ko/docs/handbook/project-references.html#declarationmaps) 구성할 때 설정필요
 
 > Can you please try adding `"declarationMap": true` to the **compilerOptions in your tsconfig**
 > This will generated a map so that go to definition can just back to the original ts source instead of the generated d.ts
