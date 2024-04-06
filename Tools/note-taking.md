@@ -26,8 +26,10 @@
 
 - plugins
   - Block to page
+  - Copy Code
   - Logseq Markmap
   - Tags
+  - Tidy Blocks
   - Todo list
 - theme
   - Dev theme
