@@ -39,3 +39,35 @@ To import db on RDS
   CHARACTER SET = 'utf8'
   COLLATE = 'utf8_general_ci';
   ```
+
+## 최대 연결 수 (기본설정)
+
+<https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/CHAP_Limits.html#RDS_Limits.MaxConnections>
+
+### RDS MySQL
+
+공식에 따라 인스턴스 유형별 최대 연결 수 기본 값을 계산하면 다음과 같다
+
+> `{DBInstanceClassMemory/12582880}`
+> 값이 16,000보다 큰 경우 Amazon RDS는 MariaDB 및 MySQL DB 인스턴스에 대한 제한을 16,000으로 설정
+
+- t2.micro: 66
+- t2.small: 150
+- m3.medium: 296
+- t2.medium: 312
+- M3.large: 609
+- t2.large: 648
+- M4.large: 648
+- M3.xlarge: 1237
+- R3.large: 1258
+- M4.xlarge: 1320
+- M2.xlarge: 1412
+- M3.2xlarge: 2492
+- R3.xlarge: 2540
+
+> <https://support.bespinglobal.com/ko/support/solutions/articles/73000524758>
+
+### RDS Aurora
+
+- Aurora MySQL: <https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Performance.html#AuroraMySQL.Managing.MaxConnections>
+- Aurora PostgreSQL: <https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Managing.html#AuroraPostgreSQL.Managing.MaxConnections>
