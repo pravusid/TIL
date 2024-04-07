@@ -315,9 +315,9 @@ SELECT <col1, col2, ...> FROM <SOURCE> [WHERE <CONDITION>];
 
 > 동일테이블 내 데이터 복사에도 사용가능함
 
-## ALTER TABLE
+### ALTER TABLE
 
-### PK 변경
+#### PK 변경
 
 ```sql
 ALTER TABLE `my_table` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`);
@@ -325,7 +325,7 @@ ALTER TABLE `my_table` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`);
 ALTER TABLE `my_table` DROP KEY `key_name`, ADD PRIMARY KEY (`id`);
 ```
 
-### COLUMN 변경
+#### COLUMN 변경
 
 ```sql
 ALTER TABLE <TABLE> ADD <COLUMN_NAME> <COLUMN_TYPE> [CONSTRAINTS] [COMMENT '설명'] [FIRST | AFTER <COLUMN_NAME>];
@@ -334,7 +334,7 @@ ALTER TABLE <TABLE> RENAME COLUMN <COLUMN_NAME> TO <NEW_COLUMN_NAME>;
 ALTER TABLE <TABLE> DROP COLUMN <COLUMN_NAME>;
 ```
 
-### COLUMN 순서만 변경
+#### COLUMN 순서만 변경
 
 ```sql
 -- 다른COLUMN 다음으로 이동
@@ -343,7 +343,7 @@ ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [
 ALTER TABLE <테이블명> MODIFY COLUMN <컬럼명> <자료형> [CONSTRAINTS] [COMMENT '설명'] FIRST;
 ```
 
-### Character Set 변경
+#### Character Set 변경
 
 > To change the table default character set and all character columns (CHAR, VARCHAR, TEXT) to a new character set, use a statement like this
 
@@ -355,32 +355,7 @@ ALTER TABLE tbl_name CONVERT TO CHARACTER SET charset_name;
 
 <https://dev.mysql.com/doc/refman/8.0/en/charset-conversion.html>
 
-## DML
-
-<https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html>
-
-### SELECT
-
-#### query cache
-
-```sql
-SET SESSION query_cache_type = OFF;
-SHOW VARIABLES LIKE 'query_cache_type';
-
--- select 실행시 캐시 없이 할 수도 있음
-SELECT SQL_NO_CACHE * FROM <TABLE_NAME>;
-```
-
-### INSERT SELECT
-
-```sql
-INSERT INTO tbl_temp2 (fld_id)
-  SELECT tbl_temp1.fld_order_id
-  FROM tbl_temp1
-  WHERE tbl_temp1.fld_order_id > 100;
-```
-
-### transaction
+## transaction
 
 ```sql
 START TRANSACTION [transaction_characteristic [, transaction_characteristic] ...]
@@ -414,7 +389,7 @@ select @@AUTOCOMMIT;
 SET AUTOCOMMIT=FALSE;
 ```
 
-#### isolation level
+### isolation level
 
 - READ UNCOMMITTED
 - READ COMMITTED
@@ -426,25 +401,6 @@ isolation level 조회
 ```sql
 SHOW VARIABLES WHERE VARIABLE_NAME='tx_isolation';
 ```
-
-### UPDATE FROM SELECT
-
-```sql
-UPDATE
-  tablename1 AS t1
-  JOIN tablename2 AS t2 ON join_condition
-SET assignment_list
-[WHERE where_condition];
-```
-
-## 집계함수
-
-<https://dev.mysql.com/doc/refman/8.0/en/group-by-functions.html>
-
-숫자 인수의 경우 분산 및 표준편차 함수의 경우 DOUBLE 타입 값을 반환한다.
-
-SUM(), AVG() 함수는 정확한 값의 인수(정수 또는 DECIMAL)에 대해서는 DECIMAL 타입 값을,
-근사값 인수(FLOAT, DOUBLE)에 대해서는 DOUBLE 타입 값을 리턴한다.
 
 ## DB Dump / Import
 
