@@ -11,11 +11,10 @@
 
 ## 참조
 
-<https://www.typescriptlang.org/tsconfig>
-
-<https://www.typescriptlang.org/docs/handbook/compiler-options.html>
-
-<https://www.typescriptlang.org/docs/handbook/project-references.html>
+- <https://www.typescriptlang.org/tsconfig>
+- <https://www.typescriptlang.org/docs/handbook/compiler-options.html>
+- <https://www.typescriptlang.org/docs/handbook/project-references.html>
+- <https://www.typescriptlang.org/docs/handbook/modules/guides/choosing-compiler-options.html>
 
 ## 예시
 

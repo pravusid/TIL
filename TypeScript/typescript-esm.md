@@ -2,11 +2,12 @@
 
 ## Refs
 
-- <https://github.com/microsoft/TypeScript/issues/46452>
+- <https://www.typescriptlang.org/docs/handbook/modules/introduction.html>
+- <https://www.typescriptlang.org/docs/handbook/esm-node.html>
+- [Concerns with TypeScript 4.5's Node 12+ ESM Support](https://github.com/microsoft/TypeScript/issues/46452)
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/#esm-nodejs>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-rc/#esm-nodejs>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#esm-nodejs>
-- <https://www.typescriptlang.org/docs/handbook/esm-node.html>
 - <https://dev.to/logto/migrate-a-60k-loc-typescript-nodejs-repo-to-esm-and-testing-become-4x-faster-12-5f82>
 - <https://dev.to/logto/migrate-a-60k-loc-typescript-nodejs-repo-to-esm-and-testing-become-4x-faster-22-4a4k>
 - <https://nodejs.org/docs/latest/api/esm.html>
@@ -50,7 +51,7 @@
 
 ## `package.json` Exports, Imports, and Self-Referencing
 
-- <https://github.com/microsoft/TypeScript/issues/33079>
+- [Support for NodeJS 12.7+ package exports](https://github.com/microsoft/TypeScript/issues/33079)
 - <https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing>
 - <https://nodejs.org/api/packages.html>
 - <https://antfu.me/posts/publish-esm-and-cjs>
@@ -66,10 +67,10 @@
 
 ## import 구문 확장자 관련
 
-- <https://github.com/microsoft/TypeScript/issues/49083>
+- [`"module": "node16"` should support extension rewriting](https://github.com/microsoft/TypeScript/issues/49083)
 - <https://www.reddit.com/r/typescript/comments/uuivss/module_node16_should_support_extension_rewriting/>
-- <https://github.com/nodejs/node/issues/46006>
-- <https://github.com/microsoft/TypeScript/issues/37582>
+- [Adding support for ESM references without a .js extension](https://github.com/nodejs/node/issues/46006)
+- [allow voluntary .ts suffix for import paths](https://github.com/microsoft/TypeScript/issues/37582)
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#resolution-customization-flags>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/#decorator-metadata>
 
@@ -81,3 +82,7 @@
 - [TypeScript module "node16" does not work with CommonJS dependencies](https://github.com/microsoft/TypeScript/issues/49271)
 - [This expression is not callable for ESM consuming CJS with default export](https://github.com/microsoft/TypeScript/issues/52086)
 - <https://www.npmjs.com/package/default-import>
+
+## esm cjs interop
+
+<https://www.typescriptlang.org/docs/handbook/modules/appendices/esm-cjs-interop.html>
