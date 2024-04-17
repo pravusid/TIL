@@ -7,6 +7,9 @@
 
 - [Understanding Layout Algorithms](https://www.joshwcomeau.com/css/understanding-layout-algorithms/)
 - [How To Center a Div - The Ultimate Guide to Centering in CSS](https://www.joshwcomeau.com/css/center-a-div/)
+- <https://developer.mozilla.org/ko/docs/Learn/CSS/CSS_layout>
+- <https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_box_alignment>
+- <https://developer.mozilla.org/ko/docs/Web/CSS/CSS_box_model>
 
 ## 헤더, 본문형
 
