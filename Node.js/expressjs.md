@@ -38,14 +38,18 @@ export const errorHandler = (error: Error, request: Request, response: Response,
   response.status(500).json({ message: error.message });
 };
 
-type AsyncFunc = (req: Request, resp: Response, next: NextFunction) => Promise<unknown>;
+type AsyncHandler<Req extends Request, Res extends Response, Next extends NextFunction = NextFunction> = (
+  req: Req,
+  resp: Res,
+  next: Next
+) => Promise<unknown>;
 
-export const asyncHandler: (func: AsyncFunc) => AsyncFunc = (func) => {
-  return (request, response, next) =>
-    Promise.resolve(func(request, response, next)).catch((error: Error) =>
-      errorHandler(error, request, response, next)
-    );
-};
+export const asyncHandler: <Req extends Request, Res extends Response>(
+  handler: AsyncHandler<Req, Res>
+) => AsyncHandler<Req, Res> = (handler) => (request, response, next) =>
+  Promise.resolve(handler(request, response, next)).catch((error: Error) =>
+    errorHandler(error, request, response, next)
+  );
 ```
 
 다음처럼 사용한다
