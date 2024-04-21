@@ -157,3 +157,24 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 >
 > -- <https://github.com/microsoft/vscode/issues/73201>
 > -- <https://www.typescriptlang.org/tsconfig#declarationMap>
+
+## HTML, JSX (Auto rename, Auto closing)
+
+### Auto rename
+
+> <https://www.roboleary.net/vscode/2023/05/08/auto-rename-tags-react-vue-svelte.html>
+
+```json
+{
+  "editor.linkedEditing": true
+}
+```
+
+- `javascript.preferences.renameMatchingJsxTags`: 기본값 true
+- `typescript.preferences.renameMatchingJsxTags`: 기본값 true
+
+### Auto closing
+
+- `html.autoClosingTags` 기본값 true (HTML)
+- `javascript.autoClosingTags` 기본값 true (JSX)
+- `typescript.autoClosingTags` 기본값 true (JSX)
