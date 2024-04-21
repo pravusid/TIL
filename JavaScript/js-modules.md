@@ -18,6 +18,11 @@
 - [Modules: node:module API](https://nodejs.org/docs/latest/api/module.html)
 - [Modules: Packages](https://nodejs.org/docs/latest/api/packages.html)
 
+### NodeJS cjs-esm interop
+
+- <https://www.sonarsource.com/blog/dirname-node-js-es-modules/>
+- <https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/>
+
 ## TypeScript
 
 - [[typescript-handbook-module-system]]
