@@ -178,3 +178,11 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 - `html.autoClosingTags` 기본값 true (HTML)
 - `javascript.autoClosingTags` 기본값 true (JSX)
 - `typescript.autoClosingTags` 기본값 true (JSX)
+
+## Custom labels for open editors
+
+> v1.88
+
+- <https://github.com/microsoft/vscode/issues/208388>
+- <https://www.reddit.com/r/nextjs/comments/1bzd0h7/vs_code_new_feature_implementation_for_next_js/>
+- <https://gist.github.com/hAbuMustafa/88288a7fc2141c2a919a492ff3bf84cb>
