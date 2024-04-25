@@ -518,6 +518,7 @@ export const typeOf =
 type-guard를 객체의 프로퍼티에 적용할 수도 있다
 
 ```ts
+/** 선택한 속성만 Required 적용 */
 export type Convinced<T, R extends keyof T> = {
   [K in R]: T[K] extends infer I | null | undefined ? I : T[K];
 } & Omit<T, R>;
@@ -728,4 +729,19 @@ Intersected Object Type (`{ a: string } & { b: string }`)을 정리해서 보여
 
 ```ts
 type LiteralUnion<T extends U, U = string> = T | (U & {});
+```
+
+### Omit(Pick) only optional keys
+
+- <https://github.com/type-challenges/type-challenges/blob/main/questions/00057-hard-get-required/README.md>
+- <https://github.com/type-challenges/type-challenges/blob/main/questions/00059-hard-get-optional/README.md>
+
+```ts
+type RequiredFieldsOnly<T> = {
+  [K in keyof T as T[K] extends Required<T>[K] ? K : never]: T[K];
+};
+
+type PartialFieldsOnly<T> = {
+  [K in keyof T as T[K] extends Required<T>[K] ? never : K]: T[K];
+};
 ```
