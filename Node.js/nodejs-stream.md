@@ -28,6 +28,12 @@ readableStream.pipe(transformStream1).pipe(transformStream2).pipe(writable);
 > - 이 기본기능을 비활성화 하려면 `{ end: false }` 옵션을 사용하면되고, destination Writable stream은 열려있는 상태가 유지된다
 > - 중요한 주의사항은, Readable stream 처리중 오류가 발생하면 Writable destination은 자동으로 닫히지 않는다는 것이다 (메모리 누수 방지를 위해 오류발생시 수동으로 닫아야 함)
 
+#### pipe & backpressuring
+
+- <https://nodejs.org/en/learn/modules/backpressuring-in-streams>
+- <https://nodejs.org/api/stream.html#api-for-stream-implementers>
+- [Do transform streams have to handle backpressure as well?](https://github.com/nodejs/help/issues/2695)
+
 ### event
 
 모든 stream은 `EventEmitter`의 인스턴스이므로 event handler를 사용하여 stream을 처리할 수 있다.

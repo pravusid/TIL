@@ -1,5 +1,9 @@
 # nodejs performance analyzer
 
+## Google Chrome Performance Panel
+
+[성능 패널로 Node.js 성능 프로파일링](https://developer.chrome.com/docs/devtools/performance/nodejs?hl=ko)
+
 ## clinic.js
 
 nodejs 성능 문제 분석도구
