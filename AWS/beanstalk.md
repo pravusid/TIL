@@ -44,7 +44,7 @@ fi
 
 > [[nginx]] 설정 참고
 
-[기본설정 값 확인](https://stackoverflow.com/questions/66074722/what-is-the-port-number-of-the-web-application-to-which-default-proxy-config-on) (AMZ linux 2 기준)
+[Beanstalk Nginx 기본설정 값 확인](https://stackoverflow.com/questions/66074722/what-is-the-port-number-of-the-web-application-to-which-default-proxy-config-on) (AMZ linux 2 기준)
 
 `cat /etc/nginx/conf.d/elasticbeanstalk/00_application.conf`
 
@@ -61,13 +61,61 @@ location / {
 }
 ```
 
-`.platform/nginx/conf.d/timeout.conf`: 타임아웃 설정
+`.platform/nginx/conf.d/timeout.conf`: [[nginx#Timeout|타임아웃 설정]]
 
 ```conf
 send_timeout 90s;
 proxy_connect_timeout 90s;
 proxy_send_timeout 90s;
 proxy_read_timeout 90s;
+```
+
+인스턴스 nginx 기본 설정은 다음과 같다 (상단의 설정은 Include를 통해 적용된다)
+
+`/etc/nginx/nginx.conf`
+
+```conf
+user                    nginx;
+error_log               /var/log/nginx/error.log warn;
+pid                     /var/run/nginx.pid;
+worker_processes        auto;
+worker_rlimit_nofile    131591;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    server_tokens off;
+
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    include       conf.d/*.conf;
+
+    map $http_upgrade $connection_upgrade {
+        default     "upgrade";
+    }
+
+    server {
+        listen        80 default_server;
+        access_log    /var/log/nginx/access.log main;
+
+        client_header_timeout 60;
+        client_body_timeout   60;
+        keepalive_timeout     60;
+        gzip                  off;
+        gzip_comp_level       4;
+        gzip_types text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+        # Include the Elastic Beanstalk generated locations
+        include conf.d/elasticbeanstalk/*.conf;
+    }
+}
 ```
 
 ### `.ebextensions`

@@ -301,3 +301,18 @@ server {
 
 - [공식문서](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size)에서 해당옵션의 context: `http, server, location`
 - 중첩 context에서 하위 context는 상위 context 값을 상속받지만, client-max-body-size 옵션은 의도대로 작동하지 않는 경우가 있는듯 하다
+
+```conf
+server {
+    listen 80;
+
+    location /upload/ {
+        client_max_body_size 10M;
+        ...
+    }
+
+    location / {
+        ...
+    }
+}
+```
