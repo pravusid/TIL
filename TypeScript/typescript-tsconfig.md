@@ -15,6 +15,7 @@
 - <https://www.typescriptlang.org/docs/handbook/compiler-options.html>
 - <https://www.typescriptlang.org/docs/handbook/project-references.html>
 - <https://www.typescriptlang.org/docs/handbook/modules/guides/choosing-compiler-options.html>
+- <https://www.totaltypescript.com/tsconfig-cheat-sheet>
 
 ## 예시
 

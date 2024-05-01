@@ -422,6 +422,8 @@ branch 삭제
 
 ## 특정 기록 완전 삭제 (데이터 손상 위험)
 
+<https://git-scm.com/docs/git-filter-branch#_examples>
+
 > 파일 이동이 있었다면, 파일이 존재했던 모든 경로의 기록을 삭제 해야함
 
 ```sh
