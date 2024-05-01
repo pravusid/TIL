@@ -34,6 +34,43 @@ readableStream.pipe(transformStream1).pipe(transformStream2).pipe(writable);
 - <https://nodejs.org/api/stream.html#api-for-stream-implementers>
 - [Do transform streams have to handle backpressure as well?](https://github.com/nodejs/help/issues/2695)
 
+pipeline & backpressuring 예제
+
+```js
+import { createReadStream } from 'node:fs';
+import { createInterface } from 'node:readline/promises';
+import { Writable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+
+const result = [];
+
+await pipeline(
+  createReadStream('./input.log'),
+  (input) => createInterface({ input }),
+  new Writable({
+    objectMode: true,
+    highWaterMark: 500,
+    writev: async ([{ chunk }], cb) => {
+      if (!chunk) {
+        return cb();
+      }
+
+      const pos = chunk.indexOf(' web: {');
+      try {
+        const o = JSON.parse(chunk.slice(pos + 6));
+        result.push(o);
+        cb();
+      } catch (e) {
+        // cb(e); // throw error
+        cb(); // noop
+      }
+    },
+  })
+);
+
+console.log(result);
+```
+
 ### event
 
 모든 stream은 `EventEmitter`의 인스턴스이므로 event handler를 사용하여 stream을 처리할 수 있다.
