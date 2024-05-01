@@ -86,7 +86,7 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 #### `.zprofile`
 
-> 로그인 시 읽음
+> 로그인 쉘에서 로그인 시 읽음
 
 - 툴과 관련한 환경변수
 - 명령어 실행과 관련한 환경설정
@@ -112,7 +112,7 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 > 로그인 쉘에서 로그인 시 읽음
 
 - `.zprofile` 파일과 유사하게 login shell의 환경을 설정한다
-- `.zprifile` 파일과는 유래에서 차이가 있다
+- `.zprofile` 파일과는 유래에서 차이가 있다
   - > `.zprofile` is based on the Bash's `.bash_profile` while `.zlogin` is a derivative of CSH's `.login`
 
 #### `.zlogout`
