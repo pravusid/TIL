@@ -1002,6 +1002,12 @@ npm 패키지에 선언 파일이 없다면 `@types` 패키지를 다운로드 �
 npm install --save @types/lodash
 ```
 
+### DefinitelyTyped package version
+
+<https://github.com/definitelytyped/definitelytyped?tab=readme-ov-file#how-do-definitely-typed-package-versions-relate-to-versions-of-the-corresponding-library>
+
+> `major.minor.*` 버전을 맞춰서 사용한다
+
 ### 사용
 
 설치한 이후 불러와서 사용하기만 하면 된다
