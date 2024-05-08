@@ -4,9 +4,11 @@
 
 ## references
 
+- <https://unix.stackexchange.com/questions/38175/difference-between-login-shell-and-non-login-shell>
 - <https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout>
-- <https://apple.stackexchange.com/questions/388622/zsh-zprofile-zshrc-zlogin-what-goes-where>
 - <https://superuser.com/questions/187639/zsh-not-hitting-profile>
+- <https://apple.stackexchange.com/questions/388622/zsh-zprofile-zshrc-zlogin-what-goes-where>
+- <https://apple.stackexchange.com/questions/419014/why-is-zprofile-always-sourced-on-every-interactive-session>
 
 ## 계층
 
@@ -26,7 +28,6 @@
 
   - `/etc/bash.bashrc`
   - `~/.bashrc`: 사용자에게만 적용되고, 리눅스 기본 쉘인 bash 쉘 세션이 생성될 때마다 로드된다
-  - `~/.zshrc`: 사용자에게만 적용되고, zsh쉘 세션이 생성될 때 마다 로드된다
   - 세션 환경변수는 현재 쉘에서 지정된 값으로 `set/unset 변수=값`을 활용해서 지정/해제한다
 
 > rc는 'run commands'의 약자이다
@@ -38,6 +39,8 @@
 `~/.profile` 파일은 login shell에 의해 로드된다. login shell은 text mode에서 로그인 하면 수행되는 최초 과정이다.
 대부분의 리눅스에서는 기본 login shell은 `bash`이고 이는 `/etc/passwd`에서 확인할 수 있다.
 
+> text mode 로그인, SSH, `su -` 명령어를 사용하는 경우 login shell 이다
+
 login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 존재하면 읽는다.
 반면, `zsh`는 `~/.zprofile` 파일만 읽는다. (이는 zsh 문법이 기본 bourne shell 계통과 완전한 호환성을 보장하지 않기 때문이다)
 
@@ -48,7 +51,13 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 대부분의 설정에서 `~/.profile` 파일은 그래픽 디스플레이 매니저로 로그인 할 때 **X session startup scripts**에 의해서 로드된다.
 
-### terminal emulator (gnome terminal...)
+login shell 여부는 다음 명령어로 확인할 수 있다
+
+```bash
+shopt -q login_shell && echo 'Login shell' || echo 'Not login shell'
+```
+
+### terminal emulator: linux (gnome terminal...)
 
 터미널 에뮬레이터를 시작한 뒤 shell prompt를 얻거나(`bash`) shell script를 실행하면(`bash foo.bash`), 해당 shell은 **non login shell**이다.
 
@@ -61,6 +70,17 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 `~/.zshrc` 파일은 모든 대화형 shell instance에서 실행되어야 하는 것을 포함해야 한다.
 예를 들면, alias, 함수 정의, shell 옵선 설정, 자동완성 설정, 프롬프트 설정 키 바인딩 등의 설정이다.
+
+### terminal emulator: macOS
+
+- macOS의 터미널 에뮬레이터는 **login shell**을 실행한다
+- 터미널을 실행할 때마다 `.zprofile` 파일을 불러온다
+
+### bash
+
+- SSH를 통해 bash를 사용할 때는 login shell 이다
+- 이 말은 `.bashrc` 파일을 불러오지 않는다는 의미이다
+- 그런데 `.bashrc` 파일을 직접 불러오지 않지만, `.profile` 이나 `.bash_profile` 파일에 `. ~/.bashrc` 명령어가 포함되어 있다
 
 ### zsh
 
@@ -95,7 +115,7 @@ login shell에서 `bash`는 `~/.bash_profile` 파일과 `~/.profile` 파일이 �
 
 #### `.zshrc`
 
-> **대화형** shell 실행시 항상 읽음
+> **대화형** shell 실행시 항상 읽음 (login/non-login shell 여부와 관계 없음)
 
 대화형 쉘에서 사용할 내용을 입력하는 것이 좋음
 
