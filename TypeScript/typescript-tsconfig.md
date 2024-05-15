@@ -37,13 +37,33 @@
 
 명령행에 지정된 컴파일러 옵션이 `tsconfig.json` 파일에서 지정된 설정을 대체한다.
 
+### target
+
+- <https://www.typescriptlang.org/tsconfig/#target>
+- <https://github.com/tsconfig/bases#centralized-recommendations-for-tsconfig-bases>
+
+컴파일 할 자바스크립트 버전을 선택한다. target 설정에 따라 lib 설정 값도 변경된다 (기본 값을 사용하고 있다면)
+
+### lib
+
+<https://www.typescriptlang.org/tsconfig/#lib>
+
+- 타입스크립트에서 사용할 built-in JavaScript API 타입선언을 지정한다
+- 필요에 따라 선언의 일부분만 사용할 경우가 있다 (DOM 타입선언을 사용하지 않는 경우, 일부 polyfill만 포함한 경우...)
+
+> target 설정에 따른 lib 기본 값은 <https://github.com/microsoft/TypeScript/blob/main/src/lib/libs.json> 코드에서
+> target 버전과 일치하는 Default libraries 설정 값이다. (`es20??.full`)
+>
+> 해당 타입선언을 열어보면 기본 값으로 설정되는 lib들이 선언되어 있다. (`<reference lib="es20??" /><reference lib="dom" />` ...)
+>
+> --<https://stackoverflow.com/questions/63943629/what-is-the-typescript-compilers-default-lib-value>
+
 ### 경로 관련 설정
 
 #### baseUrl
 
-<https://www.typescriptlang.org/tsconfig#baseUrl>
-
-<https://www.typescriptlang.org/tsconfig#paths>
+- <https://www.typescriptlang.org/tsconfig#baseUrl>
+- <https://www.typescriptlang.org/tsconfig#paths>
 
 모듈 절대경로(non-relative) 설정(`paths`)에서 기준 경로를 설정할 때 사용하는 옵션
 
