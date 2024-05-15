@@ -186,3 +186,27 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 - <https://github.com/microsoft/vscode/issues/208388>
 - <https://www.reddit.com/r/nextjs/comments/1bzd0h7/vs_code_new_feature_implementation_for_next_js/>
 - <https://gist.github.com/hAbuMustafa/88288a7fc2141c2a919a492ff3bf84cb>
+
+### Custom labels example: Next.js
+
+```json
+{
+  "workbench.editor.customLabels.patterns": {
+    "**/app/**/*.{ts,tsx}": "/${dirname}/${filename}.${extname}",
+    "**/components/**/index.{ts,tsx}": "@component/${dirname}.${extname}",
+    "**/components/**/*.{ts,tsx}": "@component/${dirname}/${filename}.${extname}",
+    "**/pages/api/**/index.ts": "@api/${dirname}.${extname}",
+    "**/pages/api/**/*.ts": "@api/${dirname}/${filename}.${extname}",
+    "**/pages/**/index.tsx": "/${dirname}.${extname}",
+    "**/pages/**/*.tsx": "/${dirname}/${filename}.${extname}"
+  }
+}
+```
+
+## 참고사항
+
+### Why are there duplicate paths in the terminal's $PATH environment variable and/or why are they reversed on macOS?
+
+<https://code.visualstudio.com/docs/terminal/profiles#_why-are-there-duplicate-paths-in-the-terminals-path-environment-variable-andor-why-are-they-reversed-on-macos>
+
+> [[env-variables#terminal emulator: macOS|macOS 터미널]]은 login shell을 실행한다
