@@ -37,13 +37,11 @@ alias la='ls -lAh'
 
 <https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/clipboard.zsh>
 
-| 명령어                   | 설명                                            |
-| ------------------------ | ----------------------------------------------- |
-| `<command> \| clipcopy`  | copies stdin to clipboard                       |
-| `clipcopy <file>`        | copies a file's contents to clipboard           |
-| `clippaste`              | writes clipboard's contents to stdout           |
-| `clippaste \| <command>` | pastes contents and pipes it to another process |
-| `clippaste > <file>`     | paste contents to a file                        |
+- `<command> | clipcopy` : copies stdin to clipboard
+- `clipcopy <file>` : copies a file's contents to clipboard
+- `clippaste` : writes clipboard's contents to stdout
+- `clippaste | <command>` : pastes contents and pipes it to another process
+- `clippaste > <file>` : paste contents to a file
 
 ## sudo
 
