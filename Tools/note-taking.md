@@ -6,7 +6,6 @@
 
 - Database → Notion
 - DigitalGarden → VSCodeFoam → <https://pravusid.kr/wiki/>
-- PersonalNote → VSCodeFoam
 - Worklog → LogSeq
 
 ---
@@ -19,17 +18,3 @@
 - `Logseq`, `Roam Research`
   - outliner 스타일임
   - block reference 문법이 `((block))` 임
-
-## Extensions
-
-### Logseq
-
-- plugins
-  - Block to page
-  - Copy Code
-  - Logseq Markmap
-  - Tags
-  - Tidy Blocks
-  - Todo list
-- theme
-  - Dev theme
