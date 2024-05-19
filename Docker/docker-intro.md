@@ -20,7 +20,8 @@ Docker는 리눅스 컨테이너 기술을 기반으로 두기 때문에 Windows
 
 설치: `curl -s https://get.docker.com/ | sudo sh`
 
-<https://docs.docker.com/engine/install/linux-postinstall/>
+- <https://github.com/docker/docker-install>
+- <https://docs.docker.com/engine/install/linux-postinstall/>
 
 도커 daemon은 root 소유의 유닉스 소켓을 사용하므로 사용자를 docker 그룹에 추가함
 
