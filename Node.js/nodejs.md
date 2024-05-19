@@ -51,6 +51,22 @@ node --watch-path=./src --watch-path=./tests index.js
 NODE_OPTIONS="--max-old-space-size=4096" node index.js
 ```
 
+## Node.js default max-old-space-size
+
+- <https://github.com/nodejs/node/pull/25576#issuecomment-455737693>
+- <https://github.com/nodejs/node/issues/35573>
+- <https://github.com/nodejs/node/issues/39107>
+- <https://github.com/nodejs/node/issues/43991>
+- <https://stackoverflow.com/a/71337579>
+- <https://source.chromium.org/chromium/chromium/src/+/main:v8/src/heap/heap.cc>
+
+old generation heap size (64bit 기준)
+
+- 512MB 미만: 256MB
+- 512MB~4GB: 256MB~2048MB
+- 4GB~15GB: 2048MB
+- 15GB이상: 4096MB
+
 ## http
 
 <https://nodejs.org/en/learn/modules/anatomy-of-an-http-transaction>
