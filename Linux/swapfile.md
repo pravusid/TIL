@@ -26,3 +26,7 @@ sudo swapon -s
 ```txt
 /swapfile swap swap defaults 0 0
 ```
+
+## Swappiness 설정
+
+<https://wiki.archlinux.org/title/swap#Swappiness>
