@@ -92,8 +92,10 @@ compose 파일의 기본 경로는 `./docker-compose.yml`이다.
 
 <https://docs.docker.com/compose/compose-file/>
 
+> The top-level version property is defined by the Compose Specification for backward compatibility.
+> It is only informative and you'll receive a warning message that it is obsolete if used.
+
 ```yml
-version: '3'
 name: my_project_name
 
 services:
@@ -191,7 +193,6 @@ volumes:
 [[example-mysql]] & [[example-redis]]
 
 ```yml
-version: '3'
 name: my_project_name
 
 services:

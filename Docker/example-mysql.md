@@ -113,8 +113,7 @@ EXPOSE 3306
 <https://github.com/docker-library/mysql/issues/131>
 
 `docker-entrypoint`를 사용해 UTF8 인코딩으로 되어있는 sql 스크립트 실행시켜 DB 초기화를 하려는 경우
-
-shell에서 스크립트를 실행시키는데 docker상의 리눅스 기본 locale은 UTF가 아니다
+shell에서 스크립트를 실행시키는데 docker 인스턴스의 기본 locale codeset은 UTF가 아니다
 
 해결책1: `locale` 변경
 

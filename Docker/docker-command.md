@@ -49,6 +49,10 @@ docker run -d --restart always ...
 docker update --restart=always <container-id|container-name>
 ```
 
+### 컨테이너 자원 제한 (Memory, CPUs, and GPUs)
+
+<https://docs.docker.com/config/containers/resource_constraints/>
+
 ## docker ps
 
 실행중인 컨테이너 목록을 출력
