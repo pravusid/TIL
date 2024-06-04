@@ -145,9 +145,13 @@ esac
 
 ### 조건문 상의 비교연산자
 
-<https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html>
+> 괄호가 하나인 경우 `test` 명령으로 작동한다 `[ expression ]`
 
-> 확장 비교연산자를 사용하기 위해서는 괄호를 두개 써야한다 `[[ 조건 ]]`
+<https://en.wikipedia.org/wiki/Test_(Unix)>
+
+> 확장 비교연산자를 사용하기 위해서는 괄호를 두개 써야한다 `[[ expression ]]`
+
+<https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html>
 
 - 문자열 비교
 

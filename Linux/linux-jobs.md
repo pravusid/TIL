@@ -6,7 +6,9 @@
 - stopped
 - background
 
-![https://www.baeldung.com/linux/foreground-background-process](linux-jobs.png)
+![foreground-background-process](linux-jobs.png)
+
+> -- <https://www.baeldung.com/linux/foreground-background-process>
 
 ## background 상태로 명령어 시작
 
