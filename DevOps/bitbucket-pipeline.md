@@ -26,15 +26,21 @@
 ```yml
 pipelines:
   default:
-  - step:
-      name: Install, build and tests
-      caches:
-        - npm
-      script:
-        - npm ci
+    - step:
+        name: Install deps
+        caches:
+          - npm
+        script:
+          - npm ci
+
 definitions:
   caches:
-    npm: $HOME/.npm
+    npm:
+      key:
+        files:
+          - package-lock.json
+          - '**/package-lock.json'
+      path: $HOME/.npm
 ```
 
 ## Example
@@ -92,7 +98,7 @@ pipelines:
           caches:
             - node
           script:
-            - npm ci
+            - npm install
             - npm run build
             - pipe: atlassian/aws-s3-deploy:1.1.0
               variables:
@@ -137,11 +143,12 @@ pipelines:
           image: node:16.13.0
           name: Build & Compress
           caches:
-            - node
+            - npm
           script:
             - apt-get update && apt-get install -y zip
-            - npm ci --only=prod && npm run build
-            - zip -r dist.zip ./
+            - npm ci --only=prod
+            - npm run build
+            - zip -q -y -r dist.zip ./ -x '.git/*' -x '.vscode/*'
           artifacts:
             - dist.zip
 
