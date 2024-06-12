@@ -23,6 +23,8 @@ AWS SDK에서는 스로틀된 요청은 기본적으로 10번 재시도 함
 - <https://github.com/aws/aws-sdk-js/blob/master/lib/services/dynamodb.js>
 - <https://github.com/aws/aws-sdk-js/blob/master/test/services/dynamodb.spec.js>
 
+> [Amazon DynamoDB 키 디자인 패턴](https://www.youtube.com/watch?v=I7zcRxHbo98)
+
 ### 보조 인덱스
 
 테이블에서 종류별 최대 5개의 보조 인덱스를 생성할 수 있다

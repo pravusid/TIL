@@ -39,6 +39,8 @@ docker run -d -p 3306:3306 \
 
 ### --restart 옵션으로 재부팅 후 자동시작
 
+<https://docs.docker.com/config/containers/start-containers-automatically/>
+
 ```sh
 docker run -d --restart always ...
 ```
