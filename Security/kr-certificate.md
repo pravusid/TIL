@@ -21,7 +21,7 @@
 - 개인키는
 
   - [PKCS#5](https://datatracker.ietf.org/doc/html/rfc2898) 및 [PKCS#8](https://en.wikipedia.org/wiki/PKCS_8) 형식을 사용하며
-  - PKCS#8 개인키를 ASN.1 구조로 파싱하면 [sequence[0]은 암호화 알고리즘, sequence[1]은 암호화된 개인키 정보이다](https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java#L20)
+  - PKCS#8 개인키를 ASN.1 구조로 파싱하면 [sequence[0]은 암호화 알고리즘, sequence[1]은 암호화된 개인키 정보이다](https://github.com/bcgit/bc-java/blob/f4ba48a0fab38264bce4d1898637de19fc787e9c/core/src/main/java/org/bouncycastle/asn1/pkcs/EncryptedPrivateKeyInfo.java#L21)
   - [암호 알고리즘 규격](https://www.rootca.or.kr/kcac/down/TechSpec/2.3-KCAC.TS.ENC.pdf)을 확인할 수 있다
   - 암호화 방식 (PBES)
     - 암호화 방식 OID 값 확인은 [전자서명인증체계 OID 가이드라인](https://www.rootca.or.kr/kcac/down/Guide/Object_Identifier_Guideline_for_the_Electronic_Signature_Certification_System.pdf) 참조

@@ -102,8 +102,8 @@ driver option: `timezone: 'z'`
 ## 에러처리
 
 - 에러코드: <https://github.com/sidorares/node-mysql2/blob/master/lib/constants/errors.js>
-- 에러패킷처리 (저수준): <https://github.com/sidorares/node-mysql2/blob/master/lib/packets/packet.js#L702>
-- 에러처리 (고수준): <https://github.com/sidorares/node-mysql2/blob/master/promise.js#L8>
+- 에러패킷처리 (저수준): <https://github.com/sidorares/node-mysql2/blob/092dc7f103f622b0c9d013b286cea48ed01883a9/lib/packets/packet.js#L718>
+- 에러처리 (고수준): <https://github.com/sidorares/node-mysql2/blob/092dc7f103f622b0c9d013b286cea48ed01883a9/promise.js#L7>
 
 ## mysqljs vs node-mysql2
 

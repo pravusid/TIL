@@ -18,11 +18,11 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 
 각 테스트 파일은 기본적으로 병렬로 실행되고 독립적인 런타임 환경을 가짐
 
-- <https://github.com/facebook/jest/blob/master/packages/jest-core/src/runJest.ts#L122>
-- <https://github.com/facebook/jest/blob/master/packages/jest-core/src/TestScheduler.ts#L78>
-- <https://github.com/facebook/jest/blob/master/packages/jest-runner/src/index.ts#L60>
-- <https://github.com/facebook/jest/blob/master/packages/jest-runner/src/runTest.ts#L78>
-- <https://github.com/facebook/jest/blob/master/packages/jest-runtime/src/index.ts#L144>
+- <https://github.com/jestjs/jest/blob/21cce70205025decc778f4aac2ec76051f589fd7/packages/jest-core/src/runJest.ts#L140>
+- <https://github.com/jestjs/jest/blob/21cce70205025decc778f4aac2ec76051f589fd7/packages/jest-core/src/TestScheduler.ts#L92>
+- <https://github.com/jestjs/jest/blob/21cce70205025decc778f4aac2ec76051f589fd7/packages/jest-runner/src/index.ts#L53>
+- <https://github.com/jestjs/jest/blob/21cce70205025decc778f4aac2ec76051f589fd7/packages/jest-runner/src/runTest.ts#L385>
+- <https://github.com/jestjs/jest/blob/21cce70205025decc778f4aac2ec76051f589fd7/packages/jest-runtime/src/index.ts#L164>
 
 > [`--runInBand`](https://jestjs.io/docs/en/cli#--runinband) 옵션으로 순차실행할 수 있음 (디버그 용도로 적합)
 
@@ -40,7 +40,7 @@ Facebook 에서 주도하는 자바스크립트 테스트 툴 (React와 함께 �
 
 jest 기본 `NODE_ENV`는 `test`임
 
-> <https://github.com/facebook/jest/blob/master/packages/jest-cli/bin/jest.js#L12-L14>
+> <https://github.com/jestjs/jest/blob/21cce70205025decc778f4aac2ec76051f589fd7/packages/jest-cli/bin/jest.js#L12-L14>
 
 ## jest설정 (TypeScript기준)
 

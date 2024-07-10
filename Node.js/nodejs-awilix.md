@@ -40,7 +40,7 @@ export class Foo {
 ## 종속성 중복등록
 
 - 동일한 이름의 종속성 (별도의 `RESOLVER` 설정이 없다면 동일한 파일명)을 중복(여러번) 등록하면 마지막으로 등록한 종속성을 사용함
-- 종속성 등록순서는 [`listModules`](https://github.com/jeffijoe/awilix/blob/master/src/load-modules.ts#L107) 순서를 따름
+- 종속성 등록순서는 [`listModules`](https://github.com/jeffijoe/awilix/blob/65b4d4246aafec5f31d760398ed644abc3fb48ba/src/load-modules.ts#L107) 순서를 따름
 - `node:path.resolve` 실행결과의 순서임
 
 ## Auto Loading Modules

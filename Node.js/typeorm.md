@@ -234,7 +234,7 @@ TypeOrm에서 대용량 작업을 `chunk` 단위로 나누어 처리할 수 있�
 
 ### raw query with parameters
 
-<https://github.com/typeorm/typeorm/blob/master/src/driver/mysql/MysqlDriver.ts#L396>
+<https://github.com/typeorm/typeorm/blob/e7649d2746f907ff36b1efb600402dedd5f5a499/src/driver/mysql/MysqlDriver.ts#L490>
 
 ```ts
 // 테스트 위해 id = 1 고정

@@ -157,7 +157,7 @@ app.listen();
 
 클라이언트에서 확인 가능한 오류는 `GraphQLFormattedError`이다
 
-<https://github.com/graphql/graphql-js/blob/main/src/error/GraphQLError.ts#L218>
+<https://github.com/graphql/graphql-js/blob/f6227a899aad15a8784d07e442b5df6e5ab16212/src/error/GraphQLError.ts#L218>
 
 - message: (짧고 이해할 수 있게 요약한) 오류메시지
 - locations: 요청 GraphQL doucment(query, mutation)에서 오류가 발생한 위치 (line, column)

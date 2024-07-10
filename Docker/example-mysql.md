@@ -74,7 +74,7 @@ docker logs -f idpravus
 
 초기화 스크립트 `scripts/_init.sql` 예시
 
-> 초기화를 위한 `docker-entrypoint-initdb.d` 호출 코드: <https://github.com/docker-library/mysql/blob/master/8.0/docker-entrypoint.sh#L416>
+> 초기화를 위한 `docker-entrypoint-initdb.d` 호출 코드: <https://github.com/docker-library/mysql/blob/8a3178fd2f84b610693bd4ba9d6bdf26215b04b8/8.0/docker-entrypoint.sh#L399>
 
 ```sql
 CREATE DATABASE idpravus_db;

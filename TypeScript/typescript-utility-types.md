@@ -1,7 +1,7 @@
 # TypeScript - Utility Types
 
 - 문서: <https://www.typescriptlang.org/docs/handbook/utility-types.html>
-- 구현: <https://github.com/microsoft/TypeScript/blob/main/lib/lib.es5.d.ts#L1530>
+- 구현: <https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts>
 
 TypeScript에서는 타입 변환을 편리하게 할 수 있는 유틸리티 타입을 global scope로 사용할 수 있다.
 
