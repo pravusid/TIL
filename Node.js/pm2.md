@@ -6,6 +6,8 @@ Process Manager 2
 
 ## 시작
 
+[[oss-licenses#AGPL]]이므로 사용시 유의
+
 ```sh
 # Install
 sudo npm install pm2@latest -g
@@ -22,9 +24,6 @@ pm2 start app.js -i <number-instances>
 
 # 한번에 종료하지 않고 클러스터 내에서 순차적으로 재시작
 pm2 reload <app_name>
-
-# Invoke reload
-pm2 startOrReload <app_name>
 ```
 
 ## CLI
@@ -34,8 +33,12 @@ pm2 startOrReload <app_name>
 ```sh
 pm2 start app.js --name <app_name>
 
-pm2 reload <app_id|app_name|all>
-pm2 restart <app_id|app_name|all>
+pm2 startOrRestart <json>             # start or restart JSON file
+pm2 startOrReload <json>              # start or gracefully reload JSON file
+pm2 startOrGracefulReload <json>      # start or gracefully reload JSON file
+
+pm2 restart <app_id|app_name|all>     # restart a process
+pm2 reload <app_id|app_name|all>      # reload processes (note that its for app using HTTP/HTTPS)
 
 pm2 stop <app_id|app_name|all>
 pm2 delete <app_id|app_name|all>
@@ -73,23 +76,23 @@ pm2 serve <path> <port> [--spa]
 module.exports = {
   apps: [
     {
-      name: "app",
-      script: "./app.js",
-      instances: "max", // cluster
+      name: 'app',
+      script: './app.js',
+      instances: 'max', // cluster
       exp_backoff_restart_delay: 100,
-      max_memory_restart: "200M",
-      output: "./logs/out.log",
-      error: "./logs/error.log",
-      log_type: "json",
+      max_memory_restart: '200M',
+      output: './logs/out.log',
+      error: './logs/error.log',
+      log_type: 'json',
       merge_logs: true,
       env: {
-        NODE_ENV: "development"
+        NODE_ENV: 'development',
       },
       env_production: {
-        NODE_ENV: "production"
-      }
-    }
-  ]
+        NODE_ENV: 'production',
+      },
+    },
+  ],
 };
 ```
 
@@ -113,7 +116,7 @@ pm2를 통해 실행된 어플리케이션에서는 `wait_ready: true` 옵션을
 아래의 코드를 앱에서 실행하여 PM2에게 `ready` signal을 직접 보낼 수 있다
 
 ```js
-process.send("ready");
+process.send('ready');
 ```
 
 ### Graceful Stop
@@ -134,13 +137,13 @@ process.on('SIGINT', function() {
 module.exports = {
   apps: [
     {
-      name: "app",
-      script: "./app.js",
+      name: 'app',
+      script: './app.js',
       wait_ready: true, // Instead of reload waiting for listen event, wait for process.send(‘ready’)
       listen_timeout: 3000, // (default) time in ms before forcing a reload if app not listening
-      kill_timeout: 1600 // (default) time in milliseconds before sending a final SIGKILL
-    }
-  ]
+      kill_timeout: 1600, // (default) time in milliseconds before sending a final SIGKILL
+    },
+  ],
 };
 ```
 
@@ -159,3 +162,14 @@ pm2 install pm2-logrotate
 <https://github.com/Unitech/pm2/blob/de0bbad9afe29f4e316452af373d1c7b87655ca0/lib/ProcessContainer.js#L251>
 
 pm2는 실행중인 프로세스의 `uncaughtException`, `unhandledRejection`을 처리함
+
+### 실행 모드 (exec_mode)
+
+실행 모드 처리방식은 <https://nodejs.org/api/cluster.html> 참고
+
+- 기본 값은 `fork`
+- 설정에 `"exec_mode": "cluster"` 또는 `"instances": n`을 정의하면 `cluster`로 작동함
+
+> [cron](https://www.npmjs.com/package/cron) 라이브러리에서 `cluster` 모드로 실행할 때 작업이 두 번 실행되는 문제가 있음
+>
+> --<https://github.com/kelektiv/node-cron/issues/489>
