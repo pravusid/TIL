@@ -3,7 +3,12 @@
 - 문서: <https://www.typescriptlang.org/docs/handbook/utility-types.html>
 - 구현: <https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts>
 
-TypeScript에서는 타입 변환을 편리하게 할 수 있는 유틸리티 타입을 global scope로 사용할 수 있다.
+TypeScript에서는 타입 변환을 편리하게 할 수 있는 유틸리티 타입을 global scope로 사용할 수 있다
+
+## Refs
+
+- <https://github.com/type-challenges/type-challenges>
+- <https://github.com/sindresorhus/type-fest>
 
 ## `Partial<T>`
 
@@ -396,8 +401,6 @@ createStreetLight(['red', 'yellow', 'green'], 'blue');
 ```
 
 ## 타입활용
-
-<https://github.com/type-challenges/type-challenges>
 
 ### `infer NonFunctionProperties`
 
