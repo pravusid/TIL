@@ -340,6 +340,18 @@ git push --delete origin feature-foobar
 - 되돌리기(unstaged 파일 변경점 되돌리기): `git restore <filename>`
 - 되돌리기(staged -> unstaged): `git restore --staged <filename>`
 
+## Clone
+
+- <https://git-scm.com/docs/git-clone/en>
+- <https://git-scm.com/docs/git-clone/en#URLS>
+
+```sh
+git clone [--depth n] <git-url> [dir-to-clone-into]
+
+# depth → 마지막 n개의 커밋만 가져오는 shallow clone 실행
+# 커밋을 추가로 가져오려면 git fetch --depth n --force 실행
+```
+
 ## Remote
 
 - 생성한 브랜치 원격 저장소 최초 커밋시 push
