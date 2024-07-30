@@ -21,17 +21,18 @@
 
 ## Libraries
 
-### Plugins & Components
+### Components
 
 - <https://github.com/tailwindlabs/tailwindcss-forms>
 - <https://github.com/shadcn-ui/ui>
 - <https://github.com/saadeghi/daisyui>
 - <https://github.com/mdbootstrap/TW-Elements>
 
-### Tools
+### Plugins & Tools
 
 - <https://github.com/ben-rogerson/twin.macro>
 - <https://github.com/dcastil/tailwind-merge>
+- <https://github.com/barvian/fluid-tailwind>
 
 ## install
 
