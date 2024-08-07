@@ -2,16 +2,21 @@
 
 ## CodeDeploy Agent
 
-- CLI 환경에서 Agent 설치: <https://docs.aws.amazon.com/ko_kr/codedeploy/latest/userguide/codedeploy-agent-operations-install-linux.html>
-- CodeDeploy Agent 사용자 변경: <https://aws.amazon.com/ko/premiumsupport/knowledge-center/codedeploy-agent-non-root-profile/>
-
 ### CodeDeploy Agent in AmazonLinux
+
+CLI 환경에서 Agent 설치: <https://docs.aws.amazon.com/ko_kr/codedeploy/latest/userguide/codedeploy-agent-operations-install-linux.html>
 
 ```sh
 sudo yum install -y ruby
 curl -O https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
 chmod +x install
 sudo ./install auto
+```
+
+CodeDeploy Agent 사용자 변경: <https://aws.amazon.com/ko/premiumsupport/knowledge-center/codedeploy-agent-non-root-profile/>
+
+```sh
+sudo service codedeploy-agent stop
 
 sudo sed -i 's/""/"ec2-user"/g' /etc/init.d/codedeploy-agent
 # 중요: Amazon Linux 2 AMI의 경우 다음 추가 명령을 실행합니다.
@@ -29,15 +34,15 @@ sudo systemctl status codedeploy-agent
 ps aux | grep codedeploy-agent
 ```
 
-### agent 실행 환경변수
+### Agent 실행 환경변수
 
-agent 실행시 환경변수는 다음과 같음
+Agent 실행시 환경변수는 다음과 같음
 
-1. LIFECYCLE_EVENT : This variable contains the name of the lifecycle event associated with the script.
-2. DEPLOYMENT_ID : This variables contains the deployment ID of the current deployment.
-3. APPLICATION_NAME : This variable contains the name of the application being deployed. This is the name the user sets in the console or AWS CLI.
-4. DEPLOYMENT_GROUP_NAME : This variable contains the name of the deployment group. A deployment group is a set of instances associated with an application that you target for a deployment.
-5. DEPLOYMENT_GROUP_ID : This variable contains the ID of the deployment group in AWS CodeDeploy that corresponds to the current deployment
+1. `LIFECYCLE_EVENT` : This variable contains the name of the lifecycle event associated with the script.
+2. `DEPLOYMENT_ID` : This variables contains the deployment ID of the current deployment.
+3. `APPLICATION_NAME` : This variable contains the name of the application being deployed. This is the name the user sets in the console or AWS CLI.
+4. `DEPLOYMENT_GROUP_NAME` : This variable contains the name of the deployment group. A deployment group is a set of instances associated with an application that you target for a deployment.
+5. `DEPLOYMENT_GROUP_ID` : This variable contains the ID of the deployment group in AWS CodeDeploy that corresponds to the current deployment
 
 ## 준비
 

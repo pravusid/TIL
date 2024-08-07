@@ -58,7 +58,7 @@ definitions:
 ### PR 빌드 & 테스트
 
 ```yml
-image: node:16.13.0
+image: node:22
 
 pipelines:
   pull-requests:
@@ -87,7 +87,7 @@ pipelines:
 ### S3 배포 후 cloudfront invalidation
 
 ```yml
-image: node:16.13.0
+image: node:22
 
 pipelines:
   branches:
@@ -96,7 +96,7 @@ pipelines:
           name: Deploy
           deployment: production
           caches:
-            - node
+            - npm
           script:
             - npm install
             - npm run build
@@ -115,7 +115,7 @@ pipelines:
                 # EXPIRES: '<timestamp>' # Optional.
                 # EXTRA_ARGS: '<string>' # Optional.
                 # DEBUG: '<boolean>' # Optional.
-            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+            - pipe: atlassian/aws-cloudfront-invalidate:0.10.0
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
@@ -123,7 +123,7 @@ pipelines:
                 DISTRIBUTION_ID: $DISTRIBUTION_ID
                 PATHS: '/*'
                 # DEBUG: '<boolean>' # Optional
-            - pipe: atlassian/slack-notify:2.0.0
+            - pipe: atlassian/slack-notify:2.3.0
               variables:
                 WEBHOOK_URL: $WEBHOOK_URL
                 MESSAGE: 'SLACK MESSAGE!'
@@ -134,13 +134,12 @@ pipelines:
 <https://support.atlassian.com/bitbucket-cloud/docs/deploy-to-aws-with-codedeploy/>
 
 ```yml
-image: atlassian/default-image:3
+image: node:22
 
 pipelines:
   branches:
     master:
       - step:
-          image: node:16.13.0
           name: Build & Compress
           caches:
             - npm
@@ -148,17 +147,15 @@ pipelines:
             - apt-get update && apt-get install -y zip
             - npm ci --only=prod
             - npm run build
-            - zip -q -y -r dist.zip ./ -x '.git/*' -x '.vscode/*'
+            - zip -q -y -r ${APPLICATION_NAME}.dist.zip ./ -x '.git/*' -x '.vscode/*'
           artifacts:
-            - dist.zip
+            - '*.dist.zip'
 
       - step:
           name: Upload & Deploy with CodeDeploy
           deployment: production
-          services:
-            - docker
           script:
-            - pipe: atlassian/aws-code-deploy:1.1.1
+            - pipe: atlassian/aws-code-deploy:1.5.0
               variables:
                 AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
                 AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -166,8 +163,8 @@ pipelines:
                 COMMAND: 'upload'
                 APPLICATION_NAME: ${APPLICATION_NAME}
                 S3_BUCKET: '${AWS_DEPLOY_BUCKET}'
-                ZIP_FILE: 'dist.zip'
-            - pipe: atlassian/aws-code-deploy:1.1.1
+                ZIP_FILE: '${APPLICATION_NAME}.dist.zip'
+            - pipe: atlassian/aws-code-deploy:1.5.0
               variables:
                 AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
                 AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
