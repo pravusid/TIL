@@ -416,9 +416,42 @@ type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 
 ```ts
 export type OnlyTypePropertyNames<T, O> = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   [K in keyof T]: T[K] extends O ? K : never;
 }[keyof T];
+```
+
+### `ExtractProps<T>`
+
+<https://x.com/colinhacks/status/1818047762891506050?s=46&t=zQaFJ1iBc-ZF5GKv5CVZpQ>
+
+```ts
+// extract non-function properties from the prototype
+type IsProp<T, K extends keyof T> = T[K] extends (...args: any[]) => any ? never : K;
+
+type ExtractProps<T extends { prototype: unknown }> = {
+  [k in keyof T['prototype'] as IsProp<T['prototype'], k>]: T['prototype'][k];
+};
+```
+
+> `NonFunctionProperties<T>` 타입과는 다르게 다른 클래스를 상속하는 SubClass에서도 활용가능
+
+```ts
+class Player {
+  name!: string;
+  points!: number;
+
+  constructor(props: ExtractProps<typeof Player>) {
+    Object.assign(this, props);
+  }
+}
+
+class FooPlayer extends Player {
+  level!: number;
+
+  constructor(props: ExtractProps<typeof FooPlayer>) {
+    super(props);
+  }
+}
 ```
 
 ### `Mutable<T>`, `Immutable<T>`
@@ -596,9 +629,10 @@ export const findById = <T extends Id<unknown, unknown>, I extends T['_id']>(lis
 
 - <https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type>
 - <https://github.com/type-challenges/type-challenges/issues/122>
+- <https://github.com/sindresorhus/type-fest/blob/main/source/union-to-intersection.d.ts>
 
 ```ts
-type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (m: infer I) => void ? I & U : never;
 ```
 
 ### Tuple to Union
