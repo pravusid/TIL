@@ -48,7 +48,43 @@ node --watch-path=./src --watch-path=./tests index.js
 ### `--max-old-space-size=SIZE` (in megabytes)
 
 ```bash
-NODE_OPTIONS="--max-old-space-size=4096" node index.js
+node --max-old-space-size=1536 index.js
+```
+
+### `--openssl-legacy-provider`
+
+- [Investigate loading legacy provider with OpenSSL 3.0](https://github.com/nodejs/node/issues/40455)
+- <https://www.codingbeautydev.com/blog/node-err-ossl-evp-unsupported>
+
+```bash
+node --openssl-legacy-provider
+```
+
+## `NODE_OPTIONS`
+
+<https://nodejs.org/api/cli.html#node_optionsoptions>
+
+- 공백으로 구분된 명령행 옵션 여러 건을 환경변수로 정의할 수 있다
+- 명령행 옵션보다 먼저 해석되고, 함께 적용되거나 overriding 된다
+
+```bash
+# 예시 1
+node --max-old-space-size=1536 index.js
+# is equivalent to:
+NODE_OPTIONS="--max-old-space-size=1536" node index.js
+
+# 예시 2
+NODE_OPTIONS='--require "./a.js"' node --require "./b.js"
+# is equivalent to:
+node --require "./a.js" --require "./b.js"
+```
+
+> `.npmrc` 파일에 다음 내용을 추가해도 된다, npm script(`npm run ??`) 호출할 때 적용 됨
+>
+> --<https://docs.npmjs.com/cli/v10/using-npm/config#node-options>
+
+```env
+node-options="--max-old-space-size=1536"
 ```
 
 ## Node.js default max-old-space-size
