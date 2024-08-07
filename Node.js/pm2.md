@@ -167,9 +167,28 @@ pm2는 실행중인 프로세스의 `uncaughtException`, `unhandledRejection`을
 
 실행 모드 처리방식은 <https://nodejs.org/api/cluster.html> 참고
 
-- 기본 값은 `fork`
-- 설정에 `"exec_mode": "cluster"` 또는 `"instances": n`을 정의하면 `cluster`로 작동함
+- 기본 값은 `fork`(node:child_process)
+- 설정에 `"exec_mode": "cluster"` 또는 `"instances": n`을 정의하면 `cluster`(node:cluster)로 작동함
 
-> [cron](https://www.npmjs.com/package/cron) 라이브러리에서 `cluster` 모드로 실행할 때 작업이 두 번 실행되는 문제가 있음
->
-> --<https://github.com/kelektiv/node-cron/issues/489>
+> <https://github.com/kelektiv/node-cron/issues/489> 이슈 처럼
+> child_process를 사용하는 코드를 `cluster` 모드로 실행할 때 코드가 두 번 호출되거나 하는 등의 잠재적 문제가 있음
+
+- fork 모드로 실행하고 `/usr/bin/node` 바이너리가 없을 때 (NVM 사용 등으로 ...)
+- `pm2 save && pm2 resurrect` 명령을 사용한다면 인터프리터 경로를 별도 처리해야 한다
+
+```sh
+# https://github.com/Unitech/pm2/issues/1413
+# https://github.com/Unitech/pm2/issues/3648
+pm2 start main.js --name=foo --interpreter=$(which node)
+pm2 start ecosystem.config.js # "interpreter" 설정 값 변경필요 (default: "node")
+```
+
+### Updating environment variables and options
+
+<https://github.com/Unitech/pm2/blob/de0bbad9afe29f4e316452af373d1c7b87655ca0/test/e2e/cli/env-refresh.sh#L7>
+
+> To update environment variables or PM2 options, specify the --update-env CLI option:
+
+```bash
+NODE_ENV=production pm2 restart foo --update-env
+```
