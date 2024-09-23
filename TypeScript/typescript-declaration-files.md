@@ -1021,6 +1021,22 @@ _.padStart('Hello TypeScript!', 20, ' ');
 
 대부분의 경우 타입 선언패키지는 npm 패키지 이름과 같으며 접두사가 `@types/`이지만 필요한 경우 <https://aka.ms/types>에서 직접 찾을 수 있다.
 
+## Isolated Declarations
+
+- <https://www.typescriptlang.org/tsconfig/#isolatedDeclarations>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-5/#isolated-declarations>
+- [Speeding up the JavaScript ecosystem - Isolated Declarations](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-10/)
+
+## 선언 파일 (`d.ts`) 사용에 대한 의견
+
+<https://x.com/mattpocockuk/status/1820454283457765645?s=46&t=zQaFJ1iBc-ZF5GKv5CVZpQ>
+
+> - 라이브러리가 아니라 애플리케이션 코드에서는 선언파일을 사용하지 말아야 한다
+> - 타입스크립트 프로젝트에서 선언파일을 사용하는 경우는 보통 전역 타입이다
+> - 보통 사용중인 라이브러리 타입 오류 발생방지와 약간의 성능을 위해 타입스크립트 컴파일러 옵션에서 `skipLibCheck`를 사용하는 경우가 많다
+> - 이 경우 현재 프로젝트에서 작성한 `d.ts` 파일의 오류도 확인할 수 없게 된다
+> - 일반적인 상황에서 `ts` 파일을 작성하면 `d.ts` 파일의 기능을 수행할 수 있으므로 `ts` 파일만 사용한다
+
 ## Examples
 
 ### process.env

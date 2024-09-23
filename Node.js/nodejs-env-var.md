@@ -9,16 +9,4 @@
 
 ## TypeScript 환경변수 타입 정의
 
-`env.d.ts`
-
-```ts
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      FOO: string;
-    }
-  }
-}
-
-export {};
-```
+[[typescript-declaration-files#process.env]]
