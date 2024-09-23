@@ -33,6 +33,9 @@
 - <https://github.com/ben-rogerson/twin.macro>
 - <https://github.com/dcastil/tailwind-merge>
 - <https://github.com/barvian/fluid-tailwind>
+- <https://github.com/lukeed/clsx>
+- <https://github.com/joe-bell/cva>
+- <https://github.com/nextui-org/tailwind-variants>
 
 ## install
 
@@ -84,6 +87,7 @@
 
 - <https://github.com/tailwindlabs/tailwindcss/issues/7553>
 - <https://github.com/tailwindlabs/tailwindcss/discussions/7554>
+- <https://github.com/lukeed/clsx?tab=readme-ov-file#tailwind-support>
+- <https://cva.style/docs/getting-started/installation#intellisense>
 - <https://github.com/ben-rogerson/twin.macro/discussions/227>
 - <https://github.com/paolotiu/tailwind-intellisense-regex-list>
-- <https://github.com/lukeed/clsx?tab=readme-ov-file#tailwind-support>
