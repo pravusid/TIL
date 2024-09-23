@@ -346,10 +346,11 @@ git push --delete origin feature-foobar
 - <https://git-scm.com/docs/git-clone/en#URLS>
 
 ```sh
-git clone [--depth n] <git-url> [dir-to-clone-into]
+git clone [--branch <name>] [--depth n] <git-url> [dir-to-clone-into]
 
-# depth → 마지막 n개의 커밋만 가져오는 shallow clone 실행
-# 커밋을 추가로 가져오려면 git fetch --depth n --force 실행
+# branch → 특정 브랜치(태그)를 가져온다
+# depth  → 마지막 n개의 커밋만 가져오는 shallow clone 실행
+#          커밋을 추가로 가져오려면 git fetch --depth n --force 실행
 ```
 
 ## Remote
