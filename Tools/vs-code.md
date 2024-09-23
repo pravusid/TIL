@@ -4,7 +4,9 @@
 - <https://code.visualstudio.com/docs>
 - <https://code.visualstudio.com/docs/getstarted/settings#_default-settings>
 
-## TypeScript SDK
+## TypeScript
+
+### TypeScript SDK
 
 `.vscode/settings.json`
 
@@ -18,6 +20,51 @@
 > The typescript.tsdk workspace setting only tells VS Code that a workspace version of TypeScript exists.
 > To actually start using the workspace version for IntelliSense, you must run the TypeScript:
 > Select TypeScript Version command and select the workspace version.
+
+### TS Server WatchOptions
+
+options: <https://www.typescriptlang.org/docs/handbook/configuring-watch.html>
+
+```jsonc
+{
+  "typescript.tsserver.watchOptions": {
+    // ...options
+  }
+}
+```
+
+CodeGen + tsserver.watch
+
+<https://github.com/dotansimha/graphql-code-generator/discussions/8345#discussioncomment-4028928>
+
+```json
+{
+  "typescript.tsserver.watchOptions": {
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriorityPolling",
+    "watchFile": "useFsEventsOnParentDirectory",
+    "synchronousWatchDirectory": true
+  }
+}
+```
+
+### Exclude Patterns for Auto-Imports
+
+<https://devblogs.microsoft.com/typescript/announcing-typescript-5-6/#exclude-patterns-for-auto-imports>
+
+> The same settings can be applied for JavaScript through `javascript.preferences.autoImportSpecifierExcludeRegexes` in VSCode.
+
+```jsonc
+{
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
+    "^lodash$",
+    "^node:",
+    "^./lib/internal", // no escaping needed
+    "/^.\\/lib\\/internal/", // escaping needed - note the leading and trailing slashes
+    "/^.\\/lib\\/internal/i" // escaping needed - we needed slashes to provide the 'i' regex flag
+  ]
+}
+```
 
 ## Formatting
 
@@ -62,11 +109,15 @@ for vuejs
 - <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-8.html#exclude-specific-files-from-auto-imports>
 - <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-7.html#group-aware-organize-imports>
 
+## Linting
+
+[[eslint-prettier#VSCode]] 참고
+
 ## Debugging
 
 <https://code.visualstudio.com/docs/editor/debugging>
 
-### Nodemon + TypeScript
+### Nodemon + TypeScript Debugging
 
 attaching debugger to Nodemon
 
@@ -94,7 +145,7 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 }
 ```
 
-### TypeScript
+### TypeScript Debugging
 
 <https://code.visualstudio.com/docs/typescript/typescript-debugging>
 
@@ -148,15 +199,21 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 > runtimeVersion을 지원하지 않는 version manager 사용 또는 위 옵션을 사용하지 않으려면
 > `~/.profile`, `~/.zprofile`, `~/.zshenv` 같은 환경변수 설정에서 기본 node/bin PATH를 지정한다.
 
-## Go to definition goes to `.d.ts`
+## [[monorepo]]
 
-[[monorepo]], [TypeScript Project References](https://www.typescriptlang.org/ko/docs/handbook/project-references.html#declarationmaps) 구성할 때 설정필요
+### Go to definition goes to `.d.ts`
+
+[TypeScript Project References](https://www.typescriptlang.org/ko/docs/handbook/project-references.html#declarationmaps) 구성할 때 설정필요
 
 > Can you please try adding `"declarationMap": true` to the **compilerOptions in your tsconfig**
 > This will generated a map so that go to definition can just back to the original ts source instead of the generated d.ts
 >
 > -- <https://github.com/microsoft/vscode/issues/73201>
 > -- <https://www.typescriptlang.org/tsconfig#declarationMap>
+
+### importModuleSpecifier
+
+[[monorepo#monorepo with VSCode]]
 
 ## HTML, JSX (Auto rename, Auto closing)
 

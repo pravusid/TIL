@@ -227,11 +227,29 @@ eslint에서 js, ts 처리
 }
 ```
 
+상황에 따라 eslint 적용대상 변경
+
+```json
+{
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue"]
+}
+```
+
 optional: prettier-eslint Integration
 
 ```json
 {
   "prettier.eslintIntegration": true
+}
+```
+
+eslint --fix 자동실행
+
+```json
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
 }
 ```
 
