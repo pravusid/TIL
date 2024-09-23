@@ -133,6 +133,31 @@ await pipeline(createReadStream('archive.tar'), createGzip(), createWriteStream(
 console.log('Pipeline succeeded.');
 ```
 
+### Utility Consumers
+
+> `Readable` stream을 변환 하는데 사용하는 유틸리티 함수이다
+>
+> --<https://nodejs.org/api/webstreams.html#utility-consumers>
+
+```ts
+declare module 'stream/consumers' {
+  import { Blob as NodeBlob } from 'node:buffer';
+  import { Readable } from 'node:stream';
+  function buffer(stream: NodeJS.ReadableStream | Readable | AsyncIterable<any>): Promise<Buffer>;
+  function text(stream: NodeJS.ReadableStream | Readable | AsyncIterable<any>): Promise<string>;
+  function arrayBuffer(stream: NodeJS.ReadableStream | Readable | AsyncIterable<any>): Promise<ArrayBuffer>;
+  function blob(stream: NodeJS.ReadableStream | Readable | AsyncIterable<any>): Promise<NodeBlob>;
+  function json(stream: NodeJS.ReadableStream | Readable | AsyncIterable<any>): Promise<unknown>;
+}
+```
+
+다음 방법으로 Readable stream을 Uint8Array(or Buffer) 타입의 데이터로 변환할 수 있다
+([[#Stream <-> Buffer 변환]], Stream to Buffer 기능과 동일)
+
+```js
+const uint8Arr = new Uint8Array(await arrayBuffer(readable));
+```
+
 ## 생성
 
 ### Writable stream
