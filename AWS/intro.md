@@ -52,26 +52,20 @@ VPN이나 프라이빗 게이트웨이를 사용시 유료
 
 ## AWS SDK for JavaScript
 
-aws credentials(`aws.credentials.json`)
+<https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/>
 
-```json
-{
-  "region": "ap-northeast-2",
-  "accessKeyId": "<ACCESS_KEY_ID>",
-  "secretAccessKey": "<SECRET_ACCESS_KEY>"
-}
-```
+> Default credential provider is how SDK resolve the AWS credential if you DO NOT provide one explicitly.
 
-SDK 설정
+`v2`: CredentialProviderChain  in Node.js resolves credential from sources as following order:
 
-```ts
-import * as AWS from "aws-sdk";
+- [environmental variable](https://docs.aws.amazon.com/sdkref/latest/guide/environment-variables.html)
+- shared credentials file
+- ECS container credentials
+- spawning external process
+- OIDC token from specified file
+- EC2 instance metadata
 
-const configs = require("./aws.credentials.json");
+If one of the credential providers above fails to resolve the AWS credential, the chain falls back to next provider until a valid credential is resolved, or throw error when all of them fail.
+In Browsers and ReactNative, the chain is empty, meaning you always need supply credentials explicitly.
 
-AWS.config.update({
-  region: configs.region,
-  accessKeyId: configs.accessKeyId,
-  secretAccessKey: configs.secretAccessKey
-});
-```
+`v3`: defaultProvider  The credential sources and fallback order does not change in v3. It also supports AWS Single Sign-On credentials.
