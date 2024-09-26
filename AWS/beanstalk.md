@@ -183,3 +183,10 @@ EC2 key pair 등록한 경우 보안그룹에 22번 포트 ingress 생성되는 
 ### EIP
 
 [Remove public IP on single instance deployments](https://github.com/aws/elastic-beanstalk-roadmap/issues/47)
+
+### CloudWatch logs
+
+inplace 배포하는 경우 자동생성된 로그 그룹 삭제하면 안됨 (nginx, apache ...)
+
+- `/aws/elasticbeanstalk/eb-env-name/var/log/httpd/access_log`
+- `/aws/elasticbeanstalk/eb-env-name/var/log/httpd/error_log`
