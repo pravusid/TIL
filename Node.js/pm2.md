@@ -31,7 +31,10 @@ pm2 reload <app_name>
 > <https://pm2.keymetrics.io/docs/usage/quick-start/#cheatsheet>
 
 ```sh
+# Run JavaScript
 pm2 start app.js --name <app_name>
+# Run npm script
+pm2 start --name <app_name> npm -- run start -- -p 3000
 
 pm2 startOrRestart <json>             # start or restart JSON file
 pm2 startOrReload <json>              # start or gracefully reload JSON file
