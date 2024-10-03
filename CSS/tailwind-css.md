@@ -35,7 +35,8 @@
 - <https://github.com/barvian/fluid-tailwind>
 - <https://github.com/lukeed/clsx>
 - <https://github.com/joe-bell/cva>
-- <https://github.com/nextui-org/tailwind-variants>
+- <https://github.com/nextui-org/tailwind-variants> (cva + tailwind-merge)
+- <https://github.com/gregberge/twc>
 
 ## install
 
