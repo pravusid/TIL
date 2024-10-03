@@ -1,4 +1,4 @@
-# OSX keychain in Shell
+# macOS keychain in Shell
 
 ```sh
 # 추가
