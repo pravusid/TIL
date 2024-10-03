@@ -1,10 +1,9 @@
 # Node.js MySQL Drivers
 
-두 가지 선택가능한 패키지가 있다
+선택 가능한 두 가지 패키지가 있다
 
-<https://github.com/mysqljs/mysql>
-
-<https://github.com/sidorares/node-mysql2>
+- <https://github.com/mysqljs/mysql>
+- <https://github.com/sidorares/node-mysql2>
 
 ## timezone
 
@@ -125,6 +124,23 @@ mysql의 집계함수 결과값은 DECIMAL/DOUBLE로 출력되는데, 두 드라
   decimalNumbers: true;
 }
 ```
+
+### BigNumbers: BigInt, Decimal
+
+#### `supportBigNumbers`
+
+When dealing with big numbers (BIGINT and DECIMAL columns) in the database, you should enable this option
+
+> default: `false`
+
+#### `bigNumberStrings`
+
+Enabling both supportBigNumbers and bigNumberStrings forces big numbers (BIGINT and DECIMAL columns) to be always returned as JavaScript String objects.
+Enabling supportBigNumbers but leaving bigNumberStrings disabled will return big numbers as String objects
+only when they cannot be accurately represented with JavaScript Number objects (which happens when they exceed the [-2^53, +2^53] range),
+otherwise they will be returned as Number objects. This option is ignored if supportBigNumbers is disabled.
+
+> default: `false`
 
 ## issues in node-mysql2 with Jest
 

@@ -87,24 +87,11 @@ json 뿐만 아니라 `js`, `yml`, `.env` 등의 다양한 방식으로 작성 �
 
 ### nodejs-mysql 드라이버(mysqljs, node-mysql2)와 기본 옵션이 다른 경우
 
-#### `supportBigNumbers`
+- 기본 옵션: [[nodejs-mysql#BigNumbers: BigInt, Decimal]]
 
-When dealing with big numbers (BIGINT and DECIMAL columns) in the database, you should enable this option
-
-- mysqljs: `false`
-- node-mysql2: `false`
-- typeorm: `true`
-
-#### `bigNumberStrings`
-
-Enabling both supportBigNumbers and bigNumberStrings forces big numbers (BIGINT and DECIMAL columns) to be always returned as JavaScript String objects.
-Enabling supportBigNumbers but leaving bigNumberStrings disabled will return big numbers as String objects
-only when they cannot be accurately represented with JavaScript Number objects (which happens when they exceed the [-2^53, +2^53] range),
-otherwise they will be returned as Number objects. This option is ignored if supportBigNumbers is disabled.
-
-- mysqljs: `false`
-- node-mysql2: `false`
-- typeorm: `true`
+- TypeORM 옵션
+  - `supportBigNumbers`: `true`
+  - `bigNumberStrings`: `true`
 
 ## 연결
 
