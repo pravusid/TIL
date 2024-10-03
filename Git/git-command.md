@@ -459,3 +459,9 @@ git gc --aggressive --prune=now
 ```sh
 git push --all --force
 ```
+
+## Troubleshootings
+
+<https://github.com/k88hudson/git-flight-rules>
+
+> 뭔가 잘못 됐을 때 뭘 해야할지에 대한 우주비행사를 위한 가이드 (여기선 깃을 쓰는 개발자를 위한)

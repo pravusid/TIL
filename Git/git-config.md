@@ -2,6 +2,14 @@
 
 <https://github.com/pravusid/dotfiles/blob/main/.gitconfig>
 
+## git utils
+
+- <https://github.com/jesseduffield/lazygit>
+- <https://github.com/extrawurst/gitui>
+- <https://github.com/bigH/git-fuzzy>
+- <https://github.com/arxanas/git-branchless>
+- <https://github.com/gitext-rs/git-stack>
+
 ## refs
 
 - <https://git-scm.com/docs/git-config>
