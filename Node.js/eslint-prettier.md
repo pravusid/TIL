@@ -208,10 +208,7 @@ eslint 설정이 끝난 상태에서 (prettier-config & plugin 설정을 하지 
 
 ```json
 {
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
+  "[javascript][javascriptreact][typescript][typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "javascript.format.enable": false,
@@ -219,19 +216,11 @@ eslint 설정이 끝난 상태에서 (prettier-config & plugin 설정을 하지 
 }
 ```
 
-eslint에서 js, ts 처리
+eslint에서 js, ts 처리 (기본적으로 `eslint.probe` 옵션을 통해 적용되지만 특정 유형만 대상으로 할 때 사용)
 
 ```json
 {
-  "eslint.validate": ["javascript", "typescript"]
-}
-```
-
-상황에 따라 eslint 적용대상 변경
-
-```json
-{
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue"]
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
 }
 ```
 
@@ -258,6 +247,8 @@ eslint --fix 자동실행
 - ESLint
 
   - eslint 포함하지 않으므로 global or local 설치 필요
+  - [`eslint.probe` vs `eslint.validate`](https://github.com/microsoft/vscode-eslint/issues/1736)
+  - [default `eslint.probe`](https://github.com/microsoft/vscode-eslint/blob/main/package.json#L309)
 
 - Prettier – Code Formatter
 
