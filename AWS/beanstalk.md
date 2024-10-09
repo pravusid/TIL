@@ -11,6 +11,21 @@
 
 > 동시에 M개의 배포 가능 (배포 총 경우의 수 == N x M)
 
+## IAM
+
+### 인스턴스 프로파일
+
+<https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/iam-instanceprofile.html>
+
+> 이전에 Elastic Beanstalk는 계정이 환경을 처음 AWS 생성할 때 이름이 지정된 기본 EC2 인스턴스 aws-elasticbeanstalk-ec2-role 프로필을 생성했습니다.
+> 이 인스턴스 프로파일에는 기본 관리형 정책이 포함되었습니다. 계정에 이미 이 인스턴스 프로파일이 있는 경우 사용자 환경에 계속 할당할 수 있습니다.
+> 하지만 최신 AWS 보안 지침에서는 AWS 서비스가 다른 AWS 서비스 (이 경우 EC2) 에 대한 신뢰 정책을 사용하여 역할을 자동으로 생성하는 것을 허용하지 않습니다.
+> 이러한 보안 지침 때문에 Elastic Beanstalk는 더 이상 기본 aws-elasticbeanstalk-ec2-role 인스턴스 프로파일을 생성하지 않습니다.
+
+### 서비스 역할
+
+<https://docs.aws.amazon.com/ko_kr/elasticbeanstalk/latest/dg/iam-servicerole.html>
+
 ## 환경 구성
 
 ### 리눅스 플랫폼 확장
