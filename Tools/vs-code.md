@@ -249,13 +249,13 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 ```json
 {
   "workbench.editor.customLabels.patterns": {
+    "**/components/**/index.{ts,tsx}": "#/${dirname}.${extname}",
+    "**/components/**/*.{ts,tsx}": "#/${dirname}/${filename}.${extname}",
     "**/app/**/*.{ts,tsx}": "/${dirname}/${filename}.${extname}",
-    "**/components/**/index.{ts,tsx}": "@component/${dirname}.${extname}",
-    "**/components/**/*.{ts,tsx}": "@component/${dirname}/${filename}.${extname}",
-    "**/pages/api/**/index.ts": "@api/${dirname}.${extname}",
-    "**/pages/api/**/*.ts": "@api/${dirname}/${filename}.${extname}",
     "**/pages/**/index.tsx": "/${dirname}.${extname}",
-    "**/pages/**/*.tsx": "/${dirname}/${filename}.${extname}"
+    "**/pages/**/*.tsx": "/${dirname}/${filename}.${extname}",
+    "**/pages/api/**/index.ts": "@api/${dirname}.${extname}",
+    "**/pages/api/**/*.ts": "@api/${dirname}/${filename}.${extname}"
   }
 }
 ```
