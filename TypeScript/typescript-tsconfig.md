@@ -16,6 +16,7 @@
 - <https://www.typescriptlang.org/docs/handbook/project-references.html>
 - <https://www.typescriptlang.org/docs/handbook/modules/guides/choosing-compiler-options.html>
 - <https://www.totaltypescript.com/tsconfig-cheat-sheet>
+- <https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping>
 
 ## 예시
 
