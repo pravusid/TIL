@@ -1,6 +1,7 @@
 # CSS Grid
 
 - <https://developer.mozilla.org/ko/docs/Web/CSS/CSS_grid_layout/Basic_concepts_of_grid_layout>
+- <https://web.dev/learn/css/grid>
 - <https://yamoo9.gitbook.io/css-grid/>
 - <https://www.joshwcomeau.com/css/interactive-guide-to-grid/>
 
