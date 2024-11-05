@@ -14,21 +14,21 @@
 
 <https://marketplace.visualstudio.com/items?itemName=YuTengjing.vscode-classic-experience> 확장 설치
 
-확장 단축키 추가 변경
+확장 단축키 추가 변경: [Copilot Chat](https://code.visualstudio.com/docs/copilot/copilot-chat), [Copilot Edit](https://code.visualstudio.com/docs/copilot/copilot-edits) 단축키 참고
 
 ```json
 [
   {
-    "key": "ctrl+shift+i",
-    "command": "aipopup.action.modal.generate",
-    "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible",
-    "args": { "invocationType": "toggle" }
-  },
-  {
-    "key": "ctrl+i",
+    "key": "cmd+i",
     "command": "aipopup.action.modal.generate",
     "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible",
     "args": { "invocationType": "new" }
+  },
+  {
+    "key": "shift+cmd+i",
+    "command": "aipopup.action.modal.generate",
+    "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible",
+    "args": { "invocationType": "toggle" }
   },
   {
     "key": "cmd+e",
@@ -36,7 +36,7 @@
     "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible"
   },
   {
-    "key": "ctrl+i",
+    "key": "cmd+i",
     "command": "cursorai.action.generateInTerminal",
     "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported || terminalFocus && terminalHasBeenCreated && terminalProcessSupported"
   },
@@ -51,7 +51,7 @@
     "when": "composerIsEnabled"
   },
   {
-    "key": "ctrl+o",
+    "key": "ctrl+cmd+i",
     "command": "aichat.newchataction"
   },
   {
@@ -63,17 +63,12 @@
     "command": "-aichat.insertselectionintochat"
   },
   {
-    "key": "ctrl+shift+o",
-    "command": "aichat.fixerrormessage",
-    "when": "(arbitrary function)"
-  },
-  {
     "key": "shift+cmd+e",
     "command": "-aichat.fixerrormessage",
     "when": "(arbitrary function)"
   },
   {
-    "key": "ctrl+shift+o",
+    "key": "ctrl+cmd+i",
     "command": "aichat.insertselectionintochat",
     "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported || terminalFocus && terminalHasBeenCreated && terminalProcessSupported"
   }
