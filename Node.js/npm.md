@@ -4,7 +4,8 @@
 
 ### npm install
 
-`npm install --only=production` (or `--only=prod`): devDependencies 설치하지 않음
+- `npm install --only=production` (or `--only=prod`): devDependencies 설치하지 않음
+- `npm install && npm prune --production`: 모든 의존성 설치 후, 필요할 때 devDependencies 제외
 
 > The npm install command installs package files based on dependencies and devDependencies in package.json.
 
