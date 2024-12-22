@@ -77,6 +77,7 @@ CodeGen + tsserver.watch
     "source.addMissingImports": "always",
     "source.organizeImports": "always"
   },
+  "editor.pasteAs.preferences": ["text.updateImports"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
