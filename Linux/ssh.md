@@ -105,10 +105,24 @@ Host *
     StrictHostKeyChecking no
 ```
 
-### root 로그인 차단
+### 보안관련 설정
 
-```txt
+`/etc/ssh/sshd_config`
+
+```conf
+# root 로그인 차단
 PermitRootLogin no
+PermitRootLogin prohibit-password
+
+# 공개키 인증 사용
+PubkeyAuthentication yes
+
+# 패스워드 인증 차단 (기본 값: no)
+PasswordAuthentication no
+PermitEmptyPasswords no
+
+# 설정 적용
+sudo systemctl restart ssh
 ```
 
 ## Secure Copy (SCP)
