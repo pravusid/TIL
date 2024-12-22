@@ -73,6 +73,8 @@
 - [allow voluntary .ts suffix for import paths](https://github.com/microsoft/TypeScript/issues/37582)
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#resolution-customization-flags>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/#decorator-metadata>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-7/#path-rewriting-for-relative-paths>
+- <https://github.com/microsoft/TypeScript/pull/59767>
 
 ## import default 관련
 
