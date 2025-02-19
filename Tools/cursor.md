@@ -7,6 +7,12 @@
 - <https://cursor.directory/>
 - [React18 Component -> React19 Component Refactor Prompt](https://gist.github.com/ellemedit/46cb6ac6a8c65aa69e010b1c88f406c3)
 
+## Security
+
+- <https://www.cursor.com/security>
+- <https://forum.cursor.com/t/questions-on-gitignore-cursorignore-cursorban/34713>
+- <https://forum.cursor.com/t/environment-secrets-and-code-security/14486>
+
 ## 단축키 설정 ([[vs-code]] compatible)
 
 - <https://forum.cursor.com/t/cmd-k-vs-cmd-r-keyboard-shortcuts-default/1172/9>

@@ -268,3 +268,31 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 <https://code.visualstudio.com/docs/terminal/profiles#_why-are-there-duplicate-paths-in-the-terminals-path-environment-variable-andor-why-are-they-reversed-on-macos>
 
 > [[env-variables#terminal emulator: macOS|macOS 터미널]]은 login shell을 실행한다
+
+## Github Copilot
+
+deny list
+
+```json
+{
+  "github.copilot.enable": {
+    "*": true,
+    "dotenv": false,
+    "properties": false
+  }
+}
+```
+
+allow list
+
+```json
+{
+  "github.copilot.enable": {
+    "*": false,
+    "javascript": true,
+    "javascriptreact": true,
+    "typescript": true,
+    "typescriptreact": true
+  }
+}
+```
