@@ -57,6 +57,17 @@ for me
 
 ```ts
 interface FooBarId extends String {
-  readonly _fooBarIdBrand: never
+  readonly _fooBarIdBrand: never;
 }
+```
+
+unique symbol을 brand key로 사용하면 key 중복을 방지할 수 있다
+
+<https://egghead.io/blog/using-branded-types-in-typescript>
+
+```ts
+declare const __brand: unique symbol;
+type Brand<B> = { [__brand]: B };
+
+export type Branded<T, B> = T & Brand<B>;
 ```
