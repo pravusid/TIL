@@ -782,3 +782,13 @@ type PartialFieldsOnly<T> = {
   [K in keyof T as T[K] extends Required<T>[K] ? never : K]: T[K];
 };
 ```
+
+### ReplaceAttributes
+
+```ts
+export type ReplaceAttributes<
+  T extends Record<PropertyKey, unknown>,
+  R extends Record<PropertyKey, unknown>
+  //
+> = Omit<T, keyof R> & R;
+```
