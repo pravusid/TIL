@@ -12,6 +12,7 @@
 
 ## Refs
 
+- [Grouping variants together](https://github.com/tailwindlabs/tailwindcss/discussions/8337)
 - <https://darkghosthunter.medium.com/tailwind-the-base-the-components-and-the-utilities-a81137c52534>
 - [The Pros and Cons of TailwindCSS](https://webartisan.info/the-pros-and-cons-of-tailwindcss)
   - [(번역) Tailwind CSS의 장점과 단점](https://ykss.netlify.app/translation/the_pros_and_cons_of_tailwindcss/)
