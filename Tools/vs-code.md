@@ -271,6 +271,8 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 
 ## Github Copilot
 
+<https://code.visualstudio.com/docs/copilot/overview>
+
 deny list
 
 ```json

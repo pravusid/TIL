@@ -4,8 +4,19 @@
 
 ## Prompt
 
+<https://docs.cursor.com/context/rules-for-ai>
+
+- <https://github.com/PatrickJS/awesome-cursorrules>
+- <https://github.com/sanjeed5/awesome-cursor-rules-mdc>
 - <https://cursor.directory/>
-- [React18 Component -> React19 Component Refactor Prompt](https://gist.github.com/ellemedit/46cb6ac6a8c65aa69e010b1c88f406c3)
+- [You are using Cursor AI incorrectly](https://ghuntley.com/stdlib/)
+- [My Best Practices for MDC rules and troubleshooting](https://forum.cursor.com/t/my-best-practices-for-mdc-rules-and-troubleshooting/50526)
+
+## MCP
+
+<https://docs.cursor.com/context/model-context-protocol>
+
+- [Those MCP totally 10x my Cursor workflow](https://www.youtube.com/watch?v=oAoigBWLZgE)
 
 ## Security
 
@@ -22,24 +33,23 @@
 
 확장 단축키 추가 변경: [Copilot Chat](https://code.visualstudio.com/docs/copilot/copilot-chat), [Copilot Edit](https://code.visualstudio.com/docs/copilot/copilot-edits) 단축키 참고
 
-```json
+```jsonc
 [
+  //
+  // Cursor
+  //
   {
     "key": "cmd+i",
     "command": "aipopup.action.modal.generate",
-    "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible",
-    "args": { "invocationType": "new" }
+    "when": "editorFocus && !composerBarIsVisible"
   },
   {
     "key": "shift+cmd+i",
-    "command": "aipopup.action.modal.generate",
-    "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible",
-    "args": { "invocationType": "toggle" }
+    "command": "composerMode.agent"
   },
   {
-    "key": "cmd+e",
-    "command": "-aipopup.action.modal.generate",
-    "when": "editorFocus && !composerBarIsVisible && !composerControlPanelIsVisible"
+    "key": "ctrl+cmd+i",
+    "command": "composerMode.chat"
   },
   {
     "key": "cmd+i",
@@ -48,35 +58,27 @@
   },
   {
     "key": "cmd+e",
+    "command": "-aipopup.action.modal.generate",
+    "when": "editorFocus && !composerBarIsVisible"
+  },
+  {
+    "key": "cmd+e",
     "command": "-cursorai.action.generateInTerminal",
     "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported || terminalFocus && terminalHasBeenCreated && terminalProcessSupported"
   },
   {
-    "key": "cmd+e",
-    "command": "-composer.startComposerPrompt",
-    "when": "composerIsEnabled"
-  },
-  {
-    "key": "ctrl+cmd+i",
-    "command": "aichat.newchataction"
+    "key": "cmd+]",
+    "command": "-aichat.newchataction",
+    "when": "!view.workbench.panel.aichat.view.visible"
   },
   {
     "key": "cmd+]",
-    "command": "-aichat.newchataction"
+    "command": "-aichat.close-sidebar",
+    "when": "view.workbench.panel.aichat.view.visible"
   },
   {
     "key": "shift+cmd+]",
     "command": "-aichat.insertselectionintochat"
-  },
-  {
-    "key": "shift+cmd+e",
-    "command": "-aichat.fixerrormessage",
-    "when": "(arbitrary function)"
-  },
-  {
-    "key": "ctrl+cmd+i",
-    "command": "aichat.insertselectionintochat",
-    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported || terminalFocus && terminalHasBeenCreated && terminalProcessSupported"
   }
 ]
 ```
