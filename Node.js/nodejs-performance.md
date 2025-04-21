@@ -59,3 +59,10 @@ clinic doctor --on-port 'autocannon localhost:$PORT' -- node dist/main.js
 
 - <https://devblogs.microsoft.com/typescript/introducing-deopt-explorer/>
 - <https://github.com/microsoft/deoptexplorer-vscode>
+
+## nodejs Diagnostics
+
+- <https://nodejs.org/en/learn/diagnostics/memory>
+- <https://nodejs.org/en/learn/diagnostics/live-debugging>
+- <https://nodejs.org/en/learn/diagnostics/poor-performance>
+- <https://nodejs.org/en/learn/diagnostics/flame-graphs>
