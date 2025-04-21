@@ -22,6 +22,15 @@ To import db on RDS
 
 `mysql -h rds.host.name -u remote_user_name -p remote_db < remote_db.sql`
 
+## 읽을거리
+
+- <https://aws.amazon.com/ko/blogs/tech/amazon-aurora-auto-scaling-strategy-for-ktown4u-global-spike-traffic-response/>
+- <https://aws.amazon.com/ko/blogs/tech/part-1-10-amazon-aurora-tips-for-application-developers/>
+- <https://aws.amazon.com/ko/blogs/tech/part-2-10-amazon-aurora-tips-for-application-developers/>
+- <https://aws.amazon.com/ko/blogs/tech/pretesting-database-changes-including-application-with-amazon-aurora-blue-green-deployments/>
+- <https://aws.amazon.com/ko/blogs/tech/implement-a-rollback-strategy-after-an-amazon-aurora-mysql-blue-green-deployment-switchover/>
+- <https://aws.amazon.com/ko/blogs/tech/migrate-very-large-databases-to-amazon-aurora-mysql-using-mydumper-and-myloader/>
+
 ## Troubleshooting
 
 ### 문자 인코딩 관련
@@ -71,3 +80,12 @@ To import db on RDS
 
 - Aurora MySQL: <https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Performance.html#AuroraMySQL.Managing.MaxConnections>
 - Aurora PostgreSQL: <https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Managing.html#AuroraPostgreSQL.Managing.MaxConnections>
+
+## Aurora MySQL v3
+
+- <https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Updates.MajorVersionUpgrade.html#AuroraMySQL.Updates.MajorVersionUpgrade.2to3>
+- [Aurora MySQL Version 3 업그레이드의 모든 것 #우아콘2024](https://www.youtube.com/watch?v=rXEzXx9ZCuw)
+- [Amazon Aurora MySQL 버전 3으로 업그레이드 (MySQL 8.0 호환)](https://aws.amazon.com/ko/blogs/tech/amazon-aurora-mysql-version-3-upgrade-mysql-8-0-compatability/)
+- [Amazon Aurora MySQL 버전 2(MySQL 5.7 호환)에서 버전 3(MySQL 8.0 호환)으로 업그레이드 체크리스트, 1부](https://aws.amazon.com/ko/blogs/tech/database-amazon-aurora-mysql-version-2-with-mysql-5-7-compatibility-to-version-3-with-mysql-8-0-compatibility-upgrade-checklist-part-1/)
+- [Amazon Aurora MySQL 버전 2(MySQL 5.7 호환)에서 버전 3(MySQL 8.0 호환)으로 업그레이드 체크리스트, 2부](https://aws.amazon.com/ko/blogs/tech/database-amazon-aurora-mysql-version-2-with-mysql-5-7-compatibility-to-version-3-with-mysql-8-0-compatibility-upgrade-checklist-part-2/)
+- [Amazon Aurora MySQL 3버전(MySQL 8.0 호환)의 블루/그린 배포를 통한 업그레이드 시 권장 확인 사항](https://aws.amazon.com/ko/blogs/tech/amazon-aurora-mysql3-mysql-8-0-blue-green-deployment-upgrade/)
