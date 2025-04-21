@@ -71,10 +71,15 @@
 - <https://www.reddit.com/r/typescript/comments/uuivss/module_node16_should_support_extension_rewriting/>
 - [Adding support for ESM references without a .js extension](https://github.com/nodejs/node/issues/46006)
 - [allow voluntary .ts suffix for import paths](https://github.com/microsoft/TypeScript/issues/37582)
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#resolution-customization-flags>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/#decorator-metadata>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-7/#path-rewriting-for-relative-paths>
 - <https://github.com/microsoft/TypeScript/pull/59767>
+- <https://www.perplexity.ai/search/typescript-esm-support-eseo-im-p2J8Ki87TLi6sB2pUKsqEA>
+
+확장자 관련 이슈는 5.7 버전에서 `--rewriteRelativeImportExtensions` 설정을 지원하면서 거의 정리된 것으로 보인다.
+해당옵션을 사용하면 [`--allowImportingTsExtensions`](https://www.typescriptlang.org/vo/tsconfig/#allowImportingTsExtensions) 설정도 같이 활성화된다.
 
 ## import default 관련
 
@@ -87,4 +92,6 @@
 
 ## esm cjs interop
 
-<https://www.typescriptlang.org/docs/handbook/modules/appendices/esm-cjs-interop.html>
+- <https://www.typescriptlang.org/docs/handbook/modules/appendices/esm-cjs-interop.html>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-8/#support-for-require()-of-ecmascript-modules-in---module-nodenext>
+- [[nodejs#nodejs ESM]]
