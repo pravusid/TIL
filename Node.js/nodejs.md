@@ -60,6 +60,18 @@ node --max-old-space-size=1536 index.js
 node --openssl-legacy-provider
 ```
 
+### `--run`
+
+- Added in: v22.0.0
+
+```bash
+# For example, the following command will run the test script of the package.json in the current folder:
+node --run test
+
+# You can also pass arguments to the command. Any argument after -- will be appended to the script:
+node --run test -- --verbose
+```
+
 ## `NODE_OPTIONS`
 
 <https://nodejs.org/api/cli.html#node_optionsoptions>
@@ -111,7 +123,7 @@ nodejs 는 다양한 작업을 수행할 수 있지만, 웹 기반 Application�
 
 ### 의존성
 
-~~<https://nodejs.org/ko/docs/meta/topics/dependencies/#llhttp>~~
+<https://github.com/nodejs/llhttp>
 
 > HTTP 파싱은 llhttp라는 경량 C 라이브러리가 처리합니다.
 > 이는 시스템 호출이나 할당을 하려고 만들어진 것이 아니므로 요청당 아주 작은 메모리 공간만 차지합니다.
@@ -137,3 +149,53 @@ server.listen(port, hostname, () => {
 
 > 이 서버로 오는 HTTP 요청마다 createServer에 전달된 함수가 한 번씩 호출됩니다.
 > 사실 createServer가 반환한 Server 객체는 EventEmitter이고 여기서는 server 객체를 생성하고 리스너를 추가하는 축약 문법을 사용한 것입니다.
+
+## nodejs ESM
+
+- <https://nodejs.org/docs/latest/api/esm.html>
+- <https://nodejs.org/en/blog/release/v22.12.0#requireesm-is-now-enabled-by-default>
+- [Pure ESM package](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)
+- [Move on to ESM-only](https://antfu.me/posts/move-on-to-esm-only)
+
+## nodejs built-in support for TypeScript
+
+> v22.6.0 에서 `--experimental-strip-types` 플래그 추가
+> v23.6.0 부터 Type stripping 은 플래그 없이 기본기능으로 동작
+
+- <https://nodejs.org/docs/latest/api/typescript.html#type-stripping>
+- <https://github.com/nodejs/typescript>
+- <https://nodejs.org/en/learn/typescript/run-natively>
+- <https://github.com/bloomberg/ts-blank-space>
+- <https://satanacchio.hashnode.dev/everything-you-need-to-know-about-nodejs-type-stripping>
+
+### Determining module system
+
+- `.ts` files will have their module system determined the same way as .js files. To use import and export syntax, add "type": "module" to the nearest parent package.json.
+- `.mts` files will always be run as ES modules, similar to .mjs files.
+- `.cts` files will always be run as CommonJS modules, similar to .cjs files.
+- `.tsx` files are unsupported.
+
+### TypeScript features
+
+타입스크립트의 모든 기능을 지원하는 것은 아니며 아래의 기능이 포함된 코드의 경우 오류가 발생함
+
+- Enum declarations
+- namespace with runtime code
+- legacy module with runtime code
+- parameter properties
+- import aliases
+
+오류를 방지하기 위해서 두 가지 방법을 사용할 수 있음
+
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-8/#the---erasablesyntaxonly-option>
+- [--experimental-transform-types](https://nodejs.org/docs/latest/api/cli.html#--experimental-transform-types)
+
+### Importing types without type keyword
+
+type stripping을 실행할 때 import 구문에서 타입을 불러올 때 type 키워드를 사용하지 않은 코드를 실행하는 경우 런타임 오류가 발생한다.
+tsconfig의 [Verbatim Module Syntax](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--verbatimmodulesyntax) 옵션을 사용해서 오류를 방지할 수 있다.
+
+### [[typescript-esm]] 상호호환
+
+type stripping에서는 기존 TypeScript-ESM 지원을 위해 작성한 `import ... from './foo.js'` 구문을 처리할 수 없다.
+TypeScript 5.7에서 [Path Rewriting for Relative Paths](https://devblogs.microsoft.com/typescript/announcing-typescript-5-7/#path-rewriting-for-relative-paths) 옵션이 추가되었다.
