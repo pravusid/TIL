@@ -337,8 +337,25 @@ git push --delete origin feature-foobar
 
 <https://git-scm.com/docs/git-restore>
 
-- 되돌리기(unstaged 파일 변경점 되돌리기): `git restore <filename>`
+- 되돌리기(unstaged 파일 변경점 되돌리기, `--worktree` default true): `git restore <filename>`
 - 되돌리기(staged -> unstaged): `git restore --staged <filename>`
+
+## Sparse Checkout
+
+<https://git-scm.com/docs/git-sparse-checkout>
+
+> git 2.25 버전에 추가됨
+
+대규모 repository에서 (특히 monorepo) 일부분만 checkout 할 때 사용
+
+```bash
+git clone --no-checkout git@github.com:pravusid/TIL.git
+cd TIL
+
+git sparse-checkout init --cone
+git sparse-checkout set <path> [...paths]
+git sparse-checkout list
+```
 
 ## Clone
 
@@ -458,6 +475,25 @@ git gc --aggressive --prune=now
 
 ```sh
 git push --all --force
+```
+
+## Bisect
+
+<https://git-scm.com/docs/git-bisect>
+
+이진탐색을 통해 오류지점을 찾는 기능
+
+```bash
+git bisect start
+git bisect bad HEAD
+git bisect good 246320d
+
+# 이동한 위치의 결과 입력 (둘 중 하나)
+git bisect bad
+git bisect good
+
+# bisect 종료
+git bisect reset
 ```
 
 ## Troubleshootings
