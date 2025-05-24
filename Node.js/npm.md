@@ -214,3 +214,17 @@ TS 기준
 > This is not recommended unless deploying a CLI tool or otherwise using the publication process for producing production packages.
 
 그러나, 패키지매니저에 따라 `npm-shrinkwrap` 파일 역시 무시될 수 있다. <https://pnpm.io/limitations>
+
+## corepack
+
+<https://github.com/nodejs/corepack>
+
+> Corepack is a zero-runtime-dependency Node.js script that acts as a bridge between Node.js projects and the package managers they are intended to be used with during development.
+> In practical terms, Corepack lets you use Yarn, npm, and pnpm without having to install them.
+
+### disable corepack by default
+
+> nodejs@25 부터 런타임 기본 번들에서 corepack 제거 예정
+
+- <https://github.com/nodejs/node/issues/50963>
+- <https://github.com/nodejs/TSC/pull/1697#issuecomment-2737093616>
