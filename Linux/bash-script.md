@@ -313,3 +313,60 @@ cd $current_dir
 
 > - <https://stackoverflow.com/questions/24112727/relative-paths-based-on-file-location-instead-of-current-working-directory>
 > - <https://stackoverflow.com/questions/35006457/choosing-between-0-and-bash-source>
+
+## interactive shell 여부 확인
+
+<https://www.gnu.org/software/bash/manual/bash.html#Interactive-Shells>
+
+```bash
+#!/usr/bin/env bash
+
+# If not running interactively, don't do anything
+case $- in
+  *i*) ;;
+    *) return;;
+esac
+```
+
+## 다중 파일 작업
+
+### concat csv
+
+```bash
+# 현재경로
+for f in *.csv; do (cat ${f}; echo) >> ../output.csv; done;
+```
+
+```bash
+# 하위경로
+for f in **/*.gz; do (gzcat ${f}; echo) >> ./output.log; done;
+```
+
+```bash
+# 첫 번째 파일의 헤더를 복사
+head -n 1 $(ls *.csv | head -n 1) > ../output.csv
+# 헤더 제외한 데이터 복사
+for f in *.csv; do (tail -n +2 ${f}; echo) >> ../output.csv; done;
+```
+
+### split csv
+
+- <https://stackoverflow.com/questions/20721120/how-to-split-csv-files-as-per-number-of-rows-specified>
+- <https://stackoverflow.com/questions/20954480/split-a-csv-file-into-parts-copy-header>
+- <https://stackoverflow.com/questions/339483/how-can-i-remove-the-first-line-of-a-text-file-using-bash-sed-script>
+
+```bash
+for f in *.csv; do split -l 100000 -d ${f} "${f}_"; gsed -i "1s/^/`head -n 1 ${f}`\n/" "${f}_"* && gsed -i '1d' "${f}_"*(0); rm ${f}; done;
+```
+
+### convert encoding
+
+```bash
+for f in *.csv; do iconv -f CP949 -t UTF-8 ${f} > "utf8-${f}"; done;
+```
+
+### replace string
+
+```bash
+for f in *.xml; do echo ${f}; gsed -i 's/2023-11-10T12:00+00:00/2024-03-10T03:00+00:00/' ${f}; done;
+```

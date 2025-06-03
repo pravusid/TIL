@@ -126,7 +126,7 @@ process.send('ready');
 
 SIGINT signal을 가로채서 앱 종료준비를 한다 (`kill_timeout`내에 작업을 끝내야 한다)
 
-```sh
+```js
 process.on('SIGINT', function() {
    db.stop(function(err) {
      process.exit(err ? 1 : 0);
@@ -188,7 +188,8 @@ pm2 start ecosystem.config.js # "interpreter" 설정 값 변경필요 (default: 
 
 ### Updating environment variables and options
 
-<https://github.com/Unitech/pm2/blob/de0bbad9afe29f4e316452af373d1c7b87655ca0/test/e2e/cli/env-refresh.sh#L7>
+- <https://github.com/Unitech/pm2/blob/de0bbad9afe29f4e316452af373d1c7b87655ca0/test/e2e/cli/env-refresh.sh#L7>
+- <https://github.com/Unitech/pm2/issues/3192>
 
 > To update environment variables or PM2 options, specify the --update-env CLI option:
 
