@@ -228,3 +228,8 @@ TS 기준
 
 - <https://github.com/nodejs/node/issues/50963>
 - <https://github.com/nodejs/TSC/pull/1697#issuecomment-2737093616>
+
+## unified package managers
+
+- <https://github.com/unjs/nypm>
+- <https://github.com/antfu/ni>
