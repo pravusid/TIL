@@ -1,12 +1,13 @@
-.ipynb_checkpoints/
 .obsidian/
+.specstory/
 
 .wiki/docs/
 .wiki/index.md
 
-node_modules/
-Rust/**/target/
-
 .private/
 .snippets/
 .qna/
+
+node_modules/
+Rust/**/target/
+.ipynb_checkpoints/
