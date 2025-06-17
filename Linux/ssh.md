@@ -185,6 +185,22 @@ Host pravusid
 GatewayPorts yes
 ```
 
+## SSH Agent
+
+개인키 비밀번호를 반복해서 입력하지 않도록 키를 메모리에 보관
+
+```sh
+# 키 등록
+ssh-add /path/to/private_key
+# 키 등록 (macOS 애플 키 체인 사용)
+ssh-add --apple-use-keychain /path/to/private_key
+
+# 키 제거 (전부 제거)
+ssh-add -D
+# 키 제거 (특정 키)
+ssh-add -d /path/to/private_key
+```
+
 ## SSH Proxy
 
 ### SSH Agent Forwarding vs SSH ProxyJump
