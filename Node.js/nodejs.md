@@ -164,6 +164,7 @@ server.listen(port, hostname, () => {
 
 - <https://nodejs.org/docs/latest/api/typescript.html#type-stripping>
 - <https://github.com/nodejs/typescript>
+- <https://github.com/nodejs/amaro>
 - <https://nodejs.org/en/learn/typescript/run-natively>
 - <https://github.com/bloomberg/ts-blank-space>
 - <https://satanacchio.hashnode.dev/everything-you-need-to-know-about-nodejs-type-stripping>
