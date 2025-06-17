@@ -38,6 +38,7 @@
 - <https://github.com/joe-bell/cva>
 - <https://github.com/nextui-org/tailwind-variants> (cva + tailwind-merge)
 - <https://github.com/gregberge/twc>
+- <https://github.com/tailwindlabs/prettier-plugin-tailwindcss>
 
 ## install
 
