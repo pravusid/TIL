@@ -4,7 +4,7 @@
 
 ## Prompt
 
-<https://docs.cursor.com/context/rules-for-ai>
+<https://docs.cursor.com/context/rules>
 
 - <https://github.com/PatrickJS/awesome-cursorrules>
 - <https://github.com/sanjeed5/awesome-cursor-rules-mdc>
