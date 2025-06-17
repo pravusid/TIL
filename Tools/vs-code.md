@@ -261,6 +261,10 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 }
 ```
 
+## Shortcuts
+
+- <https://dev.to/terrytyli/my-top-10-vs-code-shortcuts-you-don-t-want-to-miss-nm9>
+
 ## 참고사항
 
 ### Why are there duplicate paths in the terminal's $PATH environment variable and/or why are they reversed on macOS?
@@ -298,3 +302,7 @@ allow list
   }
 }
 ```
+
+### Copilot Prompt
+
+<https://code.visualstudio.com/docs/copilot/copilot-customization>
