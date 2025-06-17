@@ -12,61 +12,64 @@
 ```sh
 Define and run multi-container applications with Docker.
 
-Usage:
-  docker-compose [-f <arg>...] [options] [COMMAND] [ARGS...]
-  docker-compose [COMMAND] -h|--help
+Usage:  docker compose [OPTIONS] COMMAND
+
+Define and run multi-container applications with Docker
 
 Options:
-  -f, --file FILE             Specify an alternate compose file
-                              (default: docker-compose.yml)
-                              (여러 파일을 지정할 수도 있음)
-  -p, --project-name NAME     Specify an alternate project name
-                              (default: directory name)
-  --verbose                   Show more output
-  --log-level LEVEL           Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-  --no-ansi                   Do not print ANSI control characters
-  -v, --version               Print version and exit
-  -H, --host HOST             Daemon socket to connect to
+      --all-resources              Include all resources, even those not used by services
+      --ansi string                Control when to print ANSI control characters
+                                   ("never"|"always"|"auto") (default "auto")
+      --compatibility              Run compose in backward compatibility mode
+      --dry-run                    Execute command in dry run mode
+      --env-file stringArray       Specify an alternate environment file
+  -f, --file stringArray           Compose configuration files
+      --parallel int               Control max parallelism, -1 for unlimited (default -1)
+      --profile stringArray        Specify a profile to enable
+      --progress string            Set type of progress output (auto, tty, plain,
+                                   json, quiet)
+      --project-directory string   Specify an alternate working directory
+                                   (default: the path of the, first specified,
+                                   Compose file)
+  -p, --project-name string        Project name
 
-  --tls                       Use TLS; implied by --tlsverify
-  --tlscacert CA_PATH         Trust certs signed only by this CA
-  --tlscert CLIENT_CERT_PATH  Path to TLS certificate file
-  --tlskey TLS_KEY_PATH       Path to TLS key file
-  --tlsverify                 Use TLS and verify the remote
-  --skip-hostname-check       Don't check the daemon's hostname against the
-                              name specified in the client certificate
-  --project-directory PATH    Specify an alternate working directory
-                              (default: the path of the Compose file)
-  --compatibility             If set, Compose will attempt to convert deploy
-                              keys in v3 files to their non-Swarm equivalent
+Management Commands:
+  bridge      Convert compose files into another model
 
 Commands:
-  build         Services are built once and then tagged, by default as project_service.
-  bundle        Generate a Distributed Application Bundle (DAB) from the Compose file.
-  config        Validate and view the Compose file.
-  create        Creates containers for a service.
-  down          Stops containers and removes containers, networks, volumes, and images created by up.
-  events        Stream container events for every container in the project.
-  exec          Execute a command in a running container.
-  help          Get help on a command.
-  images        List images.
-  kill          Forces running containers to stop by sending a SIGKILL signal.
-  logs          View output from containers.
-  pause         Pauses running containers of a service. They can be unpaused with docker-compose unpause.
-  port          Print the public port for a port binding
-  ps            List containers
-  pull          Pull service images
-  push          Push service images
-  restart       Restarts all stopped and running services.
-  rm            Removes stopped service containers.
-  run           Runs a one-time command against a service.
-  scale         Set number of containers for a service
-  start         Starts existing containers for a service.
-  stop          Stops running containers without removing them. They can be started again with docker-compose start.
-  top           Display the running processes
-  unpause       Unpause services
-  up            Builds, (re)creates, starts, and attaches to containers for a service
-  version       Show the Docker-Compose version information
+  attach      Attach local standard input, output, and error streams to a service's running container
+  build       Build or rebuild services
+  commit      Create a new image from a service container's changes
+  config      Parse, resolve and render compose file in canonical format
+  cp          Copy files/folders between a service container and the local filesystem
+  create      Creates containers for a service
+  down        Stop and remove containers, networks
+  events      Receive real time events from containers
+  exec        Execute a command in a running container
+  export      Export a service container's filesystem as a tar archive
+  images      List images used by the created containers
+  kill        Force stop service containers
+  logs        View output from containers
+  ls          List running compose projects
+  pause       Pause services
+  port        Print the public port for a port binding
+  ps          List containers
+  publish     Publish compose application
+  pull        Pull service images
+  push        Push service images
+  restart     Restart service containers
+  rm          Removes stopped service containers
+  run         Run a one-off command on a service
+  scale       Scale services
+  start       Start services
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop services
+  top         Display the running processes
+  unpause     Unpause services
+  up          Create and start containers
+  version     Show the Docker Compose version information
+  wait        Block until containers of all (or specified) services stop.
+  watch       Watch build context for service and rebuild/refresh containers when files are updated
 ```
 
 ## Configuration reference
@@ -219,4 +222,26 @@ services:
       - '6379:6379'
     command:
       - --requirepass idpravus@redis
+```
+
+<https://www.baeldung.com/ops/docker-compose-mysql-connection-ready-wait>
+
+```yml
+services:
+  web:
+    image: alpine:latest
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 ```
