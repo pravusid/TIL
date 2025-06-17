@@ -15,3 +15,7 @@
 ## [[cursor]]
 
 <https://docs.cursor.com/tools>
+
+## tools
+
+- <https://github.com/browsermcp/mcp>
