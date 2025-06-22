@@ -1,8 +1,9 @@
 # Agent Coding
 
 - <https://en.wikipedia.org/wiki/Vibe_coding>
+- [[vs-code#Prompt]]
 - [[cursor#Prompt]]
-- [[vs-code#Copilot Prompt]]
+- <https://github.com/dagger/container-use> (agent 실행환경 격리)
 
 ## 실천방법
 

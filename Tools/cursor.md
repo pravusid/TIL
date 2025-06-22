@@ -24,6 +24,10 @@
 - <https://forum.cursor.com/t/questions-on-gitignore-cursorignore-cursorban/34713>
 - <https://forum.cursor.com/t/environment-secrets-and-code-security/14486>
 
+<https://docs.cursor.com/context/ignore-files>
+
+> Cursor will also ignore all files listed in the **.gitignore** file in your root directory and in the **Default Ignore List** provided below.
+
 ## 단축키 설정 ([[vs-code]] compatible)
 
 - <https://forum.cursor.com/t/cmd-k-vs-cmd-r-keyboard-shortcuts-default/1172/9>

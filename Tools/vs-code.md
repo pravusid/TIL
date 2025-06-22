@@ -277,10 +277,24 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 
 <https://code.visualstudio.com/docs/copilot/overview>
 
+### VSCode privacy settings
+
+<https://code.visualstudio.com/docs/copilot/reference/workspace-context#_what-sources-are-used-for-context>
+
+`.gitignore`, `files.exclude` 설정 값은 workspace index에서 제외하지만 해당 파일을 열었을 때 copilot이 접근하지 않는 것은 아님
+
+> [!NOTE]
+> VSCode는 [[cursor#Security]]의 .gitignore 자동처리를 지원하지 않음
+
+<https://stackoverflow.com/questions/77780462/how-to-exclude-specific-files-like-env-from-github-copilot-in-vs-code>
+
 deny list
 
 ```json
 {
+  "files.associations": {
+    ".env*": "dotenv"
+  },
   "github.copilot.enable": {
     "*": true,
     "dotenv": false,
@@ -303,6 +317,17 @@ allow list
 }
 ```
 
-### Copilot Prompt
+### Github privacy settings
+
+Github Settings → Copilot → Features → Privacy
+
+- Allow GitHub to use my data for product improvements: false
+- Allow GitHub to use my data for AI model training: disabled
+
+콘텐츠 제외 (Business, Enterprise Plan)
+
+- <https://docs.github.com/ko/copilot/managing-copilot/configuring-and-auditing-content-exclusion/excluding-content-from-github-copilot>
+
+### Prompt
 
 <https://code.visualstudio.com/docs/copilot/copilot-customization>
