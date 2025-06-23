@@ -1,0 +1,3 @@
+{
+  "file_scan_inclusions": [".private/", ".snippets/", ".qna/"]
+}
