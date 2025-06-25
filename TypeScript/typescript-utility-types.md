@@ -9,6 +9,7 @@ TypeScript에서는 타입 변환을 편리하게 할 수 있는 유틸리티 �
 
 - <https://github.com/type-challenges/type-challenges>
 - <https://github.com/sindresorhus/type-fest>
+- <https://github.com/ts-essentials/ts-essentials>
 
 ## `Partial<T>`
 
@@ -791,4 +792,19 @@ export type ReplaceAttributes<
   R extends Record<PropertyKey, unknown>
   //
 > = Omit<T, keyof R> & R;
+```
+
+### NestedKeyOf
+
+<https://dev.to/pffigueiredo/typescript-utility-keyof-nested-object-2pa3>
+
+```ts
+type NestedKeyOf<T, K = keyof T> = K extends keyof T & (string | number)
+  ? `${K}` | (T[K] extends object ? `${K}.${NestedKeyOf<T[K]>}` : never)
+  : never;
+
+/**
+ * Only non-optional keys can be selected
+ */
+type PickByPaths<O extends object, K extends NestedKeyOf<O>> = Extract<keyof O | K, K>;
 ```
