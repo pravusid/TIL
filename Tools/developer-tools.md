@@ -2,9 +2,9 @@
 
 ## 개발환경 구성
 
-- <https://github.com/cachix/devenv>
-- <https://github.com/jetify-com/devbox>
-- <https://github.com/daytonaio/daytona>
+- <https://github.com/pkgxdev/pkgx> Run Anything
+- <https://github.com/cachix/devenv> Fast, Declarative, Reproducible, and Composable Developer Environments
+- <https://github.com/jetify-com/devbox> a command-line tool that lets you easily create isolated shells for development
 - <https://github.com/cheeselemon/ophiuchi-desktop> Localhost SSL Proxy Server Manager
 
 ## Version Managers
@@ -19,11 +19,10 @@
 - version definition
   - <https://github.com/nvm-sh/nvm?tab=readme-ov-file#nvmrc>
   - <https://github.com/shadowspawn/node-version-usage>
-- 기타
-  - <https://github.com/pkgxdev/pkgx>
 
 ## Containers
 
+- <https://github.com/apple/container>
 - [[colima]]
 - rancher-desktop
   - <https://rancherdesktop.io/>
