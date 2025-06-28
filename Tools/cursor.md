@@ -83,6 +83,16 @@
   {
     "key": "shift+cmd+]",
     "command": "-aichat.insertselectionintochat"
+  },
+  {
+    "key": "alt+cmd+.",
+    "command": "cmdk.togglePromptBarModel",
+    "when": "editorHasPromptBar && editorPromptBarFocused"
+  },
+  {
+    "key": "alt+cmd+.",
+    "command": "composer.openModelToggle",
+    "when": "composerFocused && !editorTextFocus"
   }
 ]
 ```
