@@ -319,8 +319,9 @@ allow list
 
 ### Github privacy settings
 
-Github Settings → Copilot → Features → Privacy
+Github Settings → Copilot → Features → Privacy (모두 비활성화)
 
+- Suggestions matching public code (duplication detection filter): blocked
 - Allow GitHub to use my data for product improvements: false
 - Allow GitHub to use my data for AI model training: disabled
 

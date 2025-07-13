@@ -19,3 +19,4 @@
 ## tools
 
 - <https://github.com/browsermcp/mcp>
+- <https://github.com/microsoft/playwright-mcp>
