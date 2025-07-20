@@ -198,6 +198,11 @@ types 패키지는 `index.d.ts` 파일이 있는 폴더 혹은 `package.json` �
 자동 포함은 모듈로 선언된 파일이 아니라 global 선언 파일을 사용할 때만 중요하다.
 예를 들어, `import "foo"`를 사용하면 TypeScript는 여전히 `node_modules` 및 `node_modules/@types` 폴더에서 `foo` 패키지를 찾는다.
 
+### skipLibCheck
+
+skipLibCheck는 타입 오류는 무시하지만, 구문 오류(syntax error)는 무시하지 못함.
+(TypeScript 버전 차이로 인해 구문이 추가된 경우 처리 불가; e.g `satisfies`, `<const T extends U>`)
+
 ## `extends` 사용으로 설정 상속
 
 `tsconfig.json` 파일은 `extends` 속성으로 다른 파일에서 설정을 상속할 수 있다.

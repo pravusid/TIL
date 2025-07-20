@@ -49,6 +49,17 @@
 - CommonJS: `.cjs`, `.cts`, `.d.cts`
 - ESM: `.mjs`, `.mts`, `.d.mts`
 
+### `--module node20`
+
+<https://github.com/microsoft/TypeScript/pull/61805>
+
+|          | `target` | `moduleResolution` | `resolveJsonModule` | import assertions | import attributes | JSON imports        | require(esm) |
+| -------- | -------- | ------------------ | ------------------- | ----------------- | ----------------- | ------------------- | ------------ |
+| node16   | `es2022` | `node16`           | false               | 🚫                | 🚫                | no restrictions     | 🚫           |
+| node18   | `es2022` | `node16`           | false               | ✅                | ✅                | needs `type "json"` | 🚫           |
+| node20   | `es2023` | `node16`           | true                | 🚫                | ✅                | needs `type "json"` | ✅           |
+| nodenext | `esnext` | `nodenext`         | true                | 🚫                | ✅                | needs `type "json"` | ✅           |
+
 ## `package.json` Exports, Imports, and Self-Referencing
 
 - [Support for NodeJS 12.7+ package exports](https://github.com/microsoft/TypeScript/issues/33079)
