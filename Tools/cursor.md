@@ -33,7 +33,7 @@
 - <https://forum.cursor.com/t/cmd-k-vs-cmd-r-keyboard-shortcuts-default/1172/9>
 - <https://forum.cursor.com/t/comment-code-using-cursor-ai/11683>
 
-<https://marketplace.visualstudio.com/items?itemName=YuTengjing.vscode-classic-experience> 확장 설치
+<https://open-vsx.org/extension/YuTengjing/vscode-classic-experience> 확장 설치
 
 확장 단축키 추가 변경: [Copilot Chat](https://code.visualstudio.com/docs/copilot/copilot-chat), [Copilot Edit](https://code.visualstudio.com/docs/copilot/copilot-edits) 단축키 참고
 
