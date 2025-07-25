@@ -21,7 +21,8 @@
 ```json
 {
   "compilerOptions": {
-    "module": "nodenext"
+    "module": "nodenext",
+    "rewriteRelativeImportExtensions": true
   }
 }
 ```
