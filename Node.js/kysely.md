@@ -35,6 +35,7 @@ tags: nodejs/db querybuilder
 
 - <https://kysely-org.github.io/kysely-apidoc/classes/InsertQueryBuilder.html#onConflict>
 - <https://kysely-org.github.io/kysely-apidoc/classes/InsertQueryBuilder.html#onDuplicateKeyUpdate>
+- [MySQL 8 row aliases](https://github.com/kysely-org/kysely/issues/664)
 
 ```ts
 db.insertInto('foo')
@@ -47,10 +48,60 @@ db.insertInto('foo')
   .execute();
 ```
 
+upsert util function
+
+> 참고: <https://orm.drizzle.team/docs/guides/upsert>
+
+```ts
+import { ExpressionBuilder, StringReference, sql } from 'kysely';
+
+export const buildDuplicateKeyUpdateCols = <DB, TB extends keyof DB>(
+  expr: ExpressionBuilder<DB, TB>,
+  cols: StringReference<DB, TB>[]
+) => {
+  return cols.map((k) => ({ [k]: sql`values(${expr.ref(k)})` })).reduce((a, c) => ({ ...a, ...c }), {});
+};
+```
+
+### JSON value
+
+- <https://github.com/kysely-org/kysely/issues/209>
+- <https://kysely.dev/docs/recipes/extending-kysely#expression>
+
+```ts
+import { RawBuilder, sql } from 'kysely';
+
+export function jsonValue<T>(obj: T): RawBuilder<T> {
+  return sql`${JSON.stringify(obj)}`;
+}
+```
+
 ### Optimizer Hints
 
 `modifyFront`, `modifyEnd` 사용
 
 ```ts
 db.modifyFront(sql`/*+ MAX_EXECUTION_TIME(5000) */`);
+```
+
+### Type inference failure
+
+> 발생한 오류: `'isSelectQueryBuilder' 속성이 'RawBuilder<unknown>' 형식에 없지만 'SelectQueryBuilderExpression<Record<string, number>>' 형식에서 필수입니다.ts(2345)`
+
+오류가 발생한 코드 (실제 오류가 있는 것은 아니고 language server 변경사항이 있으면 추론 과부하가 걸리는 것으로 보임)
+
+```ts
+.values([/* ... */])
+.onDuplicateKeyUpdate($ => ({
+  foo: sql`${$.ref('foo')} + values(${$.ref('foo')})`,
+}))
+```
+
+타입 캐스팅으로 타입추론 오류 방지
+
+```ts
+.values([/* ... */])
+.onDuplicateKeyUpdate($ => ({
+  foo: sql<number>`${$.ref('foo')} + values(${$.ref('foo')})`,
+}))
 ```
