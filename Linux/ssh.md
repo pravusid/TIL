@@ -94,6 +94,36 @@ Host <host-alias1> [<host-alias2> ...]
 
 Identity 파일을 지정하지 않으면 `.ssh/id_rsa`가 기본으로 사용된다
 
+### 환경변수 전달 (SendEnv)
+
+client (`~/.ssh/config`)
+
+```sh
+Host your-server
+    HostName server.example.com
+    SendEnv MY_ENV_*
+```
+
+server (`/etc/ssh/sshd_config`)
+
+```sh
+AcceptEnv MY_ENV_*
+```
+
+설정 후 sshd 재시작 (`sudo systemctl restart sshd`)
+
+### 환경변수 전달 (SetEnv)
+
+SetEnv를 사용하면 클라이언트에서만 설정 (`~/.ssh/config`)
+
+> 변수를 가져올 수는 없고 고정된 값만 사용가능
+
+```sh
+Host your-server
+    HostName server.example.com
+    SetEnv MY_ENV_FOO=value
+```
+
 ### Host Key Checking 비활성화
 
 `~/.ssh/known_hosts` 등록시 키검증 생략 (MITM 위험성)

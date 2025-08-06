@@ -56,5 +56,5 @@ chmod +x $HOME/.git-askpass
 export GIT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export GIT_ASKPASS=$HOME/.git-askpass
 
-git clone https://token@github.com/project.git
+git clone https://github.com/user/repo.git
 ```
