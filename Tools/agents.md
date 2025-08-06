@@ -1,6 +1,6 @@
 # Agents
 
-## Github Copilot Chat
+## [[vs-code]] Github Copilot Chat
 
 - <https://github.com/github/awesome-copilot>
 
@@ -76,6 +76,10 @@
 
 <https://github.com/sst/opencode/tree/dev/packages/opencode/src/session/prompt>
 
+## [[cursor]]
+
+## [[windsurf]]
+
 ## Kilo
 
 <https://kiro.dev/docs/getting-started/>
@@ -95,3 +99,7 @@ Kiro는 핵심 프로젝트 컨텍스트를 설정하는 세 가지 필수 파�
 - 요구사항(Requirements): EARS 표기법을 사용한 인수 기준을 포함하는 사용자 스토리
 - 설계(Design): 기술 아키텍처 및 구현 접근 방식
 - 작업(Tasks): 개별적이고 추적 가능한 구현 단계
+
+## crush
+
+<https://github.com/charmbracelet/crush>
