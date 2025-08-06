@@ -52,7 +52,8 @@
 
 ### `--module node20`
 
-<https://github.com/microsoft/TypeScript/pull/61805>
+- <https://github.com/microsoft/TypeScript/pull/61805>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-5-9/#support-for---module-node20>
 
 |          | `target` | `moduleResolution` | `resolveJsonModule` | import assertions | import attributes | JSON imports        | require(esm) |
 | -------- | -------- | ------------------ | ------------------- | ----------------- | ----------------- | ------------------- | ------------ |
