@@ -72,6 +72,16 @@ node --run test
 node --run test -- --verbose
 ```
 
+## Compile Cache
+
+- Added in: v22.1.0
+- <https://nodejs.org/api/cli.html#node_compile_cachedir>
+- <https://nodejs.org/api/module.html#module-compile-cache>
+
+```bash
+NODE_COMPILE_CACHE=dir node index.js
+```
+
 ## `NODE_OPTIONS`
 
 <https://nodejs.org/api/cli.html#node_optionsoptions>
