@@ -1,18 +1,35 @@
-# Agent Coding
+# Agentic Coding
 
 - <https://en.wikipedia.org/wiki/Vibe_coding>
 - [[vs-code#Prompt]]
 - [[cursor#Prompt]]
-- <https://github.com/dagger/container-use> (agent 실행환경 격리)
+- [[agents]]
+- <https://code.visualstudio.com/docs/devcontainers/containers> (agent 실행환경 격리)
+- <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
 
 ## 실천방법
 
 - 커스텀 룰 사용, 결과 확인하면서 커스텀 룰을 지속적으로 개선
-- 한 세션을 짧게 유지
+- 한 세션을 불필요하게 길게 유지하지 않음
 - 명확한 요구사항 전달 및 활용할 기존 코드베이스 참조
+- 작업을 시작하기 전 모델에게 아이디어를 구상하거나 계획을 세우도록 요청
+  - 아이디어, 계획을 피드백 하면서 방향을 맞춤
+  - 계획은 대형/추론 모델로 진행하고 (claude opus ...), 코드 작성은 일반모델(claude sonnet ...)으로 진행하는 것도 방법
+  - 계획이 어느정도 정리되면 파일로 저장하도록 요청하고 본격적인 실행 전 다듬는 작업 진행
+  - 계획에 TODO list 생성하고 해결여부 표시하도록 요청
+    - 각 단계가 끝날 때마다, 현재 파일의 step 체크 처리하고, 커밋해줘
+    - 단계별 TODO list에 타입체크, 테스트 등을 확인하도록 해서 커밋 전 작동여부 추가 수정하도록 가이드
 - feedback loop (빌드/테스트가 작동할 때 까지 코드를 수정해줘)
-- agent에게 중간 커밋 요청
+- agent에게 각 단계가 끝날 때 커밋 요청
+  - husky 등의 git-hooks를 섞어 쓰면 타입오류, lint, 테스트 ... 적용할 수 있음
 - 여러 모델을 섞어 구현-리뷰 교차실행
+- AI에게는 오히려 코드 중간중간의 주석이 도움이 됨 (why, what, how 모두)
+
+### 탐색
+
+- 질문을 작성하기 위해 모델과 질의응답
+- 내용이 어느정도 확보되면 질의응답을 다시 질문으로 요약
+- 추론모델에게 정리된 질문을 다시 입력
 
 ### [Vibe Coding 매뉴얼: AI 지원 개발을 위한 템플릿](https://roboco.io/posts/vibe-coding-manual/)
 
@@ -279,6 +296,13 @@ Rules for high-quality vibe coding (practical guidelines)
 
 ### [Accelerating Large-Scale Test Migration with LLMs](https://medium.com/airbnb-engineering/accelerating-large-scale-test-migration-with-llms-9565c208023b)
 
+> Enzyme to React Testing Library
+
+1. File Validation and Refactor Steps
+2. Retry Loops & Dynamic Prompting
+3. Increasing the Context
+4. From 75% to 97%: Systematic Improvement
+
 ### [Here’s how I use LLMs to help me write code](https://simonwillison.net/2025/Mar/11/using-llms-for-code/)
 
 ### [Claude Code: Best practices for agentic coding](https://www.anthropic.com/engineering/claude-code-best-practices)
@@ -416,7 +440,126 @@ I've got some build errors. Run nr build to see the errors, then fix them, and t
 - <https://github.com/cloudflare/workers-oauth-provider/commits/main/>
 - [Cloudflare의 AI가 작성한 OAuth 라이브러리 살펴보기](https://news.hada.io/topic?id=21354)
 
+### [에이전트 기반 AI는 왜 좋은 페어 프로그래머가 아닌가](https://news.hada.io/topic?id=21403)
+
+- AI 에이전트(예: Copilot Agent)는 인간의 사고 속도보다 훨씬 빠르게 코드를 작성함
+- 이로 인해 사용자는 따라가기도 전에 코드가 쏟아지며, 맥락을 놓치고 작업 몰입도가 저하되는 현상이 발생함
+- 문제 상황에서 에이전트가 도움을 요청하면 이미 사용자는 상황 파악이 안 된 채로 “뒷수습” 역할을 맡게 되고, 결과적으로 잘못된 방향으로 진행된 코드를 정리하는 부담이 커짐
+
+The path forward
+
+- 비동기적 협업
+  - 인간과의 페어 프로그래밍에서 한 명이 주도적으로 진행할 때처럼, AI가 코드를 독립적으로 작성하고 Pull Request로 리뷰하는 형태가 더 효과적임
+  - GitHub Coding Agent 등 비동기 워크플로우를 활용해, 사용자가 리뷰와 품질 관리에 집중할 수 있음
+
+- 속도를 낮춘 "턴 기반" 페어링
+  - AI의 "Agent Mode" 대신, Edit/Ask Mode와 같은 한 번에 한 단계씩 진행하는 방식을 사용
+  - Ping-pong 페어링(한 쪽이 제안, 한 쪽이 승인)처럼, AI가 제안한 변경을 사용자가 직접 수락/검토하며 속도를 조절
+  - 문제 해결/디버깅에만 AI를 쓰지 않고, 일관된 워크플로우로 활용하는 것이 바람직함
+
+> 병목지점은 인간이고, 인간의 속도 향상 정확도 유지를 위한 실천방법이 중요할 듯
+
 ### [AI 지원 프로그래밍을 위한 새 실천법](https://wiki.g15e.com/pages/New%20practices%20for%20AI-aided%20programming)
+
+### <https://cookbook.openai.com/examples/gpt4-1_prompting_guide>
+
+### <https://cookbook.openai.com/examples/prompt_migration_guide>
+
+### [Agentic Engineering - Zed](https://zed.dev/agentic-engineering)
+
+### [Augmented Coding: Beyond the Vibes](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)
+
+- 바이브 코딩: 코드 품질보다는 시스템의 동작에 중점을 둠. 오류 발생 시 AI에 피드백하여 수정만 기대.
+- 증강 코딩: 코드, 복잡성, 테스트 및 테스트 커버리지 등 코드 자체에 관심을 가짐. 손으로 코딩하는 것과 유사하게 깔끔하고 작동하는 코드를 중요하게 생각하지만, 코드를 직접 타이핑하는 양은 적음.
+
+System Prompt
+
+```md
+Always follow the instructions in plan.md. When I say "go", find the next unmarked test in plan.md, implement the test, then implement only enough code to make that test pass.
+
+# ROLE AND EXPERTISE
+
+You are a senior software engineer who follows Kent Beck's Test-Driven Development (TDD) and Tidy First principles. Your purpose is to guide development following these methodologies precisely.
+
+# CORE DEVELOPMENT PRINCIPLES
+
+- Always follow the TDD cycle: Red → Green → Refactor
+- Write the simplest failing test first
+- Implement the minimum code needed to make tests pass
+- Refactor only after tests are passing
+- Follow Beck's "Tidy First" approach by separating structural changes from behavioral changes
+- Maintain high code quality throughout development
+
+# TDD METHODOLOGY GUIDANCE
+
+- Start by writing a failing test that defines a small increment of functionality
+- Use meaningful test names that describe behavior (e.g., "shouldSumTwoPositiveNumbers")
+- Make test failures clear and informative
+- Write just enough code to make the test pass - no more
+- Once tests pass, consider if refactoring is needed
+- Repeat the cycle for new functionality
+
+# TIDY FIRST APPROACH
+
+- Separate all changes into two distinct types:
+
+1. STRUCTURAL CHANGES: Rearranging code without changing behavior (renaming, extracting methods, moving code)
+2. BEHAVIORAL CHANGES: Adding or modifying actual functionality
+
+- Never mix structural and behavioral changes in the same commit
+- Always make structural changes first when both are needed
+- Validate structural changes do not alter behavior by running tests before and after
+
+# COMMIT DISCIPLINE
+
+- Only commit when:
+
+1. ALL tests are passing
+2. ALL compiler/linter warnings have been resolved
+3. The change represents a single logical unit of work
+4. Commit messages clearly state whether the commit contains structural or behavioral changes
+
+- Use small, frequent commits rather than large, infrequent ones
+
+# CODE QUALITY STANDARDS
+
+- Eliminate duplication ruthlessly
+- Express intent clearly through naming and structure
+- Make dependencies explicit
+- Keep methods small and focused on a single responsibility
+- Minimize state and side effects
+- Use the simplest solution that could possibly work
+
+# REFACTORING GUIDELINES
+
+- Refactor only when tests are passing (in the "Green" phase)
+- Use established refactoring patterns with their proper names
+- Make one refactoring change at a time
+- Run tests after each refactoring step
+- Prioritize refactorings that remove duplication or improve clarity
+
+# EXAMPLE WORKFLOW
+
+When approaching a new feature:
+
+1. Write a simple failing test for a small part of the feature
+2. Implement the bare minimum to make it pass
+3. Run tests to confirm they pass (Green)
+4. Make any necessary structural changes (Tidy First), running tests after each change
+5. Commit structural changes separately
+6. Add another test for the next small increment of functionality
+7. Repeat until the feature is complete, committing behavioral changes separately from structural ones
+
+Follow this process precisely, always prioritizing clean, well-tested code over quick implementation.
+
+Always write one test at a time, make it run, then improve structure. Always run all the tests (except long-running tests) each time.
+
+# Rust-specific
+
+Prefer functional programming style over imperative style in Rust. Use Option and Result combinators (map, and_then, unwrap_or, etc.) instead of pattern matching with if let or match when possible.
+```
+
+## <https://simonwillison.net/tags/ai-assisted-programming/>
 
 ## 참고, 의견
 
@@ -426,3 +569,8 @@ I've got some build errors. Run nr build to see the errors, then fix them, and t
 - [AI Blindspots – AI 코딩 중에 발견한 LLM의 맹점들](https://news.hada.io/topic?id=19859)
 - [에이전틱 코딩에서 개발자 역량의 역할](https://news.hada.io/topic?id=20006)
 - [AI 시대의 새로운 개발자 패턴들](https://news.hada.io/topic?id=21115)
+- [TDD, AI Agents and Coding - 켄트백](https://news.hada.io/topic?id=21446)
+- [생성형 AI 코딩 툴과 에이전트가 나에게 효과 없는 이유](https://news.hada.io/topic?id=21514)
+- [AI가 오픈소스 개발자를 느리게 만든다. Peter Naur가 그 이유를 알려줄 수 있다](https://news.hada.io/topic?id=21996)
+- [코딩 에이전트 체크리스트: Claude Code ver](https://speakerdeck.com/nacyot/koding-eijeonteu-cekeuriseuteu-claude-code-ver)
+- [AI로 개발을 어떻게 가속화하는가](https://drive.google.com/file/d/1SJ7-1YXo4r4pkHDuMdKLR9NtgbUsSRoZ/view)
