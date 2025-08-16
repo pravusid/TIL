@@ -11,6 +11,7 @@
   - `colima start --cpu 1 --memory 2 --disk 30 --arch aarch64 --vm-type vz --vz-rosetta --mount-type virtiofs`
 - 자동실행
   - `brew services start colima`
+  - `rm -rf ~/.colima && ln -s ~/.config/colima ~/.colima` (launchd → shell 환경변수 불러오지 않아 XDG_CONFIG_HOME 처리하지 않음)
 - 오류발생시
   - `limactl stop -f colima`
   - <https://github.com/abiosoft/colima/issues/381>
