@@ -103,3 +103,11 @@ Kiro는 핵심 프로젝트 컨텍스트를 설정하는 세 가지 필수 파�
 ## crush
 
 <https://github.com/charmbracelet/crush>
+
+> AI coding agent for your favourite terminal
+
+## forge
+
+<https://github.com/antinomyhq/forge>
+
+> AI enabled pair programmer for Claude, GPT, O Series, Grok, Deepseek, Gemini and 300+ models
