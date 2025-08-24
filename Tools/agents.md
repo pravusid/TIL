@@ -39,6 +39,8 @@
 > closed source
 
 - <https://github.com/anthropics/claude-code>
+- <https://github.com/zebbern/claude-code-guide>
+- <https://github.com/hesreallyhim/awesome-claude-code>
 - <https://github.com/getAsterisk/claudia> A powerful GUI app and Toolkit for Claude Code
 
 ### Claude Code Privacy
