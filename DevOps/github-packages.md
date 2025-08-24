@@ -1,18 +1,11 @@
 # GitHub Packages
 
-## NPM
+## npm
 
-<https://docs.github.com/en/free-pro-team@latest/packages/guides/configuring-npm-for-use-with-github-packages>
+### npm registry
 
-## `.npmrc`
+<https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry>
 
-<https://docs.npmjs.com/cli/v6/configuring-npm/npmrc>
+### `.npmrc`
 
-<https://github.com/yarnpkg/yarn/issues/4451>
-
-`yarn`에서 private package 사용시 `.npmrc` 설정
-
-```conf
-//npm.pkg.github.com/:_authToken=<TOKEN>
-<@ORG_NAME>:registry=https://npm.pkg.github.com/
-```
+<https://docs.npmjs.com/cli/configuring-npm/npmrc>
