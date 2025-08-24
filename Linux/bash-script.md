@@ -266,6 +266,24 @@ done
 
 인자는 9개까지 사용가능(1~9, 0은 명령어) 하므로 10번째 인자부터는 shift를 통해서 모든 파라미터 변수를 한단계식 낮춰 사용해야 한다.
 
+## brace expansion
+
+중괄호 {} 내부에 콤마로 구분한 값이나, 범위(시퀀스)로 지정한 값을 넣으면 해당 위치에 문자열이 확장되어 명령어/인자가 여러 개 생성됨
+
+```bash
+echo file{A,B,C}.txt # fileA.txt fileB.txt fileC.txt
+
+# 중첩
+echo {foo,bar{1,2,3}} # foo bar1 bar2 bar3
+
+# 시퀸스
+echo file{1..3}.txt # file1.txt file2.txt file3.txt
+echo {a..e} # a b c d e
+
+# 빈 값
+cp config.txt{,.bak} # cp config.txt config.txt.bak
+```
+
 ## 예제
 
 ### process id
