@@ -2,11 +2,6 @@
 
 - <https://en.wikipedia.org/wiki/Vibe_coding>
 - [[agents]]
-- [[vs-code#Prompt]]
-- [[cursor#Prompt]]
-- <https://code.visualstudio.com/docs/devcontainers/containers> (agent 실행환경 격리)
-- <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
-- <https://github.com/superagent-ai/vibekit> (safety layer for your coding agent)
 
 ## 실천방법
 
@@ -190,3 +185,4 @@ AI가 잘못하고 있다는 세 가지 신호
   - > 실패 비용이 극적으로 낮아져, 실험-학습-결정의 사이클이 대폭 가속
 - [Claude Code로 좋은 결과 얻기](https://news.hada.io/topic?id=22425)
 - [AI에 대한 열풍 속에서 소프트웨어 엔지니어들은 어떻게 생각하고 있나요?](https://news.hada.io/topic?id=22489)
+- [GenAI를 통한 소프트웨어 엔지니어링](https://news.hada.io/topic?id=22583)

@@ -1,16 +1,28 @@
 # Agents
 
+- <https://agents.md/>
+- <https://github.com/zed-industries/agent-client-protocol>
+- <https://code.visualstudio.com/docs/devcontainers/containers> (agent 실행환경 격리)
+- <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
+- <https://github.com/superagent-ai/vibekit> (safety layer for your coding agent)
+
 ## [[vs-code]] Github Copilot Chat
 
 - <https://github.com/github/awesome-copilot>
 
 ### Github Copilot Chat Prompts
 
-<https://github.com/microsoft/vscode-copilot-chat/blob/main/src/extension/prompts/node/agent/agentPrompt.tsx>
+- [[vs-code#Prompt]]
+- <https://github.com/microsoft/vscode-copilot-chat/blob/main/src/extension/prompts/node/agent/agentPrompt.tsx>
+
+## [[cursor]]
+
+- [[cursor#Prompt]]
 
 ## Gemini CLI
 
-<https://github.com/google-gemini/gemini-cli>
+- <https://github.com/google-gemini/gemini-cli>
+- <https://www.philschmid.de/gemini-cli-cheatsheet>
 
 ### Gemini CLI Prompts
 
@@ -42,6 +54,7 @@
 - <https://github.com/zebbern/claude-code-guide>
 - <https://github.com/hesreallyhim/awesome-claude-code>
 - <https://github.com/getAsterisk/claudia> A powerful GUI app and Toolkit for Claude Code
+- <https://github.com/automazeio/ccpm> Project management system for Claude Code
 
 ### Claude Code Privacy
 
