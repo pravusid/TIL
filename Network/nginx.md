@@ -293,6 +293,10 @@ server {
 - proxy_read_timeout: default 60s
 - proxy_send_timeout: default 60s
 
+## Native Support for ACME Protocol
+
+<https://blog.nginx.org/blog/native-support-for-acme-protocol>
+
 ## Troubleshooting
 
 ### nginx client-max-body-size
