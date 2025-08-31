@@ -66,8 +66,8 @@ peer dependencies 확인: `npm info "패키지명@버전" peerDependencies`
 
 > npm gets its config settings from the command line, environment variables, and npmrc files.
 
-- <https://docs.npmjs.com/cli/v9/configuring-npm/npmrc>
-- <https://docs.npmjs.com/cli/v9/using-npm/config>
+- <https://docs.npmjs.com/cli/configuring-npm/npmrc>
+- <https://docs.npmjs.com/cli/using-npm/config>
 
 ```env
 fund=false
@@ -207,7 +207,7 @@ TS 기준
 
 ### npm package publishing & lockfile
 
-<https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json#package-lockjson-vs-npm-shrinkwrapjson>
+<https://docs.npmjs.com/cli/configuring-npm/package-lock-json#package-lockjson-vs-npm-shrinkwrapjson>
 
 > The difference is that package-lock.json cannot be published, and it will be ignored if found in any place other than the root project.
 > In contrast, npm-shrinkwrap.json allows publication, and defines the dependency tree from the point encountered.
