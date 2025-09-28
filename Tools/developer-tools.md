@@ -16,9 +16,10 @@
   - > You can make nvm support `.node-version` in a project by making `.nvmrc` a symlink to `.node-version`
 - <https://github.com/Schniz/fnm>
   - `.node-version`, `.nvmrc`
-- version definition
+- nodejs version definition
   - <https://github.com/nvm-sh/nvm?tab=readme-ov-file#nvmrc>
   - <https://github.com/shadowspawn/node-version-usage>
+- <https://github.com/aquaproj/aqua> Declarative CLI Version manager written in Go
 
 ## Containers
 
