@@ -18,6 +18,7 @@
 ## [[cursor]]
 
 - [[cursor#Prompt]]
+- <https://docs.cursor.com/ko/welcome>
 
 ## Gemini CLI
 
@@ -51,6 +52,7 @@
 > closed source
 
 - <https://github.com/anthropics/claude-code>
+- <https://github.com/marckrenn/cc-mvp-prompts>
 - <https://github.com/zebbern/claude-code-guide>
 - <https://github.com/hesreallyhim/awesome-claude-code>
 - <https://github.com/getAsterisk/claudia> A powerful GUI app and Toolkit for Claude Code
@@ -62,17 +64,20 @@
 - <https://docs.anthropic.com/en/docs/claude-code/security>
 - <https://github.com/anthropics/claude-code?tab=readme-ov-file#data-collection-usage-and-retention>
 
+consumer products
 > We will not use your Inputs or Outputs to train our generative models (i.e. Claude), unless you’ve explicitly reported the materials to us (for example via our feedback mechanisms as noted below) or you’ve explicitly opted in to training (for example by joining our trusted tester program).
->
-> --`consumer products`
 
+commercial products
 > By default, we will not use your inputs or outputs from our commercial products to train our models.
->
-> --`commercial products`
 
+claude code
 > We may use feedback to improve our products and services, but we will not train generative models using your feedback from Claude Code. Given their potentially sensitive nature, we store user feedback transcripts for only 30 days.
->
-> --`claude code`
+
+### Claude Code Context
+
+> 클로드 코드에 추가된 `/context` 명령어를 실행해보면 context 구성을 확인해 볼 수 있다
+
+![claude-code-context](./agents/claude-code-context.png)
 
 ## Codex CLI
 
@@ -91,9 +96,13 @@
 
 <https://github.com/sst/opencode/tree/dev/packages/opencode/src/session/prompt>
 
-## [[cursor]]
+### opencode plugins
+
+- <https://github.com/numman-ali/opencode-openai-codex-auth>
 
 ## [[windsurf]]
+
+<https://docs.windsurf.com/windsurf/getting-started>
 
 ## Kilo
 
