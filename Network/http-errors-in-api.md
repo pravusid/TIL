@@ -1,6 +1,11 @@
 # HTTP 오류 처리
 
+- <https://datatracker.ietf.org/doc/html/rfc9457>
+- <https://datatracker.ietf.org/doc/html/rfc7807>
+
 ## 읽을거리
+
+- [IllegalArgumentException은 400 Bad Request인가?](https://techblog.woowahan.com/21686/)
 
 ## 예시
 
