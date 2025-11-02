@@ -245,3 +245,19 @@ services:
       timeout: 5s
       retries: 5
 ```
+
+## logging
+
+<https://docs.docker.com/engine/logging/>
+
+```yml
+services:
+  app:
+    image: myapp:latest
+    # ...
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+```
