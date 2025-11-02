@@ -5,6 +5,7 @@
 - <https://github.com/pkgxdev/pkgx> Run Anything
 - <https://github.com/cachix/devenv> Fast, Declarative, Reproducible, and Composable Developer Environments
 - <https://github.com/jetify-com/devbox> a command-line tool that lets you easily create isolated shells for development
+- <https://github.com/flox/flox> Developer environments you can take with you
 - <https://github.com/cheeselemon/ophiuchi-desktop> Localhost SSL Proxy Server Manager
 
 ## Version Managers
