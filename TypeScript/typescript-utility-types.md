@@ -784,6 +784,18 @@ type PartialFieldsOnly<T> = {
 };
 ```
 
+### OptionalIfNullable
+
+<https://stackoverflow.com/questions/72165227/how-to-make-nullable-properties-optional-in-typescript>
+
+```ts
+export type OptionalIfNullable<T> = {
+  [P in keyof T as null extends T[P] ? P : never]?: T[P];
+} & {
+  [P in keyof T as null extends T[P] ? never : P]: T[P];
+};
+```
+
 ### ReplaceAttributes
 
 ```ts
