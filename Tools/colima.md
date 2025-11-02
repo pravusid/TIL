@@ -13,8 +13,11 @@
   - `brew services start colima`
   - `rm -rf ~/.colima && ln -s ~/.config/colima ~/.colima` (launchd → shell 환경변수 불러오지 않아 XDG_CONFIG_HOME 처리하지 않음)
 - 오류발생시
-  - `limactl stop -f colima`
   - <https://github.com/abiosoft/colima/issues/381>
+  - ~~`limactl stop -f colima`~~
+  - `colima stop -f`
+  - `rm ~/.colima/_lima/_networks/user-v2/usernet_user-v2.pid` (상황에 따라)
+  - `colima start`
 - 볼륨 연결했을 때 permission 오류 발생하는 경우
   - `시스템 설정 → 개인정보 보호 및 보안 → 파일 및 폴더`에서 볼륨이 포함된 위치 권한 추가
 - options
