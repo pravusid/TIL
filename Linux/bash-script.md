@@ -18,6 +18,10 @@
   - dollar (변수실행)
   - backtick (명령실행)
   - reverse-slash (escape)
+- 큰 따옴표로 변수를 감싸면 다음 효과가 발생
+  - 빈 값 보존: 값이 비어도 “빈 인자 1개”로 전달됨
+  - 단어 분할(IFS) 방지: 공백·개행이 들어 있어도 한 인자로 유지
+  - 예약어 등 변환방지: if * ? [] 등이 문자열로 전달됨
 
 ### 변수와 curly braces
 
@@ -93,6 +97,15 @@ echo 2 $BAR
 | ${parameter?word}  | substitute parameter       | substitute null        | error, exit     |
 | ${parameter:+word} | substitute word            | substitute null        | substitute null |
 | ${parameter+word}  | substitute word            | substitute word        | substitute null |
+
+### 고급 확장
+
+- 부분문자열: `${var:offset}`, `${var:offset:length}`
+- 첫 매칭만 치환: `${var/pat/repl}`
+- 모든 매칭 치환: `${var//pat/repl}`
+- 접두가 pat일 때만 치환: `${var/#pat/repl}`
+- 접미가 pat일 때만 치환: `${var/%pat/repl}`
+- name에 들어있는 문자열을 ‘변수명’으로 간주해 그 변수의 값을 확장: `${!name}`
 
 ### special parameters
 
