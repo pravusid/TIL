@@ -8,4 +8,9 @@
 
 ### `.npmrc`
 
-<https://docs.npmjs.com/cli/configuring-npm/npmrc>
+[[npm#npmrc]]
+
+```env
+//npm.pkg.github.com/:_authToken=TOKEN
+@NAMESPACE:registry=https://npm.pkg.github.com
+```

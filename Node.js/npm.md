@@ -74,6 +74,27 @@ fund=false
 audit=false
 ```
 
+package registry 설정
+
+```env
+; bad config
+_authToken=MYTOKEN
+
+; good config
+@myorg:registry=https://somewhere-else.com/myorg
+@another:registry=https://somewhere-else.com/another
+//registry.npmjs.org/:_authToken=MYTOKEN
+
+; would apply to both @myorg and @another
+//somewhere-else.com/:_authToken=MYTOKEN
+
+; would apply only to @myorg
+//somewhere-else.com/myorg/:_authToken=MYTOKEN1
+
+; would apply only to @another
+//somewhere-else.com/another/:_authToken=MYTOKEN2
+```
+
 ## pnpm
 
 ### pre/post scripts
