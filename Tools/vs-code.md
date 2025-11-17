@@ -267,6 +267,20 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 
 ## 참고사항
 
+### 에디터, shell 환경 작동방식
+
+- 에디터 환경 (실행할 때)
+  - 사용자의 login shell 환경을 가져오는 프로세스 실행 <https://code.visualstudio.com/docs/terminal/advanced#_environment-inheritance>
+  - 사용자의 interactive shell 환경을 가져오는 프로세스 실행 <https://code.visualstudio.com/docs/supporting/FAQ#_resolving-shell-environment-fails> (`v1.52~`)
+  - if 터미널에서 실행 (`code .`) → 실행한 터미널의 shell 환경 상속 <https://code.visualstudio.com/docs/configure/command-line#_isolating-vs-code-instances>
+- 내장 터미널
+  - `terminal.integrated.inheritEnv` 설정으로 에디터 환경 상속여부를 결정할 수 있음
+  - profile 설정을 통해 내장 터미널의 동작방식을 변경할 수 있음: shell 종류, 실행 flag (login, interactive ...)
+    - 기본터미널: `terminal.integrated.defaultProfile` (login, interactive)
+    - Task, Debug 같은 자동화 터미널: `terminal.integrated.automationProfile` (login)
+
+> 참고 - zed editor: <https://zed.dev/docs/environment>
+
 ### Why are there duplicate paths in the terminal's $PATH environment variable and/or why are they reversed on macOS?
 
 <https://code.visualstudio.com/docs/terminal/profiles#_why-are-there-duplicate-paths-in-the-terminals-path-environment-variable-andor-why-are-they-reversed-on-macos>
