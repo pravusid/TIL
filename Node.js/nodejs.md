@@ -173,7 +173,7 @@ server.listen(port, hostname, () => {
 > v23.6.0 부터 Type stripping 은 플래그 없이 기본기능으로 동작
 
 - <https://nodejs.org/docs/latest/api/typescript.html#type-stripping>
-- <https://github.com/nodejs/typescript>
+- <https://github.com/nodejs/typescript> [Roadmap to stable strip-types](https://github.com/nodejs/typescript/issues/24)
 - <https://github.com/nodejs/amaro>
 - <https://nodejs.org/en/learn/typescript/run-natively>
 - <https://github.com/bloomberg/ts-blank-space>
