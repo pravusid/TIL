@@ -9,6 +9,7 @@
   - 결과 확인하면서 커스텀 룰을 지속적으로 개선
   - 프로젝트 root 규칙 (참고: [[claude-code-best-practices#CLAUDE.md]])
     - 최소한의 내용으로 유지 (100줄 정도)
+    - 예시) 최소한의 내용 + 명확한 지침 (`DO`, `DON'T`)
     - 프로젝트의 목적, 프로젝트 구조, 주요 명령어 (npm script, makefile ...), 코드 스타일, 핵심 지침 (너무 일반적인 내용이 아니라 구체적인 내용)
   - 하위 디렉토리에서 추가 규칙이 필요하다면 디렉토리별 커스텀 룰 사용
   - 그러나 코딩 에이전트들은 커스텀 룰을 제대로 따르지 않는 경우도 많기 때문에 중요한 지시사항이라면 프롬프트에 포함
@@ -117,7 +118,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - 이러한 키프레임 파일은 AI에게 다음과 같은 중요한 문맥 정보를 제공함
   - 프로젝트의 파일 구성 방식, 네임스페이스 구조, 명명 규칙, 일관된 코드 패턴
 
-### [Vibe 코딩은 저품질 작업에 대한 변명이 될 수 없어요](agentic-coding/vibe-coding-is-not-an-excuse-for-low-quality-work.md)
+### [Vibe 코딩은 저품질 작업에 대한 변명이 될 수 없어요](./agentic-coding/vibe-coding-is-not-an-excuse-for-low-quality-work.md)
 
 - Rule 1: Always Review AI-Generated Code / AI 코드 반드시 리뷰하기
 - Rule 2: Establish Coding Standards and Follow Them / 코딩 스타일과 기준을 설정하고 준수할 것
@@ -127,7 +128,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - Rule 6: Know When to Say No / 거절할 줄 알아야 함
 - Rule 7: Document and Share Knowledge / 문서화하고 지식을 공유하라
 
-### [Vibe Coding 매뉴얼: AI 지원 개발을 위한 템플릿](agentic-coding/vibe-coding-manual.md)
+### [Vibe Coding 매뉴얼: AI 지원 개발을 위한 템플릿](./agentic-coding/vibe-coding-manual.md)
 
 - [[vibe-coding-manual#Global rules]]
 - [[vibe-coding-manual#Workspace rules]]
@@ -148,8 +149,7 @@ AI가 잘못하고 있다는 세 가지 신호
 
 ## Prompting
 
-- <https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide>
-- <https://cookbook.openai.com/examples/prompt_migration_guide>
+- <https://cookbook.openai.com/examples/gpt-5-codex_prompting_guide>
 - <https://docs.anthropic.com/ko/docs/build-with-claude/prompt-engineering/overview>
 - [Gemini CLI Plan Mode](https://gist.github.com/philschmid/379cf06d9d18a1ed67ff360118a575e5)
 - [Gemini CLI: Explain Mode](https://gist.github.com/philschmid/64ed5dd32ce741b0f97f00e9abfa2a30)
@@ -186,3 +186,25 @@ AI가 잘못하고 있다는 세 가지 신호
 - [Claude Code로 좋은 결과 얻기](https://news.hada.io/topic?id=22425)
 - [AI에 대한 열풍 속에서 소프트웨어 엔지니어들은 어떻게 생각하고 있나요?](https://news.hada.io/topic?id=22489)
 - [GenAI를 통한 소프트웨어 엔지니어링](https://news.hada.io/topic?id=22583)
+- [프롬프팅 101](https://www.youtube.com/watch?v=ysPbXH0LpIE)
+- [Improve your AI code output with AGENTS.md](https://www.builder.io/blog/agents-md)
+- [에이전트 루프 설계하기 (simonwillison.net)](https://news.hada.io/topic?id=23470)
+- [코딩을 위한 효과적인 하위 에이전트를 활성화하는 방법](https://www.youtube.com/watch?v=jxDy33IqtjI)
+
+## Tools
+
+- <https://github.com/github/spec-kit>
+- <https://github.com/steveyegge/beads> A memory upgrade for your coding agent
+- <https://github.com/yamadashy/repomix> packs your entire repository into a single, AI-friendly file
+- <https://github.com/Ryandonofrio3/osgrep> Open Source Semantic Search for your AI Agent
+
+### git-worktree-runner
+
+<https://github.com/coderabbitai/git-worktree-runner>
+
+```bash
+git clone https://github.com/coderabbitai/git-worktree-runner.git ~/.git-worktree-runner
+cd ~/.git-worktree-runner
+ln -sfn "$(pwd)/bin/git-gtr" ~/.local/bin/git-gtr
+mkdir -p ~/.oh-my-zsh/completions && ln -sfn "$(pwd)/completions/_git-gtr" ~/.oh-my-zsh/completions/_git-gtr
+```

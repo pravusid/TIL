@@ -3,10 +3,15 @@
 - <https://github.com/modelcontextprotocol/modelcontextprotocol>
 - <https://github.com/modelcontextprotocol/typescript-sdk>
 - <https://github.com/modelcontextprotocol/inspector>
+- <https://platform.claude.com/docs/ko/agents-and-tools/tool-use/tool-search-tool#mcp>
 
 ## MCP Server Frameworks
 
 - <https://github.com/punkpeye/fastmcp>
+
+## 접근방법
+
+- <https://www.anthropic.com/engineering/code-execution-with-mcp>
 
 ## [[vs-code]]
 

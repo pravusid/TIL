@@ -35,6 +35,7 @@
 - <https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md>
 - <https://github.com/google-gemini/gemini-cli/blob/main/docs/telemetry.md>
 - <https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#usage-statistics>
+- <https://news.ycombinator.com/item?id=44379036>
 
 > 개인용 Gemini Code Assist를 사용하면 Google에서 프롬프트, 관련 코드, 생성된 출력, 코드 수정사항, 관련 기능 사용 정보, 사용자 의견을 수집하여 Google 제품 및 서비스, 머신러닝 기술을 제공, 개선, 개발하는 데 사용합니다.
 > ... 중략 ...
@@ -45,7 +46,8 @@
 
 ### Gemini Code Assist ToS
 
-<https://developers.google.com/gemini-code-assist/resources/plugin-license?hl=ko>
+- <https://developers.google.com/gemini-code-assist/resources/plugin-license?hl=ko>
+- <https://developers.google.com/gemini-code-assist/resources/privacy-notice-gemini-code-assist-individuals?hl=ko>
 
 ## Claude Code
 
@@ -73,11 +75,20 @@ commercial products
 claude code
 > We may use feedback to improve our products and services, but we will not train generative models using your feedback from Claude Code. Given their potentially sensitive nature, we store user feedback transcripts for only 30 days.
 
+### Claude Prompts
+
+- <https://platform.claude.com/docs/ko/release-notes/system-prompts>
+- <https://platform.claude.com/docs/ko/build-with-claude/prompt-engineering/claude-4-best-practices>
+
 ### Claude Code Context
 
 > 클로드 코드에 추가된 `/context` 명령어를 실행해보면 context 구성을 확인해 볼 수 있다
 
 ![claude-code-context](./agents/claude-code-context.png)
+
+- tool search tool
+  - <https://www.anthropic.com/engineering/advanced-tool-use>
+  - <https://news.ycombinator.com/item?id=46038047>
 
 ## Codex CLI
 
@@ -87,6 +98,14 @@ claude code
 
 - <https://github.com/openai/codex/blob/main/codex-rs/core/prompt.md>
 - <https://github.com/openai/codex/blob/main/codex-cli/examples/prompting_guide.md>
+- <https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_codex_prompt.md>
+
+### Codex CLI plan mode
+
+> 계획모드가 별도 존재하지는 않음 (도입 검토중)
+
+- <https://github.com/openai/codex/issues/2101>
+- <https://cookbook.openai.com/articles/codex_exec_plans>
 
 ## opencode
 
