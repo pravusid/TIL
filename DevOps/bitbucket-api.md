@@ -9,7 +9,9 @@
 ```bash
 curl -s -S --user USERNAME:APPPASSWORD -L -O \
   https://api.bitbucket.org/2.0/repositories/<ORGANISATION>/<REPO>/src/main/<FOLDER>/<FILE>
+```
 
-curl -s -S -H "Authorization: Bearer BITBUCKET_ENV_ACCESS_TOKEN" -L -O \
+```bash
+curl -s -S -H "Authorization: Bearer BITBUCKET_ACCESS_TOKEN" -L -O \
   https://api.bitbucket.org/2.0/repositories/<ORGANISATION>/<REPO>/src/main/<FOLDER>/<FILE>
 ```
