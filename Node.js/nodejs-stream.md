@@ -12,6 +12,20 @@
 
 HTTP의 경우 (Readable)`http.ImcomingMessage` -> (Writable)`http.ServerResponse`
 
+## 데이터
+
+<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays>
+
+> JavaScript 형식화 배열(TypedArray)은 구현을 버퍼 및 뷰로 나눕니다
+
+- **Buffers**: 일반적인 원시 바이너리 데이터 버퍼를 표현하는 데 사용되며 직접수정 불가
+  - ArrayBuffer
+  - SharedArrayBuffer
+- **Views**
+  - TypedArrayView: Int8, Uint32, Float64 등과 같은 모든 일반 숫자 형을 위한 뷰를 제공
+    - Buffer: Node.js 전용 Uint8Array 확장 타입
+  - DataView: 버퍼에 임의 데이터를 읽고 쓰기 위해 getter/setter API를 제공하는 저레벨 인터페이스
+
 ## 사용
 
 ### pipe
