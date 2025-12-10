@@ -7,7 +7,3 @@
 ### Password
 
 <https://github.com/docker-library/redis/issues/176>
-
-### User ACL
-
-🚧
