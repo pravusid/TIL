@@ -124,6 +124,12 @@
 - <https://github.com/amalshaji/portr>
 - <https://github.com/unjs/untun>
 
+## Log Viewers
+
+- <https://github.com/tstack/lnav>
+- <https://github.com/bensadeh/tailspin>
+- <https://github.com/pamburus/hl>
+
 ## Env Initialization
 
 - <https://github.com/joehillen/sysz>
