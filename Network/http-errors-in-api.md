@@ -5,7 +5,17 @@
 
 ## 읽을거리
 
+- [Google, Facebook 등 대형 서비스들의 REST API 에러 처리 비교](https://blog.ull.im/engineering/2019/03/14/service-providers-errors.html)
 - [IllegalArgumentException은 400 Bad Request인가?](https://techblog.woowahan.com/21686/)
+
+## 상태코드
+
+### <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/422>
+
+본문 형식은 유효하지만 검증 규칙 위배 (일반적으로는 상태코드 400을 사용하는 경우가 많음)
+
+- <https://stackoverflow.com/questions/16133923/400-vs-422-response-to-post-of-data>
+- <https://fastapi.tiangolo.com/tutorial/handling-errors/?h=error#use-the-requestvalidationerror-body>
 
 ## 예시
 
