@@ -496,6 +496,49 @@ git bisect good
 git bisect reset
 ```
 
+## Submodule, Subtree
+
+### submodule
+
+- <https://git-scm.com/docs/git-submodule>
+- <https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-%EC%84%9C%EB%B8%8C%EB%AA%A8%EB%93%88>
+
+저장소 내부에 외부 저장소의 참조를 관리
+
+- 클론할 때 초기화: `git clone --recurse-submodules <URL>`
+- 초기화 및 업데이트: `git submodule update --init --recursive`
+- 서브모듈 추가: `git submodule add <URL> <경로>`
+- 원격 저장소 최신 커밋 반영: `git submodule update --remote --recursive`
+- 제거 (다음 명령어 순차실행)
+  - `git submodule deinit -f <경로>`
+  - `git rm -f <경로>`
+  - `.git/modules/<경로>`
+
+### subtree
+
+저장소 내부에 외부 저장소의 복제본을 관리 (외부 저장소의 Fork를 내부에서 관리한다고 생각해도..)
+
+> `--squash` 옵션 사용하면 커밋을 하나로 합쳐서 가져옴
+
+- 추가: `git subtree add --prefix=<폴더명> <원격저장소> <브랜치>`
+- 분리: `git subtree split --prefix=<분리할폴더명> -b <새로운브랜치명>`
+- pull: `git subtree pull --prefix=<폴더명> <원격저장소> <브랜치>`
+- push: `git subtree push --prefix=<폴더명> <원격저장소> <브랜치>`
+
+## Worktree
+
+한 저장소에서 여러 작업 디렉터리(워크트리)를 만들어, 서로 다른 브랜치를 동시에 체크아웃해 병렬로 개발할 수 있게 해주는 기능이다
+최근 병렬 AI 에이전트 작업에 자주 사용되어 관심을 받고 있음
+
+- 목록: `git worktree list`
+- 생성
+  - `git worktree add <path> [<commit-ish>] [-b <branch>]`
+  - `-b` 옵션 없으면 존재하는 브랜치로 전환
+  - 예시: `git worktree add ../hotfix -b hotfix` .git 설정 중첩 관리가 복집하므로 보통 상위 경로에 생성함
+- 이동: `git worktree move <old-path> <new-path>`
+- 삭제: `git worktree remove <worktree-path>`
+- 정리: `git worktree prune` (삭제기능을 사용하지 않고 제거한 worktree 정리)
+
 ## Troubleshootings
 
 <https://github.com/k88hudson/git-flight-rules>
