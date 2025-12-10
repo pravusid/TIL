@@ -7,3 +7,7 @@
 ## 정책 생성기 (generator)
 
 <https://awspolicygen.s3.amazonaws.com/policygen.html>
+
+## Tools
+
+- <https://github.com/awslabs/iam-policy-autopilot>

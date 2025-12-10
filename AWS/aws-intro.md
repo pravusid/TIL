@@ -25,10 +25,16 @@ Cloud Computing Services
 - OIDC token from specified file
 - EC2 instance metadata
 
-If one of the credential providers above fails to resolve the AWS credential, the chain falls back to next provider until a valid credential is resolved, or throw error when all of them fail.
-In Browsers and ReactNative, the chain is empty, meaning you always need supply credentials explicitly.
+`v3`: <https://github.com/aws/aws-sdk-js-v3/tree/main/packages/credential-providers#fromnodeproviderchain>
 
-`v3`: defaultProvider The credential sources and fallback order does not change in v3. It also supports AWS Single Sign-On credentials.
+- Environment variables exposed via process.env
+- SSO credentials from token cache
+- Web identity token credentials
+- Shared credentials and config ini files
+- The EC2/ECS Instance Metadata Service
+
+> 이 자격 증명 공급자는 한 번에 하나의 공급자만 호출하며, 자격 증명을 찾지 못했을 때만 다음 공급자로 넘어갑니다.
+> 예를 들어 프로세스가 AWS_ACCESS_KEY_ID와 AWS_SECRET_ACCESS_KEY 환경 변수에 정의된 값을 찾으면, ~/.aws/credentials와 ~/.aws/config 파일은 읽지 않고 인스턴스 메타데이터 서비스로 어떤 메시지도 보내지 않습니다.
 
 ### aws-sdk-js-v3: `Error: Region is missing`
 
