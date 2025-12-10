@@ -1,10 +1,12 @@
 # Agents
 
-- <https://agents.md/>
 - <https://github.com/zed-industries/agent-client-protocol>
 - <https://code.visualstudio.com/docs/devcontainers/containers> (agent 실행환경 격리)
 - <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
 - <https://github.com/superagent-ai/vibekit> (safety layer for your coding agent)
+- <https://github.com/router-for-me/CLIProxyAPI>
+  - <https://github.com/automazeio/vibeproxy>
+  - <https://github.com/kaitranntt/ccs>
 
 ## [[vs-code]] Github Copilot Chat
 
@@ -23,7 +25,7 @@
 ## Gemini CLI
 
 - <https://github.com/google-gemini/gemini-cli>
-- <https://www.philschmid.de/gemini-cli-cheatsheet>
+- <https://geminicli.com/extensions/>
 
 ### Gemini CLI Prompts
 
@@ -49,16 +51,17 @@
 - <https://developers.google.com/gemini-code-assist/resources/plugin-license?hl=ko>
 - <https://developers.google.com/gemini-code-assist/resources/privacy-notice-gemini-code-assist-individuals?hl=ko>
 
+### Gemini CLI for google workspace account
+
+<https://github.com/google-gemini/gemini-cli/blob/main/docs/get-started/authentication.md#optional-set-your-google-cloud-project>
+
 ## Claude Code
 
 > closed source
 
 - <https://github.com/anthropics/claude-code>
-- <https://github.com/marckrenn/cc-mvp-prompts>
 - <https://github.com/zebbern/claude-code-guide>
 - <https://github.com/hesreallyhim/awesome-claude-code>
-- <https://github.com/getAsterisk/claudia> A powerful GUI app and Toolkit for Claude Code
-- <https://github.com/automazeio/ccpm> Project management system for Claude Code
 
 ### Claude Code Privacy
 
@@ -78,7 +81,7 @@ claude code
 ### Claude Prompts
 
 - <https://platform.claude.com/docs/ko/release-notes/system-prompts>
-- <https://platform.claude.com/docs/ko/build-with-claude/prompt-engineering/claude-4-best-practices>
+- <https://github.com/marckrenn/cc-mvp-prompts>
 
 ### Claude Code Context
 
@@ -90,6 +93,11 @@ claude code
   - <https://www.anthropic.com/engineering/advanced-tool-use>
   - <https://news.ycombinator.com/item?id=46038047>
 
+## Claude Skills
+
+- <https://github.com/ComposioHQ/awesome-claude-skills>
+- <https://github.com/VoltAgent/awesome-claude-skills/>
+
 ## Codex CLI
 
 <https://github.com/openai/codex>
@@ -97,8 +105,7 @@ claude code
 ### Codex CLI Prompts
 
 - <https://github.com/openai/codex/blob/main/codex-rs/core/prompt.md>
-- <https://github.com/openai/codex/blob/main/codex-cli/examples/prompting_guide.md>
-- <https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_codex_prompt.md>
+- <https://github.com/openai/codex/blob/main/codex-rs/core/gpt-5.1-codex-max_prompt.md>
 
 ### Codex CLI plan mode
 
@@ -106,6 +113,10 @@ claude code
 
 - <https://github.com/openai/codex/issues/2101>
 - <https://cookbook.openai.com/articles/codex_exec_plans>
+
+### Codex CLI tips
+
+- [subagent hacking](https://www.youtube.com/watch?v=5eJqXtevlXg)
 
 ## opencode
 
@@ -119,11 +130,7 @@ claude code
 
 - <https://github.com/numman-ali/opencode-openai-codex-auth>
 
-## [[windsurf]]
-
-<https://docs.windsurf.com/windsurf/getting-started>
-
-## Kilo
+## Kiro
 
 <https://kiro.dev/docs/getting-started/>
 

@@ -5,12 +5,10 @@
 
 ## 실천방법
 
-- 커스텀 룰 사용
-  - 결과 확인하면서 커스텀 룰을 지속적으로 개선
-  - 프로젝트 root 규칙 (참고: [[claude-code-best-practices#CLAUDE.md]])
-    - 최소한의 내용으로 유지 (100줄 정도)
-    - 예시) 최소한의 내용 + 명확한 지침 (`DO`, `DON'T`)
-    - 프로젝트의 목적, 프로젝트 구조, 주요 명령어 (npm script, makefile ...), 코드 스타일, 핵심 지침 (너무 일반적인 내용이 아니라 구체적인 내용)
+> 제작사별 모델마다 프롬프팅 방식에 차이가 있고, 신규모델이 나올 때마다 달라지므로 Learn & Unlearn 중요
+
+- [커스텀 룰](#agentsmd) 사용
+  - 커스텀 룰은 지속적으로 개선
   - 하위 디렉토리에서 추가 규칙이 필요하다면 디렉토리별 커스텀 룰 사용
   - 그러나 코딩 에이전트들은 커스텀 룰을 제대로 따르지 않는 경우도 많기 때문에 중요한 지시사항이라면 프롬프트에 포함
 - 한 세션을 불필요하게 길게 유지하지 않음
@@ -30,6 +28,82 @@
   - husky 등의 git-hooks를 섞어 쓰면 타입오류, lint, 테스트 ... 적용할 수 있음
 - 여러 모델을 섞어 구현-리뷰 교차실행
 - AI에게는 오히려 코드 중간중간의 주석이 도움이 됨 (why, what, how 모두)
+
+### Prompt Engineering
+
+#### claude
+
+최근의 모델은 복잡한 프롬프팅이 필요하지 않음. 필수 지침만 최소로 관리.
+
+- 명시적이고 명확하게 지시: 모델이 추론할 것이라고 가정하지 말고, 원하는 바를 직접적이고 명확하게 진술
+  - 서문을 건너뛰고 바로 요청
+  - 작업할 내용뿐만 아니라 결과물에 포함되기를 원하는 것을 명시
+  - 품질 및 깊이 기대치에 대해 구체적으로 명시
+- 맥락과 동기 부여 제공: 왜 이 작업이 중요한지 설명하면 모델이 목표를 더 잘 이해하고 더 목적에 맞는 응답을 제공하는 데 도움이 됨
+- 구체적으로 작성
+  - 명확한 제약 조건 (단어 수, 형식, 일정)
+  - 관련 컨텍스트 (대상은 누구인지, 목표는 무엇인지)
+  - 원하는 결과물 구조 (표, 목록, 문단)
+  - 모든 요구 사항 또는 제한 사항 (식단 요구 사항, 예산 제한, 기술적 제약)
+- 예시는 항상 필요한 것은 아니지만, 개념을 설명하거나 특정 형식을 시연할 때 효과적, 다음은 예시를 사용해야 할 때의 조건임
+  - 원하는 형식을 설명하는 것보다 보여주는 것이 더 쉬울 때
+  - 특정한 어조나 스타일이 필요할 때
+  - 작업에 미묘한 패턴이나 관례가 포함될 때
+  - 간단한 지침으로 일관된 결과가 나오지 않았을 때
+- 불확실성을 표현할 권한을 부여
+  - 추측 대신 불확실성을 표현할 수 있는 명시적인 권한을 AI에게 부여하세요. 이는 환각(hallucination)을 줄이고 신뢰도를 높입니다.
+  - 예시: "이 재무 데이터를 분석하고 추세를 파악해 줘. 결론을 도출하기에 데이터가 불충분하다면, 추측하는 대신 그렇게 말해 줘."
+
+이전 모델에서 인기 있었던 일부 기법은 최신 모델에서 덜 필요함
+
+- 최신 모델은 XML 태그 없이도 구조를 잘 이해함
+  - 여러 콘텐츠가 혼합된 복잡한 프롬프트, 콘텐츠 경계 확신이 필요한 경우 에는 사용
+  - 명확한 제목, 공백, 명시적 언어 (아래의 정보를 사용하여 ...)로 대체
+- 역할 프롬프팅
+  - 최신 모델은 과도한 역할 프롬프팅이 불필요 (출력에 일관된 톤 유지, 복잡한 도메인 전문지식의 틀 유지 가 필요한 경우 사용)
+  - 역할을 할당하는 대신 원하는 관점이 무엇인지 명시적으로 밝히는 것으로 대체
+
+[추가내용](./agentic-coding/claude-best-practices-for-prompt-engineering.md)
+
+refs
+
+- <https://docs.anthropic.com/ko/docs/build-with-claude/prompt-engineering/overview>
+- <https://platform.claude.com/docs/ko/build-with-claude/prompt-engineering/claude-4-best-practices>
+
+#### codex
+
+- (codex-max) rollout(긴 에이전트 실행) 중에  "upfront plan, preambles, status updates"(계획 설명, 진행상황 보고) 를 말하게 하는 프롬프트는 제거
+
+refs
+
+- <https://cookbook.openai.com/examples/gpt-5-codex_prompting_guide>
+- <https://cookbook.openai.com/examples/gpt-5/gpt-5-1-codex-max_prompting_guide>
+
+### AGENTS.md
+
+- <https://agents.md/>
+- [[claude-code-best-practices#CLAUDE.md]]
+- <https://www.claude.com/blog/using-claude-md-files>
+- <https://www.humanlayer.dev/blog/writing-a-good-claude-md>
+
+> 커스텀 룰, 프로젝트 메모리
+
+목적
+
+- 지속적인 컨텍스트 제공: 코드베이스 구조, 코딩 표준, 선호 워크플로우를 모델에게 알려줌
+- 반복 작업 감소: 모든 대화의 시작마다 프로젝트 기본 정보를 설명하지 않아도 됨
+
+best practices
+
+- 최소한의 내용으로 유지 (100줄 정도)
+- 최소한의 내용 + 명확한 지침 (`DO`, `DON'T`)
+- 주요 구성
+  - 프로젝트 요약, 아키텍처 패턴, 주요 라이브러리
+  - 프로젝트 구성 요소가 위치한 핵심 디렉토리 구조
+  - 표준 및 규칙
+  - 개발 서버 실행, 테스트 실행 등 자주 사용하는 명령어
+  - 배포, 테스트 등 팀의 사용자 정의 도구 및 스크립트 사용 방법, MCP 등
+  - 표준 워크플로우: 코드 변경 전 따라야 할 계획 수립, 테스트, 커밋 형식 등의 단계
 
 ### 계획 단계에서 context 보강
 
@@ -147,17 +221,18 @@ AI가 잘못하고 있다는 세 가지 신호
 
 ### [Agentic Engineering - Zed](https://zed.dev/agentic-engineering)
 
-## Prompting
-
-- <https://cookbook.openai.com/examples/gpt-5-codex_prompting_guide>
-- <https://docs.anthropic.com/ko/docs/build-with-claude/prompt-engineering/overview>
-- [Gemini CLI Plan Mode](https://gist.github.com/philschmid/379cf06d9d18a1ed67ff360118a575e5)
-- [Gemini CLI: Explain Mode](https://gist.github.com/philschmid/64ed5dd32ce741b0f97f00e9abfa2a30)
-
 ## Context Engineering
 
 - <https://github.com/davidkimai/Context-Engineering>
 - [바이브 코딩에는 컨텍스트 엔지니어링이 필요하다](https://blogbyash.com/translation/vibe-coding-needs-context-engineering/)
+- <https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
+
+## Spec-Driven-Development
+
+- <https://github.com/github/spec-kit>
+- <https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html>
+  - <https://news.hada.io/topic?id=23776>
+- [스펙 주도 개발(SDD): 워터폴의 귀환](https://news.hada.io/topic?id=24400)
 
 ## 참고, 의견
 
@@ -190,10 +265,12 @@ AI가 잘못하고 있다는 세 가지 신호
 - [Improve your AI code output with AGENTS.md](https://www.builder.io/blog/agents-md)
 - [에이전트 루프 설계하기 (simonwillison.net)](https://news.hada.io/topic?id=23470)
 - [코딩을 위한 효과적인 하위 에이전트를 활성화하는 방법](https://www.youtube.com/watch?v=jxDy33IqtjI)
+- [복잡한 코드베이스에서 AI를 제대로 작동하게 만드는 법](https://news.hada.io/topic?id=23257)
+- [AI가 이 코드의 작동 방식을 깊이 이해하고 있다](https://news.hada.io/topic?id=24637)
+- [Claude Code의 모든 기능 활용법](https://news.hada.io/topic?id=24099)
 
 ## Tools
 
-- <https://github.com/github/spec-kit>
 - <https://github.com/steveyegge/beads> A memory upgrade for your coding agent
 - <https://github.com/yamadashy/repomix> packs your entire repository into a single, AI-friendly file
 - <https://github.com/Ryandonofrio3/osgrep> Open Source Semantic Search for your AI Agent
