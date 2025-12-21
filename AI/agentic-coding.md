@@ -72,7 +72,7 @@ refs
 
 #### codex
 
-- (codex-max) rollout(긴 에이전트 실행) 중에  "upfront plan, preambles, status updates"(계획 설명, 진행상황 보고) 를 말하게 하는 프롬프트는 제거
+- (codex-max) rollout(긴 에이전트 실행) 중에 "upfront plan, preambles, status updates"(계획 설명, 진행상황 보고) 를 말하게 하는 프롬프트는 제거
 
 refs
 
@@ -226,6 +226,9 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://github.com/davidkimai/Context-Engineering>
 - [바이브 코딩에는 컨텍스트 엔지니어링이 필요하다](https://blogbyash.com/translation/vibe-coding-needs-context-engineering/)
 - <https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
+- [복잡한 코드베이스에서 AI를 제대로 작동하게 만드는 법; "research, plan, implement" workflow](https://news.hada.io/topic?id=23257)
+  - [No Vibes Allowed: Solving Hard Problems in Complex Codebases – Dex Horthy, HumanLayer](https://www.youtube.com/watch?v=rmvDxxNubIg)
+  - <https://github.com/ai-that-works/ai-that-works/tree/main/2025-08-05-advanced-context-engineering-for-coding-agents>
 
 ## Spec-Driven-Development
 
@@ -265,7 +268,6 @@ AI가 잘못하고 있다는 세 가지 신호
 - [Improve your AI code output with AGENTS.md](https://www.builder.io/blog/agents-md)
 - [에이전트 루프 설계하기 (simonwillison.net)](https://news.hada.io/topic?id=23470)
 - [코딩을 위한 효과적인 하위 에이전트를 활성화하는 방법](https://www.youtube.com/watch?v=jxDy33IqtjI)
-- [복잡한 코드베이스에서 AI를 제대로 작동하게 만드는 법](https://news.hada.io/topic?id=23257)
 - [AI가 이 코드의 작동 방식을 깊이 이해하고 있다](https://news.hada.io/topic?id=24637)
 - [Claude Code의 모든 기능 활용법](https://news.hada.io/topic?id=24099)
 
