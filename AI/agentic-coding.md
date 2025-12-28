@@ -2,6 +2,8 @@
 
 - <https://en.wikipedia.org/wiki/Vibe_coding>
 - [[agents]]
+- [[mcp]]
+- [[skills]]
 
 ## 실천방법
 
@@ -16,18 +18,19 @@
   - > Claude Code의 성공률은 특히 첫 시도에서 더 구체적인 지침을 제공할 때 크게 향상됩니다
 - 작업을 시작하기 전 모델에게 아이디어를 구상하거나 계획을 세우도록 요청 (plan mode)
   - 아이디어, 계획을 피드백 하면서 방향을 맞춤
-  - 계획을 세우기에 context 내용이 불충분 한 경우 재질문 하도록 프롬프트
-  - 계획은 대형/추론 모델로 진행하고 (claude opus ...), 코드 작성은 일반모델(claude sonnet ...)으로 진행하는 것도 방법
+  - 계획을 세우기에 context 불충분 한 경우 재질문 하도록 프롬프트 (대부분의 agent plan mode 내장기능임)
+  - 계획의 적용범위가 부족하다고 생각될 때는 "추가로 고려해야 할 사항"이 있는지 역질문
+  - 계획은 대형 모델(claude opus ...)로 진행하고, 코드 작성은 일반 모델(claude sonnet ...)으로 진행하는 것도 방법
   - 계획이 어느정도 정리되면 파일로 저장하도록 요청하고 본격적인 실행 전 다듬는 작업 진행
-  - 계획에 TODO list 생성하고 해결여부 표시하도록 요청
-    - 각 단계가 끝날 때마다, 현재 파일의 step 체크 처리하고, 커밋해줘
-    - 단계별 TODO list에 타입체크, 테스트 등을 확인하도록 해서 커밋 전 작동여부 추가 수정하도록 가이드
-- 계획을 세웠다면 프롬프트에서 지시를 정확히 수행하도록 요구 (`지시사항을 빠짐없이 정확히 준수해서 작업을 진행해줘`)
-- feedback loop (빌드/테스트가 작동할 때 까지 코드를 수정해줘)
-- agent에게 각 단계가 끝날 때 커밋 요청
-  - husky 등의 git-hooks를 섞어 쓰면 타입오류, lint, 테스트 ... 적용할 수 있음
+  - 계획으로부터 Task (todo list) 생성하고 해결 여부 표시하도록 요청 (최신 모델은 별도의 지시 없이도 단계별 Task 생성함)
+- 계획을 세웠다면 프롬프트에서 지시를 정확히 수행하도록 요구 (PLAN-TASK file/context 제공)
+- 실행 중 원하는 코드 방향이 아니면 계획단계로 돌아 가는 것이 나을 수도 있음 (계획-실행-반복수정실행 사이의 컨텍스트 불일치로 전체 품질 저하)
+- 분리할 수 있는 작업이면서 결과만 사용해도 품질 저하가 적은 경우 subagent 사용해서 작업 분리 (context 관리)
+- feedback loop (검증 조건, 빌드/테스트가 작동할 때 까지 코드를 수정해줘)
+- 각 단계가 끝날 때 커밋 요청, git-hooks를 섞어 쓰면 타입오류, lint, 테스트 ... 적용할 수 있음
 - 여러 모델을 섞어 구현-리뷰 교차실행
-- AI에게는 오히려 코드 중간중간의 주석이 도움이 됨 (why, what, how 모두)
+- 모델별로 차이는 있으나 context window 사용량이 40~50% 초과할 때부터 품질 저하 발생할 수 있음 (opus-4.5, gpt-5.2 이후 모델은 품질 저하 개선됨)
+- AI에게는 오히려 코드 중간중간의 주석이 도움이 될 때가 있음 (why, what, how 모두)
 
 ### Prompt Engineering
 
@@ -96,24 +99,17 @@ refs
 best practices
 
 - 최소한의 내용으로 유지 (100줄 정도)
-- 최소한의 내용 + 명확한 지침 (`DO`, `DON'T`)
+- 명확한 지침 (`DO`, `DON'T`), 그러나 지침은 최소화
+- 주제별 세부사항은 적당한 개수로 나열 (3~4개 이내)
+- 세부 지침이 필요한 상황이라면 별도의 파일로 분리하고, 파일위치와 설명 첨부
 - 주요 구성
   - 프로젝트 요약, 아키텍처 패턴, 주요 라이브러리
   - 프로젝트 구성 요소가 위치한 핵심 디렉토리 구조
-  - 표준 및 규칙
+  - 표준 및 규칙 (linter 규칙, 코딩스타일 등은 제외)
   - 개발 서버 실행, 테스트 실행 등 자주 사용하는 명령어
   - 배포, 테스트 등 팀의 사용자 정의 도구 및 스크립트 사용 방법, MCP 등
   - 표준 워크플로우: 코드 변경 전 따라야 할 계획 수립, 테스트, 커밋 형식 등의 단계
-
-### 계획 단계에서 context 보강
-
-```txt
-이 작업을 진행하기 위해 다음 정보들을 먼저 확인해주세요
-- 불명확하거나 부족한 정보가 있다면 반드시 먼저 질문해주세요
-- 가정을 하기보다는 명확히 확인 후 진행해주세요
-
-정보가 충분하지 않다고 판단되면 "다음 정보가 필요합니다:"로 시작하는 질문 목록을 제시해주세요.
-```
+  - 오답노트 (반복해서 잘못 작동하는 행동에 대한 지침)
 
 ### 탐색
 
@@ -142,7 +138,7 @@ AI가 잘못하고 있다는 세 가지 신호
 
 ### [Cursor 사용 방법 (+ 최고의 팁)](./agentic-coding/cursor-tips.md)
 
-### [⭐️Claude Code: Best practices for agentic coding - anthropic](./agentic-coding/claude-code-best-practices.md)
+### [Claude Code: Best practices for agentic coding - anthropic](./agentic-coding/claude-code-best-practices.md)
 
 - 설정 사용자 정의 (Customize your setup)
 - Claude에게 더 많은 도구 제공 (Give Claude more tools)
@@ -151,7 +147,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - 헤드리스 모드를 사용해 인프라 자동화 (Use headless mode to automate your infra)
 - 다중 Claude 워크플로우로 수준 향상 (Uplevel with multi-Claude workflows)
 
-### [⭐️Here’s how I use LLMs to help me write code](https://simonwillison.net/2025/Mar/11/using-llms-for-code/)
+### [Here’s how I use LLMs to help me write code](https://simonwillison.net/2025/Mar/11/using-llms-for-code/)
 
 ### [Accelerating Large-Scale Test Migration with LLMs](https://medium.com/airbnb-engineering/accelerating-large-scale-test-migration-with-llms-9565c208023b)
 
@@ -229,6 +225,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - [복잡한 코드베이스에서 AI를 제대로 작동하게 만드는 법; "research, plan, implement" workflow](https://news.hada.io/topic?id=23257)
   - [No Vibes Allowed: Solving Hard Problems in Complex Codebases – Dex Horthy, HumanLayer](https://www.youtube.com/watch?v=rmvDxxNubIg)
   - <https://github.com/ai-that-works/ai-that-works/tree/main/2025-08-05-advanced-context-engineering-for-coding-agents>
+- <https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering>
 
 ## Spec-Driven-Development
 
@@ -236,6 +233,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html>
   - <https://news.hada.io/topic?id=23776>
 - [스펙 주도 개발(SDD): 워터폴의 귀환](https://news.hada.io/topic?id=24400)
+- <https://developers.googleblog.com/conductor-introducing-context-driven-development-for-gemini-cli/>
 
 ## 참고, 의견
 
@@ -270,6 +268,10 @@ AI가 잘못하고 있다는 세 가지 신호
 - [코딩을 위한 효과적인 하위 에이전트를 활성화하는 방법](https://www.youtube.com/watch?v=jxDy33IqtjI)
 - [AI가 이 코드의 작동 방식을 깊이 이해하고 있다](https://news.hada.io/topic?id=24637)
 - [Claude Code의 모든 기능 활용법](https://news.hada.io/topic?id=24099)
+- [AI를 활용한 프로그래밍 역량을 높이는 방법](https://news.hada.io/topic?id=25060)
+- [Claude Code를 활용한 예측 가능한 바이브 코딩 전략](https://helloworld.kurly.com/blog/vibe-coding-with-claude-code/)
+- [My Current AI Dev Workflow | Peter Steinberger](https://steipete.me/posts/2025/optimal-ai-development-workflow)
+- [Just Talk To It - the no-bs Way of Agentic Engineering | Peter Steinberger](https://steipete.me/posts/just-talk-to-it)
 
 ## Tools
 

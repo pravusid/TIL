@@ -82,6 +82,7 @@ claude code
 
 - <https://platform.claude.com/docs/ko/release-notes/system-prompts>
 - <https://github.com/marckrenn/cc-mvp-prompts>
+- [Document the difference between ultrathink and Thinking Mode On/Off](https://github.com/anthropics/claude-code/issues/9072)
 
 ### Claude Code Context
 
@@ -92,11 +93,6 @@ claude code
 - tool search tool
   - <https://www.anthropic.com/engineering/advanced-tool-use>
   - <https://news.ycombinator.com/item?id=46038047>
-
-## Claude Skills
-
-- <https://github.com/ComposioHQ/awesome-claude-skills>
-- <https://github.com/VoltAgent/awesome-claude-skills/>
 
 ## Codex CLI
 
@@ -109,10 +105,10 @@ claude code
 
 ### Codex CLI plan mode
 
-> 계획모드가 별도 존재하지는 않음 (도입 검토중)
-
 - <https://github.com/openai/codex/issues/2101>
+- <https://github.com/openai/codex/discussions/7355>
 - <https://cookbook.openai.com/articles/codex_exec_plans>
+- skills 추가하면서 plan skill 내장됨
 
 ### Codex CLI tips
 

@@ -29,3 +29,7 @@
 - <https://github.com/upstash/context7> Up-to-date code documentation for LLMs and AI code editors
 - <https://github.com/oraios/serena> powerful coding agent toolkit capable of turning an LLM into a fully-featured agent that works directly on your codebase
 - <https://github.com/grafbase/nexus> Plug in all your MCP servers, APIs, and LLM providers. Route everything through a unified endpoint
+
+## articles
+
+- [Skills vs Dynamic MCP Loadouts](https://lucumr.pocoo.org/2025/12/13/skills-vs-mcp/)
