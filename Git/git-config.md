@@ -21,6 +21,30 @@
 - <https://github.com/dandavison/delta>
 - <https://dandavison.github.io/delta/>
 
+## 키 생성
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+chmod 400 ~/.ssh/id_rsa
+
+# macOS 키체인 등록
+ssh-add --apple-use-keychain ~/.ssh/id_rsa
+```
+
+이후 서버(github.com 등)에 공개키 등록
+
+## ssh config for github
+
+```conf
+Host *
+    IdentitiesOnly yes
+    AddKeysToAgent yes
+    UseKeychain yes
+
+Host github.com
+    IdentityFile ~/.ssh/id_rsa
+```
+
 ## include / includeIf
 
 ```conf
