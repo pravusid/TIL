@@ -2,9 +2,8 @@
 
 ## 설치
 
-`sudo pacman -S gnupg`
-
-<https://wiki.archlinux.org/index.php/GnuPG>
+- <https://formulae.brew.sh/formula/gnupg>
+- <https://wiki.archlinux.org/index.php/GnuPG>
 
 > 명령어 확인: `gpg -h`
 
