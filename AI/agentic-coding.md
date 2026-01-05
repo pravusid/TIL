@@ -88,6 +88,7 @@ refs
 - [[claude-code-best-practices#CLAUDE.md]]
 - <https://www.claude.com/blog/using-claude-md-files>
 - <https://www.humanlayer.dev/blog/writing-a-good-claude-md>
+- <https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/>
 
 > 커스텀 룰, 프로젝트 메모리
 
@@ -127,83 +128,7 @@ AI가 잘못하고 있다는 세 가지 신호
 
 [[augmented-coding-beyond-the-vibes#TDD를 돕는 시스템 프롬프트|TDD를 돕는 시스템 프롬프트]]
 
-### [에이전트 기반 AI는 왜 좋은 페어 프로그래머가 아닌가](./agentic-coding/why-agents-are-bad-pair-programmers.md)
-
-> 병목지점은 인간이고, 인간의 속도 향상 정확도 유지를 위한 실천방법이 중요할 듯
-
-### [Cloudflare가 Claude와 함께 OAuth를 빌드하고 모든 프롬프트를 공개함](https://news.hada.io/topic?id=21256)
-
-- <https://github.com/cloudflare/workers-oauth-provider/commits/main/>
-- [Cloudflare의 AI가 작성한 OAuth 라이브러리 살펴보기](https://news.hada.io/topic?id=21354)
-
-### [Cursor 사용 방법 (+ 최고의 팁)](./agentic-coding/cursor-tips.md)
-
-### [Claude Code: Best practices for agentic coding - anthropic](./agentic-coding/claude-code-best-practices.md)
-
-- 설정 사용자 정의 (Customize your setup)
-- Claude에게 더 많은 도구 제공 (Give Claude more tools)
-- 일반적인 워크플로우 시도 (Try common workflows)
-- 워크플로우 최적화 (Optimize your workflow)
-- 헤드리스 모드를 사용해 인프라 자동화 (Use headless mode to automate your infra)
-- 다중 Claude 워크플로우로 수준 향상 (Uplevel with multi-Claude workflows)
-
-### [Here’s how I use LLMs to help me write code](https://simonwillison.net/2025/Mar/11/using-llms-for-code/)
-
-### [Accelerating Large-Scale Test Migration with LLMs](https://medium.com/airbnb-engineering/accelerating-large-scale-test-migration-with-llms-9565c208023b)
-
-> Enzyme to React Testing Library
-
-1. File Validation and Refactor Steps
-2. Retry Loops & Dynamic Prompting
-3. Increasing the Context
-4. From 75% to 97%: Systematic Improvement
-
-### [The Prompt Engineering Playbook for Programmers](https://addyo.substack.com/p/the-prompt-engineering-playbook-for)
-
-| Technique                 | Prompt template                                                                                                                            | Purpose                                                                |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| 1. Role Prompting         | “You are a senior {language} developer. Review this function for {goal}.”                                                                  | Simulate expert-level code review, debugging, or refactoring           |
-| 2. Explicit Context Setup | “Here’s the problem: {summary}. The code is below. It should do {expected behavior}, but instead it’s doing {actual behavior}. Why?”       | Frame the problem clearly to avoid generic, surface-level responses    |
-| 3. Input/Output Examples  | “This function should return {expected output} when given {input}. Can you write or fix the code?”                                         | Guide the assistant by showing intent through examples                 |
-| 4. Iterative Chaining     | “First, generate a skeleton of the component. Next, we’ll add state. Then handle API calls.”                                               | Break larger tasks into steps to avoid overwhelming or vague prompts   |
-| 5. Debug with Simulation  | “Walk through the function line by line. What are the variable values? Where might it break?”                                              | Get the assistant to simulate runtime behavior and surface hidden bugs |
-| 6. Feature Blueprinting   | “I’m building {feature}. Requirements: {bullets}. Using: {tech stack}. Please scaffold the initial component and explain your choices.”    | Kick off feature development with AI-led planning and scaffolding      |
-| 7. Code Refactor Guidance | “Refactor this code to improve {goal}, such as {e.g., readability, performance, idiomatic style}. Use comments to explain changes.”        | Make AI refactors align with your goals, not arbitrary changes         |
-| 8. Ask for Alternatives   | “Can you rewrite this using a functional style? What would a recursive version look like?”                                                 | Explore multiple implementation paths and expand your toolbox          |
-| 9. Rubber Ducking         | “Here’s what I think this function does: {your explanation}. Am I missing anything? Does this reveal any bugs?”                            | Let the AI challenge your understanding and spot inconsistencies       |
-| 10. Constraint Anchoring  | “Please avoid {e.g., recursion} and stick to {e.g., ES6 syntax, no external libraries}. Optimize for {e.g., memory}. Here’s the function:” | Prevent the AI from overreaching or introducing incompatible patterns  |
-
-### [바이브 코딩 바이블: AI 에이전트 시대의 새로운 코딩 패러다임](./agentic-coding/vibe-coding-bible.md)
-
-- 맥락과 목표 충분 제공
-- 단계별 접근(체인 프롬프팅)
-- 에이전트와 도구 활용
-- 프롬프트 템플릿과 예시 활용
-- 반복적 실험과 개선
-
-### [AI 시대의 시니어 개발자 역량 : 더 나은 결과를 위한 경험 활용](./agentic-coding/how-seasoned-developers-can-achieve-great-results-with-ai-coding-agents.md)
-
-- 실제 AI 코딩 프로젝트에서는 구현 전 미리 빈 껍데기 파일(stub files) 을 생성해 둠
-  - 예: API 엔드포인트, API 클라이언트, 컨트롤러 클래스, Twig 템플릿 등
-- 이러한 키프레임 파일은 AI에게 다음과 같은 중요한 문맥 정보를 제공함
-  - 프로젝트의 파일 구성 방식, 네임스페이스 구조, 명명 규칙, 일관된 코드 패턴
-
-### [Vibe 코딩은 저품질 작업에 대한 변명이 될 수 없어요](./agentic-coding/vibe-coding-is-not-an-excuse-for-low-quality-work.md)
-
-- Rule 1: Always Review AI-Generated Code / AI 코드 반드시 리뷰하기
-- Rule 2: Establish Coding Standards and Follow Them / 코딩 스타일과 기준을 설정하고 준수할 것
-- Rule 3: Use AI for Acceleration, Not Autopilot / AI는 가속기이지 자동 조종 장치가 아님
-- Rule 4: Test, Test, Test / 테스트는 무조건 해야 한다
-- Rule 5: Iterate and Refine / 반복하고 다듬기
-- Rule 6: Know When to Say No / 거절할 줄 알아야 함
-- Rule 7: Document and Share Knowledge / 문서화하고 지식을 공유하라
-
-### [Vibe Coding 매뉴얼: AI 지원 개발을 위한 템플릿](./agentic-coding/vibe-coding-manual.md)
-
-- [[vibe-coding-manual#Global rules]]
-- [[vibe-coding-manual#Workspace rules]]
-
-## Series of Articles
+## Series of articles
 
 ### <https://simonwillison.net/tags/ai-assisted-programming/>
 
@@ -235,13 +160,29 @@ AI가 잘못하고 있다는 세 가지 신호
 - [스펙 주도 개발(SDD): 워터폴의 귀환](https://news.hada.io/topic?id=24400)
 - <https://developers.googleblog.com/conductor-introducing-context-driven-development-for-gemini-cli/>
 
-## 참고, 의견
+## Long running agents
+
+- <https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents>
+- <https://ghuntley.com/ralph/>
+
+## Refs
 
 - [무신사 X GitHub Copilot은 정말로 우리의 생산성을 높였을까?](https://medium.com/musinsa-tech/de149ad7b7f6)
 - [나만의 Visual Studio Code Copilot 지침 만들고 활용하기](https://d2.naver.com/helloworld/6615449)
 - [LLM이 실제로 프로그래머의 생산성을 얼마나 향상시키고 있을까?](https://news.hada.io/topic?id=19672)
 - [AI Blindspots – AI 코딩 중에 발견한 LLM의 맹점들](https://news.hada.io/topic?id=19859)
 - [에이전틱 코딩에서 개발자 역량의 역할](https://news.hada.io/topic?id=20006)
+- [Vibe Coding 매뉴얼: AI 지원 개발을 위한 템플릿](./agentic-coding/vibe-coding-manual.md)
+- [AI 시대의 시니어 개발자 역량 : 더 나은 결과를 위한 경험 활용](./agentic-coding/how-seasoned-developers-can-achieve-great-results-with-ai-coding-agents.md)
+- [Cloudflare가 Claude와 함께 OAuth를 빌드하고 모든 프롬프트를 공개함](https://news.hada.io/topic?id=21256)
+- [Vibe 코딩은 저품질 작업에 대한 변명이 될 수 없어요](./agentic-coding/vibe-coding-is-not-an-excuse-for-low-quality-work.md)
+- [에이전트 기반 AI는 왜 좋은 페어 프로그래머가 아닌가](./agentic-coding/why-agents-are-bad-pair-programmers.md)
+- [Cursor 사용 방법 (+ 최고의 팁)](./agentic-coding/cursor-tips.md)
+- [Claude Code: Best practices for agentic coding - anthropic](./agentic-coding/claude-code-best-practices.md)
+- [Here’s how I use LLMs to help me write code](https://simonwillison.net/2025/Mar/11/using-llms-for-code/)
+- [Accelerating Large-Scale Test Migration with LLMs](https://medium.com/airbnb-engineering/accelerating-large-scale-test-migration-with-llms-9565c208023b)
+- [The Prompt Engineering Playbook for Programmers](https://addyo.substack.com/p/the-prompt-engineering-playbook-for)
+- [바이브 코딩 바이블: AI 에이전트 시대의 새로운 코딩 패러다임](./agentic-coding/vibe-coding-bible.md)
 - [AI 시대의 새로운 개발자 패턴들](https://news.hada.io/topic?id=21115)
 - [에이전트와 함께 프로그래밍하는 방법](https://news.hada.io/topic?id=21418)
   - > LLM 기반 코드 생성 도구에 대한 흔한 비판 중 하나는 코드 생성 자체는 전체 소프트웨어 비용에서 극히 일부에 불과하다는 것임 (...) 그러나 대규모 유지보수 경험만을 전체 산업의 본질로 확대 해석하면 안 됨
@@ -272,6 +213,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - [Claude Code를 활용한 예측 가능한 바이브 코딩 전략](https://helloworld.kurly.com/blog/vibe-coding-with-claude-code/)
 - [My Current AI Dev Workflow | Peter Steinberger](https://steipete.me/posts/2025/optimal-ai-development-workflow)
 - [Just Talk To It - the no-bs Way of Agentic Engineering | Peter Steinberger](https://steipete.me/posts/just-talk-to-it)
+- [Shipping at Inference-Speed | Peter Steinberger](https://steipete.me/posts/2025/shipping-at-inference-speed)
 
 ## Tools
 
