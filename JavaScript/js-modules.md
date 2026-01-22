@@ -26,4 +26,4 @@
 ## TypeScript
 
 - [[typescript-handbook-module-system]]
-- [[typescript-esm]]
+- [[typescript-esm-nodejs]]

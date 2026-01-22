@@ -206,7 +206,7 @@ server.listen(port, hostname, () => {
 type stripping을 실행할 때 import 구문에서 타입을 불러올 때 type 키워드를 사용하지 않은 코드를 실행하는 경우 런타임 오류가 발생한다.
 tsconfig의 [Verbatim Module Syntax](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--verbatimmodulesyntax) 옵션을 사용해서 오류를 방지할 수 있다.
 
-### [[typescript-esm]] 상호호환
+### [[typescript-esm-nodejs]] 상호호환
 
 type stripping에서는 기존 TypeScript-ESM 지원을 위해 작성한 `import ... from './foo.js'` 구문을 처리할 수 없다.
 TypeScript 5.7에서 [Path Rewriting for Relative Paths](https://devblogs.microsoft.com/typescript/announcing-typescript-5-7/#path-rewriting-for-relative-paths) 옵션이 추가되었다.

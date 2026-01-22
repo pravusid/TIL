@@ -78,6 +78,17 @@
 
 명령행에 지정된 컴파일러 옵션이 `tsconfig.json` 파일에서 지정된 설정을 대체한다.
 
+### module
+
+- <https://www.typescriptlang.org/tsconfig/#module>
+- <https://www.typescriptlang.org/docs/handbook/modules/theory.html#the-module-output-format>
+
+> Node.js의 모듈 형식 감지 및 상호운용(interoperability) 규칙 때문에, 프로젝트가 Node.js에서 실행되는 경우에는 tsc가 출력하는 모든 파일이 각각 ESM 또는 CJS이더라도 module을 `esnext`나 `commonjs`로 지정하는 것은 올바르지 않다.
+> Node.js에서 실행될 것을 의도하는 프로젝트에서 올바른 module 설정은 `node16` ~ `nodenext`뿐이다.
+> 전체가 ESM인 Node.js 프로젝트의 경우, esnext와 nodenext로 컴파일했을 때 출력되는 JavaScript는 동일해 보일 수 있지만, 타입 체크 결과는 달라질 수 있다.
+>
+> 자세한 내용은 nodenext에 대한 레퍼런스 섹션을 참고하라: [[typescript-esm-nodejs#Module compiler option]]
+
 ### target
 
 - <https://www.typescriptlang.org/tsconfig/#target>

@@ -1,4 +1,4 @@
-# TypeScript ESM support
+# TypeScript ESM support for Node.js
 
 ## Refs
 
@@ -8,26 +8,11 @@
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/#esm-nodejs>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-rc/#esm-nodejs>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#esm-nodejs>
-- <https://dev.to/logto/migrate-a-60k-loc-typescript-nodejs-repo-to-esm-and-testing-become-4x-faster-12-5f82>
-- <https://dev.to/logto/migrate-a-60k-loc-typescript-nodejs-repo-to-esm-and-testing-become-4x-faster-22-4a4k>
 - <https://nodejs.org/docs/latest/api/esm.html>
 
 ## 전환방법
 
-### `tsconfig.json`
-
-> TypeScript 4.7 adds this functionality with two new module settings: node16 and nodenext.
-
-```json
-{
-  "compilerOptions": {
-    "module": "nodenext",
-    "rewriteRelativeImportExtensions": true
-  }
-}
-```
-
-### `package.json`
+### `package.json` (Node.js)
 
 ```json
 {
@@ -50,8 +35,30 @@
 - CommonJS: `.cjs`, `.cts`, `.d.cts`
 - ESM: `.mjs`, `.mts`, `.d.mts`
 
-### `--module node20`
+#### `package.json` Exports, Imports, and Self-Referencing
 
+- [Support for NodeJS 12.7+ package exports](https://github.com/microsoft/TypeScript/issues/33079)
+- <https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing>
+- <https://nodejs.org/api/packages.html>
+- <https://antfu.me/posts/publish-esm-and-cjs>
+- <https://toss.tech/article/commonjs-esm-exports-field>
+
+### `tsconfig.json` (TypeScript)
+
+> TypeScript 4.7 adds this functionality with two new module settings: node16 and nodenext.
+
+```json
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "rewriteRelativeImportExtensions": true
+  }
+}
+```
+
+#### Module compiler option
+
+- <https://www.typescriptlang.org/docs/handbook/modules/reference.html#the-module-compiler-option>
 - <https://github.com/microsoft/TypeScript/pull/61805>
 - <https://devblogs.microsoft.com/typescript/announcing-typescript-5-9/#support-for---module-node20>
 
@@ -62,13 +69,11 @@
 | node20   | `es2023` | `node16`           | true                | 🚫                | ✅                | needs `type "json"` | ✅           |
 | nodenext | `esnext` | `nodenext`         | true                | 🚫                | ✅                | needs `type "json"` | ✅           |
 
-## `package.json` Exports, Imports, and Self-Referencing
-
-- [Support for NodeJS 12.7+ package exports](https://github.com/microsoft/TypeScript/issues/33079)
-- <https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing>
-- <https://nodejs.org/api/packages.html>
-- <https://antfu.me/posts/publish-esm-and-cjs>
-- <https://toss.tech/article/commonjs-esm-exports-field>
+- node16, node18, nodenext는 ES 모듈 사용 여부와 무관하게, Node.js v12 이상에서 실행되도록 의도된 모든 애플리케이션 및 라이브러리에 대해 올바른 module 옵션으로 간주되는 유일한 선택지이다.
+- node16, node18, nodenext는 각 파일에서 감지된 모듈 형식에 따라, CommonJS 또는 ESM 형식으로 파일을 출력(emit)한다.
+- ESM과 CJS 간 Node.js의 상호운용(interop) 규칙이 타입 검사(type checking)에 반영된다.
+- ESM 출력은 import x = require("...")를, createRequire 임포트로부터 구성한 require 호출로 변환한다.
+- CommonJS 출력은 동적 import() 호출을 변환하지 않으므로, CommonJS 모듈이 ES 모듈을 비동기적으로 임포트할 수 있다.
 
 ## TypeScript’s Migration to Modules
 
