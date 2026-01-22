@@ -74,10 +74,7 @@
 
 ## 자동화
 
-- <https://nutjs.dev/> (desktop automation)
-- <https://zapier.com/>
 - <https://github.com/n8n-io/n8n> (Easily automate tasks across different services)
-- [Google Deepmind의 Project Mariner - 브라우저 자동화 도구](<https://news.hada.io/topic?id=18324)>
 - <https://github.com/simstudioai/sim> open-source AI agent workflow builder
 
 ## HTTP Client
