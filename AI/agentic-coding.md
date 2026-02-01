@@ -22,7 +22,9 @@
   - 계획의 적용범위가 부족하다고 생각될 때는 "추가로 고려해야 할 사항"이 있는지 역질문
   - 계획은 대형 모델(claude opus ...)로 진행하고, 코드 작성은 일반 모델(claude sonnet ...)으로 진행하는 것도 방법
   - 계획이 어느정도 정리되면 파일로 저장하도록 요청하고 본격적인 실행 전 다듬는 작업 진행
-  - 계획으로부터 Task (todo list) 생성하고 해결 여부 표시하도록 요청 (최신 모델은 별도의 지시 없이도 단계별 Task 생성함)
+  - 에이전트가 Todo 대신 Task를 관리하도록 바뀌고 있음
+    - [TODOs Are Done](https://ampcode.com/news/todos-are-done)
+    - [We’re turning Todos into Tasks in Claude Code](https://x.com/trq212/status/2014480496013803643)
 - 계획을 세웠다면 프롬프트에서 지시를 정확히 수행하도록 요구 (PLAN-TASK file/context 제공)
 - 실행 중 원하는 코드 방향이 아니면 계획단계로 돌아 가는 것이 나을 수도 있음 (계획-실행-반복수정실행 사이의 컨텍스트 불일치로 전체 품질 저하)
 - 분리할 수 있는 작업이면서 결과만 사용해도 품질 저하가 적은 경우 subagent 사용해서 작업 분리 (context 관리)
@@ -164,6 +166,7 @@ AI가 잘못하고 있다는 세 가지 신호
 
 - <https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents>
 - <https://ghuntley.com/ralph/>
+- [test-coverage-ralph.sh](https://gist.github.com/mattpocock/aaab9c629c733b75398aee9d839d6d5f)
 
 ## Refs
 
@@ -214,6 +217,15 @@ AI가 잘못하고 있다는 세 가지 신호
 - [My Current AI Dev Workflow | Peter Steinberger](https://steipete.me/posts/2025/optimal-ai-development-workflow)
 - [Just Talk To It - the no-bs Way of Agentic Engineering | Peter Steinberger](https://steipete.me/posts/just-talk-to-it)
 - [Shipping at Inference-Speed | Peter Steinberger](https://steipete.me/posts/2025/shipping-at-inference-speed)
+- [Peter Steinberger — You Can Just Do Things](https://www.youtube.com/watch?v=68BS5GCRcBo)
+- <https://sankalp.bearblog.dev/my-experience-with-claude-code-20-and-how-to-get-better-at-using-coding-agents/>
+- <https://every.to/chain-of-thought/compound-engineering-how-every-codes-with-agents>
+- [OMS에서 Claude AI를 활용하여 변화된 업무 방식](https://helloworld.kurly.com/blog/oms-claude-ai-workflow/)
+- [AI에 반대하는 분위기에 휩쓸리지 마세요](https://news.hada.io/topic?id=25750)
+- [Agent Psychosis: Are We Going Insane?](https://lucumr.pocoo.org/2026/1/18/agent-psychosis/)
+- [AI 에이전트를 위한 좋은 스펙 작성법](https://news.hada.io/topic?id=25949)
+- [Andrej Karpathy의 최근 몇 주간 Claude 코딩 경험에 대한 단상](https://news.hada.io/topic?id=26183)
+- <https://code.claude.com/docs/en/best-practices>
 
 ## Tools
 
