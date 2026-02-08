@@ -117,8 +117,6 @@
 
 - <https://github.com/anderspitman/awesome-tunneling>
 - <https://www.cloudflare.com/ko-kr/products/tunnel/>
-- <https://github.com/andydunstall/pico>
-- <https://github.com/amalshaji/portr>
 - <https://github.com/unjs/untun>
 
 ## Log Viewers
