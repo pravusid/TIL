@@ -166,6 +166,8 @@ server.listen(port, hostname, () => {
 - <https://nodejs.org/en/blog/release/v22.12.0#requireesm-is-now-enabled-by-default>
 - [Pure ESM package](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)
 - [Move on to ESM-only](https://antfu.me/posts/move-on-to-esm-only)
+- <https://joyeecheung.github.io/blog/2025/12/30/require-esm-in-node-js-from-experiment-to-stability/>
+- [require(esm) as stable](https://nodejs.org/en/blog/release/v25.4.0)
 
 ## nodejs built-in support for TypeScript
 
