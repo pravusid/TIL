@@ -18,3 +18,4 @@
 
 - <https://syu-m-5151.hatenablog.com/entry/2025/12/19/173309>
 - <https://websitemain.claude.com/blog/complete-guide-to-building-skills-for-claude>
+- <https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals>

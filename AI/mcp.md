@@ -21,6 +21,7 @@
 
 - <https://github.com/upstash/context7> Up-to-date code documentation for LLMs and AI code editors
 - <https://github.com/oraios/serena> powerful coding agent toolkit capable of turning an LLM into a fully-featured agent that works directly on your codebase
+- <https://github.com/timescale/pg-aiguide>
 
 ### browsers
 

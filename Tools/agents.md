@@ -5,6 +5,7 @@
   - <https://code.visualstudio.com/docs/devcontainers/containers>
   - <https://zed.dev/docs/dev-containers>
 - <https://docs.docker.com/reference/cli/docker/sandbox/run/>
+- <https://github.com/anthropic-experimental/sandbox-runtime>
 - <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
 - <https://github.com/superagent-ai/vibekit> (safety layer for your coding agent)
 - <https://github.com/router-for-me/CLIProxyAPI>

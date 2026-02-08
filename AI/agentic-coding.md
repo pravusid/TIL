@@ -74,6 +74,7 @@ refs
 
 - <https://docs.anthropic.com/ko/docs/build-with-claude/prompt-engineering/overview>
 - <https://platform.claude.com/docs/ko/build-with-claude/prompt-engineering/claude-4-best-practices>
+- <https://claude.com/resources/tutorials/get-the-most-from-claude-opus-4-6>
 
 #### codex
 
