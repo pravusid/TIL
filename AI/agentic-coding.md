@@ -149,10 +149,13 @@ AI가 잘못하고 있다는 세 가지 신호
 
 - <https://github.com/davidkimai/Context-Engineering>
 - [바이브 코딩에는 컨텍스트 엔지니어링이 필요하다](https://blogbyash.com/translation/vibe-coding-needs-context-engineering/)
-- <https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
+- <https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html>
+- <https://www.dbreunig.com/2025/06/26/how-to-fix-your-context.html>
+- [컨텍스트 변질: 입력 토큰이 많아질수록 LLM 성능이 어떻게 변하는가 (research.trychroma.com)](https://news.hada.io/topic?id=22013)
 - [복잡한 코드베이스에서 AI를 제대로 작동하게 만드는 법; "research, plan, implement" workflow](https://news.hada.io/topic?id=23257)
   - [No Vibes Allowed: Solving Hard Problems in Complex Codebases – Dex Horthy, HumanLayer](https://www.youtube.com/watch?v=rmvDxxNubIg)
   - <https://github.com/ai-that-works/ai-that-works/tree/main/2025-08-05-advanced-context-engineering-for-coding-agents>
+- <https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
 - <https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering>
 
 ## Spec-Driven-Development
@@ -168,6 +171,9 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents>
 - <https://ghuntley.com/ralph/>
 - [test-coverage-ralph.sh](https://gist.github.com/mattpocock/aaab9c629c733b75398aee9d839d6d5f)
+- <https://www.anthropic.com/engineering/building-c-compiler>
+- <https://developers.openai.com/blog/skills-shell-tips>
+- <https://openai.com/index/harness-engineering/>
 
 ## Refs
 
@@ -227,6 +233,12 @@ AI가 잘못하고 있다는 세 가지 신호
 - [AI 에이전트를 위한 좋은 스펙 작성법](https://news.hada.io/topic?id=25949)
 - [Andrej Karpathy의 최근 몇 주간 Claude 코딩 경험에 대한 단상](https://news.hada.io/topic?id=26183)
 - <https://code.claude.com/docs/en/best-practices>
+- <https://boristane.com/blog/how-i-use-claude-code/>
+- <https://lucumr.pocoo.org/2026/2/13/the-final-bottleneck/>
+- [소프트웨어 팩토리와 에이전트 시대의 도래 (factory.strongdm.ai)](https://news.hada.io/topic?id=26493)
+- [2026년 AI와 UX에 대한 18가지 예측 (uxtigers.com)](https://news.hada.io/topic?id=26528)
+- [Compound Engineering : AI 네이티브 엔지니어링 철학 (every.to)](https://news.hada.io/topic?id=26560)
+- [Claude Code 구축에서 얻은 교훈: 프롬프트 캐싱이 전부임 (x.com/trq212)](https://news.hada.io/topic?id=26835)
 
 ## Tools
 

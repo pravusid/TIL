@@ -8,6 +8,7 @@
 - <https://github.com/anthropic-experimental/sandbox-runtime>
 - <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
 - <https://github.com/superagent-ai/vibekit> (safety layer for your coding agent)
+- <https://github.com/strongdm/leash>
 - <https://github.com/router-for-me/CLIProxyAPI>
   - <https://github.com/automazeio/vibeproxy>
   - <https://github.com/kaitranntt/ccs>

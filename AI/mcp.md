@@ -26,6 +26,7 @@
 ### browsers
 
 - <https://github.com/microsoft/playwright-mcp>
+- <https://github.com/microsoft/playwright-cli>
 - <https://github.com/ChromeDevTools/chrome-devtools-mcp>
 - <https://github.com/vercel-labs/agent-browser> (CLI not MCP)
 
