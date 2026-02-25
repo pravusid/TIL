@@ -92,6 +92,7 @@ refs
 - <https://www.claude.com/blog/using-claude-md-files>
 - <https://www.humanlayer.dev/blog/writing-a-good-claude-md>
 - <https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/>
+- [Stop Using /init for AGENTS.md](https://news.hada.io/topic?id=26972)
 
 > 커스텀 룰, 프로젝트 메모리
 
@@ -143,8 +144,6 @@ AI가 잘못하고 있다는 세 가지 신호
 - [AI 시대의 소스코드 품질](https://wiki.g15e.com/pages/Source%20code%20quality%20in%20the%20AI%20era)
 - [에이전트 기반 코딩](https://wiki.g15e.com/pages/Agentic%20coding)
 
-### [Agentic Engineering - Zed](https://zed.dev/agentic-engineering)
-
 ## Context Engineering
 
 - <https://github.com/davidkimai/Context-Engineering>
@@ -174,6 +173,11 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://www.anthropic.com/engineering/building-c-compiler>
 - <https://developers.openai.com/blog/skills-shell-tips>
 - <https://openai.com/index/harness-engineering/>
+
+### Agentic Engineering
+
+- <https://zed.dev/agentic-engineering>
+- <https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/>
 
 ## Refs
 
