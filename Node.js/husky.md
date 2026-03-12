@@ -2,10 +2,12 @@
 
 - <https://www.npmjs.com/package/husky>
 - <https://typicode.github.io/husky/>
+- <https://www.npmjs.com/package/lint-staged>
 
 ## alternatives
 
 - <https://www.npmjs.com/package/lefthook>
+- <https://github.com/j178/prek>
 
 ## 설치
 
