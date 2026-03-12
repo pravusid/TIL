@@ -83,18 +83,40 @@ import { Database, Tables } from './database.module';
 import { Global, Injectable, Module } from '@nestjs/common';
 import { Transaction } from 'kysely';
 
+const TRX_ALS = Symbol('TRX_ALS');
+
 @Injectable()
 export class TrxSession {
-  constructor(private readonly db: Database) {}
+  constructor(
+    @Inject(TRX_ALS) private readonly storage: AsyncLocalStorage<Transaction<Tables>>,
+    private readonly db: Database,
+  ) {}
 
+  /** Nested Transaction Error: https://github.com/kysely-org/kysely/blob/2ceae395058da071c4948a632a3576fd4e0390f4/src/kysely.ts#L584 */
+  current(): Omit<Transaction<Tables> | DB, 'transaction'> {
+    return this.storage.getStore() ?? this.db;
+  }
+
+  /** Transactional Propagation = REQUIRED */
   create<R>(callback: (trx: Transaction<Tables>) => Promise<R>): Promise<R> {
-    return this.db.transaction().execute(callback);
+    const sessTrx = this.storage.getStore();
+    if (sessTrx) {
+      return callback(sessTrx);
+    }
+
+    return this.db.transaction().execute((trx) => this.storage.run(trx, () => callback(trx)));
   }
 }
 
 @Global()
 @Module({
-  providers: [TrxSession],
+  providers: [
+    {
+      provide: TRX_ALS,
+      useValue: new AsyncLocalStorage(),
+    },
+    TrxSession,
+  ],
   exports: [TrxSession],
 })
 export class TrxModule {}
