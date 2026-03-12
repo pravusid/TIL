@@ -173,11 +173,13 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://www.anthropic.com/engineering/building-c-compiler>
 - <https://developers.openai.com/blog/skills-shell-tips>
 - <https://openai.com/index/harness-engineering/>
+- <https://developers.openai.com/blog/run-long-horizon-tasks-with-codex>
 
 ### Agentic Engineering
 
 - <https://zed.dev/agentic-engineering>
 - <https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/>
+- <https://github.com/openai/symphony>
 
 ## Refs
 
@@ -243,6 +245,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - [2026년 AI와 UX에 대한 18가지 예측 (uxtigers.com)](https://news.hada.io/topic?id=26528)
 - [Compound Engineering : AI 네이티브 엔지니어링 철학 (every.to)](https://news.hada.io/topic?id=26560)
 - [Claude Code 구축에서 얻은 교훈: 프롬프트 캐싱이 전부임 (x.com/trq212)](https://news.hada.io/topic?id=26835)
+- [GPT-5.4 also has a 1M context window, but their evals show that needle-in-a-haystack (MRCR v2) scores 97% at 16-32K tokens, drops to 57% at 256-512K, and just 36% at 512K-1M.](https://x.com/cline/status/2029642984351010874)
 
 ## Tools
 
