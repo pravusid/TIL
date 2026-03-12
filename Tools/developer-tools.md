@@ -93,11 +93,6 @@
 - <https://dev.mysql.com/downloads/workbench/> (MySQL/MariaDB)
 - <https://tableplus.com/> (유료)
 
-## 문서 처리
-
-- <https://github.com/microsoft/markitdown> Python tool for converting files and office documents to Markdown.
-- <https://github.com/QuivrHQ/MegaParse> File Parser optimised for LLM Ingestion with no loss 🧠 Parse PDFs, Docx, PPTx
-
 ## 파일 공유
 
 - <https://localsend.org/ko> An open-source cross-platform alternative to AirDrop
