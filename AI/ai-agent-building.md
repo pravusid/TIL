@@ -2,7 +2,7 @@
 
 ## refs
 
-- <https://openai.com/index/unrolling-the-codex-agent-loop/>
+- <https://openai.com/ko-KR/index/unrolling-the-codex-agent-loop/>
 - <https://openai.com/ko-KR/index/inside-our-in-house-data-agent/>
 
 ## frameworks/libraries
