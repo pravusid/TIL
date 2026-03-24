@@ -6,6 +6,7 @@
 
 - [구글검색 core update 2024년 11월](https://support.google.com/analytics/threads?hl=en&sjid=4223695567599553041-AP)
 - [구글, Forbes/CNN/WSJ등의 기생 SEO 같은 악용에 대해 강경 대응을 시작](https://news.hada.io/topic?id=17893)
+- [1년에 10억 원을 절약한, 강남언니의 SEO 웹 전략 공개](https://www.youtube.com/watch?v=7Ps7fVCaVGs)
 
 ## 테크니컬 SEO
 
