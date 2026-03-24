@@ -105,8 +105,8 @@ claude code
 
 ### Codex CLI Prompts
 
+- <https://github.com/openai/codex/blob/main/codex-rs/core/models.json>
 - <https://github.com/openai/codex/blob/main/codex-rs/core/prompt.md>
-- <https://github.com/openai/codex/blob/main/codex-rs/core/gpt-5.1-codex-max_prompt.md>
 
 ### Codex CLI plan mode
 
@@ -118,6 +118,7 @@ claude code
 ### Codex CLI tips
 
 - [subagent hacking](https://www.youtube.com/watch?v=5eJqXtevlXg)
+- [Codex Best practices](https://developers.openai.com/codex/learn/best-practices)
 
 ## opencode
 

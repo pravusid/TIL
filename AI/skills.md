@@ -19,6 +19,7 @@
 - <https://syu-m-5151.hatenablog.com/entry/2025/12/19/173309>
 - <https://websitemain.claude.com/blog/complete-guide-to-building-skills-for-claude>
 - <https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals>
+- [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378)
 
 ## refs
 

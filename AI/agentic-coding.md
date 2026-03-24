@@ -82,8 +82,8 @@ refs
 
 refs
 
-- <https://cookbook.openai.com/examples/gpt-5-codex_prompting_guide>
-- <https://cookbook.openai.com/examples/gpt-5/gpt-5-1-codex-max_prompting_guide>
+- <https://developers.openai.com/api/docs/guides/prompt-guidance>
+- <https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide>
 
 ### AGENTS.md
 
@@ -164,6 +164,7 @@ AI가 잘못하고 있다는 세 가지 신호
   - <https://news.hada.io/topic?id=23776>
 - [스펙 주도 개발(SDD): 워터폴의 귀환](https://news.hada.io/topic?id=24400)
 - <https://developers.googleblog.com/conductor-introducing-context-driven-development-for-gemini-cli/>
+- [충분히 상세한 명세는 코드다 (haskellforall.com)](https://news.hada.io/topic?id=27662)
 
 ## Long running agents
 
@@ -172,7 +173,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - [test-coverage-ralph.sh](https://gist.github.com/mattpocock/aaab9c629c733b75398aee9d839d6d5f)
 - <https://www.anthropic.com/engineering/building-c-compiler>
 - <https://developers.openai.com/blog/skills-shell-tips>
-- <https://openai.com/index/harness-engineering/>
+- <https://openai.com/ko-KR/index/harness-engineering/>
 - <https://developers.openai.com/blog/run-long-horizon-tasks-with-codex>
 
 ### Agentic Engineering
@@ -180,6 +181,12 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://zed.dev/agentic-engineering>
 - <https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/>
 - <https://github.com/openai/symphony>
+
+### Code Review
+
+- [AI 시대에 코드 리뷰, 어떻게 해야할까?](https://flowkater.io/posts/2026-03-08-ai-code-review/)
+- [코드 리뷰를 없애는 방법 (latent.space)](https://news.hada.io/topic?id=27546)
+- [모든 리뷰 단계는 속도를 10배 느리게 만든다 (apenwarr.ca)](https://news.hada.io/topic?id=27608)
 
 ## Refs
 
@@ -246,20 +253,6 @@ AI가 잘못하고 있다는 세 가지 신호
 - [Compound Engineering : AI 네이티브 엔지니어링 철학 (every.to)](https://news.hada.io/topic?id=26560)
 - [Claude Code 구축에서 얻은 교훈: 프롬프트 캐싱이 전부임 (x.com/trq212)](https://news.hada.io/topic?id=26835)
 - [GPT-5.4 also has a 1M context window, but their evals show that needle-in-a-haystack (MRCR v2) scores 97% at 16-32K tokens, drops to 57% at 256-512K, and just 36% at 512K-1M.](https://x.com/cline/status/2029642984351010874)
-
-## Tools
-
-- <https://github.com/steveyegge/beads> A memory upgrade for your coding agent
-- <https://github.com/yamadashy/repomix> packs your entire repository into a single, AI-friendly file
-- <https://github.com/Ryandonofrio3/osgrep> Open Source Semantic Search for your AI Agent
-
-### git-worktree-runner
-
-<https://github.com/coderabbitai/git-worktree-runner>
-
-```bash
-git clone https://github.com/coderabbitai/git-worktree-runner.git ~/.git-worktree-runner
-cd ~/.git-worktree-runner
-ln -sfn "$(pwd)/bin/git-gtr" ~/.local/bin/git-gtr
-mkdir -p ~/.oh-my-zsh/completions && ln -sfn "$(pwd)/completions/_git-gtr" ~/.oh-my-zsh/completions/_git-gtr
-```
+- [에이전틱 엔지니어링 시대의 생존 스킬 9가지](https://flowkater.io/posts/2026-03-01-agentic-engineering-9-skills/)
+- [코드 작성 속도가 문제라고 생각했다면, 더 큰 문제가 있는 것이다 (andrewmurphy.io)](https://news.hada.io/topic?id=27624)
+- [우리, 프로그래머들 — .md로 코딩하는 시대](https://velog.io/@teo/we-programmer)
