@@ -1,17 +1,34 @@
 # Agents
 
+## Protocols
+
 - <https://github.com/zed-industries/agent-client-protocol>
+- <https://github.com/openai/codex/tree/main/codex-rs/app-server>
+
+## Sandboxing
+
+### devcontainers
+
 - <https://containers.dev/> (agent 실행환경 격리)
-  - <https://code.visualstudio.com/docs/devcontainers/containers>
-  - <https://zed.dev/docs/dev-containers>
-- <https://docs.docker.com/reference/cli/docker/sandbox/run/>
+- <https://code.visualstudio.com/docs/devcontainers/containers>
+- <https://zed.dev/docs/dev-containers>
+
+### OS native
+
 - <https://github.com/anthropic-experimental/sandbox-runtime>
+- <https://github.com/afshinm/zerobox> Lightweight, cross-platform process sandboxing powered by OpenAI Codex's runtime.
+
+### docker
+
+- <https://docs.docker.com/reference/cli/docker/sandbox/run/>
 - <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
-- <https://github.com/superagent-ai/vibekit> (safety layer for your coding agent)
-- <https://github.com/strongdm/leash>
+- <https://github.com/strongdm/leash> Leash wraps AI coding agents in containers and monitors their activity.
+
+## Proxy
+
 - <https://github.com/router-for-me/CLIProxyAPI>
-  - <https://github.com/automazeio/vibeproxy>
-  - <https://github.com/kaitranntt/ccs>
+- <https://github.com/automazeio/vibeproxy>
+- <https://github.com/kaitranntt/ccs>
 
 ## [[vs-code]] Github Copilot Chat
 
@@ -163,3 +180,13 @@ Kiro는 핵심 프로젝트 컨텍스트를 설정하는 세 가지 필수 파�
 <https://github.com/antinomyhq/forge>
 
 > AI enabled pair programmer for Claude, GPT, O Series, Grok, Deepseek, Gemini and 300+ models
+
+## multiplexer + agents
+
+- <https://github.com/warpdotdev/warp>
+- <https://github.com/manaflow-ai/cmux>
+- <https://github.com/muxy-app/muxy>
+- <https://github.com/superset-sh/superset>
+- <https://github.com/stablyai/orca>
+- <https://www.conductor.build/>
+- <https://super.engineering/>

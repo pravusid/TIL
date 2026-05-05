@@ -75,6 +75,7 @@ refs
 - <https://docs.anthropic.com/ko/docs/build-with-claude/prompt-engineering/overview>
 - <https://platform.claude.com/docs/ko/build-with-claude/prompt-engineering/claude-4-best-practices>
 - <https://claude.com/resources/tutorials/get-the-most-from-claude-opus-4-6>
+- <https://claude.com/blog/best-practices-for-using-claude-opus-4-7-with-claude-code>
 
 #### codex
 
@@ -175,6 +176,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://developers.openai.com/blog/skills-shell-tips>
 - <https://openai.com/ko-KR/index/harness-engineering/>
 - <https://developers.openai.com/blog/run-long-horizon-tasks-with-codex>
+- <https://www.anthropic.com/engineering/harness-design-long-running-apps>
 
 ### Agentic Engineering
 
@@ -256,3 +258,5 @@ AI가 잘못하고 있다는 세 가지 신호
 - [에이전틱 엔지니어링 시대의 생존 스킬 9가지](https://flowkater.io/posts/2026-03-01-agentic-engineering-9-skills/)
 - [코드 작성 속도가 문제라고 생각했다면, 더 큰 문제가 있는 것이다 (andrewmurphy.io)](https://news.hada.io/topic?id=27624)
 - [우리, 프로그래머들 — .md로 코딩하는 시대](https://velog.io/@teo/we-programmer)
+- [속도를 늦춰야 하는 이유 (mariozechner.at)](https://news.hada.io/topic?id=27861)
+- [멀티 에이전트 오케스트레이션은 왜 잘 안 되는가?](https://shalomeir.substack.com/p/multi-agent-orchestration-problems)
