@@ -8,6 +8,7 @@
 
 - <https://www.npmjs.com/package/lefthook>
 - <https://github.com/j178/prek>
+- <https://github.com/jdx/hk>
 
 ## 설치
 
