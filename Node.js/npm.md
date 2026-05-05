@@ -254,3 +254,22 @@ TS 기준
 
 - <https://github.com/unjs/nypm>
 - <https://github.com/antfu/ni>
+
+## security
+
+- <https://pnpm.io/blog/2025/12/05/newsroom-npm-supply-chain-security>
+  - <https://pnpm.io/supply-chain-security>
+- <https://github.com/npm/cli/pull/8965>
+- <https://github.com/bodadotsh/npm-security-best-practices>
+  - 종속성 버전 고정 (lockfile)
+  - lifecycle 스크립트 비활성화 (pnpm, deno, bun 은 기본옵션임)
+  - `MinimumReleaseAge` 옵션 사용
+  - 런타임 권한모델(Permission Model) 사용
+  - 외부 종속성 최소화
+
+`.npmrc`
+
+- npm: `ignore-scripts=true`
+- npm: `min-release-age=7`
+- pnpm: `minimum-release-age=10080`
+- bun: `minimumReleaseAge = 604800`
