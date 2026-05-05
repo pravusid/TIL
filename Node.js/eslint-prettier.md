@@ -260,3 +260,8 @@ eslint --fix 자동실행
 ### airbnb 규칙에서 'ForOfStatement' is not allowed
 
 <https://github.com/airbnb/javascript/issues/1271>
+
+## Alternatives
+
+- <https://biomejs.dev/internals/language-support/>
+- <https://oxc.rs/compatibility.html>
