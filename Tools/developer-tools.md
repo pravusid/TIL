@@ -6,7 +6,7 @@
 - <https://github.com/cachix/devenv> Fast, Declarative, Reproducible, and Composable Developer Environments
 - <https://github.com/jetify-com/devbox> a command-line tool that lets you easily create isolated shells for development
 - <https://github.com/flox/flox> Developer environments you can take with you
-- <https://github.com/cheeselemon/ophiuchi-desktop> Localhost SSL Proxy Server Manager
+- <https://github.com/vercel-labs/portless> Replace port numbers with stable, named local URLs.
 
 ## Version Managers
 
@@ -67,15 +67,6 @@
 - iCloud 동기화 안 될때
   - <https://superuser.com/questions/1045791/icloud-drive-sync-stuck>
   - `killall bird`
-
-## AI
-
-- <https://github.com/ollama/ollama> Get up and running with large language models
-
-## 자동화
-
-- <https://github.com/n8n-io/n8n> (Easily automate tasks across different services)
-- <https://github.com/simstudioai/sim> open-source AI agent workflow builder
 
 ## HTTP Client
 
