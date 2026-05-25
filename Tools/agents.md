@@ -20,7 +20,7 @@
 
 ### docker
 
-- <https://docs.docker.com/reference/cli/docker/sandbox/run/>
+- <https://docs.docker.com/ai/sandboxes/>
 - <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
 - <https://github.com/strongdm/leash> Leash wraps AI coding agents in containers and monitors their activity.
 
