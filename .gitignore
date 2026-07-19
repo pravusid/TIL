@@ -1,13 +1,13 @@
 .obsidian/
-.specstory/
 
 .wiki/docs/
 .wiki/index.md
 
 .private/
-.snippets/
-.qna/
 
 node_modules/
 Rust/**/target/
 .ipynb_checkpoints/
+
+.claude/settings.local.json
+.pi/settings.json
