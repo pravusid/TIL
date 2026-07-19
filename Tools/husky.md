@@ -6,7 +6,7 @@
 
 ## alternatives
 
-- <https://www.npmjs.com/package/lefthook>
+- [[lefthook]]
 - <https://github.com/j178/prek>
 - <https://github.com/jdx/hk>
 
