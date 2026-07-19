@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "excalidraw": {
-      "url": "https://excalidraw-mcp-app.vercel.app/mcp",
-      "type": "http"
-    }
-  }
-}
