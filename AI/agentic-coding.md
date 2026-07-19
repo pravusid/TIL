@@ -73,9 +73,9 @@
 refs
 
 - <https://docs.anthropic.com/ko/docs/build-with-claude/prompt-engineering/overview>
-- <https://platform.claude.com/docs/ko/build-with-claude/prompt-engineering/claude-4-best-practices>
 - <https://claude.com/resources/tutorials/get-the-most-from-claude-opus-4-6>
 - <https://claude.com/blog/best-practices-for-using-claude-opus-4-7-with-claude-code>
+- <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices>
 
 #### codex
 
@@ -83,8 +83,9 @@ refs
 
 refs
 
-- <https://developers.openai.com/api/docs/guides/prompt-guidance>
+- <https://developers.openai.com/api/docs/guides/latest-model>
 - <https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide>
+- [[gpt-5.5-프롬프트-가이드]]
 
 ### AGENTS.md
 
@@ -177,6 +178,7 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://openai.com/ko-KR/index/harness-engineering/>
 - <https://developers.openai.com/blog/run-long-horizon-tasks-with-codex>
 - <https://www.anthropic.com/engineering/harness-design-long-running-apps>
+- <https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex>
 
 ### Agentic Engineering
 
@@ -184,11 +186,16 @@ AI가 잘못하고 있다는 세 가지 신호
 - <https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/>
 - <https://github.com/openai/symphony>
 
-### Code Review
+### Loop Engineering
 
+### 이해(인지) 부채, Code Review
+
+- [이해 부채: LLM이 만든 코드가 남기는 시한폭탄 (codemanship.wordpress.com)](https://news.hada.io/topic?id=23384)
 - [AI 시대에 코드 리뷰, 어떻게 해야할까?](https://flowkater.io/posts/2026-03-08-ai-code-review/)
 - [코드 리뷰를 없애는 방법 (latent.space)](https://news.hada.io/topic?id=27546)
 - [모든 리뷰 단계는 속도를 10배 느리게 만든다 (apenwarr.ca)](https://news.hada.io/topic?id=27608)
+- [에이전틱 코드 리뷰 (substack.com/addyo)](https://news.hada.io/topic?id=30571)
+- <https://www.geoffreylitt.com/2026/07/02/understanding-is-the-new-bottleneck.html>
 
 ## Refs
 
@@ -260,3 +267,5 @@ AI가 잘못하고 있다는 세 가지 신호
 - [우리, 프로그래머들 — .md로 코딩하는 시대](https://velog.io/@teo/we-programmer)
 - [속도를 늦춰야 하는 이유 (mariozechner.at)](https://news.hada.io/topic?id=27861)
 - [멀티 에이전트 오케스트레이션은 왜 잘 안 되는가?](https://shalomeir.substack.com/p/multi-agent-orchestration-problems)
+- [A new era for software testing](https://antirez.com/news/168)
+- [AI시대 나의 전문성을 재설계하는 법](https://drive.google.com/file/d/19rY4idXdBoFyqqzu0ImZe45C31ETb7rC/view)

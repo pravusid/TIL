@@ -24,6 +24,11 @@
 - <https://github.com/dagger/container-use> (agent 실행환경 격리, 병렬작업)
 - <https://github.com/strongdm/leash> Leash wraps AI coding agents in containers and monitors their activity.
 
+### 기타
+
+- <https://github.com/superradcompany/microsandbox> easy and fast microVMs for running untrusted workloads
+- <https://github.com/vercel-labs/just-bash> A sandboxed bash interpreter for AI agents
+
 ## Proxy
 
 - <https://github.com/router-for-me/CLIProxyAPI>
@@ -43,39 +48,6 @@
 
 - [[cursor#Prompt]]
 - <https://docs.cursor.com/ko/welcome>
-
-## Gemini CLI
-
-- <https://github.com/google-gemini/gemini-cli>
-- <https://geminicli.com/extensions/>
-
-### Gemini CLI Prompts
-
-- <https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/core/prompts.ts>
-- <https://gist.github.com/simonw/9e5f13665b3112cea00035df7da696c6>
-
-### Gemini CLI Privacy
-
-- <https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md>
-- <https://github.com/google-gemini/gemini-cli/blob/main/docs/telemetry.md>
-- <https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#usage-statistics>
-- <https://news.ycombinator.com/item?id=44379036>
-
-> 개인용 Gemini Code Assist를 사용하면 Google에서 프롬프트, 관련 코드, 생성된 출력, 코드 수정사항, 관련 기능 사용 정보, 사용자 의견을 수집하여 Google 제품 및 서비스, 머신러닝 기술을 제공, 개선, 개발하는 데 사용합니다.
-> ... 중략 ...
-> 이 데이터가 Google의 머신러닝 모델을 개선하는 데 사용되지 않도록 하려면 개인을 위한 Gemini Code Assist 설정의 단계에 따라 선택 해제할 수 있습니다.
-
-- CLI 에서 [`/privacy` slash command](https://github.com/google-gemini/gemini-cli/pull/2059) 사용 가능
-- VSCode 등의 Code Assist 확장 Privacy Settings 사용 가능
-
-### Gemini Code Assist ToS
-
-- <https://developers.google.com/gemini-code-assist/resources/plugin-license?hl=ko>
-- <https://developers.google.com/gemini-code-assist/resources/privacy-notice-gemini-code-assist-individuals?hl=ko>
-
-### Gemini CLI for google workspace account
-
-<https://github.com/google-gemini/gemini-cli/blob/main/docs/get-started/authentication.md#optional-set-your-google-cloud-project>
 
 ## Claude Code
 
@@ -122,8 +94,8 @@ claude code
 
 ### Codex CLI Prompts
 
-- <https://github.com/openai/codex/blob/main/codex-rs/core/models.json>
-- <https://github.com/openai/codex/blob/main/codex-rs/core/prompt.md>
+- <https://github.com/openai/codex/tree/main/codex-rs/models-manager>
+- <https://github.com/openai/codex/tree/main/codex-rs/prompts/templates>
 
 ### Codex CLI plan mode
 
