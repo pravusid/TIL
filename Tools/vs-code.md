@@ -12,12 +12,12 @@
 
 ```json
 {
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }
 ```
 
-> The typescript.tsdk workspace setting only tells VS Code that a workspace version of TypeScript exists.
+> The js/ts.tsdk.path workspace setting only tells VS Code that a workspace version of TypeScript exists.
 > To actually start using the workspace version for IntelliSense, you must run the TypeScript:
 > Select TypeScript Version command and select the workspace version.
 
@@ -27,7 +27,7 @@ options: <https://www.typescriptlang.org/docs/handbook/configuring-watch.html>
 
 ```jsonc
 {
-  "typescript.tsserver.watchOptions": {
+  "js/ts.tsserver.watchOptions": {
     // ...options
   }
 }
@@ -39,7 +39,7 @@ CodeGen + tsserver.watch
 
 ```json
 {
-  "typescript.tsserver.watchOptions": {
+  "js/ts.tsserver.watchOptions": {
     "watchDirectory": "useFsEvents",
     "fallbackPolling": "dynamicPriorityPolling",
     "watchFile": "useFsEventsOnParentDirectory",
@@ -52,11 +52,9 @@ CodeGen + tsserver.watch
 
 <https://devblogs.microsoft.com/typescript/announcing-typescript-5-6/#exclude-patterns-for-auto-imports>
 
-> The same settings can be applied for JavaScript through `javascript.preferences.autoImportSpecifierExcludeRegexes` in VSCode.
-
 ```jsonc
 {
-  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": [
     "^lodash$",
     "^node:",
     "^./lib/internal", // no escaping needed
@@ -89,19 +87,7 @@ for JavaScript, TypeScript
 
 ```json
 {
-  "javascript.format.enable": false,
-  "typescript.format.enable": false,
-  "javascript.validate.enable": false
-}
-```
-
-for vuejs
-
-```json
-{
-  "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "js/ts.format.enabled": false
 }
 ```
 
@@ -228,14 +214,12 @@ npm script: `"debug": "nodemon --watch dist --exec 'NODE_ENV=debug node -r sourc
 }
 ```
 
-- `javascript.preferences.renameMatchingJsxTags`: 기본값 true
-- `typescript.preferences.renameMatchingJsxTags`: 기본값 true
+- `js/ts.preferences.renameMatchingJsxTags`: 기본값 true
 
 ### Auto closing
 
 - `html.autoClosingTags` 기본값 true (HTML)
-- `javascript.autoClosingTags` 기본값 true (JSX)
-- `typescript.autoClosingTags` 기본값 true (JSX)
+- `js/ts.autoClosingTags.enabled` 기본값 true (JSX)
 
 ## Custom labels for open editors
 
