@@ -85,6 +85,15 @@ git commit --amend
 git rebase --continue
 ```
 
+방법3. `git history fixup` (Git 2.55+)
+
+```sh
+git add <filename>
+git history fixup <commit>
+```
+
+Staged 변경사항을 지정한 과거 커밋에 반영하고, 이후 커밋을 재적용한다. 대상 커밋 이후의 커밋 해시는 변경될 수 있으며, 실험적 기능이다.
+
 ## Tag
 
 - 목록
@@ -422,6 +431,15 @@ git reset --hard origin/main
 branch push
 
 `git push <remote> <branch>`
+
+remote group push (Git 2.55+)
+
+```sh
+git config remotes.publish "github gitlab mirror"
+git push publish main
+```
+
+`publish` 그룹에 등록한 remote로 순차 push한다. 여러 remote에 대한 `--atomic`은 지원하지 않는다.
 
 branch 삭제
 
