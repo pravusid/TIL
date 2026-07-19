@@ -22,6 +22,11 @@
   - <https://github.com/shadowspawn/node-version-usage>
 - <https://github.com/aquaproj/aqua> Declarative CLI Version manager written in Go
 
+## Toolkit
+
+- [[nodejs#Node.js CLI]] built-in
+- <https://github.com/nubjs/nub> all-in-one Node.js toolkit
+
 ## Containers
 
 - <https://github.com/apple/container>
